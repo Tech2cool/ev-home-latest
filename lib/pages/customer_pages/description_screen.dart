@@ -188,7 +188,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                     vertical: 10,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xfff4e9e0),
+                                    color: const Color(0xFF04395E),
                                     borderRadius: BorderRadius.circular(15),
                                     boxShadow: [
                                       BoxShadow(
@@ -236,7 +236,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                             height: 80,
                             margin: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
-                                color: const Color(0xfff4e9e0),
+                                color: const Color(0xFF04395E),
                                 borderRadius: BorderRadius.circular(15),
                                 boxShadow: [
                                   BoxShadow(
@@ -337,10 +337,10 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              color: const Color(0xfff4e9e0),
+              color: const Color(0xFF62B6CB),
               child: Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -380,12 +380,12 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 10),
                             backgroundColor: const Color(
-                                0xfff4e9e0), // Matches the background
+                                0xFF04395E), // Matches the background
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
                             side: const BorderSide(
-                                color: Color(0xfff4e9e0), width: 1.0),
+                                color: Color(0xFF04395E), width: 1.0),
                           ),
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -428,7 +428,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 10),
-                            backgroundColor: Colors.transparent,
+                            backgroundColor: Color(0xFF04395E),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
@@ -478,7 +478,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                 mouseCursor: MouseCursor.defer,
                 focusElevation: 4,
                 foregroundColor: const Color(0xff424d51),
-                backgroundColor: const Color(0xfff4e9e0),
+                backgroundColor: const Color(0xFF04395E),
                 onPressed: () async {
                   _openMap(locationLink);
                 },
@@ -505,7 +505,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                   ]),
               child: FloatingActionButton.small(
                 foregroundColor: const Color(0xff424d51),
-                backgroundColor: const Color(0xfff4e9e0),
+                backgroundColor: const Color(0xFF04395E),
                 onPressed: () {
                   _showShareDialog(context);
                 },
@@ -736,7 +736,7 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                     padding:
                         const EdgeInsetsDirectional.fromSTEB(15, 10, 15, 10),
                     decoration: BoxDecoration(
-                        color: const Color(0xfff4e9e0),
+                        color: const Color(0xFF04395E),
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
@@ -772,7 +772,7 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                       padding:
                           const EdgeInsetsDirectional.fromSTEB(15, 10, 15, 10),
                       decoration: BoxDecoration(
-                          color: const Color(0xfff4e9e0),
+                          color: const Color(0xFF04395E),
                           borderRadius: BorderRadius.circular(15),
                           boxShadow: [
                             BoxShadow(
@@ -785,13 +785,13 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                         children: [
                           Icon(
                             getIconData(filteredAmenities[index].name),
-                            color: const Color(0xff80b4ab),
+                            color: const Color(0xFF001F54),
                             size: 16.0,
                           ),
                           const SizedBox(width: 4.0),
                           Text(
                             filteredAmenities[index].name,
-                            style: const TextStyle(color: Color(0xff80b4ab)),
+                            style: const TextStyle(color: Color(0xFF001F54)),
                           ),
                         ],
                       ),

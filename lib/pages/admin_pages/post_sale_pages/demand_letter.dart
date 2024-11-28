@@ -1,3 +1,7 @@
+// import 'package:ev_home_main/core/models/customer_payment.dart';
+// import 'package:ev_home_main/core/services/api_service.dart';
+import 'package:ev_homes/core/models/customer_payment.dart';
+import 'package:ev_homes/core/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -52,6 +56,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
   double remainingBase = 0.0;
   double remainingGst = 0.0;
   double remainingTds = 0.0;
+  Payment? getpayment;
 
   String toRoman(int number) {
     if (number < 1 || number > 5) return number.toString();
@@ -552,13 +557,33 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
     }
   }
 
-  void _updateFlatNo() {
+  void _updateFlatNo() async {
     if (selectedFloor != null && selectedUnit != null) {
       setState(() {
         flatNoController.text = '$selectedFloor$selectedUnit';
       });
+      final res =
+          await ApiService().getPaymentbyFlat("$selectedFloor$selectedUnit");
+      setState(() {
+        getpayment = res;
+        carpetAreaController.text = res?.carpetArea ?? "";
+        clientNameController.text = res?.customerName ?? "";
+        phoneController.text = res?.phoneNumber.toString() ?? "";
+        addressLine1Controller.text = res?.address1 ?? "";
+        addressLine2Controller.text = res?.address2 ?? "";
+        cityController.text = res?.city ?? "";
+        pincodeController.text = res?.pincode.toString() ?? "";
+        netAmountController.text = res?.bookingAmt.toString() ?? "";
+        cgstSgstController.text = res?.cgst.toString() ?? "";
+        totalAmountController.text = res?.amtReceived.toString() ?? "";
+        allInclusiveController.text = res?.allinclusiveamt.toString() ?? "";
+        tdsController.text = res?.tds.toString() ?? "";
+
+        print(res);
+      });
     }
   }
+
 
   void _calculateTotalUpToSelectedSlab() {
     if (allInclusiveController.text.isEmpty) return;

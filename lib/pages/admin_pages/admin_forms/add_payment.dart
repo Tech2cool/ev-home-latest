@@ -229,11 +229,9 @@ class _AddPaymentState extends State<AddPayment> {
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2101),
                     );
-                    if (pickedDate != null) {
-                      _receiveDateController.text =
-                          pickedDate.toLocal().toString().split(' ')[0];
-                    }
-                  },
+                    _receiveDateController.text =
+                        pickedDate!.toLocal().toString().split(' ')[0];
+                                    },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Receive Date is required';

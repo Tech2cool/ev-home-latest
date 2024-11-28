@@ -80,7 +80,7 @@ class Lead {
       email: json['email'],
       project: (json['project'] as List<dynamic>?)
               ?.map((el) => OurProject?.fromJson(el))
-              ?.toList() ??
+              .toList() ??
           [],
       requirement: List<String>.from(json['requirement']),
       firstName: json['firstName'],

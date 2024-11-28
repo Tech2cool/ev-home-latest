@@ -1937,25 +1937,23 @@ class CustomDateTimeField extends StatelessWidget {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-    if (pickedDate != null) {
-      TimeOfDay? pickedTime = await showTimePicker(
-        context: context,
-        initialTime: TimeOfDay.now(),
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (pickedTime != null) {
+      final dateTime = DateTime(
+        pickedDate!.year,
+        pickedDate.month,
+        pickedDate.day,
+        pickedTime.hour,
+        pickedTime.minute,
       );
-      if (pickedTime != null) {
-        final dateTime = DateTime(
-          pickedDate.year,
-          pickedDate.month,
-          pickedDate.day,
-          pickedTime.hour,
-          pickedTime.minute,
-        );
-        controller.text = "${dateTime.toLocal()}".split(' ')[0] +
-            ' ' +
-            pickedTime.format(context);
-      }
+      controller.text = "${dateTime.toLocal()}".split(' ')[0] +
+          ' ' +
+          pickedTime.format(context);
     }
-  }
+    }
 
   @override
   Widget build(BuildContext context) {

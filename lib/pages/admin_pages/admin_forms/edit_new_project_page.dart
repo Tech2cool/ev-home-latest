@@ -65,28 +65,22 @@ class _EditNewProjectPageState extends State<EditNewProjectPage> {
   }
 
   void carouselImages(List<File> carouselImage) {
-    if (carouselImage != null) {
-      setState(() {
-        _carouselImages = carouselImage;
-      });
+    setState(() {
+      _carouselImages = carouselImage;
+    });
     }
-  }
 
   void amenites(List<LocalAmenity> amenite) {
-    if (amenite != null) {
-      setState(() {
-        _amenites = amenite;
-      });
+    setState(() {
+      _amenites = amenite;
+    });
     }
-  }
 
   void configurations(List<LocalConfig> configuration) {
-    if (configuration != null) {
-      setState(() {
-        _configuration = configuration;
-      });
+    setState(() {
+      _configuration = configuration;
+    });
     }
-  }
 
   @override
   void initState() {

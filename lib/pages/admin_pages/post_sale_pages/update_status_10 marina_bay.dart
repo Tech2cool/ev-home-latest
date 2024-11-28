@@ -63,12 +63,10 @@ class _UpdateStatus10State extends State<UpdateStatus10> {
   void _loadHistory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? historyJson = prefs.getString('selectionHistory_UpdateStatus10');
-    if (historyJson != null) {
-      setState(() {
-        selectionHistory = List<Map<String, dynamic>>.from(json.decode(historyJson));
-      });
+    setState(() {
+      selectionHistory = List<Map<String, dynamic>>.from(json.decode(historyJson!));
+    });
     }
-  }
 
   void _saveHistory() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -4,6 +4,7 @@ import 'package:ev_homes/components/graph/funnel_chart.dart';
 import 'package:ev_homes/components/graph/line_chart.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/chart_model.dart';
+import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_marina_bay.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_nine_square.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_letter.dart';
@@ -31,7 +32,7 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
   bool showNotification = false;
   double notificationHeight = 0;
   bool isLoading = false;
-  String? selectedProject;
+  OurProject? selectedProject;
 
   Future<void> _onRefresh() async {
     final settingProvider = Provider.of<SettingProvider>(
@@ -115,7 +116,7 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: DropdownButtonFormField<String>(
+                  child: DropdownButtonFormField<OurProject>(
                     value: selectedProject,
                     hint: Text(
                       "Select Project",
@@ -124,12 +125,11 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                         fontSize: 16,
                       ),
                     ),
-                    items:
-                        ["Nine Square", "10 Marina Bay"].map((String project) {
-                      return DropdownMenuItem<String>(
+                    items: settingProvider.ourProject.map((OurProject project) {
+                      return DropdownMenuItem<OurProject>(
                         value: project,
                         child: Text(
-                          project,
+                          project.name ?? "",
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.black,
@@ -339,11 +339,15 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                             backgroundColor: Colors.red,
                           ),
                         );
-                      } else if (selectedProject == '10 Marina Bay') {
+                      } else if (selectedProject!.name!
+                          .toLowerCase()
+                          .contains("marina")) {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const UpdateStatus10(),
                         ));
-                      } else if (selectedProject == 'Nine Square') {
+                      } else if (selectedProject!.name!
+                          .toLowerCase()
+                          .contains("square")) {
                         Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => const UpdatePayment9(),
                         ));
@@ -404,11 +408,15 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                                       backgroundColor: Colors.red,
                                     ),
                                   );
-                                } else if (selectedProject == '10 Marina Bay') {
+                                } else if (selectedProject!.name!
+                                    .toLowerCase()
+                                    .contains("marina")) {
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) => const CostGenerator(),
                                   ));
-                                } else if (selectedProject == 'Nine Square') {
+                                } else if (selectedProject!.name!
+                                    .toLowerCase()
+                                    .contains("square")) {
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
                                         const CostGenerators(),
@@ -445,12 +453,16 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                                       backgroundColor: Colors.red,
                                     ),
                                   );
-                                } else if (selectedProject == '10 Marina Bay') {
+                                } else if (selectedProject!.name!
+                                    .toLowerCase()
+                                    .contains("marina")) {
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
                                         PaymentScheduleGenerator(),
                                   ));
-                                } else if (selectedProject == 'Nine Square') {
+                                } else if (selectedProject!.name!
+                                    .toLowerCase()
+                                    .contains("square")) {
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
                                         const PaymentScheduleGenerators(),
@@ -487,11 +499,15 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                                 backgroundColor: Colors.red,
                               ),
                             );
-                          } else if (selectedProject == '10 Marina Bay') {
+                          } else if (selectedProject!.name!
+                              .toLowerCase()
+                              .contains("marina")) {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => const DemandLetter10(),
                             ));
-                          } else if (selectedProject == 'Nine Square') {
+                          } else if (selectedProject!.name!
+                              .toLowerCase()
+                              .contains("square")) {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => const DemandLetter(),
                             ));

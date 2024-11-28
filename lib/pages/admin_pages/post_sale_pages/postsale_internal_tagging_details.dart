@@ -374,6 +374,7 @@ class _PostsaleInternalTaggingDetailsState
     dateTimeController.text = widget.lead.date;
     _selectedClosingManger = widget.lead.closingManager;
     selectedPostSalesExecutives = widget.lead.postSaleExecutive;
+
     generateApplicants(widget.lead.applicants);
   }
 

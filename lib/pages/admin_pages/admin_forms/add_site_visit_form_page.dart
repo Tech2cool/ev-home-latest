@@ -81,8 +81,14 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
     '9 Square',
   ];
 
+  final List<String> visitType = [
+    'visit',
+    'revisit',
+  ];
+
   List<String> selectedProject = [];
   String? selectedProj;
+  String? selectedVisit;
   List<String> selectedRequirement = [];
   List<String> listofSource = ['Walk-in', 'CP', 'Ref'];
   Employee? _selectedDataEntryUser;
@@ -163,6 +169,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
       );
       final newVisit = SiteVisit(
         projects: selectedProject,
+        visitType: selectedVisit,
         choiceApt: selectedRequirement,
         firstName: firstNameController.text,
         lastName: lastNameController.text,
@@ -470,6 +477,53 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                     ),
 
                     const SizedBox(height: 16),
+
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        label: RichText(
+                          text: TextSpan(
+                            text: 'Select Visit',
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 16,
+                            ),
+                            children: const [
+                              TextSpan(
+                                text: '*',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black.withOpacity(0.2),
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      value: selectedVisit,
+                      items: visitType.map((String visits) {
+                        return DropdownMenuItem<String>(
+                          value: visits,
+                          child: Text(
+                            visits[0].toUpperCase() +
+                                visits.substring(1).toLowerCase(),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedVisit = newValue;
+                        });
+                      },
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
 
                     // Date of Birth
                     TextFormField(

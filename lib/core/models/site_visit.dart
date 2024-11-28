@@ -12,6 +12,7 @@ class SiteVisit {
   final String? email;
   final String? residence;
   final List<String> projects;
+  final String? visitType;
   final List<String> choiceApt;
   final Employee? closingManager;
   final Employee? attendedBy;
@@ -22,6 +23,7 @@ class SiteVisit {
   final String? source;
 
   SiteVisit({
+    this.visitType,
     this.date,
     this.firstName,
     this.lastName,
@@ -51,6 +53,7 @@ class SiteVisit {
       'feedback': feedback,
       'residence': residence,
       'projects': projects,
+      'visitType': visitType,
       'choiceApt': choiceApt,
       'gender': gender,
       'namePrefix': namePrefix,
@@ -77,6 +80,7 @@ class SiteVisit {
       namePrefix: map['namePrefix'],
       source: map['source'],
       projects: List<String>.from((map['projects'] ?? [])),
+      visitType: (map['visitType']),
       choiceApt: List<String>.from((map['choiceApt'] ?? [])),
       closingManager: map['closingManager'] != null
           ? Employee.fromMap(map['closingManager'])

@@ -1,11 +1,17 @@
 import 'dart:async';
+import 'package:ev_homes/core/models/configuration.dart';
 import 'package:ev_homes/core/models/employee.dart';
+import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/models/site_visit.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multiselect_dropdown_flutter/multiselect_dropdown_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:multi_dropdown/multi_dropdown.dart';
 
 class AddSiteVisitFormPage extends StatefulWidget {
   const AddSiteVisitFormPage({super.key});
@@ -34,6 +40,12 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   TextEditingController teamLeaderNameController = TextEditingController();
   TextEditingController teamLeaderEmailController = TextEditingController();
   TextEditingController teamLeaderPhoneController = TextEditingController();
+  MultiSelectController<OurProject> multiselectController =
+      MultiSelectController<OurProject>();
+  MultiSelectController<String> multiselectController1 =
+      MultiSelectController<String>();
+  MultiSelectController<Employee> multiselectController2 =
+      MultiSelectController<Employee>();
   Timer? _periodicTimer;
   int _counter = 10;
   bool showTimer = false;
@@ -54,8 +66,23 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   String? _selectedSource;
   Employee? _selectedClosingManger;
   Employee? _selectedTeamLeader;
-  final List myList = const ['Ev 9 Square', 'Ev heart city', 'Marina Bay'];
+
+  Employee? _selectedSalesManager;
+  List<Employee> _selectedSalesManagers1 = [];
+
+  final List<String> myList = const [
+    'Ev 9 Square',
+    'Ev heart city',
+    'Marina Bay'
+  ];
+
+  final List<String> projects = [
+    '10 Marina Bay',
+    '9 Square',
+  ];
+
   List<String> selectedProject = [];
+  String? selectedProj;
   List<String> selectedRequirement = [];
   List<String> listofSource = ['Walk-in', 'CP', 'Ref'];
   Employee? _selectedDataEntryUser;
@@ -245,6 +272,8 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
         settingProvider.getClosingManagers(),
         settingProvider.getDataEntryEmployess(),
         settingProvider.getTeamLeaders(),
+        settingProvider.getOurProject(),
+        settingProvider.getSalesManager(),
       ]);
     } catch (e) {
       // Handle any errors if needed
@@ -317,6 +346,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   Widget build(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(context);
     final closingMangers = settingProvider.dataEntryUsers;
+    final salesManager = settingProvider.salesManager;
     final teamLeaders = settingProvider.teamLeaders;
     final requirements = settingProvider.requirements;
 
@@ -397,12 +427,73 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                 ),
                 child: Column(
                   children: [
+                    const SizedBox(height: 16),
+                    DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        label: RichText(
+                          text: TextSpan(
+                            text: 'Select location',
+                            style: TextStyle(
+                              color: Colors.grey[700],
+                              fontSize: 16,
+                            ),
+                            children: const [
+                              TextSpan(
+                                text: '*',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.black.withOpacity(0.2),
+                          ),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      value: selectedProj,
+                      items: projects.map((String project) {
+                        return DropdownMenuItem<String>(
+                          value: project,
+                          child: Text(project),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedProj = newValue;
+                        });
+                      },
+                    ),
+
+                    const SizedBox(height: 16),
+
                     // Date of Birth
                     TextFormField(
                       controller: _dateController,
                       readOnly: true,
                       decoration: InputDecoration(
-                        labelText: 'Date & Time',
+                        label: RichText(
+                          text: TextSpan(
+                            text: 'Date & Time',
+                            style: TextStyle(
+                              color: Colors.grey[700], // Label text color
+                              fontSize: 16,
+                            ),
+                            children: const [
+                              TextSpan(
+                                text: '*',
+                                style: TextStyle(
+                                  color: Colors.red, // Asterisk color
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         prefixIcon: const Icon(Icons.calendar_today),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
@@ -417,7 +508,9 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                           ),
                         ),
                         contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 10),
+                          vertical: 15,
+                          horizontal: 10,
+                        ),
                       ),
                       onTap: () => _selectDate(context),
                     ),
@@ -429,7 +522,24 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         TextFormField(
                           controller: firstNameController,
                           decoration: InputDecoration(
-                            labelText: 'First Name',
+                            label: RichText(
+                              text: TextSpan(
+                                text: 'First Name',
+                                style: TextStyle(
+                                  color: Colors.grey[700], // Label text color
+                                  fontSize: 16,
+                                ),
+                                children: const [
+                                  TextSpan(
+                                    text: '*',
+                                    style: TextStyle(
+                                      color: Colors.red, // Asterisk color
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             prefixIcon: const Icon(Icons.person),
                             prefix: DropdownButtonHideUnderline(
                               child: SizedBox(
@@ -473,7 +583,24 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         TextFormField(
                           controller: lastNameController,
                           decoration: InputDecoration(
-                            labelText: 'Last Name',
+                            label: RichText(
+                              text: TextSpan(
+                                text: 'Last Name',
+                                style: TextStyle(
+                                  color: Colors.grey[700], // Label text color
+                                  fontSize: 16,
+                                ),
+                                children: const [
+                                  TextSpan(
+                                    text: '*',
+                                    style: TextStyle(
+                                      color: Colors.red, // Asterisk color
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             prefixIcon: const Icon(Icons.person),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -493,11 +620,26 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
 
                         TextFormField(
                           controller: phoneController,
+                          maxLength: 10,
                           decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(
-                              vertical: 16,
+                            label: RichText(
+                              text: TextSpan(
+                                text: 'Phone',
+                                style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontSize: 16,
+                                ),
+                                children: const [
+                                  TextSpan(
+                                    text: '*',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            labelText: 'Phone',
                             prefixIcon: const Icon(Icons.phone),
                             prefix: const Text("+91 "),
                             focusedBorder: OutlineInputBorder(
@@ -510,6 +652,18 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(
                                 color: Colors.grey.withOpacity(0.4),
+                              ),
+                            ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Colors.grey.withOpacity(0.4),
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Colors.red.withOpacity(0.4),
                               ),
                             ),
                           ),
@@ -525,7 +679,24 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         TextFormField(
                           controller: emailController,
                           decoration: InputDecoration(
-                            labelText: 'Email',
+                            label: RichText(
+                              text: TextSpan(
+                                text: 'Email',
+                                style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontSize: 16,
+                                ),
+                                children: const [
+                                  TextSpan(
+                                    text: '*',
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             prefixIcon: const Icon(Icons.email),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -546,7 +717,24 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         TextFormField(
                           controller: addressController,
                           decoration: InputDecoration(
-                            labelText: 'Residence',
+                            label: RichText(
+                              text: TextSpan(
+                                text: 'Residence',
+                                style: TextStyle(
+                                  color: Colors.grey[700], // Label text color
+                                  fontSize: 16,
+                                ),
+                                children: const [
+                                  TextSpan(
+                                    text: '*',
+                                    style: TextStyle(
+                                      color: Colors.red, // Asterisk color
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             prefixIcon: const Icon(Icons.location_on),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -563,24 +751,75 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                           ),
                         ),
                         const SizedBox(height: 16),
+
                         Row(
                           children: [
                             Expanded(
-                              child: MultiSelectDropdown.simpleList(
-                                list: myList,
-                                boxDecoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.grey.withOpacity(0.4)),
-                                  borderRadius: BorderRadius.circular(12),
+                              child: MultiDropdown<OurProject>(
+                                items: [
+                                  ...settingProvider.ourProject
+                                      .map((ele) => DropdownItem(
+                                          value: ele, label: ele.name))
+                                      .toList(),
+                                ],
+                                controller: multiselectController,
+                                enabled: true,
+                                searchEnabled: true,
+                                chipDecoration: const ChipDecoration(
+                                  backgroundColor: Colors.greenAccent,
+                                  wrap: true,
+                                  runSpacing: 2,
+                                  spacing: 10,
                                 ),
-                                initiallySelected: selectedProject,
-                                checkboxFillColor: Colors.grey.withOpacity(0.3),
-                                splashColor: Colors.grey.withOpacity(0.3),
-                                includeSearch: true,
-                                whenEmpty: "Projects",
-                                onChange: (newList) {
-                                  selectedProject =
-                                      newList.map((e) => e as String).toList();
+                                fieldDecoration: FieldDecoration(
+                                  hintText: 'Projects',
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black87),
+                                  prefixIcon: const Icon(
+                                      CupertinoIcons.building_2_fill),
+                                  showClearIcon: false,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ),
+                                dropdownDecoration: const DropdownDecoration(
+                                  marginTop: 2,
+                                  maxHeight: 500,
+                                  header: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Text(
+                                      'Select Projects',
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                dropdownItemDecoration: DropdownItemDecoration(
+                                  selectedIcon: const Icon(Icons.check_box,
+                                      color: Colors.grey),
+                                  disabledIcon: Icon(Icons.lock,
+                                      color: Colors.grey.shade300),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select a project';
+                                  }
+                                  return null;
+                                },
+                                onSelectionChange: (selectedItems) {
+                                  debugPrint(
+                                      "OnSelectionChange: $selectedItems");
                                 },
                               ),
                             ),
@@ -592,29 +831,78 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         Row(
                           children: [
                             Expanded(
-                              child: MultiSelectDropdown.simpleList(
-                                list: requirements,
-
-                                boxDecoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.grey.withOpacity(0.4),
-                                  ),
-                                  borderRadius: BorderRadius.circular(12),
+                              child: MultiDropdown<String>(
+                                items: [
+                                  ...settingProvider.requirements
+                                      .map((ele) =>
+                                          DropdownItem(value: ele, label: ele))
+                                      .toList(),
+                                ],
+                                controller: multiselectController1,
+                                enabled: true,
+                                searchEnabled: false,
+                                chipDecoration: const ChipDecoration(
+                                  backgroundColor: Colors.greenAccent,
+                                  wrap: true,
+                                  runSpacing: 2,
+                                  spacing: 10,
                                 ),
-                                initiallySelected: selectedRequirement,
-                                checkboxFillColor: Colors.grey.withOpacity(0.3),
-                                splashColor: Colors.grey.withOpacity(0.3),
-                                // includeSearch: true,
-                                whenEmpty: "Choice of Apartment",
-                                onChange: (newList) {
-                                  selectedRequirement =
-                                      requirements.map((e) => e).toList();
+                                fieldDecoration: FieldDecoration(
+                                  labelStyle: TextStyle(fontSize: 30),
+                                  hintText: 'Choice of Apartment',
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black87),
+                                  prefixIcon: const Icon(
+                                      CupertinoIcons.building_2_fill),
+                                  showClearIcon: false,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ),
+                                dropdownDecoration: const DropdownDecoration(
+                                  marginTop: 2,
+                                  maxHeight: 500,
+                                  header: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Text(
+                                      'Select Apartments',
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                dropdownItemDecoration: DropdownItemDecoration(
+                                  selectedIcon: const Icon(Icons.check_box,
+                                      color: Colors.grey),
+                                  disabledIcon: Icon(Icons.lock,
+                                      color: Colors.grey.shade300),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select a apartment';
+                                  }
+                                  return null;
+                                },
+                                onSelectionChange: (selectedItems) {
+                                  debugPrint(
+                                      "OnSelectionChange: $selectedItems");
                                 },
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(
+                        SizedBox(
                           height: 16,
                         ),
                         Row(
@@ -738,6 +1026,83 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         const SizedBox(
                           height: 16,
                         ),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: MultiDropdown<Employee>(
+                                items: [
+                                  ...settingProvider.salesManager
+                                      .map((ele) => DropdownItem(
+                                          value: ele,
+                                          label:
+                                              "${ele.firstName} ${ele.lastName} (${ele.designation?.designation ?? ""})"))
+                                      .toList(),
+                                ],
+                                controller: multiselectController2,
+                                enabled: true,
+                                searchEnabled: true,
+                                chipDecoration: const ChipDecoration(
+                                  backgroundColor: Colors.greenAccent,
+                                  wrap: true,
+                                  runSpacing: 2,
+                                  spacing: 10,
+                                ),
+                                fieldDecoration: FieldDecoration(
+                                  hintText: 'Select Sales Managers',
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black87),
+                                  prefixIcon:
+                                      const Icon(CupertinoIcons.person_2),
+                                  showClearIcon: false,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: const BorderSide(
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ),
+                                dropdownDecoration: const DropdownDecoration(
+                                  marginTop: 2,
+                                  maxHeight: 500,
+                                  header: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Text(
+                                      'Assign To',
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                dropdownItemDecoration: DropdownItemDecoration(
+                                  selectedIcon: const Icon(Icons.check_box,
+                                      color: Colors.grey),
+                                  disabledIcon: Icon(Icons.lock,
+                                      color: Colors.grey.shade300),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select Sales Managers';
+                                  }
+                                  return null;
+                                },
+                                onSelectionChange: (selectedItems) {
+                                  debugPrint(
+                                      "OnSelectionChange: $selectedItems");
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+
                         // Row(
                         // children: [
                         //     Expanded(

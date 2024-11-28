@@ -4,6 +4,7 @@ import 'package:ev_homes/pages/customer_pages/customer_forms/my_meeting_page.dar
 import 'package:ev_homes/pages/customer_pages/customer_forms/schedule_meeting.dart';
 import 'package:ev_homes/pages/customer_pages/customer_home_page.dart';
 import 'package:ev_homes/pages/customer_pages/customer_details/customer_offer_details_page.dart';
+import 'package:ev_homes/pages/customer_pages/customer_shorts/shorts_homepage.dart';
 import 'package:ev_homes/pages/customer_pages/emi_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -44,11 +45,11 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
         Tween<double>(begin: 0, end: 0.125).animate(_animationController);
 
     _videoPlayerController =
-        VideoPlayerController.asset('assets/video/dark_blue_bg.mp4')
+        VideoPlayerController.asset('assets/video/orange_bg.mp4')
           ..initialize().then((_) {
             _videoPlayerController.setLooping(true);
             _videoPlayerController.play();
-            setState(() {}); // Refresh UI after video initializes
+            setState(() {});
           });
   }
 
@@ -131,8 +132,7 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
         children: [
           Icon(
             icon,
-            color:
-                _currentIndex == index ? Colors.deepPurpleAccent : Colors.grey,
+            color: _currentIndex == index ? Colors.orange : Colors.grey,
           ),
           Text(
             label,
@@ -163,7 +163,7 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
                 width: 45,
                 height: 45,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2e2252),
+                  color: Colors.orange,
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
@@ -295,21 +295,21 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
 
   Widget _buildCircularButton() {
     return GestureDetector(
-      // onTap: () {
-      //   Navigator.push(
-      //       context, MaterialPageRoute(builder: (context) => ShortsHomepage()));
-      // },
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ShortsHomepage()));
+      },
       child: Column(
         children: [
           Container(
             width: 40,
             height: 50,
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: Colors.orange,
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.blue.withOpacity(0.3),
+                  color: Colors.orange.withOpacity(0.3),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -328,7 +328,7 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Colors.blue,
+              color: Colors.orange,
             ),
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:ev_homes/pages/admin_pages/upload_shorts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -209,10 +210,10 @@ class _MoreOptionPageState extends State<MoreOptionPage> {
             ),
             ListTile(
               onTap: () {
-                //TODO:// Upload Shorts
+                TODO: // Upload Shorts
 
-                // Navigator.of(context).push(
-                //     MaterialPageRoute(builder: (context) => UploadShorts()));
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => UploadShorts()));
               },
               leading: Icon(
                 Icons.create_new_folder_outlined,

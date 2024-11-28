@@ -164,17 +164,19 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          ...widget.project.configurations.map(
-                            (ele) {
+                          ...widget.project.configurations
+                              .map((ele) => ele
+                                  .configuration) // Extract configuration names
+                              .toSet() // Remove duplicates
+                              .map(
+                            (uniqueConfig) {
                               return GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    // If the selected configuration is already tapped, reset to "All"
-                                    if (selectedConfiguration ==
-                                        ele.configuration) {
+                                    if (selectedConfiguration == uniqueConfig) {
                                       selectedConfiguration = "All";
                                     } else {
-                                      selectedConfiguration = ele.configuration;
+                                      selectedConfiguration = uniqueConfig;
                                     }
                                   });
                                 },
@@ -186,15 +188,16 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                     vertical: 10,
                                   ),
                                   decoration: BoxDecoration(
-                                      color: const Color(0xfff4e9e0),
-                                      borderRadius: BorderRadius.circular(15),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.4),
-                                          blurRadius: 2,
-                                          spreadRadius: 1,
-                                        )
-                                      ]),
+                                    color: const Color(0xfff4e9e0),
+                                    borderRadius: BorderRadius.circular(15),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.4),
+                                        blurRadius: 2,
+                                        spreadRadius: 1,
+                                      )
+                                    ],
+                                  ),
                                   child: Row(
                                     children: [
                                       const Icon(
@@ -205,7 +208,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                       ),
                                       const SizedBox(width: 4.0),
                                       Text(
-                                        ele.configuration,
+                                        uniqueConfig,
                                         style: const TextStyle(
                                           color: Color(0xff80b4ab),
                                         ),

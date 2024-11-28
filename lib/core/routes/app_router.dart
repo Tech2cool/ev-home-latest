@@ -1,5 +1,6 @@
 import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/models/our_project.dart';
+import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_channer_partner_page.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_new_project_page.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_payment.dart';
@@ -16,6 +17,7 @@ import 'package:ev_homes/pages/admin_pages/admin_management/manage_site_visit_pa
 import 'package:ev_homes/pages/admin_pages/admin_profile_page.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/post_sale_head_pages/post_sale_head__tagging_list_page.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/post_sale_head_pages/post_sale_head_assigned.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/postsale_internal_tagging_details.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_details_page.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_list_page.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_review_page.dart';
@@ -275,6 +277,14 @@ class AppRoutes {
           return PostSaleHeadAssigned(
             status: status,
           );
+        },
+      ),
+      GoRoute(
+        path: '/post-sales-lead-details',
+        builder: (context, state) {
+          final lead = state.extra as PostSaleLead;
+
+          return PostsaleInternalTaggingDetails(lead: lead);
         },
       ),
     ],

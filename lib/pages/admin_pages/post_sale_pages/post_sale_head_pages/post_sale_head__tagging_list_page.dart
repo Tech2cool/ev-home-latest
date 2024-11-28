@@ -237,7 +237,7 @@ Widget _buildLeadCard(BuildContext context, PostSaleLead lead) {
     child: GestureDetector(
       onTap: () {
         GoRouter.of(context).pushReplacement(
-          "/postsalehead-internal-tagging-details",
+          "/post-sales-lead-details",
           extra: lead,
         );
       },

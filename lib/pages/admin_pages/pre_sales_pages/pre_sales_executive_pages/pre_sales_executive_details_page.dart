@@ -419,7 +419,7 @@ class _PreSalesExecutiveDetailsPageState
                       onChanged: (String? newValue) {
                         setState(() {
                           selectedLeadStage = newValue!;
-                          selectedLeadStatus = null; // Reset lead status
+                          selectedLeadStatus = null;
                         });
                       },
                     ),
@@ -667,11 +667,15 @@ class _PreSalesExecutiveDetailsPageState
 
                         // Check if loggedAdmin has an id and use it
                         if (loggedAdmin != null && loggedAdmin.id != null) {
-                          await Provider.of<SettingProvider>(context,
-                                  listen: false)
-                              .updateCallHistoryPreSales(widget.lead.id, data);
+                          await Provider.of<SettingProvider>(
+                            context,
+                            listen: false,
+                          ).updateCallHistoryPreSales(
+                            widget.lead.id,
+                            data,
+                          );
 
-                          Navigator.of(context).pop(); // Close the bottom sheet
+                          Navigator.of(context).pop();
                         } else {
                           Helper.showCustomSnackBar(
                             "Error: Logged admin or admin ID is null",

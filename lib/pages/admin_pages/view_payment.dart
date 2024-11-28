@@ -62,8 +62,8 @@ class _ViewPaymentState extends State<ViewPayment> {
                                   child: Table(
                                     columnWidths: const {0: FlexColumnWidth(1)},
                                     children: [
-                                      _buildVerticalTableRow(
-                                          "Project", customer.projects.name),
+                                      _buildVerticalTableRow("Project",
+                                          customer.projects.name ?? ""),
                                       _buildVerticalTableRow(
                                           "Flat No", customer.flatNo),
                                       _buildVerticalTableRow(

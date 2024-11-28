@@ -508,7 +508,7 @@ class _AddPostsaleLeadState extends State<AddPostsaleLead> {
                           children: [
                             Expanded(
                               child: Text(
-                                project.name,
+                                project.name ?? "",
                                 overflow: TextOverflow.ellipsis,
                                 maxLines: 1,
                               ),

@@ -51,7 +51,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildUserInfo(loggedChannelPartner!.email),
+            _buildUserInfo(loggedChannelPartner?.email ?? ""),
             _buildInfoTile(
               title: 'My Account Information',
               onTap: () => Navigator.push(

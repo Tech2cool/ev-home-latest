@@ -348,7 +348,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         items: closingMangers
                             .map((ele) => DropdownMenuItem(
                                   value: ele,
-                                  child: Text(ele.firstName),
+                                  child: Text(ele.firstName ?? ""),
                                 ))
                             .toList(),
                         hint: const Text("User"),

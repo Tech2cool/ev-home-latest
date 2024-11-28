@@ -133,14 +133,14 @@ class _EditEmployeeState extends State<EditEmployee> {
   void initState() {
     super.initState();
 
-    firstNameController.text = widget.emp.firstName;
-    lastNameController.text = widget.emp.lastName;
-    emailController.text = widget.emp.email;
+    firstNameController.text = widget.emp.firstName ?? "";
+    lastNameController.text = widget.emp.lastName ?? "";
+    emailController.text = widget.emp.email ?? "";
     phoneController.text = widget.emp.phoneNumber.toString();
-    addressController.text = widget.emp.address;
-    employeIdController.text = widget.emp.employeeId;
-    _selectedGender = widget.emp.gender.toLowerCase();
-    dateOfBirthController.text = widget.emp.dateOfBirth;
+    addressController.text = widget.emp.address ?? "";
+    employeIdController.text = widget.emp.employeeId ?? "";
+    _selectedGender = widget.emp.gender?.toLowerCase() ?? "";
+    dateOfBirthController.text = widget.emp.dateOfBirth ?? "";
     _selectedDepartment = widget.emp.department;
     _selectedDesignation = widget.emp.designation;
     _selectedDivision = widget.emp.division;

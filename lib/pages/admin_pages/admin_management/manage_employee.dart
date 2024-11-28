@@ -50,8 +50,8 @@ class _ManageEmployeeState extends State<ManageEmployee> {
     final employees = settingProvider.employees;
     // Filter employees based on the search query
     final filteredEmployees = employees.where((employee) {
-      final nameLower = employee.firstName.toLowerCase();
-      final lastNameLower = employee.lastName.toLowerCase();
+      final nameLower = employee.firstName?.toLowerCase() ?? '';
+      final lastNameLower = employee.lastName?.toLowerCase() ?? '';
       final searchLower = searchQuery.toLowerCase();
       return nameLower.contains(searchLower) ||
           lastNameLower.contains(searchLower);
@@ -114,8 +114,9 @@ class _ManageEmployeeState extends State<ManageEmployee> {
                                       ? Image.network(employee.profilePic!)
                                       : Text(
                                           employee.firstName
-                                              .substring(0, 1)
-                                              .toUpperCase(),
+                                                  ?.substring(0, 1)
+                                                  .toUpperCase() ??
+                                              "",
                                           style: const TextStyle(
                                             color: Colors.white,
                                           ),
@@ -140,7 +141,7 @@ class _ManageEmployeeState extends State<ManageEmployee> {
                                         height:
                                             4), // Space between designation and email
                                     Text(
-                                      employee.email,
+                                      employee.email ?? "",
                                       style: TextStyle(color: Colors.grey[600]),
                                     ),
                                   ],

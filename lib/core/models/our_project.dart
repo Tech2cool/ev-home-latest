@@ -6,8 +6,8 @@ import 'package:ev_homes/core/models/configuration.dart';
 
 class OurProject {
   final String? id;
-  final String name;
-  final String description;
+  final String? name;
+  final String? description;
   final String? showCaseImage;
   final List<String> carouselImages;
   final List<Configuration> configurations;

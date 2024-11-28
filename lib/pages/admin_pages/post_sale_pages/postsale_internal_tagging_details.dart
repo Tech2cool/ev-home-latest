@@ -602,7 +602,7 @@ class _PostsaleInternalTaggingDetailsState
                     children: [
                       Expanded(
                         child: Text(
-                          project.name,
+                          project.name ?? '',
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                         ),

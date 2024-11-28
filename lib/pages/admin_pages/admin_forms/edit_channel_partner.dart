@@ -111,11 +111,11 @@ class _EditEmployeeState extends State<EditChannelPartner> {
 
     firstNameController.text = widget.cp.firstName ?? '';
     lastNameController.text = widget.cp.lastName ?? '';
-    emailController.text = widget.cp.email;
+    emailController.text = widget.cp.email ?? '';
     phoneController.text = widget.cp.phoneNumber.toString();
     phoneController.text = widget.cp.phoneNumber?.toString() ?? '';
     dateOfBirthController.text = widget.cp.dateOfBirth ?? '';
-    _selectedGender = widget.cp.gender.toLowerCase();
+    _selectedGender = widget.cp.gender?.toLowerCase() ?? '';
     homeAddressController.text = widget.cp.homeAddress ?? '';
     firmNameController.text = widget.cp.firmName ?? '';
     firmAddressController.text = widget.cp.firmAddress ?? '';

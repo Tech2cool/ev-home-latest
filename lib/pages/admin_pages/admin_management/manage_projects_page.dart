@@ -43,7 +43,7 @@ class _ManageProjectsPageState extends State<ManageProjectsPage> {
     // Filter projects based on the search query
     final settingProvider = Provider.of<SettingProvider>(context);
     final filteredProjects = settingProvider.ourProject.where((project) {
-      final nameLower = project.name.toLowerCase();
+      final nameLower = project.name?.toLowerCase() ?? "";
       final searchLower = searchQuery.toLowerCase();
       return nameLower.contains(searchLower);
     }).toList();
@@ -107,7 +107,7 @@ class _ManageProjectsPageState extends State<ManageProjectsPage> {
                                   //   style: const TextStyle(color: Colors.white),
                                   // ),
                                 ),
-                                title: Text(project.name),
+                                title: Text(project.name ?? ""),
                                 trailing: PopupMenuButton<String>(
                                   onSelected: (value) {
                                     if (value == 'Edit') {

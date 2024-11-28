@@ -127,7 +127,7 @@ class PropertyCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          project.name,
+                          project.name ?? '',
                           style: const TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,

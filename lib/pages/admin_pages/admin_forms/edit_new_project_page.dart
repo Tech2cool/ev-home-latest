@@ -92,10 +92,10 @@ class _EditNewProjectPageState extends State<EditNewProjectPage> {
   void initState() {
     super.initState();
 
-    _projectNameController.text = widget.ourProj.name;
+    _projectNameController.text = widget.ourProj.name ?? "";
     _locationController.text = widget.ourProj.locationName!;
     _locationLinkController.text = widget.ourProj.locationLink!;
-    _descriptionController.text = widget.ourProj.description;
+    _descriptionController.text = widget.ourProj.description ?? '';
     _contactController.text = widget.ourProj.contactNumber.toString();
     showcaseImg = widget.ourProj.showCaseImage;
     // _selectedBrochure = widget.ourProj.brochure;

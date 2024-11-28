@@ -167,7 +167,7 @@ class _AddPaymentState extends State<AddPayment> {
                         children: [
                           Expanded(
                             child: Text(
-                              project.name,
+                              project.name ?? "",
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
                             ),

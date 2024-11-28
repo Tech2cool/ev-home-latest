@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:ev_homes/core/models/employee.dart';
+import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/models/site_visit.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
@@ -55,7 +56,8 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   Employee? _selectedClosingManger;
   Employee? _selectedTeamLeader;
   final List myList = const ['Ev 9 Square', 'Ev heart city', 'Marina Bay'];
-  List<String> selectedProject = [];
+  List<OurProject> selectedProject = [];
+  // List<String> selectedProject = [];
   List<String> selectedRequirement = [];
   List<String> listofSource = ['Walk-in', 'CP', 'Ref'];
   Employee? _selectedDataEntryUser;
@@ -348,7 +350,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         items: closingMangers
                             .map((ele) => DropdownMenuItem(
                                   value: ele,
-                                  child: Text(ele.firstName),
+                                  child: Text(ele.firstName ?? ""),
                                 ))
                             .toList(),
                         hint: const Text("User"),
@@ -579,8 +581,9 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                 includeSearch: true,
                                 whenEmpty: "Projects",
                                 onChange: (newList) {
-                                  selectedProject =
-                                      newList.map((e) => e as String).toList();
+                                  //TODO:our project multi select
+                                  // selectedProject =
+                                  //     newList.map((e) => e as String).toList();
                                 },
                               ),
                             ),

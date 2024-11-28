@@ -1,3 +1,4 @@
+import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:flutter/material.dart';
 import '../../pages/cp_pages/resale_screen.dart';
 
@@ -16,7 +17,7 @@ class ResalePropertyList extends StatelessWidget {
     // Add more properties here
   ];
 
-   ResalePropertyList({super.key});
+  ResalePropertyList({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,8 @@ class PropertyCardVertical1 extends StatelessWidget {
   final Map<String, String> property;
   final BuildContext context;
 
-  const PropertyCardVertical1({super.key, required this.property, required this.context});
+  const PropertyCardVertical1(
+      {super.key, required this.property, required this.context});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +46,8 @@ class PropertyCardVertical1 extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => const ResaleScreen()), // Navigate to ResaleScreen
+              builder: (context) =>
+                  const ResaleScreen()), // Navigate to ResaleScreen
         );
       },
       child: Container(
@@ -55,7 +58,8 @@ class PropertyCardVertical1 extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: const Color(0xFF80B4AB).withOpacity(0.8), // Grey shadow color
+              color: const Color.fromARGB(255, 133, 0, 0)
+                  .withOpacity(0.6), // Grey shadow color
               offset: const Offset(3, 3), // Position the shadow
               blurRadius: 8, // Blur effect
               spreadRadius: 3, // Spread the shadow
@@ -66,12 +70,8 @@ class PropertyCardVertical1 extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
           child: Stack(
             children: [
-              Positioned.fill(
-                child: Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0XFFF4E9E0), // Static background color
-                  ),
-                ),
+              const Positioned.fill(
+                child: AnimatedGradientBg(),
               ),
               Container(
                 decoration: BoxDecoration(
@@ -124,7 +124,7 @@ class PropertyCardVertical1 extends StatelessWidget {
                             Text(
                               property['title']!,
                               style: const TextStyle(
-                                color: Color(0xFF80b4ab),
+                                color: Colors.black,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
                               ),
@@ -134,14 +134,14 @@ class PropertyCardVertical1 extends StatelessWidget {
                               children: [
                                 const Icon(
                                   Icons.location_on,
-                                  color: Color(0xFF424D51),
+                                  color: Color.fromARGB(255, 133, 0, 0),
                                   size: 18,
                                 ),
                                 const SizedBox(width: 5),
                                 Text(
                                   property['location']!,
                                   style: const TextStyle(
-                                    color: Color(0xFF80b4ab),
+                                    color: Colors.black,
                                     fontSize: 14,
                                   ),
                                 ),

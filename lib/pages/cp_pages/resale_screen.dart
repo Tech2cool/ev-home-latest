@@ -11,21 +11,21 @@ class ResaleScreen extends StatefulWidget {
 
 class _ResaleScreenState extends State<ResaleScreen> {
   final List<String> imgList = [
-    'assets/images/resalbul1.jpg',
-    'assets/images/resalbul2.jpg',
-    'assets/images/resalbul3.jpg',
-    'assets/images/resalbul4.jpg',
+    'http://cdn.evhomes.tech/539e6919-1920-429e-96aa-bb8445d8c140-IMG-20241128-WA0006.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6IjUzOWU2OTE5LTE5MjAtNDI5ZS05NmFhLWJiODQ0NWQ4YzE0MC1JTUctMjAyNDExMjgtV0EwMDA2LmpwZyIsImlhdCI6MTczMjc4NDAzNH0.7MSymzf8SMq-XxVGz-xsNsUD88YtzPKyW8jMsxfCN0k',
+    'http://cdn.evhomes.tech/afc0ea3c-a8bc-420b-963d-8b2f8544bb7a-IMG-20241128-WA0005.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImFmYzBlYTNjLWE4YmMtNDIwYi05NjNkLThiMmY4NTQ0YmI3YS1JTUctMjAyNDExMjgtV0EwMDA1LmpwZyIsImlhdCI6MTczMjc4NDA5NH0.qfUyPmNa7WOkvq4JDTl8TuylDykZxuc8RSJqqacT35E',
+    'http://cdn.evhomes.tech/ff831d85-327e-4d03-b815-c4dc6092ffc7-IMG-20241128-WA0004.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImZmODMxZDg1LTMyN2UtNGQwMy1iODE1LWM0ZGM2MDkyZmZjNy1JTUctMjAyNDExMjgtV0EwMDA0LmpwZyIsImlhdCI6MTczMjc4NDEzN30.fQdypA7xIyJ1m8slPu3IGpEsOm6F9neT2nMsyFojhHs',
+    'http://cdn.evhomes.tech/6ce2510d-1372-426e-9764-79c55bc232f6-IMG-20241128-WA0003.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6IjZjZTI1MTBkLTEzNzItNDI2ZS05NzY0LTc5YzU1YmMyMzJmNi1JTUctMjAyNDExMjgtV0EwMDAzLmpwZyIsImlhdCI6MTczMjc4NDE4MH0.AQ_jI87OMxfaIPDh4QzI0Dw_hfaeYnV91KGBP7qUuPA',
   ];
 
   bool _isHovered = false; // Track hover state for the button
 
   // List of nearby attractions with their images
   final List<String> attractions = [
-    'assets/images/badroom1.jpg',
-    'assets/images/bedroom2.jpg',
-    'assets/images/kichken.jpg',
-    'assets/images/livingroom1.jpg',
-    'assets/images/washroom.jpg',
+    'http://cdn.evhomes.tech/bef9c013-f328-432c-ab5c-264666448e24-IMG-20241128-WA0009.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImJlZjljMDEzLWYzMjgtNDMyYy1hYjVjLTI2NDY2NjQ0OGUyNC1JTUctMjAyNDExMjgtV0EwMDA5LmpwZyIsImlhdCI6MTczMjc4MzYwMX0.fZW1VFfEKSnJNIOFKZ720P9zYspTbVzXQWAtWiglBM0',
+    'http://cdn.evhomes.tech/1c585c3e-30a8-4147-b7d5-4cbc50c245e0-IMG-20241128-WA0008.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6IjFjNTg1YzNlLTMwYTgtNDE0Ny1iN2Q1LTRjYmM1MGMyNDVlMC1JTUctMjAyNDExMjgtV0EwMDA4LmpwZyIsImlhdCI6MTczMjc4MzY4Mn0.qKP98h8s4scuEvg6II3TMWhRVAh8qpJJg-eal2UHObw',
+    'http://cdn.evhomes.tech/feafc7ac-68f8-46e7-9af1-5c78a042b881-IMG-20241128-WA0007.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImZlYWZjN2FjLTY4ZjgtNDZlNy05YWYxLTVjNzhhMDQyYjg4MS1JTUctMjAyNDExMjgtV0EwMDA3LmpwZyIsImlhdCI6MTczMjc4MzUxNH0.qgb1rb30qQaHbp93FjKwqz8BR1rG3PmcdOKmM7iyAC0',
+    'http://cdn.evhomes.tech/fc647791-2473-47d3-a1ea-439f0c52edd3-IMG-20241128-WA0010.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImZjNjQ3NzkxLTI0NzMtNDdkMy1hMWVhLTQzOWYwYzUyZWRkMy1JTUctMjAyNDExMjgtV0EwMDEwLmpwZyIsImlhdCI6MTczMjc4Mzg2Mn0.mBoAModp-JFzyy5x3qLhj3n3Hu9Gg-_sa6UCWCeCGio',
+    'https://cdn.evhomes.tech/0c5bbb3a-0c28-4ff9-87cb-9c7eb4989afc-IMG-20241128-WA0002.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6IjBjNWJiYjNhLTBjMjgtNGZmOS04N2NiLTljN2ViNDk4OWFmYy1JTUctMjAyNDExMjgtV0EwMDAyLmpwZyIsImlhdCI6MTczMjc4MzIxNH0.9UBXPVZK1zSPF4wuuMAOlkKbLN29YCCMPbxfqRmz0Ew',
   ];
 
   // List of nearby places with their icons
@@ -95,7 +95,7 @@ class _ResaleScreenState extends State<ResaleScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
-                      child: Image.asset(
+                      child: Image.network(
                         item,
                         fit: BoxFit.cover,
                         width: double.infinity,
@@ -292,7 +292,7 @@ class _ResaleScreenState extends State<ResaleScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
-                      child: Image.asset(
+                      child: Image.network(
                         item,
                         fit: BoxFit.cover,
                         width: double.infinity,

@@ -614,6 +614,31 @@ class ApiService {
     }
   }
 
+  Future<PostSaleLead?> getBookingByFlat(String flatNo) async {
+    try {
+      final Response response = await _dio.get('/post-sale-lead-by-id/$flatNo');
+      final Map<String, dynamic> data = response.data;
+      final items = data['data'];
+
+      return PostSaleLead.fromJson(items);
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+        print("pass 2");
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
+      print("pass 3");
+      return null;
+    }
+  }
+
   // Search channel partner by query
   Future<PaginationModel<ChannelPartner>?> searchChannelPartner(
       [String query = '', int page = 1, int limit = 10]) async {

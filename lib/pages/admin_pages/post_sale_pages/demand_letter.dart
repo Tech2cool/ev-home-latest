@@ -745,7 +745,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
     double baseAmount = (totalDue / 1.05);
     print(baseAmount);
     double gstAmount = totalDue - baseAmount;
-    double tdsAmount = baseAmount * 0.1;
+    double tdsAmount = baseAmount * 0.01;
     baseAmount = baseAmount - tdsAmount;
 
     double receivedBase =
@@ -760,7 +760,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
     double remainingTotal = remainingBase + remainingGst + remainingTds;
     double latePaymentCharge = remainingBase * (reminderDays / 100.0);
     double latePaymentGST = latePaymentCharge * 0.18;
-    double latetdspayment = "-" as double;
+    double latetdspayment = 0;
     double totalLatePayment =
         latePaymentCharge + latePaymentGST + latetdspayment;
     double finalBase = remainingBase + latePaymentCharge;

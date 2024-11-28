@@ -66,6 +66,16 @@ class SettingProvider extends ChangeNotifier {
     totalItems: 0,
     data: [],
   );
+  PaginationModel<PostSaleLead> _leadsPostSalesExectives =
+      PaginationModel<PostSaleLead>(
+    code: 404,
+    message: '',
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+    totalItems: 0,
+    data: [],
+  );
 
   List<TeamSection> _teamSections = [];
   List<SiteVisit> _siteVisits = [];
@@ -132,6 +142,8 @@ class SettingProvider extends ChangeNotifier {
   PaginationModel<PostSaleLead> get leadsPostSale => _leadsPostSale;
   PaginationModel<Lead> get leadsTeamLeader => _leadsTeamLeader;
   PaginationModel<Lead> get leadsPreSaleExecutive => _leadsPreSalesExectives;
+  PaginationModel<PostSaleLead> get leadsPostSaleExecutive =>
+      _leadsPostSalesExectives;
   List<SiteVisit> get siteVisits => _siteVisits;
   List<OurProject> get ourProject => _ourProject;
   List<ChannelPartner> get channelPartner => _channelPartner;
@@ -325,6 +337,24 @@ class SettingProvider extends ChangeNotifier {
     final leads = await _apiService.getPreSalesExecutivesLeads(id);
 
     _leadsPreSalesExectives = leads;
+    notifyListeners();
+    return leads;
+  }
+
+  Future<PaginationModel<PostSaleLead>> getPostSalesExecutiveLeads(
+    String id, [
+    String query = '',
+    int page = 1,
+    int limit = 10,
+  ]) async {
+    final leads = await _apiService.getPostSalesExecutivesLeads(
+      id,
+      query,
+      page,
+      limit,
+    );
+
+    _leadsPostSalesExectives = leads;
     notifyListeners();
     return leads;
   }

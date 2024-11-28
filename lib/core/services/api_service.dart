@@ -30,9 +30,7 @@ const storage = FlutterSecureStorage();
 
 const baseUrl = "http://192.168.1.180:8082";
 
-// const baseUrl = "http://192.168.1.107:8082";
-
-const baseUrl = "https://api.evhomes.tech";
+// const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -1996,7 +1994,7 @@ class ApiService {
     }
   }
 
-  // Leads for teamleader
+  // Leads for pre sales exe
   Future<PaginationModel<Lead>> getPreSalesExecutivesLeads(
     String id, [
     String query = '',
@@ -2106,6 +2104,86 @@ class ApiService {
   //     return [];
   //   }
   // }
+
+  // Leads for pre sales exe
+  Future<PaginationModel<PostSaleLead>> getPostSalesExecutivesLeads(
+    String id, [
+    String query = '',
+    int page = 1,
+    int limit = 10,
+    String? status,
+  ]) async {
+    try {
+      var url =
+          '/post-sale-leads-for-pse/$id?query=$query&page=$page&limit=$limit';
+      final Response response = await _dio.get(url);
+      if (status != null) {
+        url += '&status=$status';
+      }
+      print(url);
+      if (response.data['code'] != 200) {
+        print('pass 0.1');
+        Helper.showCustomSnackBar(response.data['message']);
+        final emptyPagination = PaginationModel<PostSaleLead>(
+          code: 404,
+          message: '',
+          page: page,
+          limit: limit,
+          totalPages: 1,
+          totalItems: 0,
+          data: [],
+        );
+
+        return emptyPagination;
+      }
+
+      print('pass 0');
+      final List<dynamic> dataList = response.data["data"];
+      print(dataList);
+
+      final List<PostSaleLead> leads = dataList.map((data) {
+        return PostSaleLead.fromJson(data as Map<String, dynamic>);
+      }).toList();
+
+      // print('pass id $id');
+      print('leads ${leads.length}');
+      print('leads data ${dataList.length}');
+      return PaginationModel<PostSaleLead>(
+        code: 404,
+        message: response.data["message"],
+        page: page,
+        limit: limit,
+        totalPages: response.data["totalPages"],
+        totalItems: response.data["totalItems"],
+        // pendingCount: response.data["pendingCount"],
+        // assignedCount: response.data["assignedCount"],
+        // followUpCount: response.data["followUpCount"],
+        // contactedCount: response.data["contactedCount"],
+        data: leads,
+      );
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+      Helper.showCustomSnackBar(errorMessage);
+      print(e);
+      return PaginationModel<PostSaleLead>(
+        code: 500,
+        message: e.response?.data['message'] ?? errorMessage,
+        page: page,
+        limit: limit,
+        totalPages: 1,
+        totalItems: 0,
+        data: [],
+      );
+    }
+  }
 
   Future<List<Employee>> getPreSalesExecutives(String tlId) async {
     try {

@@ -1,4 +1,5 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
+import 'package:ev_homes/components/graph/animated_pie_chart.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -62,55 +63,62 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
     }
   }
 
-  final Map<String, List<PieChartSectionData>> chartData = {
-    "lead_to_visit": [
-      PieChartSectionData(
-        value: visitepercentage,
-        color: Colors.blue,
-        title: 'visit1 ${visitepercentage.toStringAsFixed(1)}%',
-      ),
-      PieChartSectionData(
-        value: 100 - visitepercentage,
-        color: Colors.purple,
-        title: 'Leads ${(100 - visitepercentage).toStringAsFixed(1)}%',
-      ),
-    ],
-    "visit1_to_booking": [
-      PieChartSectionData(
-        value: visitbooking,
-        color: Colors.red,
-        title: 'Booking ${visitbooking.toStringAsFixed(1)}%',
-      ),
-      PieChartSectionData(
-        value: 100 - visitbooking,
-        color: Colors.blue,
-        title: 'Visit1 ${(100 - visitbooking).toStringAsFixed(1)}%',
-      ),
-    ],
-    "visit2_to_booking": [
-      PieChartSectionData(
-        value: onthervisite,
-        color: Colors.green,
-        title: 'Booking ${onthervisite.toStringAsFixed(1)}%',
-      ),
-      PieChartSectionData(
-        value: 100 - onthervisite,
-        color: Colors.pink,
-        title: 'Visit2 ${(100 - onthervisite).toStringAsFixed(1)}%',
-      ),
-    ],
-    "lead_to_booking": [
-      PieChartSectionData(
-        value: onthervisite,
-        color: Colors.brown,
-        title: 'Booking ${onthervisite.toStringAsFixed(1)}%',
-      ),
-      PieChartSectionData(
-        value: 100 - onthervisite,
-        color: Colors.blue,
-        title: 'Leads ${(100 - onthervisite).toStringAsFixed(1)}%',
-      ),
-    ],
+  // final Map<String, List<PieChartSectionData>> chartData = {
+  //   "lead_to_visit": [
+  //     PieChartSectionData(
+  //       value: visitepercentage,
+  //       color: Colors.blue,
+  //       title: 'visit1 ${visitepercentage.toStringAsFixed(1)}%',
+  //     ),
+  //     PieChartSectionData(
+  //       value: 100 - visitepercentage,
+  //       color: Colors.purple,
+  //       title: 'Leads ${(100 - visitepercentage).toStringAsFixed(1)}%',
+  //     ),
+  //   ],
+  //   "visit1_to_booking": [
+  //     PieChartSectionData(
+  //       value: visitbooking,
+  //       color: Colors.red,
+  //       title: 'Booking ${visitbooking.toStringAsFixed(1)}%',
+  //     ),
+  //     PieChartSectionData(
+  //       value: 100 - visitbooking,
+  //       color: Colors.blue,
+  //       title: 'Visit1 ${(100 - visitbooking).toStringAsFixed(1)}%',
+  //     ),
+  //   ],
+  //   "visit2_to_booking": [
+  //     PieChartSectionData(
+  //       value: onthervisite,
+  //       color: Colors.green,
+  //       title: 'Booking ${onthervisite.toStringAsFixed(1)}%',
+  //     ),
+  //     PieChartSectionData(
+  //       value: 100 - onthervisite,
+  //       color: Colors.pink,
+  //       title: 'Visit2 ${(100 - onthervisite).toStringAsFixed(1)}%',
+  //     ),
+  //   ],
+  //   "lead_to_booking": [
+  //     PieChartSectionData(
+  //       value: onthervisite,
+  //       color: Colors.brown,
+  //       title: 'Booking ${onthervisite.toStringAsFixed(1)}%',
+  //     ),
+  //     PieChartSectionData(
+  //       value: 100 - onthervisite,
+  //       color: Colors.blue,
+  //       title: 'Leads ${(100 - onthervisite).toStringAsFixed(1)}%',
+  //     ),
+  //   ],
+  // };
+
+  final Map<String, Map<String, int>> chartData = {
+    "lead_to_visit": {"visited": 60, "notVisited": 40},
+    "visit1_to_booking": {"visited": 30, "notVisited": 70},
+    "visit2_to_booking": {"booking": 20, "Visited2": 80},
+    "lead_to_booking": {"booking": 15, "notVisited": 85},
   };
 
   @override
@@ -272,6 +280,49 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           border: Border.all(color: Colors.grey.shade400),
                         ),
                         child: DropdownButtonHideUnderline(
+                          //     child: DropdownButton<String>(
+                          //       isExpanded: true,
+                          //       hint: const Text("Select an option"),
+                          //       value: selectedOption,
+                          //       items: const [
+                          //         DropdownMenuItem(
+                          //           value: "lead_to_visit",
+                          //           child: Text("Lead to Visit"),
+                          //         ),
+                          //         DropdownMenuItem(
+                          //           value: "visit1_to_booking",
+                          //           child: Text("Visit 1 to Booking"),
+                          //         ),
+                          //         DropdownMenuItem(
+                          //           value: "visit2_to_booking",
+                          //           child: Text("Visit 2 to Booking"),
+                          //         ),
+                          //         DropdownMenuItem(
+                          //           value: "lead_to_booking",
+                          //           child: Text("Lead to Booking"),
+                          //         ),
+                          //       ],
+                          //       onChanged: (value) {
+                          //         setState(() {
+                          //           selectedOption = value;
+                          //         });
+                          //       },
+                          //       icon: const Icon(Icons.arrow_drop_down),
+                          //     ),
+                          //   ),
+                          // ),
+                          // if (selectedOption != null)
+                          //   SizedBox(
+                          //     height: 250,
+                          //     width: 400,
+                          //     child: Stack(
+                          //       alignment: Alignment.center,
+                          //       children: [
+                          //         PieChart(
+                          //           PieChartData(
+                          //             sections: chartData[selectedOption]!,
+                          //             centerSpaceRadius: 70,
+                          //             sectionsSpace: 2,
                           child: DropdownButton<String>(
                             isExpanded: true,
                             hint: const Text("Select an option"),
@@ -279,12 +330,20 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                             items: const [
                               DropdownMenuItem(
                                 value: "lead_to_visit",
-                                child: Text("Lead to Visit"),
+                                child: Text("Leads to Visit"),
                               ),
+                              // ),
+                              // const Text(
+                              //   "Conversion",
+                              //   style: TextStyle(
+                              //     fontSize: 18,
+                              //     fontWeight: FontWeight.bold,
                               DropdownMenuItem(
                                 value: "visit1_to_booking",
                                 child: Text("Visit 1 to Booking"),
                               ),
+                              //   ),
+                              // ],
                               DropdownMenuItem(
                                 value: "visit2_to_booking",
                                 child: Text("Visit 2 to Booking"),
@@ -303,29 +362,23 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           ),
                         ),
                       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      // Container(
+                      //   margin:
+                      //       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      //   padding: const EdgeInsets.all(10),
+                      //   decoration: BoxDecoration(
+                      //     borderRadius: BorderRadius.circular(10),
+                      //     color: const Color.fromARGB(116, 218, 207, 120),
                       if (selectedOption != null)
-                        SizedBox(
-                          height: 250,
-                          width: 400,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              PieChart(
-                                PieChartData(
-                                  sections: chartData[selectedOption]!,
-                                  centerSpaceRadius: 70,
-                                  sectionsSpace: 2,
-                                ),
-                              ),
-                              const Text(
-                                "Conversion",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
+                        AnimatedPieChart(
+                          visited: chartData[selectedOption]!['visited']!,
+                          notVisited: chartData[selectedOption]!['notVisited']!,
+                          // Visited2: chartData[selectedOption]!['Visited2']!,
+                          // booking: chartData[selectedOption]!['booking']!,
+                          title: 'conversion',
                         ),
                     ],
                   ),
@@ -542,7 +595,6 @@ class MyCard extends StatelessWidget {
   final Color? textColor;
   final Color? bgColor;
   final List<BoxShadow>? boxShadow;
-
   const MyCard({
     required this.label,
     required this.value,
@@ -551,7 +603,6 @@ class MyCard extends StatelessWidget {
     this.width,
     this.boxShadow,
   });
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -607,14 +658,12 @@ class TargetCircle extends StatelessWidget {
   final String number; // Replace the icon with number
   final String label;
   final Color backgroundColor;
-
   const TargetCircle({
     required this.number,
     required this.label,
     required this.backgroundColor,
     super.key,
   });
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -767,7 +816,6 @@ DataCell _buildNavigableDataCell(BuildContext context, String text) {
     GestureDetector(
       onTap: () {
         //TODO: closing manager Client details
-
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(
@@ -862,7 +910,6 @@ void _showAssignTaskDialog(BuildContext context) {
   final subjectController = TextEditingController();
   final taskNameController = TextEditingController();
   final taskDetailsController = TextEditingController();
-
   showDialog(
     context: context,
     builder: (context) {

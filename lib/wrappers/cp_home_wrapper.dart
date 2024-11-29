@@ -117,7 +117,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
             icon,
             color: _currentIndex == index
                 ? const Color.fromARGB(255, 133, 0, 0)
-                : const Color.fromARGB(255, 133, 0, 0),
+                : Colors.grey[600],
             size: 24,
           ),
           Text(

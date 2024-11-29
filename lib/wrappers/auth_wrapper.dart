@@ -6,6 +6,8 @@ import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/core/services/shared_pref_service.dart';
 import 'package:ev_homes/pages/starter_page.dart';
 import 'package:ev_homes/wrappers/admin_home_wrapper.dart';
+import 'package:ev_homes/wrappers/cp_home_wrapper.dart';
+import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
@@ -57,12 +59,11 @@ class _AuthWrapperState extends State<AuthWrapper> {
           final user = dataSnapshot.data!;
           if (user["role"] == 'employee') {
             return const AdminHomeWrapper();
-          }
-          /*else if (user["role"] == 'customer') {
+          } else if (user["role"] == 'customer') {
             return const CustomerHomeWrapper();
           } else if (user["role"] == 'channel-partner') {
             return const CpHomeWrapper();
-          }*/
+          }
           return const StarterPage();
         }
         return const StarterPage();

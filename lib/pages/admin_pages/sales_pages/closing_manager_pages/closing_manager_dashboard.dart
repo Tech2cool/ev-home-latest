@@ -1,6 +1,7 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -47,7 +48,12 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
         widget.id ?? settingProvider.loggedAdmin!.id!,
       );
 
-      await settingProvider.getMyTarget();
+      await settingProvider.getMyTarget(
+        widget.id ?? settingProvider.loggedAdmin!.id!,
+      );
+      await settingProvider.getClosingManagerGraph(
+        widget.id ?? settingProvider.loggedAdmin!.id!,
+      );
       // await settingProvider.getLeadsTeamLeaderGraph(
       //   widget.id ?? settingProvider.loggedAdmin!.id!,
       // );
@@ -62,57 +68,6 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
     }
   }
 
-  final Map<String, List<PieChartSectionData>> chartData = {
-    "lead_to_visit": [
-      PieChartSectionData(
-        value: visitepercentage,
-        color: Colors.blue,
-        title: 'visit1 ${visitepercentage.toStringAsFixed(1)}%',
-      ),
-      PieChartSectionData(
-        value: 100 - visitepercentage,
-        color: Colors.purple,
-        title: 'Leads ${(100 - visitepercentage).toStringAsFixed(1)}%',
-      ),
-    ],
-    "visit1_to_booking": [
-      PieChartSectionData(
-        value: visitbooking,
-        color: Colors.red,
-        title: 'Booking ${visitbooking.toStringAsFixed(1)}%',
-      ),
-      PieChartSectionData(
-        value: 100 - visitbooking,
-        color: Colors.blue,
-        title: 'Visit1 ${(100 - visitbooking).toStringAsFixed(1)}%',
-      ),
-    ],
-    "visit2_to_booking": [
-      PieChartSectionData(
-        value: onthervisite,
-        color: Colors.green,
-        title: 'Booking ${onthervisite.toStringAsFixed(1)}%',
-      ),
-      PieChartSectionData(
-        value: 100 - onthervisite,
-        color: Colors.pink,
-        title: 'Visit2 ${(100 - onthervisite).toStringAsFixed(1)}%',
-      ),
-    ],
-    "lead_to_booking": [
-      PieChartSectionData(
-        value: onthervisite,
-        color: Colors.brown,
-        title: 'Booking ${onthervisite.toStringAsFixed(1)}%',
-      ),
-      PieChartSectionData(
-        value: 100 - onthervisite,
-        color: Colors.blue,
-        title: 'Leads ${(100 - onthervisite).toStringAsFixed(1)}%',
-      ),
-    ],
-  };
-
   @override
   void initState() {
     super.initState();
@@ -125,6 +80,59 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
     final teamLeaderLeads = settingProvider.leadsTeamLeader;
     final leads = teamLeaderLeads.data;
     final target = settingProvider.myTarget;
+    final graphInfo = settingProvider.closingManagerGraph;
+    double visitPercentage = (graphInfo.visitCount * 100) / graphInfo.leadCount;
+
+    final Map<String, List<PieChartSectionData>> chartData = {
+      "lead_to_visit": [
+        PieChartSectionData(
+          value: graphInfo.visitCount,
+          color: Colors.blue,
+          title: 'visit1 ${graphInfo.visitCount.toStringAsFixed(1)}%',
+        ),
+        PieChartSectionData(
+          value: graphInfo.leadCount,
+          color: Colors.purple,
+          title: 'Leads ${(graphInfo.leadCount).toStringAsFixed(1)}%',
+        ),
+      ],
+      "visit1_to_booking": [
+        PieChartSectionData(
+          value: graphInfo.visitCount,
+          color: Colors.red,
+          title: 'Booking ${graphInfo.bookingCount.toStringAsFixed(1)}%',
+        ),
+        PieChartSectionData(
+          value: graphInfo.bookingCount,
+          color: Colors.blue,
+          title: 'Visit1 ${(graphInfo.visitCount).toStringAsFixed(1)}%',
+        ),
+      ],
+      "visit2_to_booking": [
+        PieChartSectionData(
+          value: graphInfo.revisitCount,
+          color: Colors.green,
+          title: 'Booking ${graphInfo.bookingCount.toStringAsFixed(1)}%',
+        ),
+        PieChartSectionData(
+          value: graphInfo.revisitCount,
+          color: Colors.pink,
+          title: 'Visit2 ${(graphInfo.bookingCount).toStringAsFixed(1)}%',
+        ),
+      ],
+      "lead_to_booking": [
+        PieChartSectionData(
+          value: graphInfo.bookingCount,
+          color: Colors.brown,
+          title: 'Booking ${graphInfo.leadCount.toStringAsFixed(1)}%',
+        ),
+        PieChartSectionData(
+          value: graphInfo.leadCount,
+          color: Colors.blue,
+          title: 'Leads ${(100 - graphInfo.leadCount).toStringAsFixed(1)}%',
+        ),
+      ],
+    };
 
     return Stack(
       children: [
@@ -440,7 +448,15 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                             ),
                             const SizedBox(width: 8),
                             InkWell(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => AdminCarryForwardPage(
+                                      id: widget.id,
+                                    ),
+                                  ),
+                                );
+                              },
                               child: TargetCircle(
                                 number: target?.carryForward.toString() ?? "0",
                                 label: "Carry Forward",
@@ -463,7 +479,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                 onPressed: () {
                                   //TODO: closing manager client List
                                   GoRouter.of(context).push(
-                                    "/closing-manager-follow-up-list/booking/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                                    "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                                   );
                                 },
                                 style: ElevatedButton.styleFrom(

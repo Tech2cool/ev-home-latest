@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/channel_partner.dart';
 import 'package:ev_homes/core/models/chart_model.dart';
+import 'package:ev_homes/core/models/closing_manager_graph.dart';
 import 'package:ev_homes/core/models/customer.dart';
 import 'package:ev_homes/core/models/customer_payment.dart';
 import 'package:ev_homes/core/models/department.dart';
@@ -525,6 +526,37 @@ class ApiService {
       Helper.showCustomSnackBar(errorMessage);
 
       return [];
+    }
+  }
+
+  Future<ClosingManagerGraph?> getClosingManagerGraphLeads(String id) async {
+    try {
+      var url = '/leads-team-leader-graph/$id';
+      final Response response = await _dio.get(url);
+
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return null;
+      }
+      final data = response.data['data'];
+      print("got data");
+      final parsedData = ClosingManagerGraph.fromMap(data);
+      print("paresed data");
+      return parsedData;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+      print(e);
+      Helper.showCustomSnackBar(errorMessage);
+
+      return null;
     }
   }
 
@@ -2003,11 +2035,11 @@ class ApiService {
   ]) async {
     try {
       var url = '/leads-team-leader/$id?query=$query&page=$page&limit=$limit';
-      final Response response = await _dio.get(url);
       if (status != null) {
         url += '&status=$status';
       }
-      print(url);
+
+      final Response response = await _dio.get(url);
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
         final emptyPagination = PaginationModel<Lead>(
@@ -2154,37 +2186,6 @@ class ApiService {
     }
   }
 
-  // Future<List<Lead>> getPreSalesExecutivesLeads(String id) async {
-  //   try {
-  //     final Response response =
-  //         await _dio.get('/leads-pre-sales-executive/$id');
-
-  //     if (response.data['code'] != 200) {
-  //       Helper.showCustomSnackBar(response.data['message']);
-  //       return [];
-  //     }
-  //     final List<dynamic> dataList = response.data["data"];
-
-  //     final List<Lead> leads = dataList.map((data) {
-  //       return Lead.fromJson(data);
-  //     }).toList();
-  //     return leads;
-  //   } on DioException catch (e) {
-  //     String errorMessage = 'Something went wrong';
-
-  //     if (e.response != null) {
-  //       // Backend response error message
-  //       errorMessage = e.response?.data['message'] ?? errorMessage;
-  //     } else {
-  //       // Other types of errors (network, etc.)
-  //       errorMessage = e.message.toString();
-  //     }
-  //     Helper.showCustomSnackBar(errorMessage);
-
-  //     return [];
-  //   }
-  // }
-
   // Leads for pre sales exe
   Future<PaginationModel<PostSaleLead>> getPostSalesExecutivesLeads(
     String id, [
@@ -2301,39 +2302,32 @@ class ApiService {
     }
   }
 
-  // Future<List<Employee>> getPreSalesExecutiveEmployee(String id) async {
-  //   try {
-  //     final Response response =
-  //         await _dio.get('/employee-pre-sale-executive?$id');
+  Future<List<int>> getCarryForwardOptions(String tlId) async {
+    try {
+      final Response response = await _dio.get(
+        '/get-carry-forward-opt/$tlId',
+      );
 
-  //     if (response.data['code'] != 200) {
-  //       Helper.showCustomSnackBar(response.data['message']);
-  //       return [];
-  //     }
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return [];
+      }
+      final dataList = response.data["data"];
+      return (dataList as List).map((e) => (e as num).toInt()).toList();
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
 
-  //     final Map<String, dynamic> data = response.data;
-  //     print(data);
-  //     final items = data['data'] as List<dynamic>? ?? [];
-  //     print("pass1");
-  //     print(items);
-  //     List<Employee> empItems = [];
-  //     if (items.isNotEmpty) {
-  //       empItems = items.map((emp) => Employee.fromMap(emp)).toList();
-  //     }
-  //     return empItems;
-  //   } on DioException catch (e) {
-  //     String errorMessage = 'Something went wrong';
-  //     print("pass2");
-  //     if (e.response != null) {
-  //       errorMessage = e.response?.data['message'] ?? errorMessage;
-  //     } else {
-  //       errorMessage = e.message.toString();
-  //     }
-  //     print("pass3");
-  //     Helper.showCustomSnackBar(errorMessage);
-  //     return [];
-  //   }
-  // }
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+      Helper.showCustomSnackBar(errorMessage);
+      return [];
+    }
+  }
 
   // Leads
   Future<String?> leadApproveAndAssignTL(

@@ -294,12 +294,12 @@ class _ClosingManagerLeadListPageState
 
 Color _getStatusColor(String status) {
   switch (status) {
-    case 'Approved':
+    case 'approved':
       return Colors.green;
-    case 'Rejected':
+    case 'rejected':
       return Colors.red;
-    case 'In Progress':
-    case 'Pending':
+    case 'in progress':
+    case 'pending':
       return Colors.orange;
     default:
       return Colors.grey;

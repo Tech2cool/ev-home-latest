@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/channel_partner.dart';
 import 'package:ev_homes/core/models/chart_model.dart';
+import 'package:ev_homes/core/models/closing_manager_graph.dart';
 import 'package:ev_homes/core/models/customer.dart';
 import 'package:ev_homes/core/models/customer_payment.dart';
 import 'package:ev_homes/core/models/department.dart';
@@ -47,6 +48,7 @@ class SettingProvider extends ChangeNotifier {
   List<String> _requirements = [];
 
   List<Lead> _leads = [];
+  List<int> _carryForwardsOptions = [];
   // List<PostSaleLead> _leadsPostSale = [];
 
   PaginationModel<Lead> _leadsTeamLeader = PaginationModel<Lead>(
@@ -124,7 +126,11 @@ class SettingProvider extends ChangeNotifier {
   ChannelPartner? loggedChannelPartner;
   Lead? loggedPreSale;
   Target? myTarget;
+
+  ClosingManagerGraph _closingManagerGraph = ClosingManagerGraph();
+  ClosingManagerGraph get closingManagerGraph => _closingManagerGraph;
   List<Designation> get designations => _designation;
+  List<int> get carryForwardsOptions => _carryForwardsOptions;
   List<Division> get divisions => _divisions;
   List<Payment> get payment => _payment;
   List<Department> get departments => _departments;
@@ -187,12 +193,30 @@ class SettingProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> getCarryForwardOpt(String id) async {
+    final emps = await _apiService.getCarryForwardOptions(id);
+    if (emps.isNotEmpty) {
+      _carryForwardsOptions = emps;
+      notifyListeners();
+    }
+  }
+
   Future<void> getPreSaleExForTL(String teamLeaderId) async {
     final emps = await _apiService.getPreSalesExecutives(teamLeaderId);
     if (emps.isNotEmpty) {
       _preSaleExecutives = emps;
       notifyListeners();
     }
+  }
+
+  Future<void> getClosingManagerGraph(String id) async {
+    final emps = await _apiService.getClosingManagerGraphLeads(id);
+    if (emps == null) {
+      notifyListeners();
+      return;
+    }
+    _closingManagerGraph = emps;
+    notifyListeners();
   }
 
   Future<void> addSiteVisit(Map<String, dynamic> data) async {
@@ -376,8 +400,8 @@ class SettingProvider extends ChangeNotifier {
     return leads;
   }
 
-  Future<void> getMyTarget() async {
-    final targetResp = await _apiService.getMyTarget(loggedAdmin!.id!);
+  Future<void> getMyTarget(String id) async {
+    final targetResp = await _apiService.getMyTarget(id);
     myTarget = targetResp;
     notifyListeners();
   }

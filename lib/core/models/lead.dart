@@ -10,14 +10,14 @@ class Lead {
   final String? email;
   final List<OurProject> project;
   final List<String> requirement;
-  final String firstName;
-  final String lastName;
+  final String? firstName;
+  final String? lastName;
   final String? address;
-  final ChannelPartner? channelPartner; // should be String or ObjectId
-  final Employee? dataAnalyser; // should be String or ObjectId
-  final Employee? teamLeader; // should be String or ObjectId
-  final Employee? preSalesExecutive; // should be String or ObjectId
-  final String countryCode;
+  final ChannelPartner? channelPartner;
+  final Employee? dataAnalyser;
+  final Employee? teamLeader;
+  final Employee? preSalesExecutive;
+  final String? countryCode;
   final int phoneNumber;
   final int? altPhoneNumber;
   final String? remark;
@@ -31,8 +31,8 @@ class Lead {
   final RevisitStage? revisitStage;
   final TaggingOverStage? taggingOverStage;
   final Cycle? cycle;
-  // final String approvalStatus;
-  final String interestedStatus;
+  final String? approvalStatus;
+  final String? interestedStatus;
   final List<CallHistory> callHistory;
   final List<ViewedBy> viewedBy;
   final List<ApprovalHistory> approvalHistory;
@@ -65,8 +65,8 @@ class Lead {
     this.revisitStage,
     this.taggingOverStage,
     this.cycle,
-    // required this.approvalStatus,
-    required this.interestedStatus,
+    this.approvalStatus,
+    this.interestedStatus,
     this.callHistory = const [],
     this.viewedBy = const [],
     this.approvalHistory = const [],
@@ -123,7 +123,7 @@ class Lead {
           : null,
       cycle: json['cycle'] != null ? Cycle.fromMap(json['cycle']) : null,
       status: json['status'],
-      // approvalStatus: json['approvalStatus'],
+      approvalStatus: json['approvalStatus'],
       interestedStatus: json['interestedStatus'],
       callHistory: (json['callHistory'] as List)
           .map((item) => CallHistory.fromJson(item))
@@ -166,7 +166,7 @@ class Lead {
       'previousValidTill': previousValidTill?.toIso8601String(),
       'approvalStage': approvalStage?.toMap(),
       'status': status,
-      // 'approvalStatus': approvalStatus,
+      'approvalStatus': approvalStatus,
       'interestedStatus': interestedStatus,
       'callHistory': callHistory.map((item) => item.toJson()).toList(),
       'viewedBy': viewedBy.map((item) => item.toJson()).toList(),

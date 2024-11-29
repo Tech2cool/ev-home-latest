@@ -28,7 +28,9 @@ class _PostsaleexcecutiveDashboardState
       context,
       listen: false,
     );
-    await settingProvider.getPostSaleLead();
+    await settingProvider.getPostSalesExecutiveLeads(
+      widget.id ?? settingProvider.loggedAdmin!.id!,
+    );
     await Future.delayed(const Duration(seconds: 2));
   }
 
@@ -61,7 +63,7 @@ class _PostsaleexcecutiveDashboardState
   Widget build(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(context);
 
-    final leadsPostSale = settingProvider.leadsPostSale;
+    final leadsPostSale = settingProvider.leadsPostSaleExecutive;
     final leads = leadsPostSale.data;
 // Dummy Chart Data
     final List<ChartModel> presalesData = [
@@ -192,7 +194,7 @@ class _PostsaleexcecutiveDashboardState
                           child: GestureDetector(
                             onTap: () {
                               GoRouter.of(context).push(
-                                "/post-lead-list/Total",
+                                "/post-sales-executive-lead-list/Total/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                               );
                             },
                             child: SizedBox(
@@ -209,7 +211,7 @@ class _PostsaleexcecutiveDashboardState
                           child: GestureDetector(
                             onTap: () {
                               GoRouter.of(context).push(
-                                "/post-lead-list/Registration Done",
+                                "/post-sales-executive-lead-list/Registration Done/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                               );
                             },
                             child: SizedBox(
@@ -227,7 +229,7 @@ class _PostsaleexcecutiveDashboardState
                           child: GestureDetector(
                             onTap: () {
                               GoRouter.of(context).push(
-                                "/post-lead-list/EOI Received",
+                                "/post-sales-executive-lead-list/EOI Received/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                               );
                             },
                             child: SizedBox(
@@ -245,7 +247,7 @@ class _PostsaleexcecutiveDashboardState
                           child: GestureDetector(
                             onTap: () {
                               GoRouter.of(context).push(
-                                "/post-lead-list/Cancelled",
+                                "/post-sales-executive-lead-list/Cancelled/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                               );
                             },
                             child: SizedBox(

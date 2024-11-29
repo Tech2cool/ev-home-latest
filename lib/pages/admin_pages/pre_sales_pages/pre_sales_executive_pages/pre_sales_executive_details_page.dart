@@ -84,7 +84,7 @@ class _PreSalesExecutiveDetailsPageState
                       children: [
                         MyTextCard(
                           heading: "Client Name: ",
-                          value: widget.lead.firstName,
+                          value: widget.lead.firstName ?? "",
                         ),
                         const SizedBox(height: 8),
                         MyTextCard(

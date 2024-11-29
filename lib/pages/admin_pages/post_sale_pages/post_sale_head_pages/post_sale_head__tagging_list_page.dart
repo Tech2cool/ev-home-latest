@@ -236,7 +236,7 @@ Widget _buildLeadCard(BuildContext context, PostSaleLead lead) {
         vertical: 10, horizontal: 10), // Adds space around the card
     child: GestureDetector(
       onTap: () {
-        GoRouter.of(context).pushReplacement(
+        GoRouter.of(context).push(
           "/post-sales-lead-details",
           extra: lead,
         );

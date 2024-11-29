@@ -1,219 +1,195 @@
+import 'dart:async';
+import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class PostSaleLeadListPage extends StatelessWidget {
+class PostsaleexecutiveTaggingListPage extends StatefulWidget {
   final String status;
+  final String? id;
+  const PostsaleexecutiveTaggingListPage({
+    super.key,
+    required this.status,
+    this.id,
+  });
 
-  const PostSaleLeadListPage({super.key, required this.status});
+  @override
+  State<PostsaleexecutiveTaggingListPage> createState() =>
+      _PostsaleexecutiveTaggingListPageState();
+}
 
-  // // Dummy data
-  // final List<Map<String, String>> dummyLeads = [
-  //   {
-  //     'client Name': 'Mayur Thorat',
-  //     'client Phone': '9876543210',
-  //     'status': 'Registration Done',
-  //     'Project': '9 Square',
-  //     'Manager Name': 'Jasprit',
-  //     'Booking date': '2024-10-02',
-  //     'closing manager': 'Rohit',
-  //   },
-  //   {
-  //     'client Name': 'Rashmi Maratha',
-  //     'client Phone': '9876543210',
-  //     'status': 'EOI Received',
-  //     'Project': '10 Marina',
-  //     'Manager Name': 'Dipak',
-  //     'Booking date': '2024-09-02',
-  //     'closing manager': 'Rohan',
-  //   },
-  //   {
-  //     'client Name': 'Raj Rajput',
-  //     'client Phone': '9876543210',
-  //     'status': 'Cancelled',
-  //     'Project': '9 Square',
-  //     'Manager Name': 'Jasprit',
-  //     'Booking date': '2024-10-02',
-  //     'closing manager': 'Priya',
-  //   },
-  //   {
-  //     'client Name': 'mahek',
-  //     'client Phone': '9876543210',
-  //     'status': 'Cancelled',
-  //     'Project': '9 Square',
-  //     'Manager Name': 'Jasprit',
-  //     'Booking date': '2024-10-02',
-  //     'closing manager': 'Priya',
-  //   },
-  //   // Add more dummy leads as needed
-  // ];
+class _PostsaleexecutiveTaggingListPageState
+    extends State<PostsaleexecutiveTaggingListPage> {
+  bool isLoading = false;
+  bool isFetchingMore = false;
+  String searchQuery = '';
+  List<PostSaleLead> leads = [];
+  int currentPage = 1;
+  int totalPages = 1;
+  Timer? _debounce;
 
-  List<PostSaleLead> getFilteredLeads(List<PostSaleLead> leads, String status) {
-    if (status == "Total") return leads;
-    return leads.where((lead) => lead.bookingStatus == status).toList();
-    // return leads; // Show all leads for "Total Booking"
+  List<PostSaleLead> getFilteredLeads() {
+    // if (widget.status == "Approved") {
+    //   return leads.where((lead) => lead.approvalStatus == "Approved").toList();
+    // } else if (widget.status == "Rejected") {
+    //   return leads.where((lead) => lead.approvalStatus == "Rejected").toList();
+    // } else if (widget.status == "Pending") {
+    //   return leads
+    //       .where(
+    //         (lead) =>
+    //             lead.approvalStatus == "Pending" ||
+    //             lead.approvalStatus == "In Progress",
+    //       )
+    //       .toList();
+    // }
+    return leads;
+  }
+
+  // Fetch initial leads or leads based on a new search
+  Future<void> getLeads({bool resetPage = false}) async {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+
+    if (resetPage) {
+      setState(() {
+        currentPage = 1;
+        leads = [];
+        isLoading = true;
+      });
+    } else {
+      setState(() {
+        isFetchingMore = true;
+      });
+    }
+
+    final visitsResp = await settingProvider.getPostSalesExecutiveLeads(
+      widget.id ?? settingProvider.loggedAdmin!.id!,
+      searchQuery,
+      currentPage,
+      10,
+    );
+
+    if (mounted) {
+      setState(() {
+        if (resetPage) {
+          leads = visitsResp.data; // Set new leads
+        } else {
+          leads.addAll(visitsResp.data); // Append more leads
+        }
+        totalPages = visitsResp.totalPages; // Update total pages
+        isLoading = false; // Hide loading
+        isFetchingMore = false; // Hide loading more
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getLeads(resetPage: true); // Fetch initial leads
   }
 
   @override
   Widget build(BuildContext context) {
-    final settingProvider = Provider.of<SettingProvider>(context);
+    final filteredLeads = getFilteredLeads();
 
-    final leadsPostSale = settingProvider.leadsPostSale;
-
-    final filteredLeads = getFilteredLeads(leadsPostSale.data, status);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Booking Report - $status"),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // Implement filter functionality if needed
-            },
-            icon: const Icon(Icons.filter_alt),
-          )
-        ],
-      ),
-      body: LayoutBuilder(
-        builder: (context, constraint) {
-          return constraint.maxWidth > 500
-              ? GridView.builder(
-                  padding: const EdgeInsets.all(8.0),
-                  itemCount: filteredLeads.length,
-                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 400,
-                    mainAxisExtent: 200,
-                    mainAxisSpacing: 10,
-                    crossAxisSpacing: 10,
-                  ),
-                  itemBuilder: (context, i) {
-                    final lead = filteredLeads[i];
-                    return _buildLeadCard(context, lead);
-                  },
-                )
-              : ListView.builder(
-                  padding: const EdgeInsets.all(8.0),
-                  itemCount: filteredLeads.length,
-                  itemBuilder: (context, i) {
-                    final lead = filteredLeads[i];
-                    return _buildLeadCard(context, lead);
-                  },
-                );
-        },
-      ),
-    );
-  }
-
-  Widget _buildLeadCard(BuildContext context, PostSaleLead lead) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-          vertical: 10, horizontal: 10), // Adds space around the card
-      child: GestureDetector(
-        onTap: () {
-          GoRouter.of(context).pushReplacement(
-            "/postsalehead-internal-tagging-details",
-          );
-        },
-        child: Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white.withAlpha(240),
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey.withOpacity(0.3),
-                spreadRadius: 0.3,
-                blurRadius: 2,
-              ),
-            ],
+    return Stack(
+      children: [
+        const Positioned.fill(
+          child: AnimatedGradientBg(),
+        ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            title: Text("Tagging Report - ${widget.status}"),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          body: Column(
             children: [
-              // Text(
-              //   lead.bookingStatus ?? 'NA',
-              //   style: TextStyle(
-              //     fontSize: 12,
-              //     color: _getStatusColor(lead.bookingStatus ?? ''),
-              //   ),
-              // ),
-              const SizedBox(height: 5),
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        NamedCard(
-                          heading: "Client Name",
-                          value: "${lead.firstName} ${lead.lastName}" ?? 'N/A',
-                        ),
-                        const SizedBox(height: 5),
-                        NamedCard(
-                          heading: "Client Phone",
-                          value: "+91 ${lead.phoneNumber ?? ''}",
-                        ),
-                        const SizedBox(height: 5),
-                        NamedCard(
-                          heading: "Booking Date",
-                          value: lead.date ?? 'N/A',
-                        ),
-                        const SizedBox(height: 5),
-                        NamedCard(
-                          heading: "Project",
-                          value: lead.project?.name ?? 'N/A',
-                        ),
-                      ],
+              SizedBox(
+                height: 6,
+              ),
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 2),
+                child: TextField(
+                  onChanged: (query) {
+                    if (_debounce?.isActive ?? false) _debounce?.cancel();
+                    _debounce = Timer(const Duration(seconds: 1), () {
+                      setState(() {
+                        searchQuery = query;
+                      });
+                      getLeads(
+                          resetPage: true); // Fetch leads on new search query
+                    });
+                  },
+                  decoration: InputDecoration(
+                    labelText: 'Search Lead',
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20.0),
                     ),
+                    prefixIcon: const Icon(Icons.search),
                   ),
-                  const Spacer(),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        NamedCard(
-                          heading: "Booking Status",
-                          value: lead.bookingStatus?.type ?? 'NA',
-                        ),
+                ),
+              ),
+              Expanded(
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    if (!isFetchingMore &&
+                        scrollInfo.metrics.pixels ==
+                            scrollInfo.metrics.maxScrollExtent) {
+                      if (currentPage < totalPages) {
+                        currentPage++;
+                        getLeads(); // Fetch more leads
+                      }
+                    }
+                    return true;
+                  },
+                  child: ListView.builder(
+                    itemCount: filteredLeads.length + (isFetchingMore ? 1 : 0),
+                    itemBuilder: (context, i) {
+                      if (i == filteredLeads.length) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
 
-                        // NamedCard(
-                        //   heading: "Manager Name",
-                        //   value: lead.closingManager != null
-                        //       ? "${lead.closingManager?.fi}"
-                        //       : 'N/A',
-                        // ),
-                        const SizedBox(height: 5),
-                        NamedCard(
-                          heading: "Closing Manager",
-                          value: lead.closingManager != null
-                              ? "${lead.closingManager?.firstName ?? ''} ${lead.closingManager?.lastName ?? ""}"
-                              : 'N/A',
-                        ),
-                      ],
-                    ),
+                      final lead = filteredLeads[i];
+                      return _buildLeadCard(context, lead);
+                    },
                   ),
-                ],
+                ),
               ),
             ],
           ),
         ),
-      ),
+        if (isLoading)
+          Container(
+            color: Colors.black.withOpacity(0.2),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+      ],
     );
   }
+}
 
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'Registration Done':
-        return Colors.green;
-      case 'EOI Received':
-        return Colors.orange;
-      case 'Cancelled':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
+Color _getStatusColor(String status) {
+  switch (status) {
+    case 'Approved':
+      return Colors.green;
+    case 'Rejected':
+      return Colors.red;
+    case 'In Progress':
+    case 'Pending':
+      return Colors.orange;
+    default:
+      return Colors.grey;
   }
 }
 
@@ -241,12 +217,12 @@ class NamedCard extends StatelessWidget {
           child: Text(
             heading,
             style: TextStyle(
-              color: Colors.grey.shade500,
+              color: Colors.grey.shade700,
               fontSize: headingSize ?? 11,
             ),
           ),
         ),
-        FittedBox(
+        Flexible(
           child: Text(
             value.length > 18 ? "${value.substring(0, 15)}..." : value,
             style: TextStyle(
@@ -258,4 +234,104 @@ class NamedCard extends StatelessWidget {
       ],
     );
   }
+}
+
+Widget _buildLeadCard(BuildContext context, PostSaleLead lead) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(
+        vertical: 10, horizontal: 10), // Adds space around the card
+    child: GestureDetector(
+      onTap: () {
+        GoRouter.of(context).pushReplacement(
+          "/post-sales-lead-details",
+          extra: lead,
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(10),
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Colors.grey.withOpacity(0.3),
+          //     spreadRadius: 0.3,
+          //     blurRadius: 2,
+          //   ),
+          // ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              lead.bookingStatus?.type ?? '',
+              style: TextStyle(
+                fontSize: 12,
+                color: _getStatusColor(lead.bookingStatus?.type ?? ''),
+              ),
+            ),
+            const SizedBox(height: 5),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      NamedCard(
+                        heading: "Client Name",
+                        value: "${lead.firstName} ${lead.lastName}" ?? 'N/A',
+                      ),
+                      const SizedBox(height: 5),
+                      NamedCard(
+                        heading: "Client Phone",
+                        value: "+91 ${lead.phoneNumber}",
+                      ),
+                      const SizedBox(height: 5),
+                      NamedCard(
+                        heading: "Booking Date",
+                        value: lead.date ?? 'N/A',
+                      ),
+                      const SizedBox(height: 5),
+                      NamedCard(
+                        heading: "Project",
+                        value: lead.project?.name ?? 'N/A',
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      NamedCard(
+                        heading: "Booking Status",
+                        value: lead.bookingStatus != null
+                            ? lead.bookingStatus?.type ?? "NA"
+                            : 'N/A',
+                      ),
+                      const SizedBox(height: 5),
+                      NamedCard(
+                        heading: "Closing Manager",
+                        value: lead.closingManager != null
+                            ? "${lead.closingManager?.firstName} ${lead.closingManager?.lastName}"
+                            : 'N/A',
+                      ),
+                      const SizedBox(height: 5),
+                      NamedCard(
+                        heading: "Post Sales Executive",
+                        value: lead.postSaleExecutive != null
+                            ? "${lead.postSaleExecutive?.firstName} ${lead.postSaleExecutive?.lastName}"
+                            : 'N/A',
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

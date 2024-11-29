@@ -6,6 +6,7 @@ import 'package:ev_homes/pages/admin_pages/admin_forms/add_new_project_page.dart
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_payment.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_postsale_lead.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_site_visit_form_page.dart';
+import 'package:ev_homes/pages/admin_pages/admin_forms/admin_client_tagging_form.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/edit_new_project_page.dart';
 import 'package:ev_homes/pages/admin_pages/admin_management/manage_channel_partners.dart';
 import 'package:ev_homes/pages/admin_pages/admin_management/manage_department.dart';
@@ -17,6 +18,7 @@ import 'package:ev_homes/pages/admin_pages/admin_management/manage_site_visit_pa
 import 'package:ev_homes/pages/admin_pages/admin_profile_page.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/post_sale_head_pages/post_sale_head__tagging_list_page.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/post_sale_head_pages/post_sale_head_assigned.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/post_sales_executive_pages/postsaleexecutive_tagging_list_page.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/postsale_internal_tagging_details.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_details_page.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_list_page.dart';
@@ -66,6 +68,13 @@ class AppRoutes {
         },
       ),
       //pages
+      GoRoute(
+        path: '/add-client-tagging-lead',
+        builder: (context, state) {
+          return const AdminClientTaggingForm();
+        },
+      ),
+
       GoRoute(
         path: '/data-analyzer-lead-list/:status',
         builder: (context, state) {
@@ -285,6 +294,17 @@ class AppRoutes {
           final lead = state.extra as PostSaleLead;
 
           return PostsaleInternalTaggingDetails(lead: lead);
+        },
+      ),
+      GoRoute(
+        path: '/post-sales-executive-lead-list/:status/:id',
+        builder: (context, state) {
+          final status = state.pathParameters['status'] ?? '';
+          final id = state.pathParameters['id'];
+          return PostsaleexecutiveTaggingListPage(
+            status: status,
+            id: id,
+          );
         },
       ),
     ],

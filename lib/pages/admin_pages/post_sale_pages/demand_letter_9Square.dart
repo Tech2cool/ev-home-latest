@@ -831,9 +831,11 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
 
     double baseAmount = totalDue / 1.05;
     double gstAmount = totalDue - baseAmount;
-    double tdsAmount = gstAmount * 0.1;
-    baseAmount = baseAmount - tdsAmount;
 
+    tdsAmount = baseAmount * 0.01;
+    baseAmount = baseAmount - tdsAmount;
+    print("base ${totalDue / 1.05}");
+    print("tds ${(totalDue / 1.05) * 0.1}");
     double receivedBase =
         double.parse(netAmountController.text.replaceAll(',', ''));
     double receivedGst =

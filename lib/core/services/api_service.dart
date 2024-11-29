@@ -533,7 +533,7 @@ class ApiService {
     try {
       final Response response = await _dio.get('/channel-partner');
       final Map<String, dynamic> data = response.data;
-      final items = data['items'] as List<dynamic>? ?? [];
+      final items = data['data'] as List<dynamic>? ?? [];
 
       List<ChannelPartner>? cpItems;
       if (items.isNotEmpty) {

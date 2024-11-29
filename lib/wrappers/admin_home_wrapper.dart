@@ -214,6 +214,16 @@ class _AdminHomeWrapperState extends State<AdminHomeWrapper>
                   SlideTransition(
                     position: _slideAnimation,
                     child: MyChip(
+                      heading: "Add Client Tagging",
+                      onPress: () {
+                        GoRouter.of(context).push("/add-client-tagging-lead");
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SlideTransition(
+                    position: _slideAnimation,
+                    child: MyChip(
                       heading: "Add Site Visit Form",
                       onPress: () {
                         GoRouter.of(context).push("/add-site-visit");

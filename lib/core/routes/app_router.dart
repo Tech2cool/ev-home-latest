@@ -6,6 +6,7 @@ import 'package:ev_homes/pages/admin_pages/admin_forms/add_new_project_page.dart
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_payment.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_postsale_lead.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_site_visit_form_page.dart';
+import 'package:ev_homes/pages/admin_pages/admin_forms/admin_client_tagging_form.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/edit_new_project_page.dart';
 import 'package:ev_homes/pages/admin_pages/admin_management/manage_channel_partners.dart';
 import 'package:ev_homes/pages/admin_pages/admin_management/manage_department.dart';
@@ -67,6 +68,13 @@ class AppRoutes {
         },
       ),
       //pages
+      GoRoute(
+        path: '/add-client-tagging-lead',
+        builder: (context, state) {
+          return const AdminClientTaggingForm();
+        },
+      ),
+
       GoRoute(
         path: '/data-analyzer-lead-list/:status',
         builder: (context, state) {

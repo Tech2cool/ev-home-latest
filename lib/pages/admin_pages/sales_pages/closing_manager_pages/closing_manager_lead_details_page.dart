@@ -246,9 +246,9 @@ class _ClosingManagerLeadDetailsPageState
                               const SizedBox(height: 8),
                               MyTextCard(
                                 heading: "Interested: ",
-                                value: widget.lead.interestedStatus,
+                                value: widget.lead.interestedStatus ?? "",
                                 valueColor: _getIntrestedColor(
-                                  widget.lead.interestedStatus,
+                                  widget.lead.interestedStatus ?? "",
                                 ),
                               ),
                               const SizedBox(height: 8),

@@ -588,6 +588,20 @@ class ApiService {
     }
   }
 
+  Future<Lead?> addLead(Map<String, dynamic> data) async {
+    final Response response = await _dio.post(
+      '/leads-add',
+      data: data,
+    );
+    if (response.data['code'] != 200) {
+      Helper.showCustomSnackBar(response.data['message']);
+      return null;
+    }
+    Helper.showCustomSnackBar(response.data['message'], Colors.green);
+
+    return Lead.fromJson(response.data['data']);
+  }
+
   Future<Payment?> getPaymentbyFlat(String flatNo) async {
     try {
       final Response response =

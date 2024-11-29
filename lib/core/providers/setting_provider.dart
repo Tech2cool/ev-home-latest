@@ -325,6 +325,13 @@ class SettingProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> addLead(Map<String, dynamic> data) async {
+    final resp = await _apiService.addLead(data);
+    if (resp == null) return;
+    await searchLead();
+    notifyListeners();
+  }
+
   Future<void> getEmployeeByDesignation(String desgId) async {
     final emps = await _apiService.getEmployeeByDesignation(desgId);
     if (emps.isNotEmpty) {

@@ -30,27 +30,6 @@ class _ClosingManagerLeadListPageState
   int totalPages = 1;
   Timer? _debounce;
 
-  List<Lead> getFilteredLeads() {
-    // if (widget.status == "Approved") {
-    //   return leads
-    //       .where((lead) => lead.approvalStage?.status == "Approved")
-    //       .toList();
-    // } else if (widget.status == "Rejected") {
-    //   return leads
-    //       .where((lead) => lead.approvalStage?.status == "Rejected")
-    //       .toList();
-    // } else if (widget.status == "Pending") {
-    //   return leads
-    //       .where(
-    //         (lead) =>
-    //             lead.approvalStage?.status == "Pending" ||
-    //             lead.approvalStage?.status == "In Progress",
-    //       )
-    //       .toList();
-    // }
-    return leads;
-  }
-
   // Fetch initial leads or leads based on a new search
   Future<void> getLeads({bool resetPage = false}) async {
     final settingProvider = Provider.of<SettingProvider>(
@@ -60,13 +39,13 @@ class _ClosingManagerLeadListPageState
 
     if (resetPage) {
       setState(() {
-        currentPage = 1; // Reset to first page
-        leads = []; // Clear current leads
+        currentPage = 1;
+        leads = [];
         isLoading = true;
       });
     } else {
       setState(() {
-        isFetchingMore = true; // Show loading more indicator
+        isFetchingMore = true;
       });
     }
 
@@ -75,7 +54,7 @@ class _ClosingManagerLeadListPageState
       searchQuery,
       currentPage,
       10,
-      widget.status.toLowerCase() == "total" ? null : widget.status,
+      widget.status.toLowerCase() == "total" ? null : widget.status.toString(),
     );
 
     if (mounted) {
@@ -92,6 +71,17 @@ class _ClosingManagerLeadListPageState
     }
   }
 
+  String? getStatus(Lead lead) {
+    if (lead.stage == "visit") {
+      return lead.visitStatus;
+    } else if (lead.stage == "revisit") {
+      return lead.revisitStatus;
+    } else if (lead.stage == "booking") {
+      return lead.bookingStatus;
+    }
+    return lead.status;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -100,7 +90,7 @@ class _ClosingManagerLeadListPageState
 
   @override
   Widget build(BuildContext context) {
-    final filteredLeads = getFilteredLeads();
+    final filteredLeads = leads;
 
     return Stack(
       children: [
@@ -199,41 +189,13 @@ class _ClosingManagerLeadListPageState
                                     children: [
                                       Text(
                                         Helper.capitalize(
-                                          lead.approvalStage?.status ?? "",
+                                          getStatus(lead) ?? "",
                                         ),
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: _getStatusColor(
-                                            lead.approvalStage?.status ?? "",
+                                            getStatus(lead) ?? "",
                                           ),
-                                        ),
-                                      ),
-                                      const Text(
-                                        "status",
-                                        style: TextStyle(
-                                          fontSize: 9,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Column(
-                                    children: [
-                                      Text(
-                                        Helper.capitalize(
-                                          lead.stage ?? "",
-                                        ),
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.orangeAccent,
-                                        ),
-                                      ),
-                                      const Text(
-                                        "stage",
-                                        style: TextStyle(
-                                          fontSize: 9,
-                                          color: Colors.grey,
                                         ),
                                       ),
                                     ],
@@ -292,8 +254,8 @@ class _ClosingManagerLeadListPageState
                                         const SizedBox(height: 5),
                                         NamedCard(
                                           heading: "Data Analyser",
-                                          value: lead.dataAnalyser != null
-                                              ? "${lead.dataAnalyser?.firstName} ${lead.dataAnalyser?.lastName}"
+                                          value: lead.dataAnalyzer != null
+                                              ? "${lead.dataAnalyzer?.firstName} ${lead.dataAnalyzer?.lastName}"
                                               : "NA",
                                         ),
                                         NamedCard(

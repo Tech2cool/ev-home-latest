@@ -136,9 +136,9 @@ class _DataAnalyzerLeadDetailsPageState
                         const SizedBox(height: 8),
                         MyTextCard(
                           heading: "Lead Status: ",
-                          value: widget.lead.approvalStage?.status ?? "",
+                          value: widget.lead.approvalStatus ?? "",
                           valueColor: _getStatusColor(
-                            widget.lead.approvalStage?.status ?? "",
+                            widget.lead.approvalStatus ?? "",
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -168,8 +168,8 @@ class _DataAnalyzerLeadDetailsPageState
                         const SizedBox(height: 8),
                         MyTextCard(
                           heading: "Data Analyzer: ",
-                          value: widget.lead.dataAnalyser != null
-                              ? "${widget.lead.dataAnalyser?.firstName ?? ""} ${widget.lead.dataAnalyser?.lastName ?? ""}"
+                          value: widget.lead.dataAnalyzer != null
+                              ? "${widget.lead.dataAnalyzer?.firstName ?? ""} ${widget.lead.dataAnalyzer?.lastName ?? ""}"
                               : "NA",
 
                           // valueColor: _getIntrestedColor(
@@ -412,7 +412,7 @@ class _DataAnalyzerLeadDetailsPageState
                                               ),
                                               sLead.channelPartner?.firmName ??
                                                   "NA",
-                                              sLead.approvalStage?.status ?? "",
+                                              sLead.approvalStatus ?? "",
                                             ),
                                             const Divider(),
                                           ],
@@ -518,8 +518,7 @@ class _DataAnalyzerLeadDetailsPageState
                 ),
               ],
 
-              if (widget.lead.approvalStage?.status?.toLowerCase() !=
-                  "approved")
+              if (widget.lead.approvalStatus?.toLowerCase() != "approved")
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16.0,

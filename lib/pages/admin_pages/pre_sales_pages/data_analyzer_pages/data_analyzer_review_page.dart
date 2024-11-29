@@ -20,10 +20,28 @@ class _CommentReviewPageState extends State<DataAnalyzerReviewPage> {
   bool _showCards = false;
   bool isLoading = false;
   Employee? _selectedTeamLeader;
+
+  @override
+  void initState() {
+    super.initState();
+    onRefresh();
+  }
+
   @override
   void dispose() {
     _commentController.dispose();
     super.dispose();
+  }
+
+  Future<void> onRefresh() async {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+
+    try {
+      await settingProvider.getClosingManagers();
+    } catch (e) {}
   }
 
   void _toggleVisibility() {
@@ -263,8 +281,8 @@ class _CommentReviewPageState extends State<DataAnalyzerReviewPage> {
             title: const Text('Comments'),
           ),
           body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ListView(
               children: [
                 // Comment Box with attachment icon
                 MyTextCard(
@@ -305,7 +323,7 @@ class _CommentReviewPageState extends State<DataAnalyzerReviewPage> {
                   heading: "Remark: ",
                   value: widget.lead.remark ?? 'NA',
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
 
                 TextField(
                   controller: _commentController,
@@ -480,18 +498,13 @@ class _CommentReviewPageState extends State<DataAnalyzerReviewPage> {
                                                 ),
                                                 // Status (Approved/Rejected alternating)
                                                 Text(
-                                                  widget
-                                                          .similarLeads[index]
-                                                          .approvalStage
-                                                          ?.status ??
+                                                  widget.similarLeads[index]
+                                                          .approvalStatus ??
                                                       "",
                                                   style: TextStyle(
                                                     color: _getStatusColor(
-                                                      widget
-                                                              .similarLeads[
-                                                                  index]
-                                                              .approvalStage
-                                                              ?.status ??
+                                                      widget.similarLeads[index]
+                                                              .approvalStatus ??
                                                           "",
                                                     ),
                                                     fontWeight: FontWeight.bold,

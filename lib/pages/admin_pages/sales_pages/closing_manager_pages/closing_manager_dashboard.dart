@@ -208,7 +208,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           child: MyCard(
                             textColor: Colors.green,
                             label: "Visit 1",
-                            value: teamLeaderLeads.visit1Count,
+                            value: teamLeaderLeads.visitCount,
                           ),
                         ),
                       ),
@@ -222,7 +222,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           child: MyCard(
                             textColor: Colors.red,
                             label: "Visit 2",
-                            value: teamLeaderLeads.visit2Count,
+                            value: teamLeaderLeads.revisitCount,
                           ),
                         ),
                       ),
@@ -251,7 +251,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           child: MyCard(
                             textColor: Colors.red,
                             label: "Pending",
-                            value: teamLeaderLeads.visit2Count,
+                            value: teamLeaderLeads.pendingCount,
                           ),
                         ),
                       ),

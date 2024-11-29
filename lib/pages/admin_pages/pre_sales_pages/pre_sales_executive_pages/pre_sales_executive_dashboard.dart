@@ -57,7 +57,7 @@ class _PreSalesExecutiveDashboardState
   List<ChartModel> generateLeadStatusFunnel(List<Lead> preSalesExecutive) {
     Map<String, int> leadCountMap = {};
     for (Lead lead in preSalesExecutive) {
-      String preSalesExecutiveName = lead.status;
+      String preSalesExecutiveName = lead.status ?? "";
       leadCountMap.update(
         preSalesExecutiveName,
         (count) => count + 1,

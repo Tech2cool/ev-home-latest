@@ -14,27 +14,25 @@ class Lead {
   final String? lastName;
   final String? address;
   final ChannelPartner? channelPartner;
-  final Employee? dataAnalyser;
+  final Employee? dataAnalyzer;
   final Employee? teamLeader;
   final Employee? preSalesExecutive;
   final String? countryCode;
-  final int phoneNumber;
+  final int? phoneNumber;
   final int? altPhoneNumber;
   final String? remark;
   final String? stage;
   final DateTime startDate;
   final DateTime validTill;
   final DateTime? previousValidTill;
-  final String status;
-  final ApprovalStage? approvalStage;
-  final VisitStage? visitStage;
-  final RevisitStage? revisitStage;
-  final TaggingOverStage? taggingOverStage;
+  final String? status;
   final Cycle? cycle;
   final String? approvalStatus;
+  final String? visitStatus;
+  final String? revisitStatus;
+  final String? bookingStatus;
   final String? interestedStatus;
   final List<CallHistory> callHistory;
-  final List<ViewedBy> viewedBy;
   final List<ApprovalHistory> approvalHistory;
   final List<UpdateHistory> updateHistory;
   final List<Cycle> cycleHistory;
@@ -48,10 +46,10 @@ class Lead {
     required this.lastName,
     this.address,
     this.channelPartner,
-    this.dataAnalyser,
+    this.dataAnalyzer,
     this.teamLeader,
     this.preSalesExecutive,
-    required this.countryCode,
+    this.countryCode,
     required this.phoneNumber,
     this.altPhoneNumber,
     this.remark,
@@ -59,16 +57,14 @@ class Lead {
     required this.startDate,
     required this.validTill,
     this.previousValidTill,
-    required this.status,
-    this.approvalStage,
-    this.visitStage,
-    this.revisitStage,
-    this.taggingOverStage,
+    this.status,
+    this.bookingStatus,
+    this.visitStatus,
+    this.revisitStatus,
     this.cycle,
     this.approvalStatus,
     this.interestedStatus,
     this.callHistory = const [],
-    this.viewedBy = const [],
     this.approvalHistory = const [],
     this.updateHistory = const [],
     this.cycleHistory = const [],
@@ -82,7 +78,7 @@ class Lead {
               ?.map((el) => OurProject?.fromJson(el))
               ?.toList() ??
           [],
-      requirement: List<String>.from(json['requirement']),
+      requirement: List<String>.from(json['requirement'] ?? []),
       firstName: json['firstName'],
       lastName: json['lastName'],
       address: json['address'],
@@ -90,8 +86,8 @@ class Lead {
       channelPartner: json['channelPartner'] != null
           ? ChannelPartner.fromMap(json['channelPartner'])
           : null,
-      dataAnalyser: json['dataAnalyser'] != null
-          ? Employee.fromMap(json['dataAnalyser'])
+      dataAnalyzer: json['dataAnalyzer'] != null
+          ? Employee.fromMap(json['dataAnalyzer'])
           : null,
       teamLeader: json['teamLeader'] != null
           ? Employee.fromMap(json['teamLeader'])
@@ -102,34 +98,26 @@ class Lead {
       countryCode: json['countryCode'],
       phoneNumber:
           json['phoneNumber'] != null ? json['phoneNumber']?.floor() : 0,
-      altPhoneNumber: json['altPhoneNumber']?.floor(),
+      altPhoneNumber: json['altPhoneNumber']?.floor() ?? 0,
       remark: json['remark'],
-      startDate: DateTime.parse(json['startDate']),
-      validTill: DateTime.parse(json['validTill']),
+      startDate: json['startDate'] != null
+          ? DateTime.parse(json['startDate'])
+          : json['startDate'],
+      validTill: json['validTill'] != null
+          ? DateTime.parse(json['validTill'])
+          : json['validTill'],
       previousValidTill: json['previousValidTill'] != null
           ? DateTime.parse(json['previousValidTill'])
-          : null,
-      approvalStage: json['approvalStage'] != null
-          ? ApprovalStage.fromMap(json['approvalStage'])
-          : null,
-      visitStage: json['visitStage'] != null
-          ? VisitStage.fromMap(json['visitStage'])
-          : null,
-      revisitStage: json['revisitStage'] != null
-          ? RevisitStage.fromMap(json['revisitStage'])
-          : null,
-      taggingOverStage: json['taggingOverStage'] != null
-          ? TaggingOverStage.fromMap(json['taggingOverStage'])
           : null,
       cycle: json['cycle'] != null ? Cycle.fromMap(json['cycle']) : null,
       status: json['status'],
       approvalStatus: json['approvalStatus'],
+      visitStatus: json['visitStatus'],
+      revisitStatus: json['revisitStatus'],
+      bookingStatus: json['bookingStatus'],
       interestedStatus: json['interestedStatus'],
       callHistory: (json['callHistory'] as List)
           .map((item) => CallHistory.fromJson(item))
-          .toList(),
-      viewedBy: (json['viewedBy'] as List)
-          .map((item) => ViewedBy.fromJson(item))
           .toList(),
       approvalHistory: (json['approvalHistory'] as List)
           .map((item) => ApprovalHistory.fromJson(item))
@@ -147,13 +135,13 @@ class Lead {
     return {
       'id': id,
       'email': email,
-      'project': project,
+      'project': project.map((pro) => pro.id).toList(),
       'requirement': requirement,
       'firstName': firstName,
       'lastName': lastName,
       'address': address,
       'channelPartner': channelPartner,
-      'dataAnalyser': dataAnalyser,
+      'dataAnalyzer': dataAnalyzer,
       'teamLeader': teamLeader,
       'preSalesExecutive': preSalesExecutive,
       'countryCode': countryCode,
@@ -164,12 +152,13 @@ class Lead {
       'startDate': startDate.toIso8601String(),
       'validTill': validTill.toIso8601String(),
       'previousValidTill': previousValidTill?.toIso8601String(),
-      'approvalStage': approvalStage?.toMap(),
       'status': status,
       'approvalStatus': approvalStatus,
+      'visitStatus': visitStatus,
+      'revisitStatus': revisitStatus,
+      'bookingStatus': bookingStatus,
       'interestedStatus': interestedStatus,
       'callHistory': callHistory.map((item) => item.toJson()).toList(),
-      'viewedBy': viewedBy.map((item) => item.toJson()).toList(),
       'approvalHistory': approvalHistory.map((item) => item.toJson()).toList(),
       'updateHistory': updateHistory.map((item) => item.toJson()).toList(),
       'cycleHistory': cycleHistory.map((item) => item.toMap()).toList(),

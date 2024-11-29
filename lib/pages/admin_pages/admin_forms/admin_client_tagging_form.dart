@@ -3,13 +3,10 @@ import 'package:ev_homes/core/models/channel_partner.dart';
 import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:multiselect_dropdown_flutter/multiselect_dropdown_flutter.dart';
-// import 'package:pdf/widgets.dart' as pw;
-// import 'package:path_provider/path_provider.dart';
-// import 'dart:io';
-// import 'package:open_file/open_file.dart';
+import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:provider/provider.dart';
 
 class AdminClientTaggingForm extends StatefulWidget {
@@ -34,13 +31,11 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
 
   bool iConfirm = false;
   bool isLoading = false;
-  final List myList2 = const ['1RK', '1BHK', '2BHK', '3BHK', '4BHK', 'Jodi'];
-  final List myList = const ['Ev 9 Square', 'Ev heart city', 'Marina Bay'];
   List<OurProject> selectedProject = [];
   List<String> selectedRequirement = [];
   bool _showClientInfo = false;
   bool _showCPDetails = false;
-  String selectedStatus = "Pending";
+  String selectedStatus = "pending";
   String selectedIntrestedStatus = "Cold";
   DateTime startDate = DateTime.now();
   DateTime validTill = DateTime.now().add(const Duration(days: 60));
@@ -186,10 +181,6 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
       status: selectedStatus,
       approvalStatus: selectedStatus,
       interestedStatus: selectedIntrestedStatus,
-      callHistory: [],
-      viewedBy: [],
-      approvalHistory: [],
-      updateHistory: [],
       channelPartner: selectedChannelPartner,
     );
     Map<String, dynamic> leadJson = newLead.toJson();
@@ -363,44 +354,139 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(15),
-                          child: MultiSelectDropdown.simpleList(
-                            list: myList,
-                            boxDecoration: BoxDecoration(
-                              border: Border.all(),
-                              borderRadius: BorderRadius.circular(20),
+                          child: MultiDropdown<OurProject>(
+                            items: [
+                              ...settingProvider.ourProject.map(
+                                (ele) => DropdownItem(
+                                    value: ele, label: ele.name ?? ""),
+                              ),
+                            ],
+                            // controller: multiselectController,
+                            enabled: true,
+                            searchEnabled: true,
+                            chipDecoration: const ChipDecoration(
+                              backgroundColor: Colors.greenAccent,
+                              wrap: true,
+                              runSpacing: 2,
+                              spacing: 10,
                             ),
-                            initiallySelected: selectedProject,
-                            checkboxFillColor: Colors.grey.withOpacity(0.3),
-                            splashColor: Colors.grey.withOpacity(0.3),
-                            includeSearch: true,
-                            // includeSelectAll: true,
-                            whenEmpty: "Projects",
-                            onChange: (newList) {
+                            fieldDecoration: FieldDecoration(
+                              hintText: 'Projects',
+                              hintStyle: const TextStyle(color: Colors.black87),
+                              prefixIcon:
+                                  const Icon(CupertinoIcons.building_2_fill),
+                              showClearIcon: false,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                            dropdownDecoration: const DropdownDecoration(
+                              marginTop: 2,
+                              maxHeight: 500,
+                              header: Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text(
+                                  'Select Projects',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            dropdownItemDecoration: DropdownItemDecoration(
+                              selectedIcon: const Icon(Icons.check_box,
+                                  color: Colors.grey),
+                              disabledIcon:
+                                  Icon(Icons.lock, color: Colors.grey.shade300),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select a project';
+                              }
+                              return null;
+                            },
+                            onSelectionChange: (selectedItems) {
                               setState(() {
-                                // selectedProject =
-                                //     newList.map((e) => e as String).toList();
+                                selectedProject = selectedItems;
                               });
                             },
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(15),
-                          child: MultiSelectDropdown.simpleList(
-                            list: myList2,
-                            boxDecoration: BoxDecoration(
-                              border: Border.all(),
-                              borderRadius: BorderRadius.circular(20),
+                          child: MultiDropdown<String>(
+                            items: [
+                              ...settingProvider.requirements.map(
+                                (ele) => DropdownItem(value: ele, label: ele),
+                              ),
+                            ],
+                            enabled: true,
+                            searchEnabled: false,
+                            chipDecoration: const ChipDecoration(
+                              backgroundColor: Colors.greenAccent,
+                              wrap: true,
+                              runSpacing: 2,
+                              spacing: 10,
                             ),
-                            initiallySelected: selectedRequirement,
-                            checkboxFillColor: Colors.grey.withOpacity(0.3),
-                            splashColor: Colors.grey.withOpacity(0.3),
-                            includeSearch: true,
-                            // includeSelectAll: true,
-                            whenEmpty: "Requirement",
-                            onChange: (newList) {
+                            fieldDecoration: FieldDecoration(
+                              labelStyle: TextStyle(fontSize: 30),
+                              hintText: 'Requirements',
+                              hintStyle: const TextStyle(color: Colors.black87),
+                              prefixIcon:
+                                  const Icon(CupertinoIcons.building_2_fill),
+                              showClearIcon: false,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                            dropdownDecoration: const DropdownDecoration(
+                              marginTop: 2,
+                              maxHeight: 500,
+                              header: Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text(
+                                  'Select Apartments',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            dropdownItemDecoration: DropdownItemDecoration(
+                              selectedIcon: const Icon(Icons.check_box,
+                                  color: Colors.grey),
+                              disabledIcon:
+                                  Icon(Icons.lock, color: Colors.grey.shade300),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select a apartment';
+                              }
+                              return null;
+                            },
+                            onSelectionChange: (selectedItems) {
                               setState(() {
-                                selectedRequirement =
-                                    newList.map((e) => e as String).toList();
+                                selectedRequirement = selectedItems;
                               });
                             },
                           ),
@@ -433,15 +519,15 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
                             value: selectedStatus,
                             items: const [
                               DropdownMenuItem(
-                                value: 'Approved',
+                                value: 'approved',
                                 child: Text('Approved'),
                               ),
                               DropdownMenuItem(
-                                value: 'Pending',
+                                value: 'pending',
                                 child: Text('Pending'),
                               ),
                               DropdownMenuItem(
-                                value: 'Rejected',
+                                value: 'rejected',
                                 child: Text('Rejected'),
                               ),
                             ],
@@ -464,15 +550,15 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
                             value: selectedIntrestedStatus,
                             items: const [
                               DropdownMenuItem(
-                                value: 'Cold',
+                                value: 'cold',
                                 child: Text('Cold'),
                               ),
                               DropdownMenuItem(
-                                value: 'Hot',
+                                value: 'hot',
                                 child: Text('Hot'),
                               ),
                               DropdownMenuItem(
-                                value: 'Warm',
+                                value: 'warm',
                                 child: Text('Warm'),
                               ),
                             ],
@@ -498,7 +584,6 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
                     childrens: [
                       if (_showCPDetails) ...[
                         const SizedBox(height: 20),
-
                         SearchableDropdown<ChannelPartner>(
                           initialSelection: selectedChannelPartner,
                           items: channelPartners,
@@ -517,17 +602,6 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
                             });
                           },
                         ),
-                        // const SizedBox(height: 16),
-                        // const CustomTile(title: "Name: ", subTitle: "John Doe"),
-                        // const CustomTile(
-                        //     title: "Phone Number: ",
-                        //     subTitle: "+91 9876543210"),
-                        // const CustomTile(
-                        //     title: "Email: ", subTitle: "johndoe@example.com"),
-                        // const CustomTile(
-                        //     title: "Firm name: ", subTitle: "ABC Realty"),
-                        // const CustomTile(
-                        //     title: "Rera Number: ", subTitle: "RERA123456"),
                       ]
                     ],
                   ),

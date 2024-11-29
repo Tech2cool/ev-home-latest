@@ -588,17 +588,22 @@ class ApiService {
   }
 
   Future<Lead?> addLead(Map<String, dynamic> data) async {
-    final Response response = await _dio.post(
-      '/leads-add',
-      data: data,
-    );
-    if (response.data['code'] != 200) {
-      Helper.showCustomSnackBar(response.data['message']);
+    try {
+      final Response response = await _dio.post(
+        '/leads-add',
+        data: data,
+      );
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return null;
+      }
+      Helper.showCustomSnackBar(response.data['message'], Colors.green);
+      final paresedLead = Lead.fromJson(response.data['data']);
+      return paresedLead;
+    } catch (e) {
+      print("$e");
       return null;
     }
-    Helper.showCustomSnackBar(response.data['message'], Colors.green);
-
-    return Lead.fromJson(response.data['data']);
   }
 
   Future<Payment?> getPaymentbyFlat(String flatNo) async {
@@ -2027,7 +2032,7 @@ class ApiService {
       }).toList();
 
       // print('pass id $id');
-      // print('leads ${leads.length}');
+      print('leads ${leads.length}');
       // print('leads data ${dataList.length}');
       return PaginationModel<Lead>(
         code: 404,
@@ -2037,6 +2042,9 @@ class ApiService {
         totalPages: response.data["totalPages"],
         totalItems: response.data["totalItems"],
         pendingCount: response.data["pendingCount"],
+        visitCount: response.data["visitCount"],
+        revisitCount: response.data["revisitCount"],
+        bookingCount: response.data["bookingCount"],
         assignedCount: response.data["assignedCount"],
         followUpCount: response.data["followUpCount"],
         contactedCount: response.data["contactedCount"],

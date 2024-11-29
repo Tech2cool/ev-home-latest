@@ -111,10 +111,10 @@ class _PreSalesExecutiveLeadListPageState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              lead.status,
+                              lead.status ?? "",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: _getStatusColor(lead.status),
+                                color: _getStatusColor(lead.status ?? ''),
                               ),
                             ),
                             const SizedBox(height: 5),
@@ -169,8 +169,8 @@ class _PreSalesExecutiveLeadListPageState
                                       const SizedBox(height: 5),
                                       NamedCard(
                                         heading: "Data Analyser",
-                                        value: lead.dataAnalyser != null
-                                            ? "${lead.dataAnalyser?.firstName} ${lead.dataAnalyser?.lastName}"
+                                        value: lead.dataAnalyzer != null
+                                            ? "${lead.dataAnalyzer?.firstName} ${lead.dataAnalyzer?.lastName}"
                                             : "NA",
                                       ),
                                       NamedCard(
@@ -220,10 +220,10 @@ class _PreSalesExecutiveLeadListPageState
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              lead.status,
+                              lead.status ?? "",
                               style: TextStyle(
                                 fontSize: 12,
-                                color: _getStatusColor(lead.status),
+                                color: _getStatusColor(lead.status ?? ""),
                               ),
                             ),
                             const SizedBox(height: 5),
@@ -272,14 +272,14 @@ class _PreSalesExecutiveLeadListPageState
                                       const SizedBox(height: 5),
                                       NamedCard(
                                         heading: "Data Analyser",
-                                        value: lead.dataAnalyser != null
-                                            ? "${lead.dataAnalyser?.firstName} ${lead.dataAnalyser?.lastName}"
+                                        value: lead.dataAnalyzer != null
+                                            ? "${lead.dataAnalyzer?.firstName} ${lead.dataAnalyzer?.lastName}"
                                             : "NA",
                                       ),
                                       NamedCard(
                                         heading: "Team Leader",
-                                        value: lead.dataAnalyser != null
-                                            ? "${lead.dataAnalyser?.firstName} ${lead.dataAnalyser?.lastName}"
+                                        value: lead.dataAnalyzer != null
+                                            ? "${lead.dataAnalyzer?.firstName} ${lead.dataAnalyzer?.lastName}"
                                             : "NA",
                                       ),
                                     ],

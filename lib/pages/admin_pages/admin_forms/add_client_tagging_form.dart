@@ -39,7 +39,7 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
   List<String> selectedRequirement = [];
   bool _showClientInfo = false;
   bool _showCPDetails = false;
-  String selectedStatus = "Pending";
+  String selectedStatus = "pending";
   String selectedIntrestedStatus = "Cold";
   DateTime startDate = DateTime.now();
   DateTime validTill = DateTime.now().add(const Duration(days: 60));
@@ -182,14 +182,9 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
       address: _addressController.text,
       validTill: validTill,
       status: selectedStatus,
-      approvalStage: ApprovalStage(
-        status: selectedStatus,
-        date: DateTime.now(),
-        remark: '',
-      ),
+      approvalStatus: selectedStatus,
       interestedStatus: selectedIntrestedStatus,
       callHistory: [],
-      viewedBy: [],
       approvalHistory: [],
       updateHistory: [],
       channelPartner: selectedChannelPartner,

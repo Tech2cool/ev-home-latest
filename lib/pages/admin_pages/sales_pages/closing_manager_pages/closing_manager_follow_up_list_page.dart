@@ -33,18 +33,18 @@ class _ClosingManagerFollowUpListPageState
   List<Lead> getFilteredLeads() {
     // if (widget.status == "Approved") {
     //   return leads
-    //       .where((lead) => lead.approvalStage?.status == "Approved")
+    //       .where((lead) => lead.approvalStatus == "Approved")
     //       .toList();
     // } else if (widget.status == "Rejected") {
     //   return leads
-    //       .where((lead) => lead.approvalStage?.status == "Rejected")
+    //       .where((lead) => lead.approvalStatus == "Rejected")
     //       .toList();
     // } else if (widget.status == "Pending") {
     //   return leads
     //       .where(
     //         (lead) =>
-    //             lead.approvalStage?.status == "Pending" ||
-    //             lead.approvalStage?.status == "In Progress",
+    //             lead.approvalStatus == "Pending" ||
+    //             lead.approvalStatus == "In Progress",
     //       )
     //       .toList();
     // }
@@ -199,12 +199,12 @@ class _ClosingManagerFollowUpListPageState
                                     children: [
                                       Text(
                                         Helper.capitalize(
-                                          lead.approvalStage?.status ?? "",
+                                          lead.approvalStatus ?? "",
                                         ),
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: _getStatusColor(
-                                            lead.approvalStage?.status ?? "",
+                                            lead.approvalStatus ?? "",
                                           ),
                                         ),
                                       ),
@@ -292,8 +292,8 @@ class _ClosingManagerFollowUpListPageState
                                         const SizedBox(height: 5),
                                         NamedCard(
                                           heading: "Data Analyser",
-                                          value: lead.dataAnalyser != null
-                                              ? "${lead.dataAnalyser?.firstName} ${lead.dataAnalyser?.lastName}"
+                                          value: lead.dataAnalyzer != null
+                                              ? "${lead.dataAnalyzer?.firstName} ${lead.dataAnalyzer?.lastName}"
                                               : "NA",
                                         ),
                                         NamedCard(

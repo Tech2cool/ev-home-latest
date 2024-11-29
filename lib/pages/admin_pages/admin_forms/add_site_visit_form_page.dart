@@ -86,7 +86,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
     'revisit',
   ];
 
-  List<String> selectedProject = [];
+  List<OurProject> selectedProject = [];
   String? selectedProj;
   String? selectedVisit;
 
@@ -812,10 +812,10 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                             Expanded(
                               child: MultiDropdown<OurProject>(
                                 items: [
-                                  ...settingProvider.ourProject
-                                      .map((ele) => DropdownItem(
-                                          value: ele, label: ele.name))
-                                      .toList(),
+                                  ...settingProvider.ourProject.map(
+                                    (ele) => DropdownItem(
+                                        value: ele, label: ele.name ?? ""),
+                                  ),
                                 ],
                                 controller: multiselectController,
                                 enabled: true,
@@ -873,8 +873,9 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                   return null;
                                 },
                                 onSelectionChange: (selectedItems) {
-                                  debugPrint(
-                                      "OnSelectionChange: $selectedItems");
+                                  setState(() {
+                                    selectedProject = selectedItems;
+                                  });
                                 },
                               ),
                             ),
@@ -888,10 +889,10 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                             Expanded(
                               child: MultiDropdown<String>(
                                 items: [
-                                  ...settingProvider.requirements
-                                      .map((ele) =>
-                                          DropdownItem(value: ele, label: ele))
-                                      .toList(),
+                                  ...settingProvider.requirements.map(
+                                    (ele) =>
+                                        DropdownItem(value: ele, label: ele),
+                                  ),
                                 ],
                                 controller: multiselectController1,
                                 enabled: true,
@@ -950,8 +951,9 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                   return null;
                                 },
                                 onSelectionChange: (selectedItems) {
-                                  debugPrint(
-                                      "OnSelectionChange: $selectedItems");
+                                  setState(() {
+                                    selectedRequirement = selectedItems;
+                                  });
                                 },
                               ),
                             ),
@@ -1087,12 +1089,12 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                             Expanded(
                               child: MultiDropdown<Employee>(
                                 items: [
-                                  ...settingProvider.salesManager
-                                      .map((ele) => DropdownItem(
-                                          value: ele,
-                                          label:
-                                              "${ele.firstName} ${ele.lastName} (${ele.designation?.designation ?? ""})"))
-                                      .toList(),
+                                  ...settingProvider.salesManager.map(
+                                    (ele) => DropdownItem(
+                                        value: ele,
+                                        label:
+                                            "${ele.firstName} ${ele.lastName} (${ele.designation?.designation ?? ""})"),
+                                  ),
                                 ],
                                 controller: multiselectController2,
                                 enabled: true,
@@ -1138,10 +1140,14 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                   ),
                                 ),
                                 dropdownItemDecoration: DropdownItemDecoration(
-                                  selectedIcon: const Icon(Icons.check_box,
-                                      color: Colors.grey),
-                                  disabledIcon: Icon(Icons.lock,
-                                      color: Colors.grey.shade300),
+                                  selectedIcon: const Icon(
+                                    Icons.check_box,
+                                    color: Colors.grey,
+                                  ),
+                                  disabledIcon: Icon(
+                                    Icons.lock,
+                                    color: Colors.grey.shade300,
+                                  ),
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -1150,8 +1156,11 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                   return null;
                                 },
                                 onSelectionChange: (selectedItems) {
-                                  debugPrint(
-                                      "OnSelectionChange: $selectedItems");
+                                  setState(() {
+                                    _selectedSalesManagers1 = selectedItems;
+                                  });
+                                  // debugPrint(
+                                  //     "OnSelectionChange: $selectedItems");
                                 },
                               ),
                             ),

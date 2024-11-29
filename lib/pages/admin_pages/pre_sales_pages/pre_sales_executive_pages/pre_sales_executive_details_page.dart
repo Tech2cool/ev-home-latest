@@ -227,7 +227,7 @@ class _PreSalesExecutiveDetailsPageState
                                             ),
                                             sLead.channelPartner?.firmName ??
                                                 "NA",
-                                            sLead.status,
+                                            sLead.status ?? "",
                                           ),
                                           const Divider(),
                                         ],

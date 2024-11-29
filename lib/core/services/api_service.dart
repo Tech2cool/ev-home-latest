@@ -28,10 +28,7 @@ const storage = FlutterSecureStorage();
 
 // final dio = Dio();
 
-const baseUrl = "http://192.168.1.167:8082";
-
-// const baseUrl = "http://192.168.1.107:8082";
-
+const baseUrl = "http://192.168.1.180:8082";
 // const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
@@ -99,10 +96,13 @@ class ApiService {
         return emptyPagination;
       }
       final items = data['data'] as List<dynamic>? ?? [];
+      print(items.length);
+
       List<Lead> leads = [];
       if (items.isNotEmpty) {
         leads = items.map((emp) => Lead.fromJson(emp)).toList();
       }
+      print("pass serialization");
       final newPagination = PaginationModel<Lead>(
         code: data['code'],
         message: data['message'],
@@ -116,6 +116,7 @@ class ApiService {
         // assignedCount: response.data["assignedCount"],
         data: leads,
       );
+      print("Pagiantion");
 
       return newPagination;
     } on DioException catch (e) {

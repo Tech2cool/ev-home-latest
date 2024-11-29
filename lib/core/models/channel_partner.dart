@@ -3,9 +3,9 @@ class ChannelPartner {
   final String? firstName;
   final String? profilePic;
   final String? lastName;
-  final String email;
-  final String gender;
-  final String dateOfBirth;
+  final String? email;
+  final String? gender;
+  final String? dateOfBirth;
   final String? firmName;
   final String? homeAddress;
   final String? firmAddress;
@@ -15,8 +15,6 @@ class ChannelPartner {
   final String? reraCertificate;
   final bool? isVerified;
   final bool? sameAdress;
-  final String? refreshToken;
-  final String? accessToken;
   final bool? isVerifiedPhone;
   final bool? isVerifiedEmail;
   final String? role;
@@ -38,8 +36,6 @@ class ChannelPartner {
     required this.reraCertificate,
     this.isVerified,
     this.sameAdress,
-    this.refreshToken,
-    this.accessToken,
     this.isVerifiedPhone,
     this.isVerifiedEmail,
     this.role,
@@ -63,8 +59,6 @@ class ChannelPartner {
       reraCertificate: map['reraCertificate'],
       isVerified: map['isVerified'],
       sameAdress: map['sameAdress'],
-      refreshToken: map['refreshToken'],
-      accessToken: map['accessToken'],
       isVerifiedPhone: map['isVerifiedPhone'],
       isVerifiedEmail: map['isVerifiedEmail'],
       role: map['role'],

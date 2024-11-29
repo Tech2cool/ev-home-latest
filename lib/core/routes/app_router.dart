@@ -280,7 +280,7 @@ class AppRoutes {
         },
       ),
       GoRoute(
-        path: '/postsalehead-internal-tagging-details',
+        path: '/post-sales-lead-details',
         builder: (context, state) {
           final lead = state.extra as PostSaleLead;
 

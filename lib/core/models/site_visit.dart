@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:ev_homes/core/models/employee.dart';
+import 'package:ev_homes/core/models/our_project.dart';
 
 class SiteVisit {
   final DateTime? date;
@@ -11,16 +12,18 @@ class SiteVisit {
   final String? countryCode;
   final String? email;
   final String? residence;
-  final List<String> projects;
   final String? visitType;
+  final List<OurProject> projects;
   final List<String> choiceApt;
   final Employee? closingManager;
+  List<Employee> closingTeam;
   final Employee? attendedBy;
   final Employee? dataEntryBy;
   final String? gender;
   final String? feedback;
   final String? namePrefix;
   final String? source;
+  final bool verified;
 
   SiteVisit({
     this.visitType,
@@ -28,13 +31,15 @@ class SiteVisit {
     this.firstName,
     this.lastName,
     this.phoneNumber,
-    this.countryCode,
+    this.countryCode = "+91",
     this.email,
     this.residence,
     this.namePrefix,
     required this.projects,
     required this.choiceApt,
+    this.verified = false,
     this.closingManager,
+    this.closingTeam = const [],
     this.attendedBy,
     this.dataEntryBy,
     this.gender,
@@ -58,7 +63,9 @@ class SiteVisit {
       'gender': gender,
       'namePrefix': namePrefix,
       'source': source,
+      'verified': verified,
       'closingManager': closingManager?.toMap(),
+      'closingTeam': closingTeam.map((e) => e.id).toList(),
       'attendedBy': attendedBy?.toMap(),
       'dataEntryBy': dataEntryBy?.toMap(),
     };
@@ -72,19 +79,27 @@ class SiteVisit {
       firstName: map['firstName'],
       lastName: map['lastName'],
       phoneNumber: map['phoneNumber'],
-      countryCode: map['countryCode'],
+      countryCode: map['countryCode'] ?? "+91",
       email: map['email'],
       gender: map['gender'],
       residence: map['residence'],
+      verified: map['verified'],
       feedback: map['feedback'],
       namePrefix: map['namePrefix'],
       source: map['source'],
-      projects: List<String>.from((map['projects'] ?? [])),
       visitType: (map['visitType']),
+      projects: map['projects'] != null
+          ? List<OurProject>.from(
+              (map['projects'] as List).map((e) => OurProject.fromJson(e)))
+          : [],
       choiceApt: List<String>.from((map['choiceApt'] ?? [])),
       closingManager: map['closingManager'] != null
           ? Employee.fromMap(map['closingManager'])
           : null,
+      closingTeam: map['closingTeam'] != null
+          ? List<Employee>.from(
+              (map['closingTeam'] as List).map((e) => Employee.fromMap(e)))
+          : [],
       attendedBy: map['attendedBy'] != null
           ? Employee.fromMap(map['attendedBy'])
           : null,

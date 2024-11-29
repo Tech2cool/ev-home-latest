@@ -84,7 +84,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Color(0xff424d51)),
         title: Text(
-          widget.project.name,
+          widget.project.name ?? "",
           style: const TextStyle(color: Color(0xff424d51)),
         ),
         backgroundColor: Colors.white,
@@ -118,7 +118,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
                     child: Text(
-                      widget.project.description,
+                      widget.project.description ?? "",
                       style: const TextStyle(
                         fontFamily: 'Manrope',
                         fontSize: 13,

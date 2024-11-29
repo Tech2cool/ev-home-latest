@@ -89,6 +89,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   List<String> selectedProject = [];
   String? selectedProj;
   String? selectedVisit;
+
   List<String> selectedRequirement = [];
   List<String> listofSource = ['Walk-in', 'CP', 'Ref'];
   Employee? _selectedDataEntryUser;
@@ -385,7 +386,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         items: closingMangers
                             .map((ele) => DropdownMenuItem(
                                   value: ele,
-                                  child: Text(ele.firstName),
+                                  child: Text(ele.firstName ?? ""),
                                 ))
                             .toList(),
                         hint: const Text("User"),

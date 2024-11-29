@@ -12,6 +12,7 @@ class SiteVisit {
   final String? countryCode;
   final String? email;
   final String? residence;
+  final String? visitType;
   final List<OurProject> projects;
   final List<String> choiceApt;
   final Employee? closingManager;
@@ -25,6 +26,7 @@ class SiteVisit {
   final bool verified;
 
   SiteVisit({
+    this.visitType,
     this.date,
     this.firstName,
     this.lastName,
@@ -56,6 +58,7 @@ class SiteVisit {
       'feedback': feedback,
       'residence': residence,
       'projects': projects,
+      'visitType': visitType,
       'choiceApt': choiceApt,
       'gender': gender,
       'namePrefix': namePrefix,
@@ -84,6 +87,7 @@ class SiteVisit {
       feedback: map['feedback'],
       namePrefix: map['namePrefix'],
       source: map['source'],
+      visitType: (map['visitType']),
       projects: map['projects'] != null
           ? List<OurProject>.from(
               (map['projects'] as List).map((e) => OurProject.fromJson(e)))

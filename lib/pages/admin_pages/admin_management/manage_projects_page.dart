@@ -1,6 +1,7 @@
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:ev_homes/pages/admin_pages/admin_forms/edit_new_project_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -156,11 +157,11 @@ class _ManageProjectsPageState extends State<ManageProjectsPage> {
   // Function to handle edit action
   void _editProject(OurProject project) {
     //TODO: Edit Project
-    // Navigator.of(context).push(
-    //   MaterialPageRoute(
-    //     builder: (context) => EditNewProjectPage(ourProj: project),
-    //   ),
-    // );
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => EditNewProjectPage(ourProj: project),
+      ),
+    );
   }
 
   // Function to handle delete action

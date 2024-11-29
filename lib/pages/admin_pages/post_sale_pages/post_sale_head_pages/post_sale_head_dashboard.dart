@@ -8,7 +8,7 @@ import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_marina_bay.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_nine_square.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_letter.dart';
-import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_letter_9Square.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_letter_9_square.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule%20_nine_square.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule_marina_bay.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/update_payment_schedule_9_squre.dart';

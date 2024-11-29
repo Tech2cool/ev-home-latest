@@ -84,13 +84,14 @@ class _PreSalesExecutiveDetailsPageState
                       children: [
                         MyTextCard(
                           heading: "Client Name: ",
-                          value: widget.lead.firstName ?? "",
+                          value:
+                              "${widget.lead.firstName} ${widget.lead.lastName}",
                         ),
                         const SizedBox(height: 8),
                         MyTextCard(
                             heading: "Phone: ",
                             value:
-                                " ${widget.lead.countryCode} ${widget.lead.phoneNumber}"),
+                                "${widget.lead.countryCode} ${widget.lead.phoneNumber}"),
                         const SizedBox(height: 8),
                         MyTextCard(
                             heading: "Alternate Number: ",
@@ -100,7 +101,10 @@ class _PreSalesExecutiveDetailsPageState
                         const SizedBox(height: 8),
                         MyTextCard(
                           heading: "Email: ",
-                          value: widget.lead.email ?? "NA",
+                          value: (widget.lead.email != null &&
+                                  widget.lead.email!.isNotEmpty)
+                              ? widget.lead.email!
+                              : "NA",
                         ),
                         const SizedBox(height: 8),
                         MyTextCard(
@@ -111,8 +115,91 @@ class _PreSalesExecutiveDetailsPageState
                         ),
                         const SizedBox(height: 8),
                         MyTextCard(
-                            heading: "Remark: ",
-                            value: widget.lead.remark ?? "NA"),
+                          heading: "Lead Status: ",
+                          value: widget.lead.approvalStatus ?? "",
+                          valueColor: _getStatusColor(
+                            widget.lead.approvalStatus ?? "",
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        MyTextCard(
+                          heading: "Interested: ",
+                          value: widget.lead.interestedStatus ?? "",
+                          valueColor: _getIntrestedColor(
+                            widget.lead.interestedStatus ?? "",
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        MyTextCard(
+                          heading: "Remark: ",
+                          value: widget.lead.remark ?? 'NA',
+                        ),
+                        const SizedBox(height: 8),
+                        MyTextCard(
+                          heading: "Team Leader: ",
+                          value: widget.lead.teamLeader != null
+                              ? "${widget.lead.teamLeader?.firstName ?? ""} ${widget.lead.teamLeader?.lastName ?? ""}"
+                              : "NA",
+
+                          // valueColor: _getIntrestedColor(
+                          //   widget.lead.interestedStatus,
+                          // ),
+                        ),
+                        const SizedBox(height: 8),
+                        MyTextCard(
+                          heading: "Data Analyzer: ",
+                          value: widget.lead.dataAnalyzer != null
+                              ? "${widget.lead.dataAnalyzer?.firstName ?? ""} ${widget.lead.dataAnalyzer?.lastName ?? ""}"
+                              : "NA",
+
+                          // valueColor: _getIntrestedColor(
+                          //   widget.lead.interestedStatus,
+                          // ),
+                        ),
+                        const SizedBox(height: 8),
+                        MyTextCard(
+                          heading: "Pre Sale Executive: ",
+                          value: widget.lead.preSalesExecutive != null
+                              ? "${widget.lead.preSalesExecutive?.firstName ?? ""} ${widget.lead.preSalesExecutive?.lastName ?? ""}"
+                              : "NA",
+
+                          // valueColor: _getIntrestedColor(
+                          //   widget.lead.interestedStatus,
+                          // ),
+                        ),
+                        const SizedBox(height: 8),
+                        MyTextCard(
+                          heading: "Start Date: ",
+                          value: Helper.formatDate(
+                            widget.lead.startDate.toString(),
+                          ),
+                          // valueColor: _getIntrestedColor(
+                          //   widget.lead.interestedStatus,
+                          // ),
+                        ),
+                        const SizedBox(height: 8),
+                        MyTextCard(
+                          heading: "Valid Till: ",
+                          value: Helper.formatDate(
+                            widget.lead.validTill.toString(),
+                          ),
+                          // valueColor: _getIntrestedColor(
+                          //   widget.lead.interestedStatus,
+                          // ),
+                        ),
+                        const SizedBox(height: 8),
+                        MyTextCard(
+                          heading: "Project: ",
+                          value: widget.lead.project
+                              .map((pr) => pr.name)
+                              .join(", "),
+                        ),
+                        const SizedBox(height: 8),
+                        MyTextCard(
+                          heading: "Requirement: ",
+                          value: widget.lead.requirement.join(", "),
+                        ),
+                        const SizedBox(height: 8),
                       ],
                     ),
                   ),
@@ -306,11 +393,11 @@ class _PreSalesExecutiveDetailsPageState
 
   Color _getStatusColor(String status) {
     switch (status) {
-      case 'Contacted':
+      case 'contacted':
         return Colors.green;
-      case 'Pending':
+      case 'pending':
         return Colors.red;
-      case 'Followup':
+      case 'followup':
         return Colors.orange;
       default:
         return Colors.grey;
@@ -659,6 +746,7 @@ class _PreSalesExecutiveDetailsPageState
                         final data = {
                           'leadStage': selectedLeadStage,
                           'leadStatus': selectedLeadStatus,
+                          'remark': feedback,
                           'feedback': feedback,
                           'siteVisit': sitevisitstatus,
                           'document': "",
@@ -701,7 +789,15 @@ class _PreSalesExecutiveDetailsPageState
 class MyTextCard extends StatelessWidget {
   final String heading;
   final String value;
-  const MyTextCard({super.key, required this.heading, required this.value});
+  final Color? headingColor;
+  final Color? valueColor;
+  const MyTextCard({
+    super.key,
+    required this.heading,
+    required this.value,
+    this.headingColor,
+    this.valueColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -709,16 +805,30 @@ class MyTextCard extends StatelessWidget {
       children: [
         Text(
           heading,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w500,
+            color: headingColor,
           ),
         ),
         Text(
           value,
-          style: const TextStyle(fontSize: 15),
+          style: TextStyle(fontSize: 15, color: valueColor),
         ),
       ],
     );
+  }
+}
+
+Color _getIntrestedColor(String status) {
+  switch (status.toLowerCase()) {
+    case 'cold':
+      return Colors.blue;
+    case 'hot':
+      return Colors.red;
+    case 'warm':
+      return Colors.orange;
+    default:
+      return Colors.blue;
   }
 }

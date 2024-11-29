@@ -1,3 +1,7 @@
+// import 'package:ev_home_main/core/models/customer_payment.dart';
+// import 'package:ev_home_main/core/services/api_service.dart';
+import 'package:ev_homes/core/models/customer_payment.dart';
+import 'package:ev_homes/core/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -52,6 +56,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
   double remainingBase = 0.0;
   double remainingGst = 0.0;
   double remainingTds = 0.0;
+  Payment? getpayment;
 
   String toRoman(int number) {
     if (number < 1 || number > 5) return number.toString();
@@ -552,10 +557,29 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
     }
   }
 
-  void _updateFlatNo() {
+  void _updateFlatNo() async {
     if (selectedFloor != null && selectedUnit != null) {
       setState(() {
         flatNoController.text = '$selectedFloor$selectedUnit';
+      });
+      final res =
+          await ApiService().getPaymentbyFlat("$selectedFloor$selectedUnit");
+      setState(() {
+        getpayment = res;
+        carpetAreaController.text = res?.carpetArea ?? "";
+        clientNameController.text = res?.customerName ?? "";
+        phoneController.text = res?.phoneNumber.toString() ?? "";
+        addressLine1Controller.text = res?.address1 ?? "";
+        addressLine2Controller.text = res?.address2 ?? "";
+        cityController.text = res?.city ?? "";
+        pincodeController.text = res?.pincode.toString() ?? "";
+        netAmountController.text = res?.bookingAmt.toString() ?? "";
+        cgstSgstController.text = res?.cgst.toString() ?? "";
+        totalAmountController.text = res?.amtReceived.toString() ?? "";
+        allInclusiveController.text = res?.allinclusiveamt.toString() ?? "";
+        tdsController.text = res?.tds.toString() ?? "";
+
+        print(res);
       });
     }
   }
@@ -742,11 +766,15 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
             double.parse(tdsController.text.replaceAll(',', ''));
     int reminderDays = int.parse(selectedReminder!);
 
+    // First calculate base amount without GST
     double baseAmount = (totalDue / 1.05);
-    print(baseAmount);
+    // Calculate GST amount
     double gstAmount = totalDue - baseAmount;
+    // Calculate 1% TDS on original base amount
     double tdsAmount = baseAmount * 0.01;
-    baseAmount = baseAmount - tdsAmount;
+    // Base amount remains the original amount (don't subtract TDS here)
+    // This ensures TDS shows separately in its column
+    double netAmount = baseAmount - tdsAmount;
 
     double receivedBase =
         double.parse(netAmountController.text.replaceAll(',', ''));
@@ -757,23 +785,27 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
     remainingBase = baseAmount - receivedBase;
     remainingGst = gstAmount - receivedGst;
     remainingTds = tdsAmount - receivedTds;
-    double remainingTotal = remainingBase + remainingGst + remainingTds;
+    // For total, we need to consider TDS reduction
+    double remainingTotal = (remainingBase - remainingTds) + remainingGst;
+
     double latePaymentCharge = remainingBase * (reminderDays / 100.0);
     double latePaymentGST = latePaymentCharge * 0.18;
-    double latetdspayment = 0;
-    double totalLatePayment =
-        latePaymentCharge + latePaymentGST + latetdspayment;
+    double latetdspayment = 0.0; // Changed from "-" as double to 0.0
+    double totalLatePayment = latePaymentCharge + latePaymentGST;
+
     double finalBase = remainingBase + latePaymentCharge;
     double finalGst = remainingGst + latePaymentGST;
-    double finaltds = remainingTds + latetdspayment;
-    double finalTotal = finalBase + finalGst + finaltds;
+    double finaltds = remainingTds;
+    // Final total should consider TDS reduction
+    double finalTotal = (finalBase - finaltds) + finalGst;
+
     List<pw.TableRow> rows = [
       _buildPdfTableRow(
           ['Particulars', 'Net Amount', 'CGST/SGST', 'TDS', 'Total'],
           isHeader: true),
       _buildPdfTableRow([
         'Amount due + GST @ 5%',
-        currencyFormat.format(baseAmount),
+        currencyFormat.format(netAmount),
         currencyFormat.format(gstAmount),
         currencyFormat.format(tdsAmount),
         currencyFormat.format(totalDue)
@@ -789,21 +821,21 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
         'Total Amount Payable on or before ${selectedDate != null ? DateFormat('dd-MM-yyyy').format(selectedDate!) : 'N/A'}',
         currencyFormat.format(remainingBase),
         currencyFormat.format(remainingGst),
-        currencyFormat.format(remainingTds), //
+        currencyFormat.format(remainingTds),
         currencyFormat.format(remainingTotal),
       ]),
       _buildPdfTableRow([
         'Add - Late payment charges @ $reminderDays${reminderDays > 1 ? '%' : ''}  + GST @ 18%',
         currencyFormat.format(latePaymentCharge),
         currencyFormat.format(latePaymentGST),
-        currencyFormat.format(latetdspayment), //
+        currencyFormat.format(latetdspayment),
         currencyFormat.format(totalLatePayment)
       ]),
       _buildPdfTableRow([
         'Total Amount Payable after ${selectedDate != null ? DateFormat('dd-MM-yyyy').format(selectedDate!) : 'N/A'}',
         currencyFormat.format(finalBase),
         currencyFormat.format(finalGst),
-        currencyFormat.format(finaltds), // TDS is already deducted
+        currencyFormat.format(finaltds),
         currencyFormat.format(finalTotal)
       ]),
     ];

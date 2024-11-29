@@ -36,6 +36,7 @@ class SettingProvider extends ChangeNotifier {
   List<Employee> _employees = [];
   List<Customer> _customer = [];
   List<Employee> _closingManagers = [];
+  List<Employee> _salesManager = [];
   List<Employee> _dataEntryUsers = [];
   List<Employee> _postSalesExecutives = [];
   List<Employee> _employeeBydDesg = [];
@@ -120,6 +121,7 @@ class SettingProvider extends ChangeNotifier {
   List<Customer> get customer => _customer;
   List<Employee> get employees => _employees;
   List<Employee> get closingManagers => _closingManagers;
+  List<Employee> get salesManager => _salesManager;
   List<Employee> get dataEntryUsers => _dataEntryUsers;
   List<Employee> get postSalesExecutives => _postSalesExecutives;
   List<TeamSection> get teamSections => _teamSections;
@@ -293,6 +295,14 @@ class SettingProvider extends ChangeNotifier {
     final emps = await _apiService.getClosingManagers();
     if (emps.isNotEmpty) {
       _closingManagers = emps;
+      notifyListeners();
+    }
+  }
+
+  Future<void> getSalesManager() async {
+    final emps = await _apiService.getSalesManager();
+    if (emps.isNotEmpty) {
+      _salesManager = emps;
       notifyListeners();
     }
   }

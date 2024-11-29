@@ -29,10 +29,7 @@ const storage = FlutterSecureStorage();
 // final dio = Dio();
 
 const baseUrl = "http://192.168.1.180:8082";
-
-// const baseUrl = "http://192.168.1.107:8082";
-
-const baseUrl = "https://api.evhomes.tech";
+// const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -1812,6 +1809,40 @@ class ApiService {
         totalItems: 0,
         data: [],
       );
+    }
+  }
+
+  Future<List<Employee>> getSalesManager() async {
+    try {
+      final Response response = await _dio.get('/employee-sales-manager');
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return [];
+      }
+      print("pass1");
+
+      final Map<String, dynamic> data = response.data;
+      final items = data['data'] as List<dynamic>? ?? [];
+      List<Employee> empItems = [];
+      if (items.isNotEmpty) {
+        empItems = items.map((emp) => Employee.fromMap(emp)).toList();
+      }
+      print("pass2");
+
+      return empItems;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+      print("pass3");
+
+      if (e.response != null) {
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        errorMessage = e.message.toString();
+      }
+      print("pass4");
+
+      Helper.showCustomSnackBar(errorMessage);
+      return [];
     }
   }
 

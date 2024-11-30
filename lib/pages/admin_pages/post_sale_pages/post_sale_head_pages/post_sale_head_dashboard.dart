@@ -329,45 +329,43 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                     ],
                   ),
                 ),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (selectedProject == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please select a project first'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      } else if (selectedProject!.name!
-                          .toLowerCase()
-                          .contains("marina")) {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const UpdateStatus10(),
-                        ));
-                      } else if (selectedProject!.name!
-                          .toLowerCase()
-                          .contains("square")) {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const UpdatePayment9(),
-                        ));
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amberAccent,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 30.0, vertical: 10.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
+                ElevatedButton(
+                  onPressed: () {
+                    if (selectedProject == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Please select a project first'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    } else if (selectedProject!.name!
+                        .toLowerCase()
+                        .contains("marina")) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const UpdateStatus10(),
+                      ));
+                    } else if (selectedProject!.name!
+                        .toLowerCase()
+                        .contains("square")) {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const UpdatePayment9(),
+                      ));
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.amberAccent,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 10.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-                    child: const Text(
-                      'View Project Status',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ),
+                  child: const Text(
+                    'View Project Status',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
@@ -539,103 +537,6 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
             ),
           ),
         ),
-        if (showNotification)
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                notificationHeight = 0;
-                showNotification = false;
-              });
-            },
-            child: Container(
-              color: Colors.black.withOpacity(0.05),
-            ),
-          ),
-        Positioned(
-          top: 15,
-          right: 15,
-          child: Stack(
-            children: [
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    if (showNotification) {
-                      notificationHeight = 0;
-                    } else {
-                      notificationHeight = 200;
-                    }
-                    showNotification = !showNotification;
-                  });
-                },
-                icon: const Icon(Icons.notifications),
-              ),
-              if (leads.isNotEmpty)
-                Positioned(
-                  right: 10,
-                  top: 10,
-                  child: Container(
-                    width: 16,
-                    height: 16,
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.red,
-                    ),
-                    child: Center(
-                      child: Text(
-                        "${leads.length}",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
-        if (showNotification)
-          Positioned(
-            top: 60,
-            right: 20,
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 660),
-              width: 200,
-              height: notificationHeight,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: ListView(
-                children: [
-                  ...leads.map((lead) {
-                    return ListTile(
-                      leading: const Icon(
-                        Icons.notifications_active,
-                        color: Colors.red,
-                      ),
-                      title: Text(
-                        "New lead from ${lead.firstName ?? "NA"}",
-                        style: const TextStyle(
-                          fontSize: 12,
-                        ),
-                        maxLines: 2,
-                      ),
-                      subtitle: Text(
-                        Helper.formatDate(lead.date.toString()),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey.shade800,
-                        ),
-                      ),
-                    );
-                  }),
-                ],
-              ),
-            ),
-          ),
         if (isLoading) const LoadingSquare()
       ],
     );

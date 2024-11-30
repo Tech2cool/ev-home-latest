@@ -38,8 +38,8 @@ class _AdminHomeWrapperState extends State<AdminHomeWrapper>
       reverseDuration: const Duration(milliseconds: 275),
     );
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(1.0, 0.0), // Slide from right to left
-      end: Offset.zero, // Target position
+      begin: const Offset(1.0, 0.0),
+      end: Offset.zero,
     ).animate(
       CurvedAnimation(
         parent: _animationController,
@@ -55,73 +55,6 @@ class _AdminHomeWrapperState extends State<AdminHomeWrapper>
     super.dispose();
   }
 
-  Widget getDashboard() {
-    final settingProvider = Provider.of<SettingProvider>(
-      context,
-      listen: false,
-    );
-    final loggedDesg = settingProvider.loggedAdmin?.designation?.id;
-
-    if (loggedDesg == null) {
-      return const UnknownErrorPage();
-    }
-
-    // if (loggedDesg.toLowerCase() == "data analyzer") {
-    // return const AnalyserDashboardPage();
-    // }
-    // else if (loggedDesg.toLowerCase() == "team leader") {
-    //   return const TlDashboard();
-    // } else if (loggedDesg.toLowerCase() == "pre sales executive") {
-    //   return const ExecutiveDashboard();
-    // } else if (loggedDesg.toLowerCase() == "pre sales head") {
-    //   return const PresaleheadDashboard();
-    // } else if (loggedDesg.toLowerCase() == "floor manager" ||
-    //     loggedDesg.toLowerCase() == "front desk executive") {
-    //   return const ReceptionDashboard();
-    // } else if (loggedDesg.toLowerCase() == "sales manager" ||
-    //     loggedDesg.toLowerCase() == "sr. sales manager") {
-    //   return const SalesmanagerDashboard();
-    // } else if (loggedDesg.toLowerCase() == "site head") {
-    //   return const SiteheadDashboard();
-    // } else if (loggedDesg.toLowerCase() == "app developer") {
-    //   // return const SiteheadDashboard();
-    //   return const AppDevDashboard();
-    // } else if (loggedDesg.toLowerCase() == "post sales executive") {
-    //   return const PostsaleheadDashboard();
-    // } else if (loggedDesg.toLowerCase() == "post sales head") {
-//       return const PostsaleheadDashboard();
-    // }
-    // if (loggedDesg.toLowerCase() == "desg-data-analyzer") {
-    //   return const AnalyserDashboardPage();
-    // } else if (loggedDesg.toLowerCase() == "desg-pre-sales-team-leader") {
-    //   return const TlDashboard();
-    // } else if (loggedDesg.toLowerCase() == "desg-pre-sales-executive") {
-    //   return const ExecutiveDashboard();
-    // } else if (loggedDesg.toLowerCase() == "desg-pre-sales-head") {
-    //   return const PresaleheadDashboard();
-    // } else if (loggedDesg.toLowerCase() == "desg-floor-manager" ||
-    //     loggedDesg.toLowerCase() == "desg-front-desk-executive") {
-    //   return const ReceptionDashboard();
-    // } else if (loggedDesg.toLowerCase() == "desg-sales-manager" ||
-    //     loggedDesg.toLowerCase() == "desg-senior-sales-manager") {
-    //   return const SalesmangerDashbord();
-    // } else if (loggedDesg.toLowerCase() == "desg-site-head") {
-    //   return const SiteheadDashboard();
-    // } else if (loggedDesg.toLowerCase() == "desg-app-developer") {
-    //   // return const SiteheadDashboard();
-    //   return const AppDevDashboard();
-    // } else if (loggedDesg.toLowerCase() == "desg-post-sales-executive") {
-    //   return const PostsaleheadDashboard();
-    // } else if (loggedDesg.toLowerCase() == "desg-post-sales-head") {
-    //   return const PostsaleheadDashboard();
-    // } else if (loggedDesg.toLowerCase() == "desg-senior-closing-manager") {
-    //   return const TeamlederDashbord();
-    // }
-    // "Pre Sales Executive"
-    // return const PostsaleheadDashboard();
-    return const UnknownErrorPage();
-  }
-
   @override
   Widget build(BuildContext context) {
     // final settingProvider = Provider.of<SettingProvider>(context);
@@ -129,12 +62,7 @@ class _AdminHomeWrapperState extends State<AdminHomeWrapper>
 
     List<Widget> myPages = [
       const AdminHomePage(),
-      // getDashboard(),
-      // getDashboard(),
       const DashboardPage(),
-      // getDashboard(),
-      // TaskPage(),
-      // ManageSiteVisitPage(),
       const MoreOptionPage(),
     ];
 
@@ -143,7 +71,9 @@ class _AdminHomeWrapperState extends State<AdminHomeWrapper>
         icon: Icon(
           Icons.home,
           size: 22,
-          color: Colors.black.withAlpha(180),
+          color: _selectedIndex == 0
+              ? Colors.orangeAccent
+              : Colors.black.withAlpha(180),
         ),
         label: "Home",
       ),
@@ -151,7 +81,9 @@ class _AdminHomeWrapperState extends State<AdminHomeWrapper>
         icon: Icon(
           Icons.dashboard,
           size: 22,
-          color: Colors.black.withAlpha(180),
+          color: _selectedIndex == 1
+              ? Colors.orangeAccent
+              : Colors.black.withAlpha(180),
         ),
         label: "Dashboard",
       ),
@@ -159,7 +91,9 @@ class _AdminHomeWrapperState extends State<AdminHomeWrapper>
         icon: Icon(
           Icons.settings,
           size: 22,
-          color: Colors.black.withAlpha(180),
+          color: _selectedIndex == 2
+              ? Colors.orangeAccent
+              : Colors.black.withAlpha(180),
         ),
         label: "More",
       ),
@@ -168,12 +102,13 @@ class _AdminHomeWrapperState extends State<AdminHomeWrapper>
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         unselectedLabelStyle: const TextStyle(color: Colors.black),
-        selectedLabelStyle: const TextStyle(color: Colors.black),
+        selectedLabelStyle: const TextStyle(color: Colors.orangeAccent),
+        selectedItemColor: Colors.orangeAccent,
         showSelectedLabels: true,
         showUnselectedLabels: true,
         selectedFontSize: 11,
         unselectedFontSize: 11,
-        backgroundColor: Colors.orange.shade200,
+        backgroundColor: Colors.white,
         currentIndex: _selectedIndex,
         items: bItems,
         onTap: (value) {

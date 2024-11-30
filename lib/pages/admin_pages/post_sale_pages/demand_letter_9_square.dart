@@ -371,17 +371,15 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
                       label: 'Address Line 2',
                       icon: Icons.location_on),
                   _buildRow([
-                    Expanded(
-                        child: _buildTextField(
-                            controller: cityController,
-                            label: 'City',
-                            icon: Icons.location_city)),
-                    Expanded(
-                        child: _buildTextField(
-                            controller: pincodeController,
-                            label: 'Pincode',
-                            icon: Icons.pin_drop,
-                            keyboardType: TextInputType.number)),
+                    _buildTextField(
+                        controller: cityController,
+                        label: 'City',
+                        icon: Icons.location_city),
+                    _buildTextField(
+                        controller: pincodeController,
+                        label: 'Pincode',
+                        icon: Icons.pin_drop,
+                        keyboardType: TextInputType.number),
                   ]),
                   _buildTextField(
                       controller: referenceController,

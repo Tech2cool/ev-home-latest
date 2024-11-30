@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -21,13 +23,27 @@ class _ChatScreenState extends State<ChatScreen> {
         title: const Text(
           'Chat',
           style: TextStyle(
-            color: Color.fromARGB(199, 248, 85, 4),
+            color: Color(0xFF042630),
           ),
         ),
       ),
       body: Stack(
         children: [
           // AnimatedGradient(),
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/chat_bg.png',
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Positioned.fill(
+          //   child: BackdropFilter(
+          //     filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
+          //     child: Container(
+          //       color: Colors.black.withOpacity(0.3),
+          //     ),
+          //   ),
+          // ),
           SafeArea(
             child: Column(
               children: <Widget>[
@@ -59,8 +75,8 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Container(
           decoration: BoxDecoration(
             color: isSentByUser
-                ? const Color(0xffeedbcd)
-                : const Color(0xffeedbcd),
+                ? Color.fromARGB(255, 203, 233, 227)
+                : Color(0xFF042630),
             borderRadius: BorderRadius.circular(20),
           ),
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -68,8 +84,8 @@ class _ChatScreenState extends State<ChatScreen> {
             message,
             style: TextStyle(
               color: isSentByUser
-                  ? const Color.fromARGB(199, 248, 85, 4)
-                  : const Color.fromARGB(199, 248, 85, 4),
+                  ? Color(0xFF042630)
+                  : Color.fromARGB(255, 203, 233, 227),
             ),
           ),
         ),
@@ -87,11 +103,11 @@ class _ChatScreenState extends State<ChatScreen> {
               controller: _controller,
               decoration: InputDecoration(
                 hintText: "Type a message...",
-                hintStyle:
-                    const TextStyle(color: Color.fromARGB(199, 248, 85, 4)),
+                hintStyle: const TextStyle(color: Color(0xFF042630)),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
-                  borderSide: const BorderSide(color: Color(0xffeedbcd)),
+                  borderSide: const BorderSide(
+                      color: Color.fromARGB(255, 203, 233, 227)),
                 ),
               ),
             ),
@@ -106,10 +122,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 }
               });
             },
-            backgroundColor: const Color(0xfff4e9e0),
+            backgroundColor: Color.fromARGB(255, 203, 233, 227),
             child: const Icon(
               Icons.send,
-              color: Color.fromARGB(199, 248, 85, 4),
+              color: Color(0xFF042630),
             ),
           ),
         ],

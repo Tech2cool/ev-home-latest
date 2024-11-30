@@ -147,321 +147,346 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
     String clientName2 = "Client Name";
     String combinedMarqueeText = marqueeTexts.join('  ');
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        title: const Text(
-          'Performance',
-          style: TextStyle(
-            color: Color.fromARGB(255, 133, 0, 0),
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromARGB(44, 134, 185, 176), // Start color
+            Color.fromARGB(44, 76, 114, 115),
+            // Color.fromARGB(199, 248, 85, 4),
+          ],
         ),
       ),
-      body: Stack(
-        children: [
-          // AnimatedGradient(),
-          SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 20),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(left: 15),
-                  //   child: const Text(
-                  //     'Top 5 Performers of this Month',
-                  //     style: TextStyle(
-                  //         fontSize: 18,
-                  //         fontWeight: FontWeight.w500,
-                  //         fontFamily: 'Manrope',
-                  //         color: Colors.white),
-                  //   ),
-                  // ),
-                  // SingleChildScrollView(
-                  //   scrollDirection: Axis.horizontal,
-                  //   child: Row(
-                  //     children: [
-                  //       Padding(
-                  //         padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-                  //         child: _buildPerformerCard("Mayur"),
-                  //       ),
-                  //       Padding(
-                  //         padding: const EdgeInsets.only(right: 8.0),
-                  //         child: _buildPerformerCard("Mahek"),
-                  //       ),
-                  //       Padding(
-                  //         padding: const EdgeInsets.only(right: 8.0),
-                  //         child: _buildPerformerCard("Aktar"),
-                  //       ),
-                  //       Padding(
-                  //         padding: const EdgeInsets.only(right: 8.0),
-                  //         child: _buildPerformerCard("Karan"),
-                  //       ),
-                  //       Padding(
-                  //         padding: const EdgeInsets.only(right: 8.0),
-                  //         child: _buildPerformerCard("Rahul"),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFf4e9e0),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(width: 0.4, color: Colors.black26),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color.fromARGB(255, 133, 0, 0)
-                              .withOpacity(0.4),
-                          offset: const Offset(3, 3),
-                          blurRadius: 8,
-                          spreadRadius: 3,
-                        ),
-                      ],
-                    ),
-                    child: SizedBox(
-                      height: 40,
-                      child: Marquee(
-                        text: combinedMarqueeText,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                        blankSpace: 20, // Space between the text scroll
-                        velocity: 100, // Scrolling speed
-                        startPadding: 20, // Padding at the start
-                        accelerationCurve: Curves.linear,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    padding: const EdgeInsets.all(8), // Optional padding
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFf4e9e0), // Background color
-                      borderRadius:
-                          BorderRadius.circular(20), // Rounded corners
-                      border: Border.all(
-                          width: 0.4, color: Colors.black26), // Border
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color.fromARGB(255, 133, 0, 0)
-                              .withOpacity(0.4), // Shadow color
-                          offset: const Offset(3, 3), // Shadow offset
-                          blurRadius: 8, // Blur effect
-                          spreadRadius: 3, // Shadow spread
-                        ),
-                      ],
-                    ),
-                    child: CpFunnelChart(
-                      title: "Leads Funnel",
-                      initialcpFunnelData: initialcpFunnelData,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.all(15),
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFf4e9e0),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(width: 0.4, color: Colors.black26),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color.fromARGB(255, 133, 0, 0)
-                              .withOpacity(0.4), // Grey shadow color
-                          offset: const Offset(3, 3), // Position the shadow
-                          blurRadius: 8, // Blur effect
-                          spreadRadius: 3, // Spread the shadow
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 15),
-                          child: Text(
-                            'Booking',
-                            style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w500,
-                                fontFamily: 'Manrope',
-                                color: Colors.black),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        GestureDetector(
-                          onTap: toggleTimeline,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: Text(
-                              '$clientId - $clientName',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        if (showTimeline)
-                          Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withAlpha(120),
-                              borderRadius: BorderRadius.circular(20),
-                              border:
-                                  Border.all(width: 0.4, color: Colors.black26),
-                            ),
-                            child: const Column(
-                              children: [
-                                // Start timeline
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 50.0),
-                                  child: MyTimelineTile(
-                                    isFirst: true,
-                                    isLast: false,
-                                    isPast: true,
-                                    eventCard: Text("Token received"),
-                                  ),
-                                ),
-
-                                // Middle timeline
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 50.0),
-                                  child: MyTimelineTile(
-                                    isFirst: false,
-                                    isLast: false,
-                                    isPast: true,
-                                    eventCard: Text("Payment received"),
-                                  ),
-                                ),
-
-                                // Middle timeline
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 50.0),
-                                  child: MyTimelineTile(
-                                    isFirst: false,
-                                    isLast: false,
-                                    isPast: false,
-                                    eventCard: Text("Registration done"),
-                                  ),
-                                ),
-
-                                // End timeline
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 50.0),
-                                  child: MyTimelineTile(
-                                    isFirst: false,
-                                    isLast: true,
-                                    isPast: false,
-                                    eventCard: Text("Payout done"),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        GestureDetector(
-                          onTap: toggleTimeline2,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 15),
-                            child: Text(
-                              '$clientId2 - $clientName2',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        if (showTimeline2)
-                          Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withAlpha(120),
-                              borderRadius: BorderRadius.circular(20),
-                              border:
-                                  Border.all(width: 0.4, color: Colors.black26),
-                            ),
-                            child: const Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Start timeline
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 50.0),
-                                  child: MyTimelineTile(
-                                    isFirst: true,
-                                    isLast: false,
-                                    isPast: true,
-                                    eventCard: Text("Token received"),
-                                  ),
-                                ),
-
-                                // Middle timeline
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 50.0),
-                                  child: MyTimelineTile(
-                                    isFirst: false,
-                                    isLast: false,
-                                    isPast: true,
-                                    eventCard: Text("Payment received"),
-                                  ),
-                                ),
-
-                                // Middle timeline
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 50.0),
-                                  child: MyTimelineTile(
-                                    isFirst: false,
-                                    isLast: false,
-                                    isPast: false,
-                                    eventCard: Text("Registration done"),
-                                  ),
-                                ),
-
-                                // End timeline
-                                Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 50.0),
-                                  child: MyTimelineTile(
-                                    isFirst: false,
-                                    isLast: true,
-                                    isPast: false,
-                                    eventCard: Text("Payout done"),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 100,
-                  ),
-                ],
-              ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          backgroundColor: Colors.transparent,
+          title: const Text(
+            'Performance',
+            style: TextStyle(
+              color: Color(0xFF042630),
             ),
           ),
-        ],
+        ),
+        body: Stack(
+          children: [
+            // Container(
+            //   decoration: const BoxDecoration(
+            //     gradient: LinearGradient(
+            //       begin: Alignment.topCenter,
+            //       end: Alignment.bottomCenter,
+            //       colors: [
+            //         Color.fromARGB(44, 134, 185, 176), // Start color
+            //         Color.fromARGB(44, 76, 114, 115),
+            //         // Color.fromARGB(199, 248, 85, 4),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(left: 15),
+                    //   child: const Text(
+                    //     'Top 5 Performers of this Month',
+                    //     style: TextStyle(
+                    //         fontSize: 18,
+                    //         fontWeight: FontWeight.w500,
+                    //         fontFamily: 'Manrope',
+                    //         color: Colors.white),
+                    //   ),
+                    // ),
+                    // SingleChildScrollView(
+                    //   scrollDirection: Axis.horizontal,
+                    //   child: Row(
+                    //     children: [
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                    //         child: _buildPerformerCard("Mayur"),
+                    //       ),
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(right: 8.0),
+                    //         child: _buildPerformerCard("Mahek"),
+                    //       ),
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(right: 8.0),
+                    //         child: _buildPerformerCard("Aktar"),
+                    //       ),
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(right: 8.0),
+                    //         child: _buildPerformerCard("Karan"),
+                    //       ),
+                    //       Padding(
+                    //         padding: const EdgeInsets.only(right: 8.0),
+                    //         child: _buildPerformerCard("Rahul"),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 203, 233, 227),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(width: 0.4, color: Colors.black26),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromARGB(125, 4, 38, 48),
+                            offset: const Offset(1, 1),
+                            blurRadius: 12,
+                            spreadRadius: 0,
+                          ),
+                        ],
+                      ),
+                      child: SizedBox(
+                        height: 40,
+                        child: Marquee(
+                          text: combinedMarqueeText,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          blankSpace: 20, // Space between the text scroll
+                          velocity: 100, // Scrolling speed
+                          startPadding: 20, // Padding at the start
+                          accelerationCurve: Curves.linear,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8), // Optional padding
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(
+                            255, 203, 233, 227), // Background color
+                        borderRadius:
+                            BorderRadius.circular(20), // Rounded corners
+                        border: Border.all(
+                            width: 0.4, color: Color(0xFF042630)), // Border
+                        boxShadow: [
+                          BoxShadow(
+                            color:
+                                Color.fromARGB(125, 4, 38, 48), // Shadow color
+                            offset: const Offset(1, 1), // Shadow offset
+                            blurRadius: 12, // Blur effect
+                            spreadRadius: 0, // Shadow spread
+                          ),
+                        ],
+                      ),
+                      child: CpFunnelChart(
+                        title: "Leads Funnel",
+                        initialcpFunnelData: initialcpFunnelData,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Container(
+                      padding: const EdgeInsets.all(15),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Color.fromARGB(255, 203, 233, 227),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(width: 0.4, color: Colors.black26),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromARGB(
+                                125, 4, 38, 48), // Grey shadow color
+                            offset: const Offset(1, 1), // Position the shadow
+                            blurRadius: 12, // Blur effect
+                            spreadRadius: 0, // Spread the shadow
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(left: 15),
+                            child: Text(
+                              'Booking',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w500,
+                                  fontFamily: 'Manrope',
+                                  color: Color(0xFF042630)),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          GestureDetector(
+                            onTap: toggleTimeline,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 15),
+                              child: Text(
+                                '$clientId - $clientName',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Color(0xFF042630),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          if (showTimeline)
+                            Container(
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withAlpha(120),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                    width: 0.4, color: Colors.black26),
+                              ),
+                              child: const Column(
+                                children: [
+                                  // Start timeline
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 50.0),
+                                    child: MyTimelineTile(
+                                      isFirst: true,
+                                      isLast: false,
+                                      isPast: true,
+                                      eventCard: Text("Token received"),
+                                    ),
+                                  ),
+
+                                  // Middle timeline
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 50.0),
+                                    child: MyTimelineTile(
+                                      isFirst: false,
+                                      isLast: false,
+                                      isPast: true,
+                                      eventCard: Text("Payment received"),
+                                    ),
+                                  ),
+
+                                  // Middle timeline
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 50.0),
+                                    child: MyTimelineTile(
+                                      isFirst: false,
+                                      isLast: false,
+                                      isPast: false,
+                                      eventCard: Text("Registration done"),
+                                    ),
+                                  ),
+
+                                  // End timeline
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 50.0),
+                                    child: MyTimelineTile(
+                                      isFirst: false,
+                                      isLast: true,
+                                      isPast: false,
+                                      eventCard: Text("Payout done"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          GestureDetector(
+                            onTap: toggleTimeline2,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 15),
+                              child: Text(
+                                '$clientId2 - $clientName2',
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          if (showTimeline2)
+                            Container(
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withAlpha(120),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                    width: 0.4, color: Colors.black26),
+                              ),
+                              child: const Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Start timeline
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 50.0),
+                                    child: MyTimelineTile(
+                                      isFirst: true,
+                                      isLast: false,
+                                      isPast: true,
+                                      eventCard: Text("Token received"),
+                                    ),
+                                  ),
+
+                                  // Middle timeline
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 50.0),
+                                    child: MyTimelineTile(
+                                      isFirst: false,
+                                      isLast: false,
+                                      isPast: true,
+                                      eventCard: Text("Payment received"),
+                                    ),
+                                  ),
+
+                                  // Middle timeline
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 50.0),
+                                    child: MyTimelineTile(
+                                      isFirst: false,
+                                      isLast: false,
+                                      isPast: false,
+                                      eventCard: Text("Registration done"),
+                                    ),
+                                  ),
+
+                                  // End timeline
+                                  Padding(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 50.0),
+                                    child: MyTimelineTile(
+                                      isFirst: false,
+                                      isLast: true,
+                                      isPast: false,
+                                      eventCard: Text("Payout done"),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 100,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

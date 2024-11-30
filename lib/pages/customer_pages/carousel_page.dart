@@ -12,8 +12,11 @@ class CarouselPage extends StatelessWidget {
     return Center(
       child: CarouselSlider(
         options: CarouselOptions(
-          height: 120, // Adjust height as needed
+          height: 220, // Adjust height as needed
           autoPlay: true,
+          autoPlayInterval: const Duration(seconds: 4), // Faster speed
+          autoPlayAnimationDuration:
+              const Duration(seconds: 2), // Smooth animation
           enlargeCenterPage: true,
           aspectRatio: 2.0,
           viewportFraction: 0.8,
@@ -56,21 +59,23 @@ class CarouselPage extends StatelessWidget {
                   child: Container(
                     margin: const EdgeInsets.symmetric(horizontal: 6.0),
                     decoration: BoxDecoration(
-                        color: Constant.bgColor,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color.fromARGB(255, 26, 25, 25)
-                                .withOpacity(0.6),
-                            offset: const Offset(0, 6),
-                            blurRadius: 2,
-                            spreadRadius: 1,
-                          )
-                        ]),
+                      color: Constant.bgColor,
+                      borderRadius: BorderRadius.circular(22),
+                      // boxShadow: [
+                      //   BoxShadow(
+                      //     color: const Color.fromARGB(255, 26, 25, 25)
+                      //         .withOpacity(0.6),
+                      //     offset: const Offset(0, 6),
+                      //     blurRadius: 2,
+                      //     spreadRadius: 1,
+                      //   )
+                      // ],
+                    ),
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10.0),
+                      borderRadius: BorderRadius.circular(15.0),
                       child: Image.asset(
                         item,
+
                         fit: BoxFit.cover,
                         width: double.infinity, // Adjust width
                       ),

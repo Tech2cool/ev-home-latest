@@ -130,40 +130,53 @@ class _EmiCalculatorState extends State<EmiCalculator>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title:
-            const Text('EMI Calculator', style: TextStyle(color: Colors.black)),
-        backgroundColor: Colors.white.withAlpha(120),
-        elevation: 0,
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.fromARGB(44, 134, 185, 176), // Start color
+            Color.fromARGB(44, 76, 114, 115),
+            // Color.fromARGB(199, 248, 85, 4),
+          ],
+        ),
       ),
-      body: Stack(
-        children: [
-          const AnimatedGradientBg(),
-          SafeArea(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _buildHeader(),
-                    const SizedBox(height: 24),
-                    _buildInputCard(),
-                    const SizedBox(height: 24),
-                    _buildActionButtons(),
-                    const SizedBox(height: 24),
-                    _buildResultsCard(),
-                    if (_emi > 0 && _totalInterest >= 0) ...[
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('EMI Calculator',
+              style: TextStyle(color: Color(0xFF042630))),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: Stack(
+          children: [
+            // const AnimatedGradientBg(),
+            SafeArea(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _buildHeader(),
                       const SizedBox(height: 24),
-                      _buildYearlySummaryTable(),
+                      _buildInputCard(),
+                      const SizedBox(height: 24),
+                      _buildActionButtons(),
+                      const SizedBox(height: 24),
+                      _buildResultsCard(),
+                      if (_emi > 0 && _totalInterest >= 0) ...[
+                        const SizedBox(height: 24),
+                        _buildYearlySummaryTable(),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -172,14 +185,14 @@ class _EmiCalculatorState extends State<EmiCalculator>
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: Colors.white.withAlpha(120),
+      color: Color.fromARGB(255, 203, 233, 227),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Icon(Icons.real_estate_agent,
-                size: 32, color: Color(0xFF8554D1)),
+                size: 32, color: Color(0xFF042630)),
             const SizedBox(width: 12),
             Expanded(
               child: AnimatedBuilder(
@@ -192,7 +205,7 @@ class _EmiCalculatorState extends State<EmiCalculator>
                       style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFF8554D1),
+                          color: Color(0xFF042630),
                           fontStyle: FontStyle.italic),
                       textAlign: TextAlign.center,
                     ),
@@ -210,7 +223,7 @@ class _EmiCalculatorState extends State<EmiCalculator>
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: Colors.white.withAlpha(120),
+      color: Color.fromARGB(255, 203, 233, 227),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -261,12 +274,13 @@ class _EmiCalculatorState extends State<EmiCalculator>
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       decoration: InputDecoration(
         labelText: label,
+        labelStyle: TextStyle(color: Color(0xFF042630)),
         errorText: errorText,
-        prefixIcon: Icon(icon, color: const Color(0xFF8554D1)),
+        prefixIcon: Icon(icon, color: Color(0xFF042630)),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Color(0xFF8554D1), width: 2),
+          borderSide: const BorderSide(color: Color(0xFF042630), width: 2),
         ),
       ),
       onChanged: (text) {
@@ -282,10 +296,16 @@ class _EmiCalculatorState extends State<EmiCalculator>
       children: [
         ElevatedButton.icon(
           onPressed: _calculateEMI,
-          icon: const Icon(Icons.calculate),
-          label: const Text('Calculate EMI'),
+          icon: const Icon(
+            Icons.calculate,
+            color: Color(0xFF042630),
+          ),
+          label: const Text(
+            'Calculate EMI',
+            style: TextStyle(color: Color(0xFF042630)),
+          ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white.withAlpha(120),
+            backgroundColor: Color.fromARGB(255, 203, 233, 227),
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -293,10 +313,16 @@ class _EmiCalculatorState extends State<EmiCalculator>
         ),
         ElevatedButton.icon(
           onPressed: _resetFields,
-          icon: const Icon(Icons.refresh),
-          label: const Text('Reset'),
+          icon: const Icon(
+            Icons.refresh,
+            color: Color(0xFF042630),
+          ),
+          label: const Text(
+            'Reset',
+            style: TextStyle(color: Color(0xFF042630)),
+          ),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white.withAlpha(120),
+            backgroundColor: Color.fromARGB(255, 203, 233, 227),
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -310,7 +336,7 @@ class _EmiCalculatorState extends State<EmiCalculator>
     return Card(
       elevation: 4,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      color: Colors.white.withAlpha(120),
+      color: Color.fromARGB(255, 203, 233, 227),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -321,10 +347,10 @@ class _EmiCalculatorState extends State<EmiCalculator>
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF8554D1)),
+                  color: Color(0xFF042630)),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 25),
             _buildPieChartWithLegend(),
             const SizedBox(height: 16),
             if (_emi > 0 && _totalInterest >= 0) ...[
@@ -351,7 +377,7 @@ class _EmiCalculatorState extends State<EmiCalculator>
               style:
                   const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
           Text(value,
-              style: const TextStyle(fontSize: 16, color: Color(0xFF8554D1))),
+              style: const TextStyle(fontSize: 16, color: Color(0xFF042630))),
         ],
       ),
     );
@@ -455,7 +481,7 @@ class _EmiCalculatorState extends State<EmiCalculator>
               style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF8554D1)),
+                  color: Color(0xFF042630)),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 16),
@@ -509,7 +535,7 @@ class _EmiCalculatorState extends State<EmiCalculator>
       child: Text(
         text,
         style: const TextStyle(
-            fontWeight: FontWeight.bold, color: Color(0xFF8554D1)),
+            fontWeight: FontWeight.bold, color: Color(0xFF042630)),
         textAlign: TextAlign.center,
       ),
     );

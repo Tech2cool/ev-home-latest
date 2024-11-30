@@ -22,7 +22,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: const Text(
           'Dashboard',
           style: TextStyle(
-            color: Color.fromARGB(255, 133, 0, 0),
+            color: Color(0xFF042630),
           ),
         ),
       ),
@@ -34,9 +34,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0xFFFFDE4D),
-                  Color(0xFFFFB22C),
-                  Color.fromARGB(199, 248, 85, 4),
+                  Color.fromARGB(44, 134, 185, 176), // Start color
+                  Color.fromARGB(44, 76, 114, 115),
+                  // Color.fromARGB(199, 248, 85, 4),
                 ],
               ),
             ),
@@ -161,7 +161,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             label,
             style: const TextStyle(
               fontSize: 10.0,
-              color: Colors.black,
+              color: Color(0xFF042630),
             ),
           ),
         ],
@@ -269,7 +269,7 @@ class LabelsDemo extends StatelessWidget {
                 subtitle,
                 style: const TextStyle(
                   fontSize: 14,
-                  color: Colors.black87,
+                  color: Color(0xFF042630),
                 ),
               ),
             ),
@@ -323,7 +323,7 @@ class _LineChartDemoState extends State<LineChartDemo> {
               const Text(
                 'Total Leads',
                 style: TextStyle(
-                  color: Colors.black87,
+                  color: Color(0xFF042630),
                   fontFamily: 'Manrope',
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -573,7 +573,7 @@ class _PieChartDemoState extends State<PieChartDemo> {
               Text(
                 'Tagging Status',
                 style: TextStyle(
-                  color: Colors.black87,
+                  color: Color(0xFF042630),
                   fontFamily: 'Manrope',
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -603,7 +603,7 @@ class _PieChartDemoState extends State<PieChartDemo> {
                     'Total Leads',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.black,
+                      color: Color(0xFF042630),
                     ),
                   ),
                   Text(
@@ -611,7 +611,7 @@ class _PieChartDemoState extends State<PieChartDemo> {
                     style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: Color(0xFF042630),
                     ),
                   ),
                 ],
@@ -654,7 +654,7 @@ class LegendItem extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           text,
-          style: const TextStyle(fontSize: 14, color: Colors.black87),
+          style: const TextStyle(fontSize: 14, color: Color(0xFF042630)),
         ),
       ],
     );
@@ -761,7 +761,7 @@ class _FunnelChartDemoState extends State<FunnelChartDemo> {
                   const Text(
                     'Leads Statistics',
                     style: TextStyle(
-                      color: Colors.black87,
+                      color: Color(0xFF042630),
                       fontFamily: 'Manrope',
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -832,7 +832,7 @@ class FunnelStage extends StatelessWidget {
             style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,
-              color: Colors.black87,
+              color: Color(0xFF042630),
             ),
           ),
           const SizedBox(height: 8),
@@ -844,7 +844,7 @@ class FunnelStage extends StatelessWidget {
               label,
               style: const TextStyle(
                 fontSize: 10,
-                color: Color.fromARGB(221, 0, 0, 0),
+                color: Color(0xFF042630),
               ),
             ),
           ),
@@ -870,8 +870,8 @@ class FunnelSegment extends StatelessWidget {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(199, 248, 85, 4),
-              Color(0xFFFFB22C),
+              Color(0xFF005254),
+              Color(0xFF042630),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

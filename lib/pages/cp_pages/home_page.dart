@@ -41,211 +41,224 @@ class _HomeScreenState extends State<CpHomeScreen> {
     final loggedChannelPartner = settingProvider.loggedChannelPartner;
     return Stack(
       children: [
-        // AnimatedGradient(),
-        // AnimatedShapesPage(),
-        Scaffold(
-          // backgroundColor: Constant.bgColor,
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-          appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(80),
-            child: AppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: Colors.white.withOpacity(0.3),
-              elevation: 0,
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Welcome!",
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 133, 0, 0),
-                            fontSize: 18),
-                      ),
-                      const SizedBox(
-                        height: 4,
-                      ),
-                      Text(
-                        loggedChannelPartner?.firstName ?? "",
-                        style: const TextStyle(
-                            color: Color.fromARGB(255, 133, 0, 0),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20),
-                      ),
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const ProfileScreen()));
-                    },
-                    child: const CircleAvatar(
-                      radius: 20,
-                      backgroundImage: AssetImage('assets/images/profile.png'),
-                    ),
-                  ),
-                ],
-              ),
+        Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromARGB(44, 134, 185, 176),
+                Color.fromARGB(44, 76, 114, 115),
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 10,
+          child: Scaffold(
+            // backgroundColor: Constant.bgColor,
+            backgroundColor: Colors.transparent,
+            appBar: PreferredSize(
+              preferredSize: const Size.fromHeight(60),
+              child: AppBar(
+                automaticallyImplyLeading: false,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Welcome!",
+                          style:
+                              TextStyle(color: Color(0xFF042630), fontSize: 18),
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          loggedChannelPartner?.firstName ?? "",
+                          style: const TextStyle(
+                              color: Color(0xFF042630),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20),
+                        ),
+                      ],
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const ProfileScreen()));
+                      },
+                      child: const CircleAvatar(
+                        radius: 20,
+                        backgroundImage:
+                            AssetImage('assets/images/profile.png'),
+                      ),
+                    ),
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: 40,
-                          child: TextField(
-                            decoration: InputDecoration(
-                              hintText: "Search...",
-                              hintStyle: const TextStyle(
-                                color: Color.fromARGB(255, 133, 0, 0),
-                              ),
-                              prefixIcon: const Icon(
-                                Icons.search,
-                                color: Color.fromARGB(255, 133, 0, 0),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color.fromARGB(255, 133, 0,
-                                      0), // Set the border color here
-                                  width: 2.0, // Set the border width
+              ),
+            ),
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            child: TextField(
+                              decoration: InputDecoration(
+                                hintText: "Search...",
+                                hintStyle: const TextStyle(
+                                  color: Color(0xFF042630),
                                 ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color.fromARGB(199, 248, 85,
-                                      4), // Set the color when not focused
-                                  width: 2.0,
+                                prefixIcon: const Icon(
+                                  Icons.search,
+                                  color: Color(0xFF042630),
                                 ),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: const BorderSide(
-                                  color: Color.fromARGB(255, 248, 85,
-                                      4), // Color when the field is focused
-                                  width: 2.0,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: const BorderSide(
+                                    color: Color(
+                                        0xFF042630), // Set the border color here
+                                    width: 2.0, // Set the border width
+                                  ),
                                 ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: const BorderSide(
+                                    color: Color(
+                                        0xFF042630), // Set the color when not focused
+                                    width: 2.0,
+                                  ),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                  borderSide: const BorderSide(
+                                    color: Color(
+                                        0xFF042630), // Color when the field is focused
+                                    width: 2.0,
+                                  ),
+                                ),
+                                filled: true,
+                                fillColor:
+                                    const Color.fromARGB(255, 255, 255, 255),
+                                contentPadding:
+                                    const EdgeInsets.symmetric(vertical: 10),
                               ),
-                              filled: true,
-                              fillColor:
-                                  const Color.fromARGB(255, 255, 255, 255),
-                              contentPadding:
-                                  const EdgeInsets.symmetric(vertical: 10),
                             ),
                           ),
                         ),
+                        const SizedBox(width: 8),
+                        SizedBox(
+                          height: 55, // Match height of the TextField
+                          width: 55, // Adjust width as needed
+                          child: Lottie.asset('assets/animations/cp_home.json'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text(
+                              "Our Projects",
+                              style: TextStyle(
+                                  color: Color(0xFF042630),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      SizedBox(
-                        height: 55, // Match height of the TextField
-                        width: 55, // Adjust width as needed
-                        child: Lottie.asset('assets/animations/cp_home.json'),
-                      ),
+                      SizedBox(height: 5),
+                      OurProjectList(),
                     ],
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text(
-                            "Our Projects",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 133, 0, 0),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
+                  SizedBox(height: 10),
+                  Column(
+                    children: [
+                      const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text(
+                              "Upcoming Projects",
+                              style: TextStyle(
+                                  color: Color(0xFF042630),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    OurProjectList(),
-                  ],
-                ),
-                Column(
-                  children: [
-                    const Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text(
-                            "Upcoming Projects",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 133, 0, 0),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      UpcomingProjectsList(),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Column(
+                    children: [
+                      const Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text(
+                              "Re-Sale Property",
+                              style: TextStyle(
+                                  color: Color(0xFF042630),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    UpcomingProjectsList(),
-                  ],
-                ),
-                Column(
-                  children: [
-                    const Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text(
-                            "Re-Sale Property",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 133, 0, 0),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
+                      ResalePropertyList(),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  const Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 20),
+                            child: Text(
+                              "What's New",
+                              style: TextStyle(
+                                  color: Color(0xFF042630),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    ResalePropertyList(),
-                  ],
-                ),
-                const Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text(
-                            "What's New",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 133, 0, 0),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    CarouselPage(),
-                  ],
-                ),
-                const SizedBox(
-                  height: 120,
-                )
-              ],
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      CarouselPage(),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 120,
+                  )
+                ],
+              ),
             ),
           ),
         ),

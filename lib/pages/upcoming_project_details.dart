@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/pages/customer_pages/featured_project_screen.dart';
 import 'package:flutter/material.dart';
@@ -80,104 +82,106 @@ class PropertyCardVertical extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromARGB(255, 133, 0, 0)
-                  .withOpacity(0.6), // Grey shadow color
-              offset: const Offset(3, 3), // Position the shadow
-              blurRadius: 8, // Blur effect
-              spreadRadius: 3, // Spread the shadow
-            ),
-          ],
         ),
         height: 120, // Set a fixed height for the card
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(25),
           child: Stack(
             children: [
-              const Positioned.fill(
-                child: AnimatedGradientBg(),
+              // Add the background image with blur effect
+              Positioned.fill(
+                child: Image.asset(
+                  property['image']!, // Path to your background image
+                  fit: BoxFit.cover,
+                ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: const Color.fromARGB(255, 26, 25, 25)
-                  //         .withOpacity(0.4),
-                  //     offset: Offset(0, 6),
-                  //     blurRadius: 2,
-                  //     spreadRadius: 1,
-                  //   )
-                  // ],
+              Positioned.fill(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // Blur effect
+                  child: Container(
+                    color:
+                        Colors.black.withOpacity(0.1), // Optional dark overlay
+                  ),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(255, 26, 25, 25)
-                                  .withOpacity(0.6),
-                              offset: const Offset(0, 6),
-                              blurRadius: 7,
-                              spreadRadius: 1,
-                            ),
-                          ],
-                        ),
-                        child: ClipOval(
-                          child: Image.asset(
-                            property['image']!,
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.cover,
+              ),
+              // Foreground content
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(7.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius:
+                            BorderRadius.circular(25), // Rounded corners
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromARGB(255, 26, 25, 25)
+                                .withOpacity(0.6),
+                            offset: const Offset(0, 6),
+                            blurRadius: 3,
+                            spreadRadius: 1,
                           ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(
+                            25), // Same radius as the container
+                        child: Image.asset(
+                          property['image']!,
+                          height: 100,
+                          width: 100,
+                          fit: BoxFit.cover,
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              property['title']!,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(6.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Move title to the top
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            property['title']!,
+                            style: const TextStyle(
+                              color: Color(0xFF042630),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          const SizedBox(
+                              height: 6), // Add spacing below the title
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on,
+                                color: Color(0xFF042630),
+                                size: 18,
                               ),
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.location_on,
-                                  color: Color.fromARGB(255, 133, 0, 0),
-                                  size: 18,
+                              const SizedBox(width: 5),
+                              Text(
+                                property['location']!,
+                                style: const TextStyle(
+                                  color: Colors
+                                      .white, // Adjust text color for contrast
+                                  fontSize: 14,
                                 ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  property['location']!,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),

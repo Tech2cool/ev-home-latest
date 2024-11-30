@@ -7,6 +7,7 @@ import 'package:ev_homes/pages/cp_pages/home_page.dart';
 import 'package:ev_homes/pages/customer_pages/emi_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:video_player/video_player.dart';
 
 class CpHomeWrapper extends StatefulWidget {
   const CpHomeWrapper({super.key});
@@ -22,6 +23,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
   late AnimationController _animationController;
   late Animation<double> _animation;
   late Animation<double> _iconAnimation;
+  late VideoPlayerController _videoPlayerController;
 
   final List<Widget> _pages = [
     const CpHomeScreen(),
@@ -43,11 +45,20 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
       curve: Curves.easeInOut,
     );
     _iconAnimation = Tween<double>(begin: 0, end: 0.125).animate(_animation);
+
+    _videoPlayerController =
+        VideoPlayerController.asset('assets/video/blue_bg.mp4')
+          ..initialize().then((_) {
+            _videoPlayerController.setLooping(true);
+            _videoPlayerController.play();
+            setState(() {});
+          });
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _videoPlayerController.dispose();
     super.dispose();
   }
 
@@ -97,10 +108,10 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            _buildNavItem("Home", FluentIcons.home_20_regular, 0),
+            _buildNavItem("Home", FluentIcons.home_12_filled, 0),
             _buildNavItem("Dashboard", Icons.dashboard, 1),
             _buildNavItem("Performance", Icons.directions_walk_outlined, 3),
-            _buildNavItem("Chat", FluentIcons.chat_empty_20_regular, 2),
+            _buildNavItem("Chat", FluentIcons.chat_12_filled, 2),
           ],
         ),
       ),
@@ -116,8 +127,8 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
           Icon(
             icon,
             color: _currentIndex == index
-                ? const Color.fromARGB(255, 133, 0, 0)
-                : const Color.fromARGB(255, 133, 0, 0),
+                ? Color(0xFF042630)
+                : Color.fromARGB(146, 134, 185, 176),
             size: 24,
           ),
           Text(
@@ -153,8 +164,8 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [
-                      Color(0xFFeedbcd),
-                      Color(0xFFeedbcd),
+                      Color.fromARGB(255, 134, 185, 176),
+                      Color.fromARGB(213, 134, 185, 176),
                     ],
                     begin:
                         Alignment.topLeft, // Gradient starts from the top left
@@ -164,8 +175,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
-                      color:
-                          const Color.fromARGB(255, 133, 0, 0).withOpacity(0.8),
+                      color: Color.fromARGB(176, 4, 38, 48),
                       blurRadius: 2,
                       spreadRadius: 1,
                       offset: const Offset(0, 4),
@@ -175,7 +185,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
                 child: const Center(
                   child: Icon(
                     Icons.add,
-                    color: Color.fromARGB(255, 133, 0, 0),
+                    color: Color(0xFF042630),
                     size: 30,
                   ),
                 ),
@@ -282,7 +292,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
         margin: const EdgeInsets.all(10),
         padding: const EdgeInsets.all(15),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Color.fromARGB(44, 134, 185, 176),
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
@@ -298,11 +308,10 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 133, 0, 0).withOpacity(0.1),
+                color: Color.fromARGB(44, 76, 114, 115),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon,
-                  color: const Color.fromARGB(255, 133, 0, 0), size: 24),
+              child: Icon(icon, color: Color(0xFF042630), size: 24),
             ),
             const SizedBox(height: 12),
             Text(
@@ -310,7 +319,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 133, 0, 0),
+                color: Color(0xFF042630),
               ),
             ),
             const SizedBox(height: 4),

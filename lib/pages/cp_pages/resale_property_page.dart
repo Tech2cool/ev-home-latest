@@ -56,22 +56,23 @@ class PropertyCardVertical1 extends StatelessWidget {
         height: 120, // Set a fixed height for the card
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromARGB(255, 133, 0, 0)
-                  .withOpacity(0.6), // Grey shadow color
-              offset: const Offset(3, 3), // Position the shadow
-              blurRadius: 8, // Blur effect
-              spreadRadius: 3, // Spread the shadow
-            ),
-          ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(20),
           child: Stack(
             children: [
-              const Positioned.fill(
-                child: AnimatedGradientBg(),
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Color(0xFF005254),
+                      Color(0xFF042630), // Start color
+                      // Color.fromARGB(199, 248, 85, 4),
+                    ],
+                  ),
+                ),
               ),
               Container(
                 decoration: BoxDecoration(
@@ -124,7 +125,7 @@ class PropertyCardVertical1 extends StatelessWidget {
                             Text(
                               property['title']!,
                               style: const TextStyle(
-                                color: Colors.black,
+                                color: Color.fromARGB(253, 134, 185, 176),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
                               ),
@@ -134,14 +135,14 @@ class PropertyCardVertical1 extends StatelessWidget {
                               children: [
                                 const Icon(
                                   Icons.location_on,
-                                  color: Color.fromARGB(255, 133, 0, 0),
+                                  color: Color.fromARGB(253, 134, 185, 176),
                                   size: 18,
                                 ),
                                 const SizedBox(width: 5),
                                 Text(
                                   property['location']!,
                                   style: const TextStyle(
-                                    color: Colors.black,
+                                    color: Color.fromARGB(253, 134, 185, 176),
                                     fontSize: 14,
                                   ),
                                 ),

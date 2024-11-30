@@ -9,14 +9,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  animated_size_and_fade:
-    dependency: "direct main"
-    description:
-      name: animated_size_and_fade
-      sha256: "8e946d67a481bceb36787b5d05c4991678c302e4f3cab5068ecc57429783b8b2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.0"
   animated_splash_screen:
     dependency: "direct main"
     description:

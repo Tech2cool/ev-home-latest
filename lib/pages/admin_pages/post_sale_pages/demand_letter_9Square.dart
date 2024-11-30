@@ -1,23 +1,22 @@
+import 'package:flutter/material.dart';
 import 'package:ev_homes/core/models/customer_payment.dart';
 import 'package:ev_homes/core/services/api_service.dart';
-import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:open_file/open_file.dart';
-import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class DemandLetter extends StatefulWidget {
-  const DemandLetter({super.key});
+  const DemandLetter({Key? key}) : super(key: key);
 
   @override
-  _PaymentScheduleAndDemandLetterState createState() =>
-      _PaymentScheduleAndDemandLetterState();
+  _DemandLetterState createState() => _DemandLetterState();
 }
 
-class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
+class _DemandLetterState extends State<DemandLetter> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController flatNoController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
@@ -33,8 +32,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
   final TextEditingController netAmountController = TextEditingController();
   final TextEditingController cgstSgstController = TextEditingController();
   final TextEditingController totalAmountController = TextEditingController();
-  final TextEditingController additionalNameController =
-      TextEditingController();
+  final TextEditingController additionalNameController = TextEditingController();
   final TextEditingController tdsController = TextEditingController();
   String selectedSlab = '52';
   String? selectedFloor;
@@ -48,7 +46,6 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
   double totalAmount = 0.0;
   String? selectedReminder = '1';
   String clientPrefix = 'Mr.';
-  // bool isTdsApplicable = false;
   double tdsAmount = 0.0;
   double remainingBase = 0.0;
   double remainingGst = 0.0;
@@ -56,30 +53,14 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
 
   Payment? getpayment;
 
-  String toRoman(int number) {
-    if (number < 1 || number > 5) return number.toString();
-    const List<String> romanNumerals = ['I', 'II', 'III', 'IV', 'V'];
-    return romanNumerals[number - 1];
-  }
-
-  final NumberFormat currencyFormat = NumberFormat('#,##,##,##0', 'en_IN');
+  Map<String, double>? calculatedValues;
+  String bankTableOption = 'bookingAmount';
 
   List<Map<String, String>> additionalNames = [];
-  final List<String> floors =
-      List.generate(27, (index) => (index + 5).toString());
-  final List<String> units = [
-    '01',
-    '02',
-    '03',
-    '04',
-    '06',
-    '07',
-    '08',
-    '09',
-    '10'
-  ];
+  final List<String> floors = List.generate(27, (index) => (index + 5).toString());
+  final List<String> units = ['01', '02', '03', '04', '06', '07', '08', '09', '10'];
   List<Map<String, String>> slabs = [
-    {'value': '1', 'name': 'On Booking'},
+     {'value': '1', 'name': 'On Booking'},
     {'value': '2', 'name': 'On Execution of Agreement'},
     {'value': '3', 'name': 'On Completion of Plinth level'},
     {'value': '4', 'name': 'On Completion of 1st Slab (Ground)'},
@@ -135,9 +116,12 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
     {'value': '50', 'name': 'On completion of entrance lobby'},
     {'value': '51', 'name': 'On completion of plinth protection and paving'},
     {'value': '52', 'name': 'On Possession'},
+
   ];
 
   bool showAdditionalNameInput = false;
+
+  final NumberFormat currencyFormat = NumberFormat('#,##,##,##0', 'en_IN');
 
   @override
   void initState() {
@@ -161,10 +145,8 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
 
   void _updateTotalAmount() {
     setState(() {
-      double netAmount =
-          double.tryParse(netAmountController.text.replaceAll(',', '')) ?? 0;
-      double cgstSgst =
-          double.tryParse(cgstSgstController.text.replaceAll(',', '')) ?? 0;
+      double netAmount = double.tryParse(netAmountController.text.replaceAll(',', '')) ?? 0;
+      double cgstSgst = double.tryParse(cgstSgstController.text.replaceAll(',', '')) ?? 0;
       totalAmount = netAmount + cgstSgst;
       totalAmountController.text = currencyFormat.format(totalAmount);
     });
@@ -174,11 +156,9 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
     List<double> percentages = [
       10.0, 20.0, 15.0, 3.0, // Slabs 1-4
       3.0, 3.0, 3.0, 3.0, // Slabs 5-8
-      0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
-      0.5, 0.5, 0.5, // Slabs 9-26
+      0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, // Slabs 9-26
       0.2, 0.2, 0.2, 0.2, 0.2, // Slabs 27-31
-      1.0, 1.0, 1.0, 1.0, 1.0, 1.25, 1.25, 1.25, 1.25, 1.0, 1.0, 1.0, 1.0, 1.0,
-      4.0, 1.0, 2.0, 1.0, 2.0, 1.0, 5.0 // Slabs 32-52
+      1.0, 1.0, 1.0, 1.0, 1.0, 1.25, 1.25, 1.25, 1.25, 1.0, 1.0, 1.0, 1.0, 1.0, 4.0, 1.0, 2.0, 1.0, 2.0, 1.0, 5.0 // Slabs 32-52
     ];
     double total = percentages.sublist(0, slabIndex).reduce((a, b) => a + b);
     return total > 100 ? 100 : total;
@@ -213,12 +193,10 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
                       value: selectedFloor,
                       label: 'Floor',
                       icon: Icons.apartment,
-                      items: floors
-                          .map((floor) => DropdownMenuItem<String>(
-                                value: floor,
-                                child: Text(floor),
-                              ))
-                          .toList(),
+                      items: floors.map((floor) => DropdownMenuItem<String>(
+                        value: floor,
+                        child: Text(floor),
+                      )).toList(),
                       onChanged: (newValue) {
                         setState(() => selectedFloor = newValue);
                         _updateFlatNo();
@@ -228,12 +206,10 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
                       value: selectedUnit,
                       label: 'Unit',
                       icon: Icons.door_front_door,
-                      items: units
-                          .map((unit) => DropdownMenuItem<String>(
-                                value: unit,
-                                child: Text(unit),
-                              ))
-                          .toList(),
+                      items: units.map((unit) => DropdownMenuItem<String>(
+                        value: unit,
+                        child: Text(unit),
+                      )).toList(),
                       onChanged: (newValue) {
                         setState(() => selectedUnit = newValue);
                         _updateFlatNo();
@@ -241,25 +217,25 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
                     ),
                   ]),
                   _buildTextField(
-                      controller: flatNoController,
-                      label: 'Flat Number',
-                      icon: Icons.home,
-                      readOnly: true),
+                    controller: flatNoController,
+                    label: 'Flat Number',
+                    icon: Icons.home,
+                    readOnly: true
+                  ),
                   _buildTextField(
-                      controller: carpetAreaController,
-                      label: 'Carpet Area (sq. ft.)',
-                      icon: Icons.square_foot,
-                      keyboardType: TextInputType.number),
+                    controller: carpetAreaController,
+                    label: 'Carpet Area (sq. ft.)',
+                    icon: Icons.square_foot,
+                    keyboardType: TextInputType.number
+                  ),
                   _buildDropdownField(
                     value: selectedSlab,
                     label: 'Construction Stage',
                     icon: Icons.layers,
-                    items: slabs
-                        .map((slab) => DropdownMenuItem<String>(
-                              value: slab['value'],
-                              child: Text(slab['name']!),
-                            ))
-                        .toList(),
+                    items: slabs.map((slab) => DropdownMenuItem<String>(
+                      value: slab['value'],
+                      child: Text(slab['name']!),
+                    )).toList(),
                     onChanged: (newValue) {
                       setState(() => selectedSlab = newValue!);
                       _calculateTotalUpToSelectedSlab();
@@ -294,23 +270,23 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
                     ],
                   ),
                   ...additionalNames.map((name) => Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text('${name['prefix']} ${name['name']}'),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.red),
-                              onPressed: () {
-                                setState(() {
-                                  additionalNames.remove(name);
-                                });
-                              },
-                            ),
-                          ],
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Text('${name['prefix']} ${name['name']}'),
                         ),
-                      )),
+                        IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () {
+                            setState(() {
+                              additionalNames.remove(name);
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  )),
                   if (showAdditionalNameInput)
                     Row(
                       children: [
@@ -358,35 +334,43 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
                       },
                     ),
                   _buildTextField(
-                      controller: phoneController,
-                      label: 'Phone Number',
-                      icon: Icons.phone,
-                      keyboardType: TextInputType.phone),
+                    controller: phoneController,
+                    label: 'Phone Number',
+                    icon: Icons.phone,
+                    keyboardType: TextInputType.phone
+                  ),
                   _buildTextField(
-                      controller: addressLine1Controller,
-                      label: 'Address Line 1',
-                      icon: Icons.location_on),
+                    controller: addressLine1Controller,
+                    label: 'Address Line 1',
+                    icon: Icons.location_on
+                  ),
                   _buildTextField(
-                      controller: addressLine2Controller,
-                      label: 'Address Line 2',
-                      icon: Icons.location_on),
+                    controller: addressLine2Controller,
+                    label: 'Address Line 2',
+                    icon: Icons.location_on
+                  ),
                   _buildRow([
                     Expanded(
-                        child: _buildTextField(
-                            controller: cityController,
-                            label: 'City',
-                            icon: Icons.location_city)),
+                      child: _buildTextField(
+                        controller: cityController,
+                        label: 'City',
+                        icon: Icons.location_city
+                      )
+                    ),
                     Expanded(
-                        child: _buildTextField(
-                            controller: pincodeController,
-                            label: 'Pincode',
-                            icon: Icons.pin_drop,
-                            keyboardType: TextInputType.number)),
+                      child: _buildTextField(
+                        controller: pincodeController,
+                        label: 'Pincode',
+                        icon: Icons.pin_drop,
+                        keyboardType: TextInputType.number
+                      )
+                    ),
                   ]),
                   _buildTextField(
-                      controller: referenceController,
-                      label: 'Reference',
-                      icon: Icons.description),
+                    controller: referenceController,
+                    label: 'Reference',
+                    icon: Icons.description
+                  ),
                 ]),
                 _buildSection('Financial Details', [
                   _buildTextField(
@@ -419,12 +403,10 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
                       value: stampDuty,
                       label: 'Stamp Duty',
                       icon: Icons.local_offer,
-                      items: ['5', '6']
-                          .map((value) => DropdownMenuItem<String>(
-                                value: value,
-                                child: Text('$value%'),
-                              ))
-                          .toList(),
+                      items: ['5', '6'].map((value) => DropdownMenuItem<String>(
+                        value: value,
+                        child: Text('$value%'),
+                      )).toList(),
                       onChanged: (newValue) {
                         setState(() => stampDuty = newValue!);
                         _calculateTotalUpToSelectedSlab();
@@ -434,13 +416,10 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
                       value: selectedReminder,
                       label: 'Reminder',
                       icon: Icons.alarm,
-                      items: List.generate(
-                          5,
-                          (index) => DropdownMenuItem<String>(
-                                value: (index + 1).toString(),
-                                child: Text(
-                                    '${index + 1} ${index == 0 ? 'day' : 'days'}'),
-                              )),
+                      items: List.generate(5, (index) => DropdownMenuItem<String>(
+                        value: (index + 1).toString(),
+                        child: Text('${index + 1} ${index == 0 ? 'day' : 'days'}'),
+                      )),
                       onChanged: (newValue) {
                         setState(() => selectedReminder = newValue);
                       },
@@ -454,6 +433,22 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
                   ),
                   _buildDatePicker(),
                 ]),
+                const SizedBox(height: 24),
+                ElevatedButton.icon(
+                  onPressed: _calculateValues,
+                  icon: const Icon(Icons.calculate),
+                  label: const Text('Calculate'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                if (calculatedValues != null) _buildCalculatedValuesCard(),
+                const SizedBox(height: 24),
+                _buildBankDetailsCard(),
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
                   onPressed: () {
@@ -485,6 +480,140 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  void _calculateValues() {
+    if (_formKey.currentState!.validate()) {
+      double allInclusiveAmount = double.parse(allInclusiveController.text.replaceAll(',', ''));
+      double totalDue = allInclusiveAmount;
+      double baseAmount = totalDue / 1.05;
+      double gstAmount = totalDue - baseAmount;
+      double tdsAmount = baseAmount * 0.01;
+
+      setState(() {
+        calculatedValues = {
+          'baseAmount': baseAmount,
+          'gstAmount': gstAmount,
+          'tdsAmount': tdsAmount,
+          'totalDue': totalDue,
+        };
+      });
+    }
+  }
+
+  Widget _buildCalculatedValuesCard() {
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Calculated Values',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade700)),
+            const SizedBox(height: 8),
+            Text('Net Amount: ${currencyFormat.format(calculatedValues!['baseAmount'])}'),
+            Text('TDS +GST/SGST ${currencyFormat.format(calculatedValues!['gstAmount']! + calculatedValues!['tdsAmount']!)}'),
+            Text('Total Due: ${currencyFormat.format(calculatedValues!['totalDue'])}'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBankDetailsCard() {
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Bank Details',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade700)),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              value: bankTableOption,
+              decoration: InputDecoration(
+                labelText: 'Select value for PDF',
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              items: [
+                DropdownMenuItem(value: 'bookingAmount', child: Text('Booking Amount')),
+                DropdownMenuItem(value: 'gstAmount', child: Text('GST Amount')),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  bankTableOption = value!;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            Table(
+              border: TableBorder.all(),
+              children: [
+                TableRow(
+                  children: [
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Bank Name', style: TextStyle(fontWeight: FontWeight.bold)),
+                    )),
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Account Number', style: TextStyle(fontWeight: FontWeight.bold)),
+                    )),
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Amount', style: TextStyle(fontWeight: FontWeight.bold)),
+                    )),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('ICICI Bank Limited'),
+                    )),
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('015105022186'),
+                    )),
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(calculatedValues != null
+                          ? currencyFormat.format(bankTableOption == 'bookingAmount'
+                              ? calculatedValues!['baseAmount']!
+                              : calculatedValues!['gstAmount']! + calculatedValues!['tdsAmount']!)
+                          : '0.00'),
+                    )),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('ICICI Bank'),
+                    )),
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('015105022390'),
+                    )),
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(calculatedValues != null
+                          ? currencyFormat.format(bankTableOption == 'bookingAmount'
+                              ? calculatedValues!['gstAmount']!
+                              : calculatedValues!['baseAmount']!)
+                          : '0.00'),
+                    )),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -613,8 +742,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
       setState(() {
         flatNoController.text = '$selectedFloor$selectedUnit';
       });
-      final res =
-          await ApiService().getPaymentbyFlat("$selectedFloor$selectedUnit");
+      final res = await ApiService().getPaymentbyFlat("$selectedFloor$selectedUnit");
       setState(() {
         getpayment = res;
         carpetAreaController.text = res?.carpetArea ?? "";
@@ -629,8 +757,6 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
         totalAmountController.text = res?.amtReceived.toString() ?? "";
         allInclusiveController.text = res?.allinclusiveamt.toString() ?? "";
         tdsController.text = res?.tds.toString() ?? "";
-
-        print(res);
       });
     }
   }
@@ -638,8 +764,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
   void _calculateTotalUpToSelectedSlab() {
     if (allInclusiveController.text.isEmpty) return;
 
-    double allInclusiveAmount =
-        double.parse(allInclusiveController.text.replaceAll(',', ''));
+    double allInclusiveAmount = double.parse(allInclusiveController.text.replaceAll(',', ''));
     double stampDutyPercentage = double.parse(stampDuty);
     double gstPercentage = 5.0;
     double registrationCharges = 30000;
@@ -775,7 +900,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
                   style: pw.TextStyle(
                       fontSize: 14, fontWeight: pw.FontWeight.bold)),
               _buildPdfBankDetails(
-                'ICIC Bank Limited (for Booking amount payment${currencyFormat.format(remainingBase.ceil())})',
+                'ICIC Bank Limited (for ${bankTableOption == 'bookingAmount' ? 'Booking amount' : 'GST'} payment ${currencyFormat.format(bankTableOption == 'bookingAmount' ? remainingBase.ceil() : (remainingGst + remainingTds).ceil())}',
                 'Account Name:- E V Homes Construction Pvt.Ltd',
                 '015105022186',
                 'ICIC0000151',
@@ -783,7 +908,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
                 'Vashi, Navi Mumbai',
               ),
               _buildPdfBankDetails(
-                'ICIC Bank (for GST And TDS amount payment${currencyFormat.format(remainingGst.ceil())})',
+                'ICIC Bank (for ${bankTableOption == 'bookingAmount' ? 'GST' : 'Booking amount'} payment ${currencyFormat.format(bankTableOption == 'bookingAmount' ? remainingGst.ceil() : (remainingGst + remainingTds).ceil())}',
                 'Account Name:- E V Homes Construction Pvt.Ltd',
                 '015105022390',
                 'ICIC0000151',
@@ -798,8 +923,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
 
     try {
       final output = await getApplicationDocumentsDirectory();
-      final file =
-          File('${output.path}/payment_schedule_and_demand_letter.pdf');
+      final file = File('${output.path}/payment_schedule_and_demand_letter.pdf');
       await file.writeAsBytes(await pdf.save());
 
       setState(() {
@@ -824,44 +948,32 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
 
   pw.Widget _buildPdfTable() {
     double totalDue = totalUpToSelectedSlab;
-    double receivedAmount =
-        double.parse(totalAmountController.text.replaceAll(',', '')) +
-            double.parse(tdsController.text.replaceAll(',', ''));
+    double receivedAmount = double.parse(totalAmountController.text.replaceAll(',', '')) +
+        double.parse(tdsController.text.replaceAll(',', ''));
     int reminderDays = int.parse(selectedReminder!);
 
-    // First calculate base amount without GST
     double baseAmount = (totalDue / 1.05);
-    // Calculate GST amount
     double gstAmount = totalDue - baseAmount;
-    // Calculate 1% TDS on original base amount
     double tdsAmount = baseAmount * 0.01;
-    // Base amount remains the original amount (don't subtract TDS here)
-    // This ensures TDS shows separately in its column
-     double netAmount = baseAmount - tdsAmount;
+    double netAmount = baseAmount - tdsAmount;
 
-
-    double receivedBase =
-        double.parse(netAmountController.text.replaceAll(',', ''));
-    double receivedGst =
-        double.parse(cgstSgstController.text.replaceAll(',', ''));
+    double receivedBase = double.parse(netAmountController.text.replaceAll(',', ''));
+    double receivedGst = double.parse(cgstSgstController.text.replaceAll(',', ''));
     double receivedTds = double.parse(tdsController.text.replaceAll(',', ''));
 
     remainingBase = baseAmount - receivedBase;
     remainingGst = gstAmount - receivedGst;
     remainingTds = tdsAmount - receivedTds;
-    // For total, we need to consider TDS reduction
     double remainingTotal = (remainingBase - remainingTds) + remainingGst;
     
     double latePaymentCharge = remainingBase * (reminderDays / 100.0);
     double latePaymentGST = latePaymentCharge * 0.18;
-    double latetdspayment = 0.0; // Changed from "-" as double to 0.0
-    double totalLatePayment =
-        latePaymentCharge + latePaymentGST;
+    double latetdspayment = 0.0;
+    double totalLatePayment = latePaymentCharge + latePaymentGST;
         
     double finalBase = remainingBase + latePaymentCharge;
     double finalGst = remainingGst + latePaymentGST;
     double finaltds = remainingTds;
-    // Final total should consider TDS reduction
     double finalTotal = (finalBase - finaltds) + finalGst;
 
     List<pw.TableRow> rows = [
@@ -919,8 +1031,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
       children: cells
           .map((cell) => pw.Padding(
                 padding: const pw.EdgeInsets.all(5),
-                child:
-                    pw.Text(cell, style: style, textAlign: pw.TextAlign.center),
+                child: pw.Text(cell, style: style, textAlign: pw.TextAlign.center),
               ))
           .toList(),
     );
@@ -939,8 +1050,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Text(title,
-              style:
-                  pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+              style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
           pw.Divider(color: PdfColors.black, thickness: 1),
           pw.SizedBox(height: 5),
           pw.Text('Account Name: $accountName',
@@ -973,8 +1083,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
         if (!await downloadDir.exists()) {
           await downloadDir.create(recursive: true);
         }
-        String pdfName =
-            'Demand_Letter_${flatNoController.text}_${DateFormat('yyyyMMdd').format(DateTime.now())}.pdf';
+        String pdfName = 'Demand_Letter_${flatNoController.text}_${DateFormat('yyyyMMdd').format(DateTime.now())}.pdf';
         final downloadPath = '${downloadDir.path}/$pdfName';
         await File(pdfFilePath!).copy(downloadPath);
 
@@ -999,11 +1108,12 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
     }
   }
 
-  Widget _buildDropdown(
-      {required String value,
-      required List<String> items,
-      required Function(String?) onChanged,
-      String? label}) {
+  Widget _buildDropdown({
+    required String value,
+    required List<String> items,
+    required Function(String?) onChanged,
+    String? label
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: DropdownButtonFormField<String>(
@@ -1015,10 +1125,16 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter> {
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         ),
       ),
     );
   }
+
+  String toRoman(int number) {
+    if (number < 1 || number > 5) return number.toString();
+    const List<String> romanNumerals = ['I', 'II', 'III', 'IV', 'V'];
+    return romanNumerals[number - 1];
+  }
 }
+

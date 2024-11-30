@@ -61,6 +61,7 @@ class PropertyCardVertical1 extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           child: Stack(
             children: [
+              // Positioned.fill(child: AnimatedGradientBg()),
               Container(
                 decoration: const BoxDecoration(
                   gradient: LinearGradient(

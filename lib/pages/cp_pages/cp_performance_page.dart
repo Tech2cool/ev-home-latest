@@ -1,9 +1,11 @@
 import 'package:ev_homes/components/cp_funnel_chart.dart';
 import 'package:ev_homes/components/cp_timeline.dart';
+import 'package:ev_homes/components/cp_videoplayer.dart';
 import 'package:ev_homes/core/models/cp_chart_data.dart';
 import 'package:ev_homes/core/models/tagging_form_model.dart';
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
+import 'package:video_player/video_player.dart';
 // import 'package:provider/provider.dart';
 
 class PerformanceScreen extends StatefulWidget {
@@ -136,6 +138,11 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
   //     ],
   //   );
   // }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,6 +180,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
         ),
         body: Stack(
           children: [
+            CpVideoplayer(),
             // Container(
             //   decoration: const BoxDecoration(
             //     gradient: LinearGradient(

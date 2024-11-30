@@ -9,9 +9,9 @@ class AnimatedGradientBg extends StatefulWidget {
 
 class _AnimatedGradientBgState extends State<AnimatedGradientBg> {
   List<Color> gradientColors = [
-    const Color(0xFFFFDE4D),
-    const Color(0xFFFFB22C),
-    const Color.fromARGB(199, 248, 85, 4),
+    Color.fromARGB(59, 4, 38, 48),
+    Colors.yellow,
+    Color(0xFF005254),
   ];
 
   bool _isAnimating = true;

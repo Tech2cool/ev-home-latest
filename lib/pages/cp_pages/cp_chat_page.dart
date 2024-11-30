@@ -1,9 +1,11 @@
 import 'dart:ui';
 
+import 'package:ev_homes/wrappers/cp_home_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final Function() goBack;
+  const ChatScreen({super.key, required this.goBack});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -20,6 +22,10 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: widget.goBack,
+        ),
         title: const Text(
           'Chat',
           style: TextStyle(
@@ -69,7 +75,7 @@ class _ChatScreenState extends State<ChatScreen> {
     bool isSentByUser = message != messages.first;
 
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 10),
+      padding: const EdgeInsetsDirectional.fromSTEB(20, 0, 20, 0),
       child: Align(
         alignment: isSentByUser ? Alignment.centerRight : Alignment.centerLeft,
         child: Container(
@@ -95,7 +101,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Widget _buildInputArea() {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 20, 100),
+      padding: const EdgeInsetsDirectional.fromSTEB(20, 20, 20, 20),
       child: Row(
         children: <Widget>[
           Expanded(

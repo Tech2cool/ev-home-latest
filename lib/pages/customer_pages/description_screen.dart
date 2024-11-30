@@ -347,7 +347,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: const Color(0xfff4e9e0),
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
@@ -378,11 +378,11 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           },
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
+                                horizontal: 10, vertical: 5),
                             backgroundColor: const Color(
                                 0xfff4e9e0), // Matches the background
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(50),
                             ),
                             side: const BorderSide(
                                 color: Color(0xfff4e9e0), width: 1.0),
@@ -414,7 +414,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       child: Container(
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.grey.withOpacity(0.4),
@@ -427,10 +427,10 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           onPressed: () => _makePhoneCall(context),
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
+                                horizontal: 20, vertical: 10),
                             backgroundColor: Colors.transparent,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(50),
                             ),
                           ),
                           child: const Row(

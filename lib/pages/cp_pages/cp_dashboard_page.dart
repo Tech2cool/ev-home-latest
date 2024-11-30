@@ -1,8 +1,10 @@
+import 'package:ev_homes/components/cp_videoplayer.dart';
 import 'package:ev_homes/core/constant/constant.dart';
 import 'package:ev_homes/core/models/tagging_form_model.dart';
 import 'package:ev_homes/pages/cp_pages/client_report.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:video_player/video_player.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -12,6 +14,12 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,19 +36,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: Stack(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color.fromARGB(44, 134, 185, 176), // Start color
-                  Color.fromARGB(44, 76, 114, 115),
-                  // Color.fromARGB(199, 248, 85, 4),
-                ],
-              ),
-            ),
-          ),
+          CpVideoplayer(),
+          // Container(
+          //   decoration: const BoxDecoration(
+          //     gradient: LinearGradient(
+          //       begin: Alignment.topCenter,
+          //       end: Alignment.bottomCenter,
+          //       colors: [
+          //         Color.fromARGB(44, 134, 185, 176), // Start color
+          //         Color.fromARGB(44, 76, 114, 115),
+          //         // Color.fromARGB(199, 248, 85, 4),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.all(15),
             child: SingleChildScrollView(
@@ -135,7 +144,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Colors.white.withOpacity(0.4),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -301,7 +310,7 @@ class _LineChartDemoState extends State<LineChartDemo> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withAlpha(40),
+        color: Colors.white.withAlpha(70),
         borderRadius: BorderRadius.circular(16),
         // border: Border.all(width: 0.5, color: Colors.black26),
         // boxShadow: [
@@ -552,7 +561,7 @@ class _PieChartDemoState extends State<PieChartDemo> {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1), // Semi-transparent container
+        color: Colors.white.withOpacity(0.3), // Semi-transparent container
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -686,6 +695,7 @@ class _FunnelChartDemoState extends State<FunnelChartDemo> {
   @override
   void initState() {
     super.initState();
+
     _funnelData = _generateFunnelData();
   }
 
@@ -741,7 +751,7 @@ class _FunnelChartDemoState extends State<FunnelChartDemo> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1), // Semi-transparent container
+            color: Colors.white.withOpacity(0.3), // Semi-transparent container
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(

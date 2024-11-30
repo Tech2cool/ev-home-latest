@@ -24,20 +24,19 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
   late Animation<double> _animation;
   late Animation<double> _iconAnimation;
   late VideoPlayerController _videoPlayerController;
-
-  final List<Widget> _pages = [
-    const CpHomeScreen(),
-    const DashboardScreen(),
-    const ChatScreen(),
-    const PerformanceScreen(),
-  ];
+  DraggableScrollableController controller = DraggableScrollableController();
+  void goback() {
+    setState(() {
+      _currentIndex = 0;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      reverseDuration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 2000),
+      reverseDuration: const Duration(milliseconds: 2000),
       vsync: this,
     );
     _animation = CurvedAnimation(
@@ -75,13 +74,41 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _pages = [
+      const CpHomeScreen(),
+      const DashboardScreen(),
+      ChatScreen(
+        goBack: goback,
+      ),
+      const PerformanceScreen(),
+    ];
+
     return Scaffold(
       body: Stack(
         children: [
-          _pages[_currentIndex],
-          if (_isMenuVisible) _buildBottomSheet(),
-          _buildBottomNavBar(),
-          _buildFloatingActionButton(),
+          Expanded(
+            child: IndexedStack(
+              index: _currentIndex,
+              children: [
+                ..._pages,
+
+                // _buildFloatingActionButton(),
+              ],
+            ),
+          ),
+          if (_isMenuVisible) ...[
+            GestureDetector(
+              onTap: _toggleMenu,
+              child: Container(
+                color: Colors.transparent,
+              ),
+            ),
+            _buildBottomSheet(controller),
+          ],
+          if (_currentIndex != 2) ...[
+            _buildBottomNavBar(),
+            _buildFloatingActionButton(),
+          ],
         ],
       ),
     );
@@ -164,8 +191,8 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [
-                      Color.fromARGB(255, 134, 185, 176),
-                      Color.fromARGB(213, 134, 185, 176),
+                      Color.fromARGB(255, 92, 168, 209),
+                      Color.fromARGB(255, 92, 168, 209),
                     ],
                     begin:
                         Alignment.topLeft, // Gradient starts from the top left
@@ -197,88 +224,110 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
     );
   }
 
-  Widget _buildBottomSheet() {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.5, // Initial size of the sheet when displayed
-      minChildSize: 0, // Minimum size the sheet can be dragged down to
-      maxChildSize: 0.6, // Maximum size the sheet can be dragged up to
-      builder: (BuildContext context, ScrollController scrollController) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                spreadRadius: 2,
+  Widget _buildBottomSheet(DraggableScrollableController contr) {
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        return DraggableScrollableSheet(
+          controller: contr,
+          initialChildSize: 0.5 * _animation.value, // Apply animation value
+          minChildSize: 0.0, // Minimum size the sheet can be dragged down to
+          maxChildSize:
+              0.6 * _animation.value, // Maximum size depends on animation
+          builder: (BuildContext context, ScrollController scrollController) {
+            return NotificationListener<DraggableScrollableNotification>(
+              onNotification: (notification) {
+                if (notification.extent == notification.minExtent) {
+                  if (_isMenuVisible) {
+                    setState(() {
+                      _isMenuVisible = false;
+                      _animationController.reverse(); // Start closing animation
+                    });
+                  }
+                }
+                return true;
+              },
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildActionCard(
+                              'Enquiry Form',
+                              Icons.description,
+                              'Create a new enquiry',
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CpEnquiryFormScreen())),
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildActionCard(
+                              'Client Tagging',
+                              Icons.label,
+                              'Tag your clients',
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ClientTaggingForm())),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildActionCard(
+                              'EMI Calculator',
+                              Icons.calculate,
+                              'Calculate your EMI',
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const EmiCalculator())),
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildActionCard(
+                              'Settings',
+                              Icons.settings,
+                              'Adjust app settings',
+                              () {
+                                // Navigate to Settings screen
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                          height:
+                              100), // Extra space to account for the navigation bar
+                    ],
+                  ),
+                ),
               ),
-            ],
-          ),
-          child: SingleChildScrollView(
-            controller: scrollController, // Attach scrollController
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildActionCard(
-                        'Enquiry Form',
-                        Icons.description,
-                        'Create a new enquiry',
-                        () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const CpEnquiryFormScreen())),
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildActionCard(
-                        'Client Tagging',
-                        Icons.label,
-                        'Tag your clients',
-                        () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ClientTaggingForm())),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildActionCard(
-                        'EMI Calculator',
-                        Icons.calculate,
-                        'Calculate your EMI',
-                        () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const EmiCalculator())),
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildActionCard(
-                        'Settings',
-                        Icons.settings,
-                        'Adjust app settings',
-                        () {
-                          // Navigate to Settings screen
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                    height: 100), // Extra space to account for the navigation b
-              ],
-            ),
-          ),
+            );
+          },
         );
       },
     );

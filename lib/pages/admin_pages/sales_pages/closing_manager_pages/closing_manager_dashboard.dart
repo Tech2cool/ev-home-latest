@@ -55,8 +55,8 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
       await settingProvider.getClosingManagerGraph(
         widget.id ?? settingProvider.loggedAdmin!.id!,
       );
-      await settingProvider.getClosingManagers();
-      settingProvider.closingManagers;
+      await settingProvider.getEmployess();
+      settingProvider.employees;
       // await settingProvider.getLeadsTeamLeaderGraph(
       //   widget.id ?? settingProvider.loggedAdmin!.id!,
       // );
@@ -878,118 +878,140 @@ void _showTaskDialog(BuildContext context) {
 
 void _showAssignTaskDialog(BuildContext context) {
   final settingProvider = Provider.of<SettingProvider>(context, listen: false);
+  final loggedUser = settingProvider.loggedAdmin?.id;
+  String? selectedSubject;
   Employee? selectedAssignee; // Variable for dropdown selection
   final subjectController = TextEditingController();
   final taskNameController = TextEditingController();
   final taskDetailsController = TextEditingController();
-  print(settingProvider.closingManagers);
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "Assign Task",
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Text("Subject"),
-                const SizedBox(height: 5),
-                TextField(
-                  controller: subjectController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+
+  if (loggedUser != null) {
+    final reportingEmployees = settingProvider.employees
+        .where((employee) => employee.reportingTo?.id == loggedUser)
+        .toList();
+
+    print(
+        "Employees reporting to loggedUser ($loggedUser):$reportingEmployees");
+    // print(settingProvider.employees);
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Assign Task",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                const Text("Task Name"),
-                const SizedBox(height: 5),
-                TextField(
-                  controller: taskNameController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Text("Task Details"),
-                const SizedBox(height: 5),
-                TextField(
-                  controller: taskDetailsController,
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Text("Assign To"),
-                const SizedBox(height: 5),
-                DropdownButtonFormField<Employee>(
-                  value: selectedAssignee,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  items: settingProvider.closingManagers
-                      .map((employee) => DropdownMenuItem<Employee>(
-                            value: employee,
-                            child: Text(
-                                '${employee.firstName}  ${employee.lastName}'),
-                          ))
-                      .toList(),
-                  onChanged: (value) {
-                    selectedAssignee =
-                        value; // Ensure you call setState to update the UI
-                  },
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.grey,
+                  const SizedBox(height: 10),
+                  const Text("Subject"),
+                  const SizedBox(height: 5),
+                  DropdownButtonFormField<String>(
+                    value: selectedSubject,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close dialog
-                      },
-                      child: const Text("Cancel"),
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromARGB(255, 151, 245, 154),
+                    items: ["First Call", "Follow-Up", "Schedule Meeting"]
+                        .map((subject) => DropdownMenuItem(
+                              value: subject,
+                              child: Text(subject),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      selectedSubject = value;
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  const SizedBox(height: 10),
+                  const Text("Task Name"),
+                  const SizedBox(height: 5),
+                  TextField(
+                    controller: taskNameController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
-                      onPressed: () {
-                        Navigator.of(context).pop(); // Close dialog
-                      },
-                      child: const Text("Submit"),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(height: 10),
+                  const Text("Task Details"),
+                  const SizedBox(height: 5),
+                  TextField(
+                    controller: taskDetailsController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text("Assign To"),
+                  const SizedBox(height: 5),
+                  DropdownButtonFormField<Employee>(
+                    value: selectedAssignee,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    items: settingProvider.employees
+                        .where((employee) =>
+                            employee.reportingTo?.id == loggedUser)
+                        .map((employee) => DropdownMenuItem<Employee>(
+                              value: employee,
+                              child: Text(
+                                  '${employee.firstName} ${employee.lastName}'),
+                            ))
+                        .toList(),
+                    onChanged: (value) {
+                      selectedAssignee = value;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey,
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close dialog
+                        },
+                        child: const Text("Cancel"),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              const Color.fromARGB(255, 151, 245, 154),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).pop(); // Close dialog
+                        },
+                        child: const Text("Submit"),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
+  }
 }

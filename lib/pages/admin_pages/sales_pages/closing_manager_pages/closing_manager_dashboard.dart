@@ -1,5 +1,6 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
+import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -54,6 +55,8 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
       await settingProvider.getClosingManagerGraph(
         widget.id ?? settingProvider.loggedAdmin!.id!,
       );
+      await settingProvider.getClosingManagers();
+      settingProvider.closingManagers;
       // await settingProvider.getLeadsTeamLeaderGraph(
       //   widget.id ?? settingProvider.loggedAdmin!.id!,
       // );
@@ -874,11 +877,12 @@ void _showTaskDialog(BuildContext context) {
 }
 
 void _showAssignTaskDialog(BuildContext context) {
-  String? selectedAssignee; // Variable for dropdown selection
+  final settingProvider = Provider.of<SettingProvider>(context, listen: false);
+  Employee? selectedAssignee; // Variable for dropdown selection
   final subjectController = TextEditingController();
   final taskNameController = TextEditingController();
   final taskDetailsController = TextEditingController();
-
+  print(settingProvider.closingManagers);
   showDialog(
     context: context,
     builder: (context) {
@@ -937,21 +941,23 @@ void _showAssignTaskDialog(BuildContext context) {
                 const SizedBox(height: 10),
                 const Text("Assign To"),
                 const SizedBox(height: 5),
-                DropdownButtonFormField<String>(
+                DropdownButtonFormField<Employee>(
                   value: selectedAssignee,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  items: ["John Doe", "Jane Smith", "Alex Brown", "Maria Lee"]
-                      .map((name) => DropdownMenuItem(
-                            value: name,
-                            child: Text(name),
+                  items: settingProvider.closingManagers
+                      .map((employee) => DropdownMenuItem<Employee>(
+                            value: employee,
+                            child: Text(
+                                '${employee.firstName}  ${employee.lastName}'),
                           ))
                       .toList(),
                   onChanged: (value) {
-                    selectedAssignee = value;
+                    selectedAssignee =
+                        value; // Ensure you call setState to update the UI
                   },
                 ),
                 const SizedBox(height: 20),
@@ -969,7 +975,8 @@ void _showAssignTaskDialog(BuildContext context) {
                     ),
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
+                        backgroundColor:
+                            const Color.fromARGB(255, 151, 245, 154),
                       ),
                       onPressed: () {
                         Navigator.of(context).pop(); // Close dialog

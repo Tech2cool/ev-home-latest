@@ -35,8 +35,8 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 2000),
-      reverseDuration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 1200),
+      reverseDuration: const Duration(milliseconds: 1200),
       vsync: this,
     );
     _animation = CurvedAnimation(
@@ -225,109 +225,102 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
   }
 
   Widget _buildBottomSheet(DraggableScrollableController contr) {
-    return AnimatedBuilder(
-      animation: _animationController,
-      builder: (context, child) {
-        return DraggableScrollableSheet(
-          controller: contr,
-          initialChildSize: 0.5 * _animation.value, // Apply animation value
-          minChildSize: 0.0, // Minimum size the sheet can be dragged down to
-          maxChildSize:
-              0.6 * _animation.value, // Maximum size depends on animation
-          builder: (BuildContext context, ScrollController scrollController) {
-            return NotificationListener<DraggableScrollableNotification>(
-              onNotification: (notification) {
-                if (notification.extent == notification.minExtent) {
-                  if (_isMenuVisible) {
-                    setState(() {
-                      _isMenuVisible = false;
-                      _animationController.reverse(); // Start closing animation
-                    });
-                  }
-                }
-                return true;
-              },
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 10,
-                      spreadRadius: 2,
-                    ),
-                  ],
+    return DraggableScrollableSheet(
+      controller: contr,
+      initialChildSize: 0.5, // Initial size of the sheet when displayed
+      minChildSize: 0, // Minimum size the sheet can be dragged down to
+      maxChildSize: 0.6, // Maximum size the sheet can be dragged up to
+      builder: (BuildContext context, ScrollController scrollController) {
+        return NotificationListener<DraggableScrollableNotification>(
+          onNotification: (notification) {
+            if (notification.extent == notification.minExtent) {
+              if (_isMenuVisible) {
+                setState(() {
+                  _isMenuVisible = false;
+                  _animationController.reverse();
+                });
+              }
+            }
+            return true;
+          },
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 10,
+                  spreadRadius: 2,
                 ),
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: Column(
+              ],
+            ),
+            child: SingleChildScrollView(
+              controller: scrollController, // Attach scrollController
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  Row(
                     children: [
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildActionCard(
-                              'Enquiry Form',
-                              Icons.description,
-                              'Create a new enquiry',
-                              () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const CpEnquiryFormScreen())),
-                            ),
-                          ),
-                          Expanded(
-                            child: _buildActionCard(
-                              'Client Tagging',
-                              Icons.label,
-                              'Tag your clients',
-                              () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ClientTaggingForm())),
-                            ),
-                          ),
-                        ],
+                      Expanded(
+                        child: _buildActionCard(
+                          'Enquiry Form',
+                          Icons.description,
+                          'Create a new enquiry',
+                          () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const CpEnquiryFormScreen())),
+                        ),
                       ),
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildActionCard(
-                              'EMI Calculator',
-                              Icons.calculate,
-                              'Calculate your EMI',
-                              () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const EmiCalculator())),
-                            ),
-                          ),
-                          Expanded(
-                            child: _buildActionCard(
-                              'Settings',
-                              Icons.settings,
-                              'Adjust app settings',
-                              () {
-                                // Navigate to Settings screen
-                              },
-                            ),
-                          ),
-                        ],
+                      Expanded(
+                        child: _buildActionCard(
+                          'Client Tagging',
+                          Icons.label,
+                          'Tag your clients',
+                          () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ClientTaggingForm())),
+                        ),
                       ),
-                      const SizedBox(
-                          height:
-                              100), // Extra space to account for the navigation bar
                     ],
                   ),
-                ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildActionCard(
+                          'EMI Calculator',
+                          Icons.calculate,
+                          'Calculate your EMI',
+                          () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const EmiCalculator())),
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildActionCard(
+                          'Settings',
+                          Icons.settings,
+                          'Adjust app settings',
+                          () {
+                            // Navigate to Settings screen
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                      height:
+                          100), // Extra space to account for the navigation bar
+                ],
               ),
-            );
-          },
+            ),
+          ),
         );
       },
     );

@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:ev_homes/core/models/channel_partner.dart';
 import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/our_project.dart';
+import 'package:ev_homes/core/models/post_sale_lead.dart';
+import 'package:ev_homes/core/models/site_visit.dart';
 
 class Lead {
   final String id;
@@ -32,6 +34,9 @@ class Lead {
   final String? revisitStatus;
   final String? bookingStatus;
   final String? interestedStatus;
+  final SiteVisit? visitRef;
+  final SiteVisit? revisitRef;
+  final PostSaleLead? bookingRef;
   final List<CallHistory> callHistory;
   final List<ApprovalHistory> approvalHistory;
   final List<UpdateHistory> updateHistory;
@@ -63,6 +68,9 @@ class Lead {
     this.revisitStatus,
     this.cycle,
     this.approvalStatus,
+    this.visitRef,
+    this.revisitRef,
+    this.bookingRef,
     this.interestedStatus,
     this.callHistory = const [],
     this.approvalHistory = const [],
@@ -110,6 +118,14 @@ class Lead {
           ? DateTime.parse(json['previousValidTill'])
           : null,
       cycle: json['cycle'] != null ? Cycle.fromMap(json['cycle']) : null,
+      visitRef:
+          json['visitRef'] != null ? SiteVisit.fromMap(json['visitRef']) : null,
+      revisitRef: json['revisitRef'] != null
+          ? SiteVisit.fromMap(json['revisitRef'])
+          : null,
+      bookingRef: json['bookingRef'] != null
+          ? PostSaleLead.fromJson(json['bookingRef'])
+          : null,
       status: json['status'],
       approvalStatus: json['approvalStatus'],
       visitStatus: json['visitStatus'],

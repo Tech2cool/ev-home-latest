@@ -81,13 +81,13 @@ class _ClosingManagerLeadDetailsPageState
 
   void _submitAppointment() {
     if (_selectedDateTime != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-              'Appointment set for: ${DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime!)}'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text(
+      //         'Appointment set for: ${DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime!)}'),
+      //     backgroundColor: Colors.green,
+      //   ),
+      // );
     } else {
       // ScaffoldMessenger.of(context).showSnackBar(
       //   const SnackBar(
@@ -512,7 +512,7 @@ class _ClosingManagerLeadDetailsPageState
                 label: const Text('Attach Files'),
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.black,
-                  backgroundColor: Colors.grey[200],
+                  backgroundColor: Colors.white,
                 ),
               ),
               const SizedBox(width: 16),
@@ -540,22 +540,22 @@ class _ClosingManagerLeadDetailsPageState
               ),
             ),
           const SizedBox(height: 16),
-          Center(
-            child: ElevatedButton(
-              onPressed: _submitAppointment,
-              child: const Text(
-                'Submit Appointment',
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.indigo,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              ),
-            ),
-          ),
+          // Center(
+          //   child: ElevatedButton(
+          //     onPressed: _submitAppointment,
+          //     child: const Text(
+          //       'Submit Appointmentt',
+          //       style: TextStyle(
+          //         color: Colors.white,
+          //       ),
+          //     ),
+          //     style: ElevatedButton.styleFrom(
+          //       backgroundColor: Colors.indigo,
+          //       padding:
+          //           const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
@@ -565,42 +565,51 @@ class _ClosingManagerLeadDetailsPageState
     return ListView(
       // crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'Schedule Appointment',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        // const Text(
+        //   'Schedule Appointment',
+        //   style: TextStyle(
+        //     fontSize: 20,
+        //     fontWeight: FontWeight.bold,
+        //   ),
+        // ),
         const SizedBox(height: 16),
-        DigitalDateTimePicker(
-          initialDateTime: DateTime.now(),
-          onDateTimeChanged: (DateTime newDateTime) {
-            setState(() {
-              _selectedDateTime = newDateTime;
-            });
-            print('Selected date time: $newDateTime');
-          },
-        ),
-        const SizedBox(height: 16),
-        if (_selectedDateTime != null)
-          Text(
-            'Selected: ${DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime!)}',
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-        const SizedBox(height: 16),
-        ElevatedButton(
-          onPressed: _submitAppointment,
-          child: const Text(
-            'Submit Appointment',
-            style: TextStyle(
-              color: Colors.white,
+        Column(
+          children: [
+            DigitalDateTimePicker(
+              initialDateTime: DateTime.now(),
+              onDateTimeChanged: (DateTime newDateTime) {
+                setState(() {
+                  _selectedDateTime = newDateTime;
+                });
+                print('Selected date time: $newDateTime');
+              },
             ),
-          ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.indigo,
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-          ),
+            const SizedBox(height: 16),
+            if (_selectedDateTime != null)
+              Text(
+                'Selected: ${DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime!)}',
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+            const SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
+                onPressed: _submitAppointment,
+                child: const Text(
+                  'Submit Appointment',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.indigo,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                ),
+              ),
+            ),
+            
+          ],
         ),
       ],
     );

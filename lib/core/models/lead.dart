@@ -373,9 +373,9 @@ class Cycle {
           ? Employee.fromMap(map['teamLeader'] as Map<String, dynamic>)
           : null,
       startDate:
-          map['startDate'] != null ? DateTime.tryParse(map['startDate']) : null,
+          map['startDate'] != null ? DateTime.parse(map['startDate']) : null,
       validTill:
-          map['validTill'] != null ? DateTime.tryParse(map['validTill']) : null,
+          map['validTill'] != null ? DateTime.parse(map['validTill']) : null,
     );
   }
 

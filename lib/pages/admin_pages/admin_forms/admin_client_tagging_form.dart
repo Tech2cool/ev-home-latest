@@ -36,7 +36,7 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
   bool _showClientInfo = false;
   bool _showCPDetails = false;
   String selectedStatus = "pending";
-  String selectedIntrestedStatus = "Cold";
+  String selectedIntrestedStatus = "cold";
   DateTime startDate = DateTime.now();
   DateTime validTill = DateTime.now().add(const Duration(days: 60));
 

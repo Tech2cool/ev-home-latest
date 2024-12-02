@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:ev_homes/components/spinning_icon_btn.dart';
 import 'package:ev_homes/core/constant/constant.dart';
+import 'package:ev_homes/core/providers/geolocation_provider.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -46,7 +48,10 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
   @override
   Widget build(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(context);
+    final geolocationProvider = Provider.of<GeolocationProvider>(context);
+
     final loggedAdmin = settingProvider.loggedAdmin;
+    final bool isInRadius = geolocationProvider.isWithinRadius;
 
     String formatTime(int seconds) {
       final hours = seconds ~/ 3600;
@@ -208,17 +213,26 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                   children: [
                     const SizedBox(width: 5),
                     Icon(
-                      Icons.location_on,
+                      isInRadius
+                          ? Icons.location_on
+                          : Icons.location_off_rounded,
                       size: 30,
-                      color: Colors.orange.shade600,
+                      color: isInRadius
+                          ? Colors.orange.shade600
+                          : Colors.red.withOpacity(0.7),
                     ),
+                    // Icon(
+                    //   Icons.location_on,
+                    //   size: 30,
+                    //   color: Colors.orange.shade600,
+                    // ),
                     const SizedBox(width: 5),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "212, Vardhaman Chambers, Vashi Flyover, Sector 17, Vashi, Navi Mumbai, Maharashtra 400703",
+                          Text(
+                            geolocationProvider.address,
                             style: TextStyle(
                               fontSize: 12,
                             ),
@@ -227,13 +241,17 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Colors.orange.shade600,
+                              color: isInRadius
+                                  ? Colors.orange.shade600
+                                  : Colors.red.withOpacity(0.8),
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            child: const Text(
-                              "Within Geofence",
-                              style: TextStyle(
-                                fontSize: 12,
+                            child: Text(
+                              isInRadius
+                                  ? "Within Geofence"
+                                  : "Outsite Geofence",
+                              style: const TextStyle(
+                                fontSize: 10,
                                 color: Colors.white,
                               ),
                             ),
@@ -242,14 +260,14 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                       ),
                     ),
                     const SizedBox(width: 3),
-                    IconButton(
-                      icon: Icon(
-                        Icons.sync,
-                        size: 30,
-                        color: Colors.orange.shade600,
-                      ),
-                      onPressed: () {
-                        // Dummy action for refresh
+                    SpinningIconBtn(
+                      icon: Icons.sync,
+                      iconSize: 30,
+                      iconColor: isInRadius
+                          ? Colors.orange.shade600
+                          : Colors.red.withOpacity(0.8),
+                      onTap: () async {
+                        await geolocationProvider.getCurrentLocation();
                       },
                     ),
                   ],

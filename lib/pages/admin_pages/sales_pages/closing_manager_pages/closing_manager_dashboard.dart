@@ -31,6 +31,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
   bool showNotification = false;
   double notificationHeight = 0;
   String? selectedOption;
+  final GlobalKey _iconKey = GlobalKey();
 
   bool isLoading = false;
 
@@ -287,7 +288,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                             items: const [
                               DropdownMenuItem(
                                 value: "lead_to_visit",
-                                child: Text("Lead to Visit"),
+                                child: Text("Lead to Visit1"),
                               ),
                               DropdownMenuItem(
                                 value: "visit1_to_booking",
@@ -359,12 +360,23 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                             ),
                           ),
                           IconButton(
+                            key: _iconKey,
                             icon: const Icon(Icons.filter_alt),
                             onPressed: () {
+                              final RenderBox renderBox =
+                                  _iconKey.currentContext!.findRenderObject()
+                                      as RenderBox;
+                              final Offset position =
+                                  renderBox.localToGlobal(Offset.zero);
+                              final Size size = renderBox.size;
                               showMenu(
                                 context: context,
-                                position:
-                                    const RelativeRect.fromLTRB(100, 80, 20, 0),
+                                position: RelativeRect.fromLTRB(
+                                  position.dx,
+                                  position.dy + size.height,
+                                  position.dx + size.width,
+                                  position.dy,
+                                ),
                                 items: const [
                                   PopupMenuItem(
                                     value: 'January',
@@ -449,13 +461,16 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                             const SizedBox(width: 8),
                             InkWell(
                               onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => AdminCarryForwardPage(
-                                      id: widget.id,
-                                    ),
-                                  ),
+                                final selectedValue = showDialog<int>(
+                                  context: context,
+                                  builder: (context) =>
+                                      AdminCarryForwardDialog(id: "123"),
                                 );
+
+                                if (selectedValue != null) {
+                                  print(
+                                      "Selected Carry Forward Option: $selectedValue");
+                                }
                               },
                               child: TargetCircle(
                                 number: target?.carryForward.toString() ?? "0",
@@ -934,6 +949,44 @@ void _showAssignTaskDialog(BuildContext context) {
                     ),
                   ),
                 ),
+                // Padding(
+                //   padding:
+                //       const EdgeInsets.symmetric(horizontal: 0, vertical: 2),
+                //   child: TextField(
+                //     onChanged: (query) {
+                //       filteredLeads = leads.where((lead) {
+                //         final fullName =
+                //             '${lead.firstName ?? ''} ${lead.lastName ?? ''}'
+                //                 .toLowerCase();
+                //         return fullName.contains(query.toLowerCase());
+                //       }).toList();
+                //     },
+                //     decoration: InputDecoration(
+                //       labelText: 'Search Lead',
+                //       fillColor: Colors.transparent,
+                //       filled: true,
+                //       border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(12),
+                //       ),
+                //       prefixIcon: const Icon(Icons.search),
+                //     ),
+                //   ),
+                // ),
+                // Expanded(
+                //   child: ListView.builder(
+                //     itemCount: filteredLeads.length,
+                //     itemBuilder: (context, index) {
+                //       final lead = filteredLeads[index];
+                //       return ListTile(
+                //         title: Text('${lead.firstName} ${lead.lastName}'),
+                //         onTap: () {
+                //           // Handle the suggestion tap
+                //           print('Selected: ${lead.firstName} ${lead.lastName}');
+                //         },
+                //       );
+                //     },
+                //   ),
+                // ),
                 const SizedBox(height: 10),
                 const Text("Assign To"),
                 const SizedBox(height: 5),

@@ -2,6 +2,9 @@ import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
+import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/sales_team_meeting.dart';
+import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/task_first_call.dart';
+import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/task_followup.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -819,34 +822,118 @@ void _showTaskDialog(BuildContext context) {
                 ),
               ),
               const SizedBox(height: 10),
-              const Expanded(
+              Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ListTile(
-                        leading: Icon(Icons.check_circle, color: Colors.green),
-                        title: Text("Complete Report"),
+                        leading: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            const Icon(Icons.check_circle, color: Colors.green),
+                            Positioned(
+                              top: -4,
+                              right: -4,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Text(
+                                  "11",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        title: const Text("First Call"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TaskFirstCall(),
+                            ),
+                          );
+                        },
                       ),
                       ListTile(
-                        leading: Icon(Icons.task_alt, color: Colors.blue),
-                        title: Text("Schedule Meeting"),
+                        leading: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            const Icon(Icons.task_alt, color: Colors.blue),
+                            Positioned(
+                              top: -4,
+                              right: -4,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Text(
+                                  "10",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        title: const Text("Follow-Up Call"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TaskFollowup(),
+                            ),
+                          );
+                        },
                       ),
                       ListTile(
-                        leading: Icon(Icons.note, color: Colors.orange),
-                        title: Text("Review Notes"),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.email, color: Colors.red),
-                        title: Text("Send Emails"),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.add_alert, color: Colors.purple),
-                        title: Text("Set Reminder"),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.update, color: Colors.teal),
-                        title: Text("Update Database"),
+                        leading: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            const Icon(Icons.note, color: Colors.orange),
+                            Positioned(
+                              top: -4,
+                              right: -4,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Text(
+                                  "4",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        title: const Text("Schedule Meeting"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SalesTeamMeeting(),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

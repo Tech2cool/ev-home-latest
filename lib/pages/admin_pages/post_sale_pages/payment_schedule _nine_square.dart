@@ -11,7 +11,8 @@ class PaymentScheduleGenerators extends StatefulWidget {
   const PaymentScheduleGenerators({super.key});
 
   @override
-  _PaymentScheduleGeneratorState createState() => _PaymentScheduleGeneratorState();
+  _PaymentScheduleGeneratorState createState() =>
+      _PaymentScheduleGeneratorState();
 }
 
 class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
@@ -72,7 +73,11 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
     {'value': '46', 'name': 'On Completion of Lift'},
     {'value': '47', 'name': 'On Completion of water pumps'},
     {'value': '48', 'name': 'On Completion of electrical fittings'},
-    {'value': '49', 'name': 'On Completion of electro, mechanical and environmental requirements'},
+    {
+      'value': '49',
+      'name':
+          'On Completion of electro, mechanical and environmental requirements'
+    },
     {'value': '50', 'name': 'On completion of entrance lobby'},
     {'value': '51', 'name': 'On completion of plinth protection and paving'},
     {'value': '52', 'name': 'On Possession'},
@@ -82,19 +87,22 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
     final pdf = pw.Document();
     final formatter = NumberFormat("#,##,###");
 
-    double allInclusiveAmount = double.tryParse(allInclusiveController.text) ?? 0;
+    double allInclusiveAmount =
+        double.tryParse(allInclusiveController.text) ?? 0;
     double stampDutyPercentage = double.tryParse(stampDuty) ?? 5;
     double gstPercentage = 5.0;
     double registrationCharges = 30000;
 
     if (allInclusiveAmount == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter a valid All Inclusive Amount')),
+        const SnackBar(
+            content: Text('Please enter a valid All Inclusive Amount')),
       );
       return;
     }
 
-    double agreementValue = (allInclusiveAmount - registrationCharges) / (((stampDutyPercentage + gstPercentage) / 100) + 1);
+    double agreementValue = (allInclusiveAmount - registrationCharges) /
+        (((stampDutyPercentage + gstPercentage) / 100) + 1);
     double stampDutyValue = agreementValue * (stampDutyPercentage / 100);
     double gstValue = agreementValue * (gstPercentage / 100);
     double totalValue = agreementValue + gstValue;
@@ -103,7 +111,13 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
     double selectedSlabPercentage = _getSlabPercentage(selectedSlabIndex);
     double selectedSlabAmount = totalValue * (selectedSlabPercentage / 100);
 
-    final List<List<String>> paymentSchedule = _generatePaymentSchedule(agreementValue, gstValue, stampDutyValue, registrationCharges, allInclusiveAmount, totalValue);
+    final List<List<String>> paymentSchedule = _generatePaymentSchedule(
+        agreementValue,
+        gstValue,
+        stampDutyValue,
+        registrationCharges,
+        allInclusiveAmount,
+        totalValue);
 
     pdf.addPage(
       pw.MultiPage(
@@ -112,16 +126,24 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
         build: (pw.Context context) {
           return [
             pw.Header(
-              level: 0,
-              child: pw.Text('PAYMENT SCHEDULE', style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold))
-            ),
+                level: 0,
+                child: pw.Text('PAYMENT SCHEDULE',
+                    style: pw.TextStyle(
+                        fontSize: 16, fontWeight: pw.FontWeight.bold))),
             pw.SizedBox(height: 10),
-            pw.Text('Flat No: ${flatNoController.text}', style: const pw.TextStyle(fontSize: 10)),
-            pw.Text('Phone: ${phoneController.text}', style: const pw.TextStyle(fontSize: 10)),
-            pw.Text('Client Name: ${clientNameController.text}', style: const pw.TextStyle(fontSize: 10)),
-            pw.Text('Carpet Area: ${carpetAreaController.text} sq. ft.', style: const pw.TextStyle(fontSize: 10)),
-            pw.Text('Project: Nine Square', style: const pw.TextStyle(fontSize: 10)),
-            pw.Text('All Inclusive Amount: ${formatter.format(allInclusiveAmount)}', style: const pw.TextStyle(fontSize: 10)),
+            pw.Text('Flat No: ${flatNoController.text}',
+                style: const pw.TextStyle(fontSize: 10)),
+            pw.Text('Phone: ${phoneController.text}',
+                style: const pw.TextStyle(fontSize: 10)),
+            pw.Text('Client Name: ${clientNameController.text}',
+                style: const pw.TextStyle(fontSize: 10)),
+            pw.Text('Carpet Area: ${carpetAreaController.text} sq. ft.',
+                style: const pw.TextStyle(fontSize: 10)),
+            pw.Text('Project: Nine Square',
+                style: const pw.TextStyle(fontSize: 10)),
+            pw.Text(
+                'All Inclusive Amount: ${formatter.format(allInclusiveAmount)}',
+                style: const pw.TextStyle(fontSize: 10)),
             pw.SizedBox(height: 10),
             pw.Table(
               border: pw.TableBorder.all(width: 0.5),
@@ -134,26 +156,36 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
               children: [
                 pw.TableRow(
                   decoration: pw.BoxDecoration(color: PdfColors.grey300),
-                  children: ['No.', 'Stage', '%', 'Amount'].map((header) => pw.Padding(
-                    padding: const pw.EdgeInsets.all(2),
-                    child: pw.Text(header, style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
-                  )).toList(),
+                  children: ['No.', 'Stage', '%', 'Amount']
+                      .map((header) => pw.Padding(
+                            padding: const pw.EdgeInsets.all(2),
+                            child: pw.Text(header,
+                                style: pw.TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: pw.FontWeight.bold)),
+                          ))
+                      .toList(),
                 ),
                 ...paymentSchedule.asMap().entries.map((entry) {
                   int index = entry.key;
                   List<String> row = entry.value;
                   return pw.TableRow(
-                    children: row.map((cell) => pw.Padding(
-                      padding: const pw.EdgeInsets.all(2),
-                      child: pw.Text(cell, style: const pw.TextStyle(fontSize: 8)),
-                    )).toList(),
+                    children: row
+                        .map((cell) => pw.Padding(
+                              padding: const pw.EdgeInsets.all(0),
+                              child: pw.Text(cell,
+                                  style: const pw.TextStyle(fontSize: 8)),
+                            ))
+                        .toList(),
                   );
-                }).toList(),
+                }),
               ],
             ),
             pw.SizedBox(height: 10),
-            pw.Text('Total up to selected slab: ${selectedSlabPercentage.toStringAsFixed(1)}% - ${formatter.format(selectedSlabAmount)}',
-                style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
+            pw.Text(
+                'Total up to selected slab: ${selectedSlabPercentage.toStringAsFixed(1)}% - ${formatter.format(selectedSlabAmount)}',
+                style:
+                    pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
           ];
         },
       ),
@@ -181,9 +213,11 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
     List<double> percentages = [
       10.0, 20.0, 15.0, 3.0, // Slabs 1-4
       3.0, 3.0, 3.0, 3.0, // Slabs 5-8
-      0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, // Slabs 9-26
+      0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+      0.5, 0.5, 0.5, // Slabs 9-26
       0.2, 0.2, 0.2, 0.2, 0.2, // Slabs 27-31
-      1.0, 1.0, 1.0, 1.0, 1.0, 1.25, 1.25, 1.25, 1.25, 1.0, 1.0, 1.0, 1.0, 1.0, 4.0, 1.0, 2.0, 1.0, 2.0, 1.0, 5.0 // Slabs 32-52
+      1.0, 1.0, 1.0, 1.0, 1.0, 1.25, 1.25, 1.25, 1.25, 1.0, 1.0, 1.0, 1.0, 1.0,
+      4.0, 1.0, 2.0, 1.0, 2.0, 1.0, 5.0 // Slabs 32-52
     ];
     double total = percentages.sublist(0, slabIndex).reduce((a, b) => a + b);
     return total > 100 ? 100 : total;
@@ -192,27 +226,52 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
   String _getOrdinalSuffix(int number) {
     if (number >= 11 && number <= 13) return 'th';
     switch (number % 10) {
-      case 1: return 'st';
-      case 2: return 'nd';
-      case 3: return 'rd';
-      default: return 'th';
+      case 1:
+        return 'st';
+      case 2:
+        return 'nd';
+      case 3:
+        return 'rd';
+      default:
+        return 'th';
     }
   }
 
-  List<List<String>> _generatePaymentSchedule(double agreementValue, double gstValue, double stampDutyValue, double registrationCharges, double allInclusiveAmount, double totalValue) {
+  List<List<String>> _generatePaymentSchedule(
+      double agreementValue,
+      double gstValue,
+      double stampDutyValue,
+      double registrationCharges,
+      double allInclusiveAmount,
+      double totalValue) {
     final formatter = NumberFormat("#,##,###");
 
     List<List<String>> schedule = [
       ['1', 'On Booking', '10 %', formatter.format(totalValue * 0.10)],
-      ['2', 'On Execution of Agreement', '20 %', formatter.format(totalValue * 0.20)],
-      ['3', 'On Completion of Plinth level', '15 %', formatter.format(totalValue * 0.15)],
-      ['4', 'On Completion of 1st Slab (Ground)', '3 %',   formatter.format(totalValue * 0.03)],
+      [
+        '2',
+        'On Execution of Agreement',
+        '20 %',
+        formatter.format(totalValue * 0.20)
+      ],
+      [
+        '3',
+        'On Completion of Plinth level',
+        '15 %',
+        formatter.format(totalValue * 0.15)
+      ],
+      [
+        '4',
+        'On Completion of 1st Slab (Ground)',
+        '3 %',
+        formatter.format(totalValue * 0.03)
+      ],
     ];
 
     for (int i = 5; i <= 8; i++) {
       schedule.add([
         '$i',
-        'On Completion of ${i-3}${_getOrdinalSuffix(i-3)} Slab (Podium ${i-3})',
+        'On Completion of ${i - 3}${_getOrdinalSuffix(i - 3)} Slab (Podium ${i - 3})',
         '3 %',
         formatter.format(totalValue * 0.03)
       ]);
@@ -220,7 +279,7 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
     for (int i = 9; i <= 26; i++) {
       schedule.add([
         '$i',
-        'On Completion of ${i-3}${_getOrdinalSuffix(i-3)} Slab',
+        'On Completion of ${i - 3}${_getOrdinalSuffix(i - 3)} Slab',
         '0.5 %',
         formatter.format(totalValue * 0.005)
       ]);
@@ -229,39 +288,145 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
     for (int i = 27; i <= 31; i++) {
       schedule.add([
         '$i',
-        'On Completion of ${i-3}${_getOrdinalSuffix(i-3)} Slab',
+        'On Completion of ${i - 3}${_getOrdinalSuffix(i - 3)} Slab',
         '0.2 %',
-        formatter.format(totalValue* 0.002)
+        formatter.format(totalValue * 0.002)
       ]);
     }
 
     List<List<String>> finishingStages = [
-      ['32', 'On Completion of walls', '1 %', formatter.format(totalValue * 0.01)],
-      ['33', 'On Completion of internal plaster', '1 %', formatter.format(totalValue * 0.01)],
-      ['34', 'On Completion of Flooring', '1 %', formatter.format(totalValue * 0.01)],
-      ['35', 'On Completion of Doors', '1 %', formatter.format(totalValue * 0.01)],
-      ['36', 'On Completion of windows', '1 %', formatter.format(totalValue* 0.01)],
-      ['37', 'On Completion of Sanitary fittings', '1.25 %', formatter.format(totalValue * 0.0125)],
-      ['38', 'On Completion of Staircase', '1.25 %', formatter.format(totalValue * 0.0125)],
-      ['39', 'On Completion of Lift well', '1.25 %', formatter.format(totalValue * 0.0125)],
-      ['40', 'On Completion of Lobbies', '1.25 %', formatter.format(totalValue * 0.0125)],
-      ['41', 'On Completion of external plumbing', '1 %', formatter.format(totalValue * 0.01)],
-      ['42', 'On Completion of External plaster', '1 %', formatter.format(totalValue * 0.01)],
-      ['43', 'On Completion of elevation', '1 %', formatter.format(totalValue * 0.01)],
-      ['44', 'On Completion of waterproofing', '1 %', formatter.format(totalValue * 0.01)],
-      ['45', 'On Completion of terrace', '1 %', formatter.format(totalValue* 0.01)],
-      ['46', 'On Completion of Lift', '4 %', formatter.format(totalValue* 0.04)],
-      ['47', 'On Completion of water pumps', '1 %', formatter.format(totalValue * 0.01)],
-      ['48', 'On Completion of electrical fittings', '2 %', formatter.format(totalValue * 0.02)],
-      ['49', 'On completion of electro mechanical and environmental requirements', '1 %', formatter.format(totalValue * 0.01)],
-      ['50', 'On completion of entrance lobby', '2 %', formatter.format(totalValue * 0.02)],
-      ['51', 'On completion of plinth protection and paving', '1 %', formatter.format(totalValue * 0.01)],
+      [
+        '32',
+        'On Completion of walls',
+        '1 %',
+        formatter.format(totalValue * 0.01)
+      ],
+      [
+        '33',
+        'On Completion of internal plaster',
+        '1 %',
+        formatter.format(totalValue * 0.01)
+      ],
+      [
+        '34',
+        'On Completion of Flooring',
+        '1 %',
+        formatter.format(totalValue * 0.01)
+      ],
+      [
+        '35',
+        'On Completion of Doors',
+        '1 %',
+        formatter.format(totalValue * 0.01)
+      ],
+      [
+        '36',
+        'On Completion of windows',
+        '1 %',
+        formatter.format(totalValue * 0.01)
+      ],
+      [
+        '37',
+        'On Completion of Sanitary fittings',
+        '1.25 %',
+        formatter.format(totalValue * 0.0125)
+      ],
+      [
+        '38',
+        'On Completion of Staircase',
+        '1.25 %',
+        formatter.format(totalValue * 0.0125)
+      ],
+      [
+        '39',
+        'On Completion of Lift well',
+        '1.25 %',
+        formatter.format(totalValue * 0.0125)
+      ],
+      [
+        '40',
+        'On Completion of Lobbies',
+        '1.25 %',
+        formatter.format(totalValue * 0.0125)
+      ],
+      [
+        '41',
+        'On Completion of external plumbing',
+        '1 %',
+        formatter.format(totalValue * 0.01)
+      ],
+      [
+        '42',
+        'On Completion of External plaster',
+        '1 %',
+        formatter.format(totalValue * 0.01)
+      ],
+      [
+        '43',
+        'On Completion of elevation',
+        '1 %',
+        formatter.format(totalValue * 0.01)
+      ],
+      [
+        '44',
+        'On Completion of waterproofing',
+        '1 %',
+        formatter.format(totalValue * 0.01)
+      ],
+      [
+        '45',
+        'On Completion of terrace',
+        '1 %',
+        formatter.format(totalValue * 0.01)
+      ],
+      [
+        '46',
+        'On Completion of Lift',
+        '4 %',
+        formatter.format(totalValue * 0.04)
+      ],
+      [
+        '47',
+        'On Completion of water pumps',
+        '1 %',
+        formatter.format(totalValue * 0.01)
+      ],
+      [
+        '48',
+        'On Completion of electrical fittings',
+        '2 %',
+        formatter.format(totalValue * 0.02)
+      ],
+      [
+        '49',
+        'On completion of electro mechanical and environmental requirements',
+        '1 %',
+        formatter.format(totalValue * 0.01)
+      ],
+      [
+        '50',
+        'On completion of entrance lobby',
+        '2 %',
+        formatter.format(totalValue * 0.02)
+      ],
+      [
+        '51',
+        'On completion of plinth protection and paving',
+        '1 %',
+        formatter.format(totalValue * 0.01)
+      ],
       ['52', 'On Possession', '5 %', formatter.format(totalValue * 0.05)],
     ];
 
     schedule.addAll(finishingStages);
-    schedule.add(['', 'TOTAL', '100 %', formatter.format(agreementValue + gstValue)]);
-    schedule.add(['', 'Before Registration (Stamp Duty & Registration Charges)', '', formatter.format(stampDutyValue + registrationCharges)]);
+    schedule.add(
+        ['', 'TOTAL', '100 %', formatter.format(agreementValue + gstValue)]);
+    schedule.add([
+      '',
+      'Before Registration (Stamp Duty & Registration Charges)',
+      '',
+      formatter.format(stampDutyValue + registrationCharges)
+    ]);
     schedule.add(['', 'GRAND TOTAL', '', formatter.format(allInclusiveAmount)]);
     return schedule;
   }
@@ -464,6 +629,7 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
       keyboardType: keyboardType,
     );
   }
+
   Widget _buildDropdownField({
     required String value,
     required String label,
@@ -504,4 +670,4 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
       },
     );
   }
-} 
+}

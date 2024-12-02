@@ -6,6 +6,7 @@ import 'package:ev_homes/pages/admin_pages/post_sale_pages/post_sales_executive_
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_dashboard.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/pre_sales_executive_pages/pre_sales_executive_dashboard.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/closing_manager_dashboard.dart';
+import 'package:ev_homes/pages/admin_pages/sales_pages/sales_manager_pages/sales_manager_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -39,7 +40,9 @@ class _DashboardPageState extends State<DashboardPage> {
     } else if (loggedDesg.toLowerCase() == "desg-app-developer") {
       return const AppDevDashboard();
     } else if (loggedDesg.toLowerCase() == "desg-post-sales-head") {
-      return const PostSaleHeadDashboard();
+      return PostSaleHeadDashboard(id: widget.id);
+    } else if (loggedDesg.toLowerCase() == "desg-sales-manager") {
+      return const SalesmangerDashbord();
     } else if (loggedDesg.toLowerCase() == "desg-post-sales-executive") {
       return const PostsaleexcecutiveDashboard();
     }

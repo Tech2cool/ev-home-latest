@@ -94,17 +94,28 @@ class Helper {
       'yyyy-MM-dd',
       'yyyy-MM-dd hh:mm',
       'dd MMMM yyyy',
-      'dd/MM/yyyy', // Add more formats if needed
+      'dd/MM/yyyy',
+      // Include ISO 8601 format
+      'yyyy-MM-ddTHH:mm:ss.SSSZ', // ISO format with timezone
+      'yyyy-MM-ddTHH:mm:ss.SSSZ', // ISO format with Z
     ];
 
     for (String format in formats) {
       try {
         // Parse the date string
         final DateFormat dateFormat = DateFormat(format);
-        DateTime dateTime = dateFormat.parseStrict(dateString);
+
+        // Check for ISO 8601 format separately
+        DateTime dateTime;
+        if (format == 'yyyy-MM-ddTHH:mm:ss.SSSZ' ||
+            format == 'yyyy-MM-ddTHH:mm:ss.SSSZ') {
+          dateTime = DateTime.parse(dateString); // Parse ISO format
+        } else {
+          dateTime = dateFormat.parseStrict(dateString);
+        }
 
         // Define the desired output format
-        final DateFormat outputFormatter = DateFormat('dd MMM yy');
+        final DateFormat outputFormatter = DateFormat('dd MMM yyyy');
 
         // Format the DateTime object into the desired string format
         return outputFormatter.format(dateTime);

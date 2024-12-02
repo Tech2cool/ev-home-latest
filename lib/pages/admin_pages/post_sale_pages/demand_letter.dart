@@ -1,3 +1,5 @@
+import 'package:ev_homes/core/models/customer_payment.dart';
+import 'package:ev_homes/core/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -52,6 +54,9 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
   double remainingBase = 0.0;
   double remainingGst = 0.0;
   double remainingTds = 0.0;
+  Payment? getpayment;
+  Map<String, double>? calculatedValues;
+  String bankTableOption = 'bookingAmount';
 
   String toRoman(int number) {
     if (number < 1 || number > 5) return number.toString();
@@ -392,12 +397,28 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
                   ]),
                   _buildTextField(
                     controller: tdsController,
-                    label: 'tds Amount',
+                    label: 'TDS Amount',
                     icon: Icons.money,
                     keyboardType: TextInputType.number,
                   ),
                   _buildDatePicker(),
                 ]),
+                const SizedBox(height: 24),
+                ElevatedButton.icon(
+                  onPressed: _calculateValues,
+                  icon: const Icon(Icons.calculate),
+                  label: const Text('Calculate'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    backgroundColor: Colors.green,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                if (calculatedValues != null) _buildCalculatedValuesCard(),
+                const SizedBox(height: 24),
+                _buildBankDetailsCard(),
                 const SizedBox(height: 24),
                 ElevatedButton.icon(
                   onPressed: () {
@@ -429,6 +450,34 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCalculatedValuesCard() {
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Calculated Values',
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue.shade700)),
+            const SizedBox(height: 8),
+            Text(
+                'Net Amount: ${currencyFormat.format(calculatedValues!['baseAmount'])}'),
+            Text(
+                'GST/SGST Amount: ${currencyFormat.format(calculatedValues!['gstAmount'])}'),
+            Text(
+                'TDS +GST/SGST ${currencyFormat.format(calculatedValues!['gstAmount']! + calculatedValues!['tdsAmount']!)}'),
+            Text(
+                'Total Due: ${currencyFormat.format(calculatedValues!['totalDue'])}'),
+          ],
         ),
       ),
     );
@@ -552,10 +601,27 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
     }
   }
 
-  void _updateFlatNo() {
+  void _updateFlatNo() async {
     if (selectedFloor != null && selectedUnit != null) {
       setState(() {
         flatNoController.text = '$selectedFloor$selectedUnit';
+      });
+      final res =
+          await ApiService().getPaymentbyFlat("$selectedFloor$selectedUnit");
+      setState(() {
+        getpayment = res;
+        carpetAreaController.text = res?.carpetArea ?? "";
+        clientNameController.text = res?.customerName ?? "";
+        phoneController.text = res?.phoneNumber.toString() ?? "";
+        addressLine1Controller.text = res?.address1 ?? "";
+        addressLine2Controller.text = res?.address2 ?? "";
+        cityController.text = res?.city ?? "";
+        pincodeController.text = res?.pincode.toString() ?? "";
+        netAmountController.text = res?.bookingAmt.toString() ?? "";
+        cgstSgstController.text = res?.cgst.toString() ?? "";
+        totalAmountController.text = res?.amtReceived.toString() ?? "";
+        allInclusiveController.text = res?.allinclusiveamt.toString() ?? "";
+        tdsController.text = res?.tds.toString() ?? "";
       });
     }
   }
@@ -578,13 +644,30 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
     setState(() {
       totalUpToSelectedSlab = totalValue * (selectedSlabPercentage / 100);
 
-      // Calculate TDS if applicable
       if (isTdsApplicable) {
         tdsAmount = (allInclusiveAmount - 30000) / 1.12;
       } else {
         tdsAmount = 0.0;
       }
     });
+  }
+
+  void _calculateValues() {
+    if (_formKey.currentState!.validate()) {
+      double allInclusiveAmount = double.parse(allInclusiveController.text);
+      double netAmount = double.parse(netAmountController.text);
+      double cgstSgst = double.parse(cgstSgstController.text);
+      double tds = double.parse(tdsController.text);
+
+      setState(() {
+        calculatedValues = {
+          'baseAmount': netAmount,
+          'gstAmount': cgstSgst,
+          'tdsAmount': tds,
+          'totalDue': allInclusiveAmount,
+        };
+      });
+    }
   }
 
   String _getGreeting() {
@@ -688,7 +771,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
                   style: pw.TextStyle(
                       fontSize: 14, fontWeight: pw.FontWeight.bold)),
               _buildPdfBankDetails(
-                'Axis Bank Limited (for Booking amount payment ${currencyFormat.format(remainingBase.ceil())})',
+                'Axis Bank Limited (for Booking amount payment ${currencyFormat.format(bankTableOption == 'bookingAmount' ? remainingBase.ceil() : (remainingGst + remainingTds).ceil())}',
                 'Account Name:- E V Homes Construction Pvt.Ltd',
                 '923020034471092',
                 'UTIB0000072',
@@ -696,7 +779,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
                 'Vashi, Navi Mumbai',
               ),
               _buildPdfBankDetails(
-                'IDBI Bank (for GST And TDS amount payment ${currencyFormat.format(remainingGst.ceil())})',
+                'IDBI Bank (for GST And TDS amount payment ${currencyFormat.format(bankTableOption == 'bookingAmount' ? (remainingGst + remainingTds).ceil() : remainingBase.ceil())}',
                 'Account Name:- E V Homes Construction Pvt.Ltd',
                 '0123102000043254',
                 'IBKL0000123',
@@ -743,10 +826,9 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
     int reminderDays = int.parse(selectedReminder!);
 
     double baseAmount = (totalDue / 1.05);
-    print(baseAmount);
     double gstAmount = totalDue - baseAmount;
     double tdsAmount = baseAmount * 0.01;
-    baseAmount = baseAmount - tdsAmount;
+    double netAmount = baseAmount - tdsAmount;
 
     double receivedBase =
         double.parse(netAmountController.text.replaceAll(',', ''));
@@ -757,23 +839,25 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
     remainingBase = baseAmount - receivedBase;
     remainingGst = gstAmount - receivedGst;
     remainingTds = tdsAmount - receivedTds;
-    double remainingTotal = remainingBase + remainingGst + remainingTds;
+    double remainingTotal = (remainingBase - remainingTds) + remainingGst;
+
     double latePaymentCharge = remainingBase * (reminderDays / 100.0);
     double latePaymentGST = latePaymentCharge * 0.18;
-    double latetdspayment = 0;
-    double totalLatePayment =
-        latePaymentCharge + latePaymentGST + latetdspayment;
+    double latetdspayment = 0.0;
+    double totalLatePayment = latePaymentCharge + latePaymentGST;
+
     double finalBase = remainingBase + latePaymentCharge;
     double finalGst = remainingGst + latePaymentGST;
-    double finaltds = remainingTds + latetdspayment;
-    double finalTotal = finalBase + finalGst + finaltds;
+    double finaltds = remainingTds;
+    double finalTotal = (finalBase - finaltds) + finalGst;
+
     List<pw.TableRow> rows = [
       _buildPdfTableRow(
           ['Particulars', 'Net Amount', 'CGST/SGST', 'TDS', 'Total'],
           isHeader: true),
       _buildPdfTableRow([
         'Amount due + GST @ 5%',
-        currencyFormat.format(baseAmount),
+        currencyFormat.format(netAmount),
         currencyFormat.format(gstAmount),
         currencyFormat.format(tdsAmount),
         currencyFormat.format(totalDue)
@@ -789,21 +873,21 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
         'Total Amount Payable on or before ${selectedDate != null ? DateFormat('dd-MM-yyyy').format(selectedDate!) : 'N/A'}',
         currencyFormat.format(remainingBase),
         currencyFormat.format(remainingGst),
-        currencyFormat.format(remainingTds), //
+        currencyFormat.format(remainingTds),
         currencyFormat.format(remainingTotal),
       ]),
       _buildPdfTableRow([
         'Add - Late payment charges @ $reminderDays${reminderDays > 1 ? '%' : ''}  + GST @ 18%',
         currencyFormat.format(latePaymentCharge),
         currencyFormat.format(latePaymentGST),
-        currencyFormat.format(latetdspayment), //
+        currencyFormat.format(latetdspayment),
         currencyFormat.format(totalLatePayment)
       ]),
       _buildPdfTableRow([
         'Total Amount Payable after ${selectedDate != null ? DateFormat('dd-MM-yyyy').format(selectedDate!) : 'N/A'}',
         currencyFormat.format(finalBase),
         currencyFormat.format(finalGst),
-        currencyFormat.format(finaltds), // TDS is already deducted
+        currencyFormat.format(finaltds),
         currencyFormat.format(finalTotal)
       ]),
     ];
@@ -923,6 +1007,120 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBankDetailsCard() {
+    return Card(
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Bank Details',
+                style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue.shade700)),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<String>(
+              value: bankTableOption,
+              decoration: InputDecoration(
+                labelText: 'Select value for PDF',
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              items: [
+                DropdownMenuItem(
+                    value: 'bookingAmount', child: Text('Booking Amount')),
+                DropdownMenuItem(value: 'gstAmount', child: Text('GST Amount')),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  bankTableOption = value!;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            Table(
+              border: TableBorder.all(),
+              children: [
+                TableRow(
+                  children: [
+                    TableCell(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Bank Name',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    )),
+                    TableCell(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Account Number',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    )),
+                    TableCell(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Amount',
+                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    )),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    TableCell(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('ICICI Bank Limited'),
+                    )),
+                    TableCell(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('015105022186'),
+                    )),
+                    TableCell(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(calculatedValues != null
+                          ? currencyFormat.format(
+                              bankTableOption == 'bookingAmount'
+                                  ? calculatedValues!['baseAmount']!
+                                  : calculatedValues!['gstAmount']!)
+                          : '0.00'),
+                    )),
+                  ],
+                ),
+                TableRow(
+                  children: [
+                    TableCell(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('ICICI Bank'),
+                    )),
+                    TableCell(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('015105022390'),
+                    )),
+                    TableCell(
+                        child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(calculatedValues != null
+                          ? currencyFormat.format(
+                              bankTableOption == 'bookingAmount'
+                                  ? calculatedValues!['gstAmount']!
+                                  : calculatedValues!['baseAmount']!)
+                          : '0.00'),
+                    )),
+                  ],
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

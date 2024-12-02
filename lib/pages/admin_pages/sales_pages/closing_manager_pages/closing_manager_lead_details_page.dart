@@ -301,16 +301,6 @@ class _ClosingManagerLeadDetailsPageState
                               ),
                               const SizedBox(height: 8),
                               MyTextCard(
-                                heading: "Valid Till: ",
-                                value: Helper.formatDate(
-                                  widget.lead.validTill.toString(),
-                                ),
-                                // valueColor: _getIntrestedColor(
-                                //   widget.lead.interestedStatus,
-                                // ),
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
                                 heading: "Project: ",
                                 value: widget.lead.project
                                     .map((pr) => pr.name)
@@ -321,6 +311,36 @@ class _ClosingManagerLeadDetailsPageState
                                 heading: "Requirement: ",
                                 value: widget.lead.requirement.join(", "),
                               ),
+                              const SizedBox(height: 8),
+                              MyTextCard(
+                                heading: widget.lead.cycle != null
+                                    ? "${Helper.capitalize(widget.lead.cycle?.stage ?? "")} Deadline: "
+                                    : "Visit Deadline: ",
+                                value: Helper.formatDateOnly(
+                                  widget.lead.cycle?.validTill!.toString() ??
+                                      '',
+                                ),
+                                valueColor: Colors.red,
+                              ),
+                              const SizedBox(height: 8),
+                              MyTextCard(
+                                heading: widget.lead.cycle != null
+                                    ? "${Helper.capitalize(widget.lead.cycle?.stage ?? "")} Deadline: "
+                                    : "Visit Deadline: ",
+                                value: Helper.formatDateOnly(
+                                  widget.lead.cycle?.validTill!.toString() ??
+                                      '',
+                                ),
+                                valueColor: Colors.red,
+                              ),
+
+                              // MyTextCard(
+                              //   heading: "Visit Deadline: ",
+                              //   value: Helper.formatDateOnly(
+                              //     widget.lead.cycle?.validTill!.toString() ??
+                              //         '',
+                              //   ),
+                              // ),
                               const SizedBox(height: 8),
                             ],
                           ),

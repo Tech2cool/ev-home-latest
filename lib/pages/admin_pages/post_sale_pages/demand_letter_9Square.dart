@@ -11,11 +11,9 @@ import 'package:permission_handler/permission_handler.dart';
 
 class DemandLetter extends StatefulWidget {
   const DemandLetter({Key? key}) : super(key: key);
-
   @override
   _DemandLetterState createState() => _DemandLetterState();
 }
-
 class _DemandLetterState extends State<DemandLetter> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController flatNoController = TextEditingController();
@@ -108,15 +106,10 @@ class _DemandLetterState extends State<DemandLetter> {
     {'value': '46', 'name': 'On Completion of Lift'},
     {'value': '47', 'name': 'On Completion of water pumps'},
     {'value': '48', 'name': 'On Completion of electrical fittings'},
-    {
-      'value': '49',
-      'name':
-          'On Completion of electro, mechanical and environmental requirements'
-    },
+    {'value': '49','name':'On Completion of electro, mechanical and environmental requirements'},
     {'value': '50', 'name': 'On completion of entrance lobby'},
     {'value': '51', 'name': 'On completion of plinth protection and paving'},
     {'value': '52', 'name': 'On Possession'},
-
   ];
 
   bool showAdditionalNameInput = false;
@@ -1083,7 +1076,7 @@ class _DemandLetterState extends State<DemandLetter> {
         if (!await downloadDir.exists()) {
           await downloadDir.create(recursive: true);
         }
-        String pdfName = 'Demand_Letter_${flatNoController.text}_${DateFormat('yyyyMMdd').format(DateTime.now())}.pdf';
+        String pdfName = 'Demand Letter 02${flatNoController.text}.pdf';
         final downloadPath = '${downloadDir.path}/$pdfName';
         await File(pdfFilePath!).copy(downloadPath);
 

@@ -454,7 +454,6 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
       ),
     );
   }
-
   Widget _buildCalculatedValuesCard() {
     return Card(
       elevation: 4,
@@ -475,7 +474,6 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
       ),
     );
   }
-
   Widget _buildSection(String title, List<Widget> children) {
     return Card(
       elevation: 4,
@@ -957,7 +955,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
         }
 
         String pdfName =
-            'Demand_Letter_${flatNoController.text}_${DateFormat('yyyyMMdd').format(DateTime.now())}.pdf';
+            'Demand Letter 01${flatNoController.text}pdf';
         final downloadPath = '${downloadDir.path}/$pdfName';
 
         await File(pdfFilePath!).copy(downloadPath);

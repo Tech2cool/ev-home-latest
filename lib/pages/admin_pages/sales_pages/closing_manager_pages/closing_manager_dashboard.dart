@@ -63,13 +63,6 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
     }
   }
 
-  final Map<String, Map<String, int>> chartData = {
-    "lead_to_visit": {"visited": 60, "notVisited": 40},
-    "visit1_to_booking": {"visited": 30, "notVisited": 70},
-    "visit2_to_booking": {"booking": 20, "Visited2": 80},
-    "lead_to_booking": {"booking": 15, "notVisited": 85},
-  };
-
   @override
   void initState() {
     super.initState();
@@ -215,60 +208,6 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 60,
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(154, 255, 254, 245),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.grey.shade400),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              isExpanded: true,
-                              hint: const Text("Select an option"),
-                              value: selectedOption,
-                              items: const [
-                                DropdownMenuItem(
-                                  value: "lead_to_visit",
-                                  child: Text("Leads to Visit"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "visit1_to_booking",
-                                  child: Text("Visit 1 to Booking"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "visit2_to_booking",
-                                  child: Text("Visit 2 to Booking"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "lead_to_booking",
-                                  child: Text("Lead to Booking"),
-                                ),
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedOption = value;
-                                });
-                              },
-                              icon: const Icon(Icons.arrow_drop_down),
-                            ),
-                          ),
-                        ),
-                        if (selectedOption != null)
-                          AnimatedPieChart(
-                            visited: chartData[selectedOption]!['visited']!,
-                            notVisited: chartData[selectedOption]!['notVisited']!,
-                            title: ' conversion', 
-                          ),
-                      ],
-                    ),
-                  ),
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                     padding: const EdgeInsets.all(10),
@@ -460,6 +399,71 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                     ],
                   ),
                 ),
+               Column(
+  children: [
+    Card(
+      elevation: 4,
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: Colors.white.withOpacity(0.3), // Semi-transparent white background
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: AnimatedPieChart(
+          visited: 75,
+          notVisited: 25,
+          title: "Leads",
+          visitedColor: Colors.blue,
+          notVisitedColor: Colors.orange,
+        ),
+      ),
+    ),
+    Card(
+      elevation: 4,
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: Colors.white.withOpacity(0.3), // Semi-transparent white background
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: AnimatedPieChart(
+          visited: 60,
+          notVisited: 40,
+          title: "Visits",
+          visitedColor: Colors.green,
+          notVisitedColor: Colors.red,
+        ),
+      ),
+    ),
+    Card(
+      elevation: 4,
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: Colors.white.withOpacity(0.3), // Semi-transparent white background
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: AnimatedPieChart(
+          visited: 30,
+          notVisited: 70,
+          title: "Bookings",
+          visitedColor: Colors.purple,
+          notVisitedColor: Colors.yellow,
+        ),
+      ),
+    ),
+    Card(
+      elevation: 4,
+      margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      color: Colors.white.withOpacity(0.3), // Semi-transparent white background
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: AnimatedPieChart(
+          visited: 80,
+          notVisited: 20,
+          title: "Follow-ups",
+          visitedColor: Colors.teal,
+          notVisitedColor: Colors.pink,
+        ),
+      ),
+    ),
+  ],
+),
+
                 const SizedBox(
                   height: 30,
                 )
@@ -472,6 +476,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
     );
   }
 }
+
 
 class MyCard extends StatelessWidget {
   final String label;

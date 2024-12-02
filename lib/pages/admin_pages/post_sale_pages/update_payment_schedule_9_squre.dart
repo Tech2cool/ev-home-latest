@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 
 class UpdatePayment9 extends StatefulWidget {
-  const UpdatePayment9({super.key});
+  const UpdatePayment9({Key? key}) : super(key: key);
 
   @override
   _UpdatePayment9State createState() => _UpdatePayment9State();
@@ -108,133 +108,160 @@ class _UpdatePayment9State extends State<UpdatePayment9> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Update Payment Status'),
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.indigo,
+        elevation: 0,
       ),
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Colors.blue, Colors.lightBlueAccent],
+            colors: [Colors.indigo, Colors.indigo.shade200],
           ),
         ),
         child: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(16),
-            child: Card(
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const Text(
-                      'Enter Payment Schedule Details',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 24),
-                    _buildDropdownField(
-                      value: selectedSlab,
-                      label: 'Select Slab',
-                      icon: Icons.layers,
-                      items: slabs.map((Map<String, String> slab) {
-                        return DropdownMenuItem<String>(
-                          value: slab['value'],
-                          child: Text(slab['name']!),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          selectedSlab = newValue!;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 24),
-                    ElevatedButton(
-                      onPressed: _updateStatus,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Text(
+                          'Enter Payment Schedule Details',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.indigo,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                      ),
-                      child: const Text(
-                        'Update Status',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                    if (updatedSlab != null) ...[
-                      const SizedBox(height: 24),
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.blue),
+                        const SizedBox(height: 24),
+                        _buildDropdownField(
+                          value: selectedSlab,
+                          label: 'Select Slab',
+                          icon: Icons.layers,
+                          items: slabs.map((Map<String, String> slab) {
+                            return DropdownMenuItem<String>(
+                              value: slab['value'],
+                              child: Text(slab['name']!),
+                            );
+                          }).toList(),
+                          onChanged: (newValue) {
+                            setState(() {
+                              selectedSlab = newValue!;
+                            });
+                          },
                         ),
-                        child: Column(
-                          children: [
-                            const Text(
-                              'Updated Slab:',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              updatedSlab!,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: Colors.black87,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                    const SizedBox(height: 24),
-                    const Text(
-                      'Selection History',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 16),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: selectionHistory.length,
-                      itemBuilder: (context, index) {
-                        final item = selectionHistory[index];
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          child: ListTile(
-                            title: Text(item['slab'] as String),
-                            subtitle: Text(
-                              DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.parse(item['timestamp'] as String)),
+                        const SizedBox(height: 24),
+                        ElevatedButton(
+                          onPressed: _updateStatus,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.indigo,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                        );
-                      },
+                          child: const Text(
+                            'Update Status',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                        if (updatedSlab != null) ...[
+                          const SizedBox(height: 24),
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: Colors.indigo.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.indigo),
+                            ),
+                            child: Column(
+                              children: [
+                                const Text(
+                                  'Updated Slab:',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.indigo,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  updatedSlab!,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.black87,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                const SizedBox(height: 24),
+                Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        const Text(
+                          'Selection History',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.indigo,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 16),
+                        ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: selectionHistory.length,
+                          itemBuilder: (context, index) {
+                            final item = selectionHistory[index];
+                            return Card(
+                              margin: const EdgeInsets.only(bottom: 8),
+                              child: ListTile(
+                                title: Text(item['slab'] as String),
+                                subtitle: Text(
+                                  DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.parse(item['timestamp'] as String)),
+                                ),
+                                leading: CircleAvatar(
+                                  backgroundColor: Colors.indigo,
+                                  child: Text(
+                                    '${selectionHistory.length - index}',
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -253,14 +280,14 @@ class _UpdatePayment9State extends State<UpdatePayment9> {
       value: value,
       decoration: InputDecoration(
         labelText: label,
-        prefixIcon: Icon(icon, color: Colors.blue),
+        prefixIcon: Icon(icon, color: Colors.indigo),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.blue),
+          borderSide: const BorderSide(color: Colors.indigo),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(color: Colors.blue, width: 2),
+          borderSide: const BorderSide(color: Colors.indigo, width: 2),
         ),
         filled: true,
         fillColor: Colors.white,
@@ -268,7 +295,7 @@ class _UpdatePayment9State extends State<UpdatePayment9> {
       items: items,
       onChanged: onChanged,
       isExpanded: true,
-      icon: const Icon(Icons.arrow_drop_down, color: Colors.blue),
+      icon: const Icon(Icons.arrow_drop_down, color: Colors.indigo),
       iconSize: 24,
       elevation: 16,
       style: const TextStyle(color: Colors.black, fontSize: 16),

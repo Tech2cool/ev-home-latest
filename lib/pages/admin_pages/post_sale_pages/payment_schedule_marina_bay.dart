@@ -101,6 +101,7 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
     ]);
     pdf.addPage(
       pw.Page(
+        pageFormat: PdfPageFormat.legal,
         build: (pw.Context context) {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -197,9 +198,21 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
   }
 
   double _getSlabPercentage(int slabIndex) {
-    if (slabIndex <= 4) return 40.0;
-    return 40.0 + (slabIndex - 4) * 2.0;
+  List<double> percentages = [
+    9.5,  // On Booking
+    15.5, // On Registration
+    10.0, // Commencement of Work
+    5.0,  // On Completion of Foundation upto Plinth Level
+  ];
+  
+  // Add 2% for each subsequent slab
+  for (int i = 5; i <= 34; i++) {
+    percentages.add(2.0);
   }
+  
+  // Calculate cumulative percentage up to the selected slab
+  return percentages.sublist(0, slabIndex).reduce((a, b) => a + b);
+}
 
   String _getOrdinalSuffix(int number) {
     if (number >= 11 && number <= 13) {

@@ -14,12 +14,13 @@ class AnimatedPieChart extends StatefulWidget {
     required this.notVisited,
     required this.title,
     this.visitedColor = Colors.green,
-    this.notVisitedColor = Colors.pink, // Updated default color
+    this.notVisitedColor = Colors.pink,
   }) : super(key: key);
 
   @override
   State<AnimatedPieChart> createState() => _AnimatedPieChartState();
 }
+
 
 class _AnimatedPieChartState extends State<AnimatedPieChart> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
@@ -31,11 +32,11 @@ class _AnimatedPieChartState extends State<AnimatedPieChart> with SingleTickerPr
     _controller = AnimationController(
       duration: const Duration(milliseconds: 5000),
       vsync: this,
-    )..repeat(); // Make the animation repeat continuously
+    )..repeat();
 
     _animation = CurvedAnimation(
       parent: _controller,
-      curve: Curves.linear, // Use linear curve for smooth rotation
+      curve: Curves.linear,
     );
   }
 
@@ -61,8 +62,8 @@ class _AnimatedPieChartState extends State<AnimatedPieChart> with SingleTickerPr
       alignment: Alignment.center,
       children: [
         SizedBox(
-          width: 300,
-          height: 300,
+          width: 250, // Reduced from 300
+          height: 250, // Reduced from 300
           child: AnimatedBuilder(
             animation: _animation,
             builder: (context, child) {
@@ -89,8 +90,8 @@ class _AnimatedPieChartState extends State<AnimatedPieChart> with SingleTickerPr
             );
           },
           child: Container(
-            width: 200,
-            height: 200,
+            width: 150, // Reduced from 200
+            height: 150, // Reduced from 200
             decoration: BoxDecoration(
               color: Colors.white,
               shape: BoxShape.circle,
@@ -109,12 +110,12 @@ class _AnimatedPieChartState extends State<AnimatedPieChart> with SingleTickerPr
                   Text(
                     widget.title,
                     style: const TextStyle(
-                      fontSize: 18,
+                      fontSize: 14, // Reduced from 18
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF1E3A8A),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 5), // Reduced from 10
                   TweenAnimationBuilder<int>(
                     tween: IntTween(begin: 0, end: total),
                     duration: const Duration(milliseconds: 1000),
@@ -122,7 +123,7 @@ class _AnimatedPieChartState extends State<AnimatedPieChart> with SingleTickerPr
                       return Text(
                         '$value',
                         style: const TextStyle(
-                          fontSize: 36,
+                          fontSize: 24, // Reduced from 36
                           fontWeight: FontWeight.bold,
                           color: Color(0xFF1E3A8A),
                         ),
@@ -132,16 +133,16 @@ class _AnimatedPieChartState extends State<AnimatedPieChart> with SingleTickerPr
                   const Text(
                     'Total',
                     style: TextStyle(
-                      fontSize: 15,
+                      fontSize: 12, // Reduced from 15
                       color: Color(0xFF64748B),
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  Row(
+                  const SizedBox(height: 5), // Reduced from 10
+                  Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       _buildLegendItem('Visited', widget.visited, widget.visitedColor),
-                      const SizedBox(width: 20),
+                      const SizedBox(height: 2), // Added small vertical spacing
                       _buildLegendItem('Not Visited', widget.notVisited, widget.notVisitedColor),
                     ],
                   ),
@@ -156,10 +157,11 @@ class _AnimatedPieChartState extends State<AnimatedPieChart> with SingleTickerPr
 
   Widget _buildLegendItem(String label, int value, Color color) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          width: 12,
-          height: 12,
+          width: 8, // Reduced from 12
+          height: 8, // Reduced from 12
           decoration: BoxDecoration(
             color: color,
             shape: BoxShape.circle,
@@ -169,7 +171,7 @@ class _AnimatedPieChartState extends State<AnimatedPieChart> with SingleTickerPr
         Text(
           '$label: $value',
           style: TextStyle(
-            fontSize: 10,
+            fontSize: 8, // Reduced from 10
             color: color,
             fontWeight: FontWeight.w600,
           ),
@@ -193,7 +195,6 @@ class PieChartPainter extends CustomPainter {
     required this.visitedColor,
     required this.notVisitedColor, // Updated default color
   });
-
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
@@ -203,7 +204,6 @@ class PieChartPainter extends CustomPainter {
     final total = visited + notVisited;
     final visitedAngle = (visited / total) * 2 * pi;
     final notVisitedAngle = (notVisited / total) * 2 * pi;
-
     // Draw background circle
     final bgPaint = Paint()
       ..color = Colors.grey.withOpacity(0.1)

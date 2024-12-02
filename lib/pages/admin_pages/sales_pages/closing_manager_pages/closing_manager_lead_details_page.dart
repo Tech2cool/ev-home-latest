@@ -562,56 +562,56 @@ class _ClosingManagerLeadDetailsPageState
   }
 
   Widget _buildAppointmentSection() {
-    return ListView(
-      // crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // const Text(
-        //   'Schedule Appointment',
-        //   style: TextStyle(
-        //     fontSize: 20,
-        //     fontWeight: FontWeight.bold,
-        //   ),
-        // ),
-        const SizedBox(height: 16),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            DigitalDateTimePicker(
-              initialDateTime: DateTime.now(),
-              onDateTimeChanged: (DateTime newDateTime) {
-                setState(() {
-                  _selectedDateTime = newDateTime;
-                });
-                print('Selected date time: $newDateTime');
-              },
-            ),
-            // const SizedBox(height: 16),
-            // if (_selectedDateTime != null)
-            //   Text(
-            //     'Selected: ${DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime!)}',
-            //     style:
-            //         const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            //   ),
-            // const SizedBox(height: 16),
-            // Center(
-            //   child: ElevatedButton(
-            //     onPressed: _submitAppointment,
-            //     child: const Text(
-            //       'Submit Appointment',
-            //       style: TextStyle(
-            //         color: Colors.white,
-            //       ),
-            //     ),
-            //     style: ElevatedButton.styleFrom(
-            //       backgroundColor: Colors.indigo,
-            //       padding:
-            //           const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            //     ),
-            //   ),
-            // ),
-          ],
-        ),
-      ],
+    return SingleChildScrollView(
+      child:
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          // children: [
+          // const Text(
+          //   'Schedule Appointment',
+          //   style: TextStyle(
+          //     fontSize: 20,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
+          Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DigitalDateTimePicker(
+            initialDateTime: DateTime.now(),
+            onDateTimeChanged: (DateTime newDateTime) {
+              setState(() {
+                _selectedDateTime = newDateTime;
+              });
+              print('Selected date time: $newDateTime');
+            },
+          ),
+          // const SizedBox(height: 16),
+          // if (_selectedDateTime != null)
+          //   Text(
+          //     'Selected: ${DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime!)}',
+          //     style:
+          //         const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          //   ),
+          // const SizedBox(height: 16),
+          // Center(
+          //   child: ElevatedButton(
+          //     onPressed: _submitAppointment,
+          //     child: const Text(
+          //       'Submit Appointment',
+          //       style: TextStyle(
+          //         color: Colors.white,
+          //       ),
+          //     ),
+          //     style: ElevatedButton.styleFrom(
+          //       backgroundColor: Colors.indigo,
+          //       padding:
+          //           const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          //     ),
+          //   ),
+          // ),
+        ],
+      ),
+      // ],
     );
   }
 

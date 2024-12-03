@@ -26,6 +26,7 @@ class _ClosingManagerLeadDetailsPageState
   DateTime? _selectedDateTime;
   bool showNotification = false;
   bool showScheduleMeeting = false;
+  bool _isPreviewVisible = false;
   final TextEditingController _notificationController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _templateController = TextEditingController();
@@ -102,134 +103,147 @@ class _ClosingManagerLeadDetailsPageState
     }
   }
 
-  void _showNotificationPreview() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return SingleChildScrollView(
-          child: Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Notification Preview',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Title
-                  const Text(
-                    'Title:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Text(
-                    _titleController.text,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Message
-                  const Text(
-                    'Message:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Text(
-                    _notificationController.text,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Attached Files
-                  if (_selectedImages.isNotEmpty)
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Attached Files:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        SizedBox(
-                          height: 100,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: _selectedImages.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(right: 8),
-                                child: Image.file(
-                                  File(_selectedImages[index].path),
-                                  width: 200,
-                                  height: 400,
-                                  fit: BoxFit.fill,
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  const SizedBox(height: 16),
-
-                  // Template
-                  const Text(
-                    'Template:',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                  Text(
-                    _templateController.text,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Close Button
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.indigo[600],
-                      // padding: const EdgeInsets.symmetric(
-                      //     horizontal: 15, vertical: 12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                    child: Center(
-                      child: const Text(
-                        'Close Preview',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
+  // void _showNotificationPreview() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return Dialog(
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(12.0),
+  //         ),
+  //         child: SingleChildScrollView(
+  //           child: Padding(
+  //             padding: const EdgeInsets.all(16),
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Row(
+  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                   children: [
+  //                     Row(
+  //                       children: [
+  //                         Container(
+  //                           decoration: BoxDecoration(
+  //                             shape: BoxShape.circle,
+  //                             color: Colors.indigo[600],
+  //                           ),
+  //                           padding: const EdgeInsets.all(8),
+  //                           child: const Icon(
+  //                             Icons.notifications,
+  //                             color: Colors.white,
+  //                             size: 12,
+  //                           ),
+  //                         ),
+  //                         const SizedBox(width: 8),
+  //                         const Text(
+  //                           'EV Home',
+  //                           style: TextStyle(
+  //                             fontSize: 16,
+  //                             fontWeight: FontWeight.bold,
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     IconButton(
+  //                       icon: const Icon(Icons.arrow_drop_down),
+  //                       onPressed: () {
+  //                         Navigator.pop(context);
+  //                       },
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 const SizedBox(height: 16),
+  //                 Padding(
+  //                   padding: const EdgeInsets.only(left: 32.0),
+  //                   child: Text(
+  //                     _titleController.text,
+  //                     style: const TextStyle(
+  //                       fontSize: 16,
+  //                       fontWeight: FontWeight.bold,
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 const SizedBox(height: 8),
+  //                 Padding(
+  //                   padding: const EdgeInsets.only(left: 32.0),
+  //                   child: Text(
+  //                     _notificationController.text,
+  //                     style: const TextStyle(fontSize: 16),
+  //                   ),
+  //                 ),
+  //                 const SizedBox(height: 8),
+  //                 if (_selectedImages.isNotEmpty)
+  //                   Padding(
+  //                     padding: const EdgeInsets.only(left: 32.0),
+  //                     child: SizedBox(
+  //                       height: 150,
+  //                       child: ListView.builder(
+  //                         scrollDirection: Axis.horizontal,
+  //                         itemCount: _selectedImages.length,
+  //                         itemBuilder: (context, index) {
+  //                           return Padding(
+  //                             padding: const EdgeInsets.only(right: 8),
+  //                             child: ClipRRect(
+  //                               borderRadius: BorderRadius.circular(12),
+  //                               child: Container(
+  //                                 decoration: BoxDecoration(
+  //                                   boxShadow: [
+  //                                     BoxShadow(
+  //                                       color: Colors.grey.withOpacity(0.6),
+  //                                       offset: const Offset(3, 3),
+  //                                       blurRadius: 8,
+  //                                       spreadRadius: 3,
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                                 child: Image.file(
+  //                                   File(_selectedImages[index].path),
+  //                                   width: 250,
+  //                                   height: 400,
+  //                                   fit: BoxFit.fill,
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           );
+  //                         },
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 const SizedBox(height: 16),
+  //                 // Show preview section if _isPreviewVisible is true
+  //                 if (_isPreviewVisible)
+  //                   Padding(
+  //                     padding: const EdgeInsets.all(16),
+  //                     child: Column(
+  //                       children: [
+  //                         Text(
+  //                           'Preview Notification',
+  //                           style: TextStyle(
+  //                             fontSize: 18,
+  //                             fontWeight: FontWeight.bold,
+  //                           ),
+  //                         ),
+  //                         const SizedBox(height: 16),
+  //                         Text(
+  //                           'Title: ${_titleController.text}',
+  //                           style: const TextStyle(fontSize: 16),
+  //                         ),
+  //                         const SizedBox(height: 8),
+  //                         Text(
+  //                           'Notification: ${_notificationController.text}',
+  //                           style: const TextStyle(fontSize: 16),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   void _showAssignTaskDialog(BuildContext context) {
     final settingProvider =
@@ -893,26 +907,6 @@ class _ClosingManagerLeadDetailsPageState
             ],
           ),
           const SizedBox(height: 16),
-          // if (_selectedImages.isNotEmpty)
-          //   SizedBox(
-          //     height: 100,
-          //     child: ListView.builder(
-          //       scrollDirection: Axis.horizontal,
-          //       itemCount: _selectedImages.length,
-          //       itemBuilder: (context, index) {
-          //         return Padding(
-          //           padding: const EdgeInsets.only(right: 8),
-          //           child: Image.file(
-          //             File(_selectedImages[index].path),
-          //             width: 100,
-          //             height: 100,
-          //             fit: BoxFit.cover,
-          //           ),
-          //         );
-          //       },
-          //     ),
-          //   ),
-          const SizedBox(height: 16),
           TextField(
             controller: _templateController,
             decoration: InputDecoration(
@@ -950,10 +944,122 @@ class _ClosingManagerLeadDetailsPageState
                 iconSize: 30,
                 icon: const Icon(Icons.remove_red_eye),
                 color: Colors.indigo[600],
-                onPressed: _showNotificationPreview,
+                onPressed: () {
+                  setState(() {
+                    _isPreviewVisible =
+                        !_isPreviewVisible; // Toggle preview visibility
+                  });
+                },
               ),
             ],
           ),
+          if (_isPreviewVisible) ...[
+            const SizedBox(height: 16),
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.indigo[600],
+                              ),
+                              padding: const EdgeInsets.all(8),
+                              child: const Icon(
+                                Icons.notifications,
+                                color: Colors.white,
+                                size: 12,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              'EV Home',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.arrow_drop_down),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 32.0),
+                      child: Text(
+                        _titleController.text,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 32.0),
+                      child: Text(
+                        _notificationController.text,
+                        style: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    if (_selectedImages.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.only(left: 32.0),
+                        child: SizedBox(
+                          height: 150,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _selectedImages.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.6),
+                                          offset: const Offset(3, 3),
+                                          blurRadius: 8,
+                                          spreadRadius: 3,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Image.file(
+                                      File(_selectedImages[index].path),
+                                      width: 250,
+                                      height: 400,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    const SizedBox(height: 16),
+                    // Show preview section if _isPreviewVisible is true
+                  ],
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

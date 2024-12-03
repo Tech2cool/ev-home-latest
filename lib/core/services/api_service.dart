@@ -17,6 +17,7 @@ import 'package:ev_homes/core/models/pagination_model.dart';
 import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:ev_homes/core/models/site_visit.dart';
 import 'package:ev_homes/core/models/target_model.dart';
+import 'package:ev_homes/core/models/task.dart';
 import 'package:ev_homes/core/models/team_section.dart';
 import 'package:ev_homes/core/models/upload_file.dart';
 import 'package:ev_homes/core/services/shared_pref_service.dart';
@@ -615,6 +616,33 @@ class ApiService {
 
       Helper.showCustomSnackBar(errorMessage);
       print("pass 3");
+      return [];
+    }
+  }
+
+  Future<List<Task>> getTasks(String id) async {
+    try {
+      final Response response = await _dio.get('/task/$id');
+      final Map<String, dynamic> data = response.data;
+      final items = data['data'] as List<dynamic>? ?? [];
+
+      List<Task> payItems = [];
+      if (items.isNotEmpty) {
+        payItems = items.map((cp) => Task.fromMap(cp)).toList();
+      }
+      return payItems;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
       return [];
     }
   }

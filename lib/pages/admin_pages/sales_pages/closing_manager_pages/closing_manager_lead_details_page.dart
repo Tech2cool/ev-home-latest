@@ -99,11 +99,13 @@ class _ClosingManagerLeadDetailsPageState
   }
 
   void _showAssignTaskDialog(BuildContext context) {
-    final settingProvider =
-        Provider.of<SettingProvider>(context, listen: false);
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
     final loggedUser = settingProvider.loggedAdmin?.id;
     String? selectedSubject;
-    Employee? selectedAssignee; // Variable for dropdown selection
+    Employee? selectedAssignee;
     final subjectController = TextEditingController();
     final taskNameController = TextEditingController();
     final taskDetailsController = TextEditingController();
@@ -147,12 +149,20 @@ class _ClosingManagerLeadDetailsPageState
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      items: ["First Call", "Follow-Up", "Schedule Meeting"]
-                          .map((subject) => DropdownMenuItem(
-                                value: subject,
-                                child: Text(subject),
-                              ))
-                          .toList(),
+                      items: [
+                        DropdownMenuItem(
+                          value: "first-call",
+                          child: Text("First Call"),
+                        ),
+                        DropdownMenuItem(
+                          value: "followup",
+                          child: Text("Follow-Up"),
+                        ),
+                        DropdownMenuItem(
+                          value: "schedule-meeting",
+                          child: Text("Schedule Meeting"),
+                        ),
+                      ],
                       onChanged: (value) {
                         selectedSubject = value;
                       },

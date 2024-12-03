@@ -3,7 +3,7 @@ import 'package:ev_homes/components/animated_pie_chart.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
-import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/view_task_page.dart';
+import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/task_list_page.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -872,7 +872,7 @@ void _showTaskDialog(BuildContext context) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ViewTaskPage(),
+                              builder: (context) => TaskListPage(),
                             ),
                           );
                         },
@@ -908,7 +908,7 @@ void _showTaskDialog(BuildContext context) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ViewTaskPage(),
+                              builder: (context) => TaskListPage(),
                             ),
                           );
                         },
@@ -944,7 +944,7 @@ void _showTaskDialog(BuildContext context) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => ViewTaskPage(),
+                              builder: (context) => TaskListPage(),
                             ),
                           );
                         },

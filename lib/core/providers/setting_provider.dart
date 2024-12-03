@@ -16,6 +16,7 @@ import 'package:ev_homes/core/models/pagination_model.dart';
 import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:ev_homes/core/models/site_visit.dart';
 import 'package:ev_homes/core/models/target_model.dart';
+import 'package:ev_homes/core/models/task.dart';
 import 'package:ev_homes/core/models/team_section.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/core/services/shared_pref_service.dart';
@@ -81,6 +82,7 @@ class SettingProvider extends ChangeNotifier {
   );
 
   List<TeamSection> _teamSections = [];
+  List<Task> _tasks = [];
   List<SiteVisit> _siteVisits = [];
   List<OurProject> _ourProject = [];
   List<ChannelPartner> _channelPartner = [];
@@ -141,6 +143,7 @@ class SettingProvider extends ChangeNotifier {
   List<Employee> get dataEntryUsers => _dataEntryUsers;
   List<Employee> get postSalesExecutives => _postSalesExecutives;
   List<TeamSection> get teamSections => _teamSections;
+  List<Task> get tasks => _tasks;
 
   List<Employee> get employeeBydDesg => _employeeBydDesg;
 
@@ -189,6 +192,15 @@ class SettingProvider extends ChangeNotifier {
     final emps = await _apiService.getTeamLeaders();
     if (emps.isNotEmpty) {
       _teamLeaders = emps;
+      notifyListeners();
+    }
+  }
+
+  Future<void> getTask(String id) async {
+    final emps = await _apiService.getTasks(id);
+
+    if (emps.isNotEmpty) {
+      _tasks = emps;
       notifyListeners();
     }
   }

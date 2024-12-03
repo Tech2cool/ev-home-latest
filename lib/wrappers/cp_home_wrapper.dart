@@ -36,14 +36,16 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1200),
-      reverseDuration: const Duration(milliseconds: 1200),
+      duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
+
     _animation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
+      reverseCurve: Curves.easeInOut, // Ensure the reverse curve matches
     );
+
     _videoPlayerController =
         VideoPlayerController.asset('assets/video/blue_bg.mp4')
           ..initialize().then((_) {
@@ -197,8 +199,8 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
                     BoxShadow(
                       color: Color.fromARGB(255, 133, 0, 0).withOpacity(0.8),
                       blurRadius: 2,
-                      spreadRadius: 1,
-                      offset: const Offset(0, 4),
+                      spreadRadius: 2,
+                      // offset: const Offset(4, 4),
                     ),
                   ],
                 ),
@@ -344,14 +346,35 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
           ],
         ),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 40),
-            const SizedBox(height: 10),
-            Text(title,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 5),
-            Text(description, style: TextStyle(color: Colors.grey[600])),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color.fromARGB(255, 133, 0, 0).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon,
+                  color: const Color.fromARGB(255, 133, 0, 0), size: 24),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Color.fromARGB(255, 133, 0, 0),
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              description,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+              ),
+            ),
           ],
         ),
       ),

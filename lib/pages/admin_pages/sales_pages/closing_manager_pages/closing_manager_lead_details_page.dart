@@ -723,9 +723,9 @@ class _ClosingManagerLeadDetailsPageState
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.grey.shade400),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    child: const Text(
+                  child: const Padding(
+                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: Text(
                       'No Contact History Yet',
                       style: TextStyle(
                         fontSize: 14,

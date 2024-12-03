@@ -22,9 +22,10 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
   bool _isMenuVisible = false;
   late AnimationController _animationController;
   late Animation<double> _animation;
-  late Animation<double> _iconAnimation;
   late VideoPlayerController _videoPlayerController;
   DraggableScrollableController controller = DraggableScrollableController();
+  double _sheetHeight = 0.0; // To control the height of the bottom sheet
+
   void goback() {
     setState(() {
       _currentIndex = 0;
@@ -43,8 +44,6 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
       parent: _animationController,
       curve: Curves.easeInOut,
     );
-    _iconAnimation = Tween<double>(begin: 0, end: 0.125).animate(_animation);
-
     _videoPlayerController =
         VideoPlayerController.asset('assets/video/blue_bg.mp4')
           ..initialize().then((_) {
@@ -65,9 +64,9 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
     setState(() {
       _isMenuVisible = !_isMenuVisible;
       if (_isMenuVisible) {
-        _animationController.forward(); // Slide-in
+        _animationController.forward(); // Open the sheet slowly
       } else {
-        _animationController.reverse(); // Slide-out
+        _animationController.reverse(); // Close the sheet slowly
       }
     });
   }
@@ -77,9 +76,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
     final List<Widget> _pages = [
       const CpHomeScreen(),
       const DashboardScreen(),
-      ChatScreen(
-        goBack: goback,
-      ),
+      ChatScreen(goBack: goback),
       const PerformanceScreen(),
     ];
 
@@ -91,8 +88,6 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
               index: _currentIndex,
               children: [
                 ..._pages,
-
-                // _buildFloatingActionButton(),
               ],
             ),
           ),
@@ -181,10 +176,10 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
       child: GestureDetector(
         onTap: _toggleMenu,
         child: AnimatedBuilder(
-          animation: _iconAnimation,
+          animation: _animation,
           builder: (context, child) {
             return Transform.rotate(
-              angle: _iconAnimation.value * 2 * 3.14159,
+              angle: _animation.value * 2 * 3.14159,
               child: Container(
                 width: 50,
                 height: 50,
@@ -194,10 +189,8 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
                       Color(0xFFeedbcd),
                       Color(0xFFeedbcd),
                     ],
-                    begin:
-                        Alignment.topLeft, // Gradient starts from the top left
-                    end: Alignment
-                        .bottomRight, // Gradient ends at the bottom right
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
@@ -225,102 +218,108 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
   }
 
   Widget _buildBottomSheet(DraggableScrollableController contr) {
-    return DraggableScrollableSheet(
-      controller: contr,
-      initialChildSize: 0.5, // Initial size of the sheet when displayed
-      minChildSize: 0, // Minimum size the sheet can be dragged down to
-      maxChildSize: 0.6, // Maximum size the sheet can be dragged up to
-      builder: (BuildContext context, ScrollController scrollController) {
-        return NotificationListener<DraggableScrollableNotification>(
-          onNotification: (notification) {
-            if (notification.extent == notification.minExtent) {
-              if (_isMenuVisible) {
-                setState(() {
-                  _isMenuVisible = false;
-                  _animationController.reverse();
-                });
-              }
-            }
-            return true;
-          },
-          child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 10,
-                  spreadRadius: 2,
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        _sheetHeight = _animationController.value *
+            0.5; // Adjust the max height during the animation
+        return DraggableScrollableSheet(
+          controller: contr,
+          initialChildSize: _sheetHeight,
+          minChildSize: 0,
+          maxChildSize: 0.6, // Adjust maximum size
+          builder: (BuildContext context, ScrollController scrollController) {
+            return NotificationListener<DraggableScrollableNotification>(
+              onNotification: (notification) {
+                if (notification.extent == notification.minExtent) {
+                  if (_isMenuVisible) {
+                    setState(() {
+                      _isMenuVisible = false;
+                      _animationController.reverse();
+                    });
+                  }
+                }
+                return true;
+              },
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            child: SingleChildScrollView(
-              controller: scrollController, // Attach scrollController
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  Row(
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Column(
                     children: [
-                      Expanded(
-                        child: _buildActionCard(
-                          'Enquiry Form',
-                          Icons.description,
-                          'Create a new enquiry',
-                          () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const CpEnquiryFormScreen())),
-                        ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildActionCard(
+                              'Enquiry Form',
+                              Icons.description,
+                              'Create a new enquiry',
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CpEnquiryFormScreen())),
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildActionCard(
+                              'Client Tagging',
+                              Icons.label,
+                              'Tag your clients',
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ClientTaggingForm())),
+                            ),
+                          ),
+                        ],
                       ),
-                      Expanded(
-                        child: _buildActionCard(
-                          'Client Tagging',
-                          Icons.label,
-                          'Tag your clients',
-                          () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ClientTaggingForm())),
-                        ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildActionCard(
+                              'EMI Calculator',
+                              Icons.calculate,
+                              'Calculate your EMI',
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const EmiCalculator())),
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildActionCard(
+                              'Settings',
+                              Icons.settings,
+                              'Adjust app settings',
+                              () {
+                                // Navigate to Settings screen
+                              },
+                            ),
+                          ),
+                        ],
                       ),
+                      const SizedBox(height: 100),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildActionCard(
-                          'EMI Calculator',
-                          Icons.calculate,
-                          'Calculate your EMI',
-                          () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const EmiCalculator())),
-                        ),
-                      ),
-                      Expanded(
-                        child: _buildActionCard(
-                          'Settings',
-                          Icons.settings,
-                          'Adjust app settings',
-                          () {
-                            // Navigate to Settings screen
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                      height:
-                          100), // Extra space to account for the navigation bar
-                ],
+                ),
               ),
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -340,40 +339,19 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
               blurRadius: 10,
-              spreadRadius: 0,
+              spreadRadius: 3,
             ),
           ],
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 133, 0, 0).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon,
-                  color: const Color.fromARGB(255, 133, 0, 0), size: 24),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 133, 0, 0),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              description,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
-              ),
-            ),
+            Icon(icon, size: 40),
+            const SizedBox(height: 10),
+            Text(title,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 5),
+            Text(description, style: TextStyle(color: Colors.grey[600])),
           ],
         ),
       ),

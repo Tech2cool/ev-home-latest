@@ -28,10 +28,12 @@ class Lead {
   final DateTime? validTill;
   final DateTime? previousValidTill;
   final String? status;
+
   final Cycle? cycle;
   final String? approvalStatus;
   final String? visitStatus;
   final String? revisitStatus;
+  
   final String? bookingStatus;
   final String? interestedStatus;
   final SiteVisit? visitRef;

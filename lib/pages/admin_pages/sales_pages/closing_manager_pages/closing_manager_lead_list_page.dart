@@ -189,7 +189,8 @@ class _ClosingManagerLeadListPageState
                                     children: [
                                       Text(
                                         Helper.capitalize(
-                                          getStatus(lead) ?? "",
+                                          '${lead.stage} ${lead.approvalStatus}' ??
+                                              "",
                                         ),
                                         style: TextStyle(
                                           fontSize: 12,

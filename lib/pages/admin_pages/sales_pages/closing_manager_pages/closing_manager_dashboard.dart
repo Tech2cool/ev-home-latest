@@ -410,7 +410,6 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
-                                  //TODO: closing manager client List
                                   GoRouter.of(context).push(
                                     "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                                   );
@@ -425,7 +424,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                   ),
                                 ),
                                 child: const Text(
-                                  'Follow Up Satus',
+                                  'Follow Up Status',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,

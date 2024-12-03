@@ -199,7 +199,7 @@ class _ClosingManagerFollowUpListPageState
                                     children: [
                                       Text(
                                         Helper.capitalize(
-                                          lead.approvalStatus ?? "",
+                                          '${lead.approvalStatus ?? ""}',
                                         ),
                                         style: TextStyle(
                                           fontSize: 12,

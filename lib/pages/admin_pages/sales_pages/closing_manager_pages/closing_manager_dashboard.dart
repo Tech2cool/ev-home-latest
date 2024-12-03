@@ -380,13 +380,16 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                             const SizedBox(width: 8),
                             InkWell(
                               onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => AdminCarryForwardPage(
-                                      id: widget.id,
-                                    ),
-                                  ),
+                                final selectedValue = showDialog<int>(
+                                  context: context,
+                                  builder: (context) =>
+                                      AdminCarryForwardDialog(id: "123"),
                                 );
+
+                                if (selectedValue != null) {
+                                  print(
+                                      "Selected Carry Forward Option: $selectedValue");
+                                }
                               },
                               child: TargetCircle(
                                 number: target?.carryForward.toString() ?? "0",

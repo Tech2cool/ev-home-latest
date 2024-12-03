@@ -1,7 +1,9 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
+import 'package:ev_homes/components/animated_pie_chart.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
+import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/view_task_page.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -266,78 +268,6 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 60,
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(154, 255, 254, 245),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.grey.shade400),
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            isExpanded: true,
-                            hint: const Text("Select an option"),
-                            value: selectedOption,
-                            items: const [
-                              DropdownMenuItem(
-                                value: "lead_to_visit",
-                                child: Text("Lead to Visit"),
-                              ),
-                              DropdownMenuItem(
-                                value: "visit1_to_booking",
-                                child: Text("Visit 1 to Booking"),
-                              ),
-                              DropdownMenuItem(
-                                value: "visit2_to_booking",
-                                child: Text("Visit 2 to Booking"),
-                              ),
-                              DropdownMenuItem(
-                                value: "lead_to_booking",
-                                child: Text("Lead to Booking"),
-                              ),
-                            ],
-                            onChanged: (value) {
-                              setState(() {
-                                selectedOption = value;
-                              });
-                            },
-                            icon: const Icon(Icons.arrow_drop_down),
-                          ),
-                        ),
-                      ),
-                      if (selectedOption != null)
-                        SizedBox(
-                          height: 250,
-                          width: 400,
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              PieChart(
-                                PieChartData(
-                                  sections: chartData[selectedOption]!,
-                                  centerSpaceRadius: 70,
-                                  sectionsSpace: 2,
-                                ),
-                              ),
-                              const Text(
-                                "Conversion",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
                 Container(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -350,6 +280,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           const Text(
                             "Target",
@@ -470,7 +401,9 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                       const SizedBox(height: 10),
                       Padding(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16.0, vertical: 12.0),
+                          horizontal: 16.0,
+                          vertical: 12.0,
+                        ),
                         child: Row(
                           children: [
                             const SizedBox(width: 16),
@@ -504,35 +437,42 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           ],
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          minimumSize: const Size(150, 40),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 12.0,
                         ),
-                        onPressed: () => _showTaskDialog(context),
-                        child: const Text(
-                          "Task",
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          minimumSize: const Size(150, 40),
-                        ),
-                        onPressed: () => _showAssignTaskDialog(context),
-                        child: const Text(
-                          "Assign Task",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  //TODO: closing manager client List
+                                  _showTaskDialog(context);
+                                  // GoRouter.of(context).push(
+                                  //   "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                                  // );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'My Task',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -540,7 +480,119 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                 ),
                 const SizedBox(
                   height: 30,
-                )
+                ),
+                Card(
+                  elevation: 4,
+                  shadowColor: Colors.transparent,
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  color: Colors.white.withOpacity(0.3),
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Lead to Visit 1",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        AnimatedPieChart(
+                          visited: graphInfo.visitCount.toInt(),
+                          notVisited: graphInfo.leadCount.toInt(),
+                          title: "Visits",
+                          subtitle: "Visit",
+                          notSubtitle: "Not Visit",
+                          visitedColor: Colors.blue,
+                          notVisitedColor: Colors.orange,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  elevation: 4,
+                  shadowColor: Colors.transparent,
+
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  color: Colors.white
+                      .withOpacity(0.3), // Semi-transparent white background
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Visit 1 to Booking",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        AnimatedPieChart(
+                          visited: 60,
+                          notVisited: 40,
+                          title: "Visits",
+                          subtitle: "Visit",
+                          notSubtitle: "Not Visit",
+                          visitedColor: Colors.green,
+                          notVisitedColor: Colors.red,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  elevation: 4,
+                  shadowColor: Colors.transparent,
+
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  color: Colors.white
+                      .withOpacity(0.3), // Semi-transparent white background
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Visit 2 to Booking",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        AnimatedPieChart(
+                          visited: graphInfo.bookingCount.toInt(),
+                          notVisited: graphInfo.visit2Count.toInt(),
+                          title: "Bookings",
+                          subtitle: "Visit",
+                          notSubtitle: "Not Visit",
+                          visitedColor: Colors.purple,
+                          notVisitedColor: Colors.amber,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  elevation: 4,
+                  shadowColor: Colors.transparent,
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  color: Colors.white.withOpacity(0.3),
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Lead to Booking",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        AnimatedPieChart(
+                          visited: graphInfo.bookingCount.toInt(),
+                          notVisited: graphInfo.leadCount.toInt(),
+                          title: "Bookings",
+                          subtitle: "Visit",
+                          notSubtitle: "Not Visit",
+                          visitedColor: Colors.teal,
+                          notVisitedColor: Colors.pink,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -819,34 +871,118 @@ void _showTaskDialog(BuildContext context) {
                 ),
               ),
               const SizedBox(height: 10),
-              const Expanded(
+              Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ListTile(
-                        leading: Icon(Icons.check_circle, color: Colors.green),
-                        title: Text("Complete Report"),
+                        leading: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            const Icon(Icons.check_circle, color: Colors.green),
+                            Positioned(
+                              top: -4,
+                              right: -4,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Text(
+                                  "11",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        title: const Text("First Call"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ViewTaskPage(),
+                            ),
+                          );
+                        },
                       ),
                       ListTile(
-                        leading: Icon(Icons.task_alt, color: Colors.blue),
-                        title: Text("Schedule Meeting"),
+                        leading: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            const Icon(Icons.task_alt, color: Colors.blue),
+                            Positioned(
+                              top: -4,
+                              right: -4,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Text(
+                                  "10",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        title: const Text("Follow-Up Call"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ViewTaskPage(),
+                            ),
+                          );
+                        },
                       ),
                       ListTile(
-                        leading: Icon(Icons.note, color: Colors.orange),
-                        title: Text("Review Notes"),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.email, color: Colors.red),
-                        title: Text("Send Emails"),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.add_alert, color: Colors.purple),
-                        title: Text("Set Reminder"),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.update, color: Colors.teal),
-                        title: Text("Update Database"),
+                        leading: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            const Icon(Icons.note, color: Colors.orange),
+                            Positioned(
+                              top: -4,
+                              right: -4,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Text(
+                                  "4",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        title: const Text("Schedule Meeting"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ViewTaskPage(),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

@@ -6,12 +6,14 @@ class ClosingManagerGraph {
   final double bookingCount;
   final double visitCount;
   final double revisitCount;
+  final double visit2Count;
 
   ClosingManagerGraph({
     this.leadCount = 0.0,
     this.bookingCount = 0.0,
     this.visitCount = 0.0,
     this.revisitCount = 0.0,
+    this.visit2Count = 0.0,
   });
 
   Map<String, dynamic> toMap() {
@@ -20,6 +22,7 @@ class ClosingManagerGraph {
       'bookingCount': bookingCount,
       'visitCount': visitCount,
       'revisitCount': revisitCount,
+      'visit2Count': visit2Count,
     };
   }
 
@@ -36,6 +39,9 @@ class ClosingManagerGraph {
           : 0.0,
       revisitCount: map['revisitCount'] != null
           ? double.parse(map['revisitCount'].toString())
+          : 0.0,
+      visit2Count: map['visit2Count'] != null
+          ? double.parse(map['visit2Count'].toString())
           : 0.0,
     );
   }

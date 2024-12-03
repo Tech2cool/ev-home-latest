@@ -1,948 +1,785 @@
-import 'package:ev_homes/components/loading/loading_square.dart';
+import 'dart:io';
+import 'package:ev_homes/components/digital_clock.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
-import 'package:ev_homes/core/services/api_service.dart';
+import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_details_page.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:timeline_tile/timeline_tile.dart';
 
 class ClosingManagerLeadDetailsPage extends StatefulWidget {
   final Lead lead;
-  const ClosingManagerLeadDetailsPage({
-    super.key,
-    required this.lead,
-  });
+  const ClosingManagerLeadDetailsPage({super.key, required this.lead});
 
   @override
-  State<ClosingManagerLeadDetailsPage> createState() =>
+  _ClosingManagerLeadDetailsPageState createState() =>
       _ClosingManagerLeadDetailsPageState();
 }
 
 class _ClosingManagerLeadDetailsPageState
     extends State<ClosingManagerLeadDetailsPage> {
-  List<Lead> similarLeads = [];
-  bool checkingSimilarLead = false;
-  bool isUpdating = false;
-  int currentStep = 0;
-  bool isLoading = false;
-  Employee? selectedExecutive;
+  final ImagePicker _picker = ImagePicker();
+  List<XFile> _selectedImages = [];
+  DateTime? _selectedDateTime;
+  bool showNotification = false;
+  bool showScheduleMeeting = false;
+  final TextEditingController _notificationController = TextEditingController();
 
-  @override
-  void initState() {
-    super.initState();
-    getSimilarLead();
-    onRefresh();
-  }
-
-  Future<void> onRefresh() async {
-    final settingProvider = Provider.of<SettingProvider>(
-      context,
-      listen: false,
-    );
-    final loggedAdmin = settingProvider.loggedAdmin;
-    try {
+  Future<void> _pickImages() async {
+    final List<XFile> images = await _picker.pickMultiImage();
+    if (images.isNotEmpty) {
       setState(() {
-        isLoading = true;
-      });
-
-      await settingProvider.getPreSaleExForTL(widget.lead.teamLeader!.id!);
-    } catch (e) {
-      //
-    } finally {
-      setState(() {
-        isLoading = false;
+        _selectedImages = images;
       });
     }
   }
 
-  Future<void> getSimilarLead() async {
+  void _handleDateTimeChanged(DateTime dateTime) {
     setState(() {
-      checkingSimilarLead = true;
-    });
-    try {
-      final resp = await ApiService().getSimilarLeads(widget.lead.id);
-      setState(() {
-        similarLeads = resp;
-      });
-    } catch (e) {
-      setState(() {
-        checkingSimilarLead = false;
-      });
-    }
-    setState(() {
-      checkingSimilarLead = false;
+      _selectedDateTime = dateTime;
     });
   }
 
-  void _showAssignDialog(
-    BuildContext context,
-    SettingProvider settingProvider,
-    Employee? selectedExecutive,
-  ) {
-    // final List<String> executives = ['Kiran', 'Rohan'];
-    final preSalesExecutive = settingProvider.preSaleExecutives;
-
+  void _onPressedSendNotification() {
     showDialog(
-      barrierDismissible: false,
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Assign Lead to'),
-          content: DropdownButtonFormField<Employee>(
-            decoration: const InputDecoration(
-              labelText: 'Executive',
-              border: OutlineInputBorder(),
-            ),
-            value: selectedExecutive,
-            items: preSalesExecutive.map((preSalesExecutive) {
-              // print(
-              //     "Executive: ${preSalesExecutive.firstName} ${preSalesExecutive.lastName}");
-              return DropdownMenuItem<Employee>(
-                value: preSalesExecutive,
-                child: Text(
-                    "${preSalesExecutive.firstName} ${preSalesExecutive.lastName}"),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                selectedExecutive = newValue!;
-                // print(selectedExecutive);
-              });
-            },
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-              },
-              child: const Text(
-                'Cancel',
-                style: TextStyle(color: Colors.redAccent),
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                // Implement the assign functionality here
-                await settingProvider.leadAssignToPresaleExcutive(
-                  widget.lead.id,
-                  selectedExecutive?.id ?? '',
-                );
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                }
-              },
-              child: const Text(
-                'Assign',
-                style: TextStyle(
-                  color: Colors.green,
-                ),
-              ),
-            ),
-          ],
+          child: _buildNotificationSection(),
+        );
+      },
+    );
+    // setState(() {
+    //   if (showNotification == true) {
+    //     showNotification = false;
+    //   } else {
+    //     showNotification = true;
+    //   }
+    // });
+  }
+
+  void _onPressedScheduleMeeting() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: _buildAppointmentSection(),
         );
       },
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final settingProvider = Provider.of<SettingProvider>(context);
-    return Stack(
-      children: [
-        Scaffold(
-          appBar: AppBar(
-            title: const Text('Tagging Details'),
-            actions: [
-              PopupMenuButton<String>(
-                onSelected: (value) {
-                  if (value == 'Edit') {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => EditTaggingPage(
-                    //       lead: widget.lead,
-                    //     ),
-                    //   ),
-                    // );
-                  }
-                },
-                itemBuilder: (BuildContext context) => [
-                  const PopupMenuItem<String>(
-                    value: 'Edit',
-                    child: Text('Edit'),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          body: RefreshIndicator(
-            onRefresh: onRefresh,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
+  void _submitAppointment() {
+    if (_selectedDateTime != null) {
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   SnackBar(
+      //     content: Text(
+      //         'Appointment set for: ${DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime!)}'),
+      //     backgroundColor: Colors.green,
+      //   ),
+      // );
+    } else {
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text('Please select a date and time'),
+      //     backgroundColor: Colors.red,
+      //   ),
+      // );
+    }
+  }
+
+  void _showAssignTaskDialog(BuildContext context) {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final loggedUser = settingProvider.loggedAdmin?.id;
+    String? selectedSubject;
+    Employee? selectedAssignee; // Variable for dropdown selection
+    final subjectController = TextEditingController();
+    final taskNameController = TextEditingController();
+    final taskDetailsController = TextEditingController();
+
+    if (loggedUser != null) {
+      final reportingEmployees = settingProvider.employees
+          .where((employee) => employee.reportingTo?.id == loggedUser)
+          .toList();
+
+      print(
+          "Employees reporting to loggedUser ($loggedUser):$reportingEmployees");
+      // print(settingProvider.employees);
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      'Overview',
+                      "Assign Task",
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                    const SizedBox(height: 10),
+                    const Text("Subject"),
+                    const SizedBox(height: 5),
+                    DropdownButtonFormField<String>(
+                      value: selectedSubject,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        elevation: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              MyTextCard(
-                                heading: "Client Name: ",
-                                value:
-                                    "${widget.lead.firstName} ${widget.lead.lastName}",
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                  heading: "Phone: ",
-                                  value:
-                                      "${widget.lead.countryCode} ${widget.lead.phoneNumber}"),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                  heading: "Alternate Number: ",
-                                  value: widget.lead.altPhoneNumber != null
-                                      ? "${widget.lead.countryCode} ${widget.lead.altPhoneNumber}"
-                                      : "NA"),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                heading: "Email: ",
-                                value: (widget.lead.email != null &&
-                                        widget.lead.email!.isNotEmpty)
-                                    ? widget.lead.email!
-                                    : "NA",
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                heading: "Requirement: ",
-                                value: widget.lead.requirement.isNotEmpty
-                                    ? widget.lead.requirement.join()
-                                    : "NA",
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                heading: "Lead Status: ",
-                                value: widget.lead.approvalStatus ?? "",
-                                valueColor: _getStatusColor(
-                                  widget.lead.approvalStatus ?? "",
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                heading: "Interested: ",
-                                value: widget.lead.interestedStatus ?? "",
-                                valueColor: _getIntrestedColor(
-                                  widget.lead.interestedStatus ?? "",
-                                ),
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                heading: "Remark: ",
-                                value: widget.lead.remark ?? 'NA',
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                heading: "Team Leader: ",
-                                value: widget.lead.teamLeader != null
-                                    ? "${widget.lead.teamLeader?.firstName ?? ""} ${widget.lead.teamLeader?.lastName ?? ""}"
-                                    : "NA",
-
-                                // valueColor: _getIntrestedColor(
-                                //   widget.lead.interestedStatus,
-                                // ),
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                heading: "Data Analyzer: ",
-                                value: widget.lead.dataAnalyzer != null
-                                    ? "${widget.lead.dataAnalyzer?.firstName ?? ""} ${widget.lead.dataAnalyzer?.lastName ?? ""}"
-                                    : "NA",
-
-                                // valueColor: _getIntrestedColor(
-                                //   widget.lead.interestedStatus,
-                                // ),
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                heading: "Pre Sale Executive: ",
-                                value: widget.lead.preSalesExecutive != null
-                                    ? "${widget.lead.preSalesExecutive?.firstName ?? ""} ${widget.lead.preSalesExecutive?.lastName ?? ""}"
-                                    : "NA",
-
-                                // valueColor: _getIntrestedColor(
-                                //   widget.lead.interestedStatus,
-                                // ),
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                heading: "Start Date: ",
-                                value: Helper.formatDate(
-                                  widget.lead.startDate.toString(),
-                                ),
-                                // valueColor: _getIntrestedColor(
-                                //   widget.lead.interestedStatus,
-                                // ),
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                heading: "Project: ",
-                                value: widget.lead.project
-                                    .map((pr) => pr.name)
-                                    .join(", "),
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                heading: "Requirement: ",
-                                value: widget.lead.requirement.join(", "),
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                heading: widget.lead.cycle != null
-                                    ? "${Helper.capitalize(widget.lead.cycle?.stage ?? "")} Deadline: "
-                                    : "Visit Deadline: ",
-                                value: Helper.formatDateOnly(
-                                  widget.lead.cycle?.validTill!.toString() ??
-                                      '',
-                                ),
-                                valueColor: Colors.red,
-                              ),
-                              const SizedBox(height: 8),
-                              MyTextCard(
-                                heading: widget.lead.cycle != null
-                                    ? "${Helper.capitalize(widget.lead.cycle?.stage ?? "")} Deadline: "
-                                    : "Visit Deadline: ",
-                                value: Helper.formatDateOnly(
-                                  widget.lead.cycle?.validTill!.toString() ??
-                                      '',
-                                ),
-                                valueColor: Colors.red,
-                              ),
-
-                              // MyTextCard(
-                              //   heading: "Visit Deadline: ",
-                              //   value: Helper.formatDateOnly(
-                              //     widget.lead.cycle?.validTill!.toString() ??
-                              //         '',
-                              //   ),
-                              // ),
-                              const SizedBox(height: 8),
-                            ],
+                      ),
+                      items: ["First Call", "Follow-Up", "Schedule Meeting"]
+                          .map((subject) => DropdownMenuItem(
+                                value: subject,
+                                child: Text(subject),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        selectedSubject = value;
+                      },
+                    ),
+                    const SizedBox(height: 10),
+                    const SizedBox(height: 10),
+                    const Text("Task Name"),
+                    const SizedBox(height: 5),
+                    TextField(
+                      controller: taskNameController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text("Task Details"),
+                    const SizedBox(height: 5),
+                    TextField(
+                      controller: taskDetailsController,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    const Text("Assign To"),
+                    const SizedBox(height: 5),
+                    DropdownButtonFormField<Employee>(
+                      value: selectedAssignee,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      items: settingProvider.employees
+                          .where((employee) =>
+                              employee.reportingTo?.id == loggedUser)
+                          .map((employee) => DropdownMenuItem<Employee>(
+                                value: employee,
+                                child: Text(
+                                    '${employee.firstName} ${employee.lastName}'),
+                              ))
+                          .toList(),
+                      onChanged: (value) {
+                        selectedAssignee = value;
+                      },
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey,
                           ),
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close dialog
+                          },
+                          child: const Text("Cancel"),
                         ),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    const Text(
-                      'Channel Partner Details',
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      width: double.infinity,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (widget.lead.channelPartner != null) ...[
-                                MyTextCard(
-                                  heading: "Name: ",
-                                  value: (widget.lead.channelPartner!.firstName!
-                                              .isEmpty &&
-                                          widget.lead.channelPartner!.lastName!
-                                              .isEmpty)
-                                      ? "NA"
-                                      : "${widget.lead.channelPartner?.firstName ?? ''} ${widget.lead.channelPartner?.lastName ?? ''}",
-                                ),
-                                const SizedBox(height: 8),
-                                MyTextCard(
-                                  heading: "Firm Name: ",
-                                  value: widget.lead.channelPartner?.firmName ??
-                                      "NA",
-                                ),
-                                const SizedBox(height: 8),
-                                MyTextCard(
-                                  heading: "Rera Registration: ",
-                                  value: widget.lead.channelPartner
-                                              ?.haveReraRegistration ==
-                                          true
-                                      ? "Yes"
-                                      : "NO",
-                                ),
-                                const SizedBox(height: 8),
-                                MyTextCard(
-                                  heading: "Rera Id: ",
-                                  value:
-                                      widget.lead.channelPartner?.reraNumber ??
-                                          "NA",
-                                ),
-                              ] else
-                                const MyTextCard(
-                                  heading: "No Channel Partner",
-                                  value: "",
-                                )
-                            ],
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 151, 245, 154),
                           ),
+                          onPressed: () {
+                            Navigator.of(context).pop(); // Close dialog
+                          },
+                          child: const Text("Submit"),
                         ),
-                      ),
+                      ],
                     ),
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   height: 400, // Constrained height for the stepper
-                    //   child: Padding(
-                    //     padding: const EdgeInsets.all(5.0),
-                    //     child: ListView(
-                    //       children: const [
-                    //         CustomTimelineTile(
-                    //           title: "Approved",
-                    //           date: "10/10/2024",
-                    //           description: "welcome to ev home",
-                    //           color: Colors.orange,
-                    //           isFirst: true,
-                    //         ),
-                    //         CustomTimelineTile(
-                    //           title: "Contacted",
-                    //           date: "10/10/2024",
-                    //           description: "welcome to ev home",
-                    //           color: Colors.orange,
-                    //         ),
-                    //         CustomTimelineTile(
-                    //           title: "Follow Up",
-                    //           date: "10/10/2024",
-                    //           description: "welcome to ev home",
-                    //           color: Colors.orange,
-                    //         ),
-                    //         CustomTimelineTile(
-                    //           title: "Site Visit",
-                    //           date: "10/10/2024",
-                    //           description: "welcome to ev home",
-                    //           color: Colors.orange,
-                    //         ),
-                    //         CustomTimelineTile(
-                    //           title: "Revisit",
-                    //           date: "10/10/2024",
-                    //           description: "welcome to ev home",
-                    //           color: Colors.orange,
-                    //         ),
-                    //         CustomTimelineTile(
-                    //           title: "Booking",
-                    //           date: "10/10/2024",
-                    //           description: "welcome to ev home",
-                    //           color: Colors.orange,
-                    //         ),
-                    //         CustomTimelineTile(
-                    //           title: "Registration",
-                    //           date: "10/10/2024",
-                    //           description: "welcome to ev home",
-                    //           color: Color.fromARGB(255, 255, 223, 174),
-                    //           isLast: true,
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                    const SizedBox(height: 24),
-                    const Text(
-                      'Additional Information',
-                      style: TextStyle(
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                      width: double.infinity,
-                      // height: 250,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        elevation: 4,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (checkingSimilarLead)
-                                const Text(
-                                  "Checking Similar Leads....",
-                                )
-                              else ...[
-                                if (similarLeads.isNotEmpty) ...[
-                                  const Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        'Date',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        'CP Firm',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      Text(
-                                        'Status',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 8),
-                                  SingleChildScrollView(
-                                    child: Column(
-                                      children: [
-                                        ...List.generate(
-                                          similarLeads.length,
-                                          (i) {
-                                            final sLead = similarLeads[i];
-                                            return GestureDetector(
-                                              onTap: () {
-                                                Navigator.of(context).push(
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ClosingManagerLeadDetailsPage(
-                                                      lead: sLead,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              child: Column(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  _buildDummyLeadRow(
-                                                    Helper.formatDate(
-                                                      sLead.startDate
-                                                          .toString(),
-                                                    ),
-                                                    sLead.channelPartner
-                                                            ?.firmName ??
-                                                        "NA",
-                                                    sLead.approvalStatus ?? "",
-                                                  ),
-                                                  const Divider(),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ] else
-                                  const Text(
-                                    "No Similar Leads",
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    if (widget.lead.approvalHistory.isNotEmpty) ...[
-                      const SizedBox(height: 24),
-                      const Text(
-                        'Approval History',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      ...List.generate(
-                        widget.lead.approvalHistory.length,
-                        (i) {
-                          final appl = widget.lead.approvalHistory[i];
-                          return CustomTimelineTile(
-                            title: appl.employee != null
-                                ? "${appl.employee?.firstName ?? ""} ${appl.employee?.lastName ?? ''}"
-                                : "NA",
-                            date: Helper.formatDate(
-                                appl.approvedAt?.toString() ?? ''),
-                            description: appl.remark ?? "NA",
-                            color: Colors.red.withOpacity(0.8),
-                            isFirst: i == 0,
-                            isLast: i == widget.lead.approvalHistory.length - 1,
-                          );
-                        },
-                      ),
-                    ],
-                    const SizedBox(height: 24),
-                    if (widget.lead.callHistory.isNotEmpty) ...[
-                      const Text(
-                        'Follow-up History',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      ...List.generate(
-                        widget.lead.callHistory.length,
-                        (i) {
-                          final appl = widget.lead.callHistory[i];
-                          return CustomTimelineTile(
-                            title: appl.caller != null
-                                ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
-                                : "NA",
-                            date: Helper.formatDate(
-                                appl.callDate?.toString() ?? ''),
-                            description: appl.remark ?? "NA",
-                            color: Colors.red.withOpacity(0.8),
-                            isFirst: i == 0,
-                            isLast: i == widget.lead.callHistory.length - 1,
-                          );
-                        },
-                      ),
-                    ],
-                    const SizedBox(height: 24),
-                    if (widget.lead.cycleHistory.isNotEmpty) ...[
-                      const Text(
-                        'Follow-up History',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      ...List.generate(
-                        widget.lead.cycleHistory.length,
-                        (i) {
-                          final appl = widget.lead.cycleHistory[i];
-                          return CustomTimelineTile(
-                            title: appl.teamLeader != null
-                                ? "${appl.teamLeader?.firstName ?? ''} ${appl.teamLeader?.lastName ?? ''}"
-                                : "NA",
-                            date:
-                                "${Helper.formatDate(appl.startDate?.toString() ?? '')} to ${Helper.formatDate(appl.validTill?.toString() ?? '')}",
-                            description: appl.stage ?? "NA",
-                            color: Colors.red.withOpacity(0.8),
-                            isFirst: i == 0,
-                            isLast: i == widget.lead.callHistory.length - 1,
-                          );
-                        },
-                      ),
-                    ],
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0, vertical: 12.0),
-                      child: Row(
-                        children: [
-                          // Expanded for Button 1
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _showAssignDialog(
-                                  context,
-                                  settingProvider,
-                                  selectedExecutive,
-                                );
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    Colors.green, // Background color
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                              ),
-                              child: const Text(
-                                'Assign',
-                                style: TextStyle(
-                                  color: Colors.white, // Text color
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16), // Space between buttons
-                          // Expanded for Button 2
-                          // Expanded(
-                          //   child: ElevatedButton(
-                          //     onPressed: () {
-                          //       _showEditBottomSheet(context);
-                          //     },
-                          //     style: ElevatedButton.styleFrom(
-                          //       backgroundColor: Colors.amberAccent,
-                          //       padding: const EdgeInsets.symmetric(vertical: 10.0),
-                          //       shape: RoundedRectangleBorder(
-                          //         borderRadius: BorderRadius.circular(12.0),
-                          //       ),
-                          //     ),
-                          //     child: const Text(
-                          //       'Edit',
-                          //       style: TextStyle(
-                          //         color: Colors.white, // Text color
-                          //         fontSize: 16,
-                          //         fontWeight: FontWeight.bold,
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
-                        ],
-                      ),
-                    ),
-
-                    // if (widget.lead.approvalStatus?.toLowerCase() !=
-                    //     "approved")
-                    //   Padding(
-                    //     padding: const EdgeInsets.symmetric(
-                    //       horizontal: 16.0,
-                    //       vertical: 12.0,
-                    //     ),
-                    //     child: Row(
-                    //       children: [
-                    //         // Expanded for Button 1
-                    //         Expanded(
-                    //           child: ElevatedButton(
-                    //             onPressed: () {
-                    //               Helper.showCustomSnackBar(
-                    //                 "Recall functionality coming soon.",
-                    //                 Colors.green,
-                    //               );
-                    //             },
-                    //             style: ElevatedButton.styleFrom(
-                    //               backgroundColor: Colors.green, // Background color
-                    //               padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    //               shape: RoundedRectangleBorder(
-                    //                 borderRadius: BorderRadius.circular(12.0),
-                    //               ),
-                    //             ),
-                    //             child: const Text(
-                    //               'Recall',
-                    //               style: TextStyle(
-                    //                 color: Colors.white, // Text color
-                    //                 fontSize: 16,
-                    //                 fontWeight: FontWeight.bold,
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //         const SizedBox(width: 16), // Space between buttons
-                    //         // Expanded for Button 2
-                    //         Expanded(
-                    //           child: ElevatedButton(
-                    //             onPressed: () {
-                    //               //TODO: DTA Comment Review Page
-                    //               GoRouter.of(context).push(
-                    //                 '/data-analyzer-lead-review',
-                    //                 extra: {
-                    //                   "lead": widget.lead,
-                    //                   "similarLeads": similarLeads,
-                    //                 },
-                    //               );
-                    //               // Navigator.push(
-                    //               //   context,
-                    //               //   MaterialPageRoute(
-                    //               //     builder: (context) => AnalyserCommentReviewPage(
-                    //               //       lead: widget.lead,
-                    //               //       similarLeads: similarLeads,
-                    //               //     ),
-                    //               //   ),
-                    //               // );
-                    //             },
-                    //             style: ElevatedButton.styleFrom(
-                    //               backgroundColor: Colors.orange, // Background color
-                    //               padding: const EdgeInsets.symmetric(vertical: 10.0),
-                    //               shape: RoundedRectangleBorder(
-                    //                 borderRadius: BorderRadius.circular(12.0),
-                    //               ),
-                    //             ),
-                    //             child: const Text(
-                    //               'Review',
-                    //               style: TextStyle(
-                    //                 color: Colors.white, // Text color
-                    //                 fontSize: 16,
-                    //                 fontWeight: FontWeight.bold,
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
                   ],
                 ),
               ),
             ),
-          ),
-        ),
-        if (isLoading) const LoadingSquare(),
-      ],
-    );
-  }
-
-  Widget _buildDummyLeadRow(String date, String firmNo, String status) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(date),
-        Text(firmNo),
-        Text(
-          status,
-          style: TextStyle(color: _getStatusColor(status)),
-        ),
-      ],
-    );
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'approved':
-        return Colors.green;
-      case 'rejected':
-        return Colors.red;
-      case 'in progress':
-      case 'pending':
-        return Colors.orange;
-      default:
-        return Colors.grey;
+          );
+        },
+      );
     }
   }
 
-  Color _getIntrestedColor(String status) {
-    switch (status.toLowerCase()) {
-      case 'cold':
-        return Colors.blue;
-      case 'hot':
-        return Colors.red;
-      case 'warm':
-        return Colors.orange;
-      default:
-        return Colors.blue;
+  String getStatus(Lead lead) {
+    if (lead.stage == "visit") {
+      return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
+    } else if (lead.stage == "revisit") {
+      return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.revisitStatus ?? '')}";
+    } else if (lead.stage == "booking") {
+      return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.bookingStatus ?? '')}";
     }
-  }
-}
 
-class MyTextCard extends StatelessWidget {
-  final String heading;
-  final String value;
-  final Color? headingColor;
-  final Color? valueColor;
-  const MyTextCard({
-    super.key,
-    required this.heading,
-    required this.value,
-    this.headingColor,
-    this.valueColor,
-  });
+    return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          heading,
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w500,
-            color: headingColor,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Client Details'),
+        backgroundColor: Colors.indigo,
+        elevation: 0,
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (value) {
+              switch (value) {
+                case 'send_notification':
+                  _buildNotificationSection();
+                  break;
+                case 'schedule_meeting':
+                  _submitAppointment();
+                  break;
+                case 'assign_tasks':
+                  _showAssignTaskDialog(context);
+                  break;
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                PopupMenuItem<String>(
+                  value: 'send_notification',
+                  child: const Text('Send Notification'),
+                  onTap: _onPressedSendNotification,
+                ),
+                PopupMenuItem<String>(
+                  value: 'schedule_meeting',
+                  child: const Text('Schedule Meeting'),
+                  onTap: _onPressedScheduleMeeting,
+                ),
+                const PopupMenuItem<String>(
+                  value: 'assign_tasks',
+                  child: Text('Assign Tasks'),
+                ),
+              ];
+            },
           ),
-        ),
-        Text(
-          value,
-          style: TextStyle(fontSize: 15, color: valueColor),
-        ),
-      ],
-    );
-  }
-}
-
-class CustomTimelineTile extends StatelessWidget {
-  final String title;
-  final String date;
-  final String description;
-  final Color color;
-  final bool isFirst;
-  final bool isLast;
-
-  const CustomTimelineTile({
-    Key? key,
-    required this.title,
-    required this.date,
-    required this.description,
-    required this.color,
-    this.isFirst = false,
-    this.isLast = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TimelineTile(
-      isFirst: isFirst,
-      isLast: isLast,
-      beforeLineStyle: LineStyle(color: color),
-      indicatorStyle: IndicatorStyle(
-        width: 30,
-        color: color,
-        iconStyle: IconStyle(iconData: Icons.done, color: Colors.white),
+        ],
       ),
-      endChild: Container(
-        margin: const EdgeInsets.all(5),
-        padding: const EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          color: color,
-        ),
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            _buildClientOverview(),
+            // MyTextCard(heading: "", value: ""),
+            Wrap(
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  color: Colors.white.withOpacity(0.3),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.notification_add,
+                            size: 40,
+                            color: Colors.orangeAccent,
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Send Notification",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-                Text(
-                  date,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
+                Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  color: Colors.white.withOpacity(0.3),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.notification_add,
+                            size: 40,
+                            color: Colors.orangeAccent,
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Send Notification",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  color: Colors.white.withOpacity(0.3),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.notification_add,
+                            size: 40,
+                            color: Colors.orangeAccent,
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Send Notification",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 5),
-            Text(
-              description,
-              style: const TextStyle(
-                color: Colors.white,
+
+            if (showNotification == true) _buildNotificationSection(),
+
+            if (showScheduleMeeting == true) _buildAppointmentSection(),
+            // _buildAppointmentSection(),
+            // _buildAppointmentHistory(),
+            if (widget.lead.callHistory.isNotEmpty) ...[
+              const Text(
+                'Follow-up History',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
               ),
-            ),
+              const SizedBox(height: 8),
+              ...List.generate(
+                widget.lead.callHistory.length,
+                (i) {
+                  final appl = widget.lead.callHistory[i];
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    child: ListTile(
+                      leading: const CircleAvatar(
+                        child: Icon(Icons.calendar_today),
+                      ),
+                      title: Row(
+                        children: [
+                          Text(
+                            appl.caller != null
+                                ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
+                                : "NA",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            Helper.formatDate(appl.callDate?.toString() ?? ''),
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                      subtitle: Row(
+                        children: [
+                          Text(
+                            appl.remark ?? "NA",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                  return CustomTimelineTile(
+                    title: appl.caller != null
+                        ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
+                        : "NA",
+                    date: Helper.formatDate(appl.callDate?.toString() ?? ''),
+                    description: appl.remark ?? "NA",
+                    color: Colors.red.withOpacity(0.8),
+                    isFirst: i == 0,
+                    isLast: i == widget.lead.callHistory.length - 1,
+                  );
+                },
+              ),
+            ],
+            const SizedBox(height: 24),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildClientOverview() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      color: Colors.indigo,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            radius: 40,
+            child: Text(
+              widget.lead.firstName?.substring(0, 1).toUpperCase() ?? "",
+              style: TextStyle(
+                fontSize: 24,
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Text(
+            "${widget.lead.firstName} ${widget.lead.lastName}",
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 8),
+          _buildInfoRow(
+            Icons.phone,
+            "${widget.lead.countryCode} ${widget.lead.phoneNumber}",
+            Colors.white,
+          ),
+          _buildInfoRow(
+            Icons.email,
+            "${(widget.lead.email != null && widget.lead.email!.isNotEmpty) ? widget.lead.email : "NA"}",
+            Colors.white,
+          ),
+          // _buildInfoRow(
+          //   Icons.info_outline,
+          //   getStatus(widget.lead),
+          //   Colors.white,
+          // ),
+          const SizedBox(height: 8),
+          MyTextCard(
+            heading: "Requirement: ",
+            headingColor: Colors.white,
+            valueColor: Colors.white,
+            value: widget.lead.requirement.join(", "),
+          ),
+          const SizedBox(height: 8),
+          MyTextCard(
+            heading: "Project: ",
+            value: widget.lead.project.map((pr) => pr.name).join(", "),
+            headingColor: Colors.white,
+            valueColor: Colors.white,
+          ),
+
+          const SizedBox(height: 8),
+
+          MyTextCard(
+            heading: "Status: ",
+            value: getStatus(widget.lead),
+            headingColor: Colors.white,
+            valueColor: Colors.white,
+          ),
+          const SizedBox(height: 8),
+          MyTextCard(
+            heading: widget.lead.cycle != null
+                ? "${Helper.capitalize(widget.lead.cycle?.stage ?? "")} Deadline: "
+                : "Visit Deadline: ",
+            value: Helper.formatDateOnly(
+              widget.lead.cycle?.validTill.toString() ?? '',
+            ),
+            valueColor: Colors.red,
+            headingColor: Colors.white,
+          ),
+          if (widget.lead.visitRef != null)
+            MyTextCard(
+              heading: widget.lead.cycle != null
+                  ? "${Helper.capitalize(widget.lead.cycle?.stage ?? "")} Date: "
+                  : "Visit Date: ",
+              value: Helper.formatDateOnly(
+                widget.lead.visitRef?.date?.toString() ?? "NA",
+              ),
+              valueColor: Colors.white,
+              headingColor: Colors.white,
+            ),
+          if (widget.lead.visitRef != null)
+            MyTextCard(
+              heading: widget.lead.cycle != null
+                  ? "${Helper.capitalize(widget.lead.cycle?.stage ?? "")} Date: "
+                  : "Visit Date: ",
+              value: Helper.formatDateOnly(
+                widget.lead.visitRef?.date?.toString() ?? "NA",
+              ),
+              valueColor: Colors.white,
+              headingColor: Colors.white,
+            ),
+
+          const SizedBox(height: 8),
+          MyTextCard(
+            heading: "Address: ",
+            headingColor: Colors.white,
+            valueColor: Colors.white,
+            value: widget.lead.address ?? "",
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotificationSection() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Send Notification',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: _notificationController,
+            maxLines: 3,
+            decoration: InputDecoration(
+              hintText: 'Type your message here...',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton.icon(
+                onPressed: _pickImages,
+                icon: const Icon(Icons.attach_file),
+                label: const Text('Attach Files'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Text('${_selectedImages.length} file(s) selected'),
+            ],
+          ),
+          const SizedBox(height: 16),
+          if (_selectedImages.isNotEmpty)
+            SizedBox(
+              height: 100,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: _selectedImages.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 8),
+                    child: Image.file(
+                      File(_selectedImages[index].path),
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                },
+              ),
+            ),
+          const SizedBox(height: 16),
+          // Center(
+          //   child: ElevatedButton(
+          //     onPressed: _submitAppointment,
+          //     child: const Text(
+          //       'Submit Appointmentt',
+          //       style: TextStyle(
+          //         color: Colors.white,
+          //       ),
+          //     ),
+          //     style: ElevatedButton.styleFrom(
+          //       backgroundColor: Colors.indigo,
+          //       padding:
+          //           const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          //     ),
+          //   ),
+          // ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppointmentSection() {
+    return SingleChildScrollView(
+      child:
+          // crossAxisAlignment: CrossAxisAlignment.start,
+          // children: [
+          // const Text(
+          //   'Schedule Appointment',
+          //   style: TextStyle(
+          //     fontSize: 20,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
+          Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DigitalDateTimePicker(
+            initialDateTime: DateTime.now(),
+            onDateTimeChanged: (DateTime newDateTime) {
+              setState(() {
+                _selectedDateTime = newDateTime;
+              });
+              print('Selected date time: $newDateTime');
+            },
+          ),
+          // const SizedBox(height: 16),
+          // if (_selectedDateTime != null)
+          //   Text(
+          //     'Selected: ${DateFormat('yyyy-MM-dd HH:mm').format(_selectedDateTime!)}',
+          //     style:
+          //         const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          //   ),
+          // const SizedBox(height: 16),
+          // Center(
+          //   child: ElevatedButton(
+          //     onPressed: _submitAppointment,
+          //     child: const Text(
+          //       'Submit Appointment',
+          //       style: TextStyle(
+          //         color: Colors.white,
+          //       ),
+          //     ),
+          //     style: ElevatedButton.styleFrom(
+          //       backgroundColor: Colors.indigo,
+          //       padding:
+          //           const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          //     ),
+          //   ),
+          // ),
+        ],
+      ),
+      // ],
+    );
+  }
+
+  Widget _buildAppointmentHistory() {
+    return Card(
+      margin: const EdgeInsets.all(16),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Appointment History',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 0,
+              itemBuilder: (context, index) {
+                return Card(
+                  margin: const EdgeInsets.only(bottom: 8),
+                  child: ListTile(
+                    leading: const CircleAvatar(
+                      child: Icon(Icons.calendar_today),
+                    ),
+                    title: Text(
+                      DateFormat('yyyy-MM-dd').format(
+                          DateTime.now().subtract(Duration(days: index))),
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: const Text(
+                      'This is the description or summary text for the appointment.',
+                    ),
+                  ),
+                );
+              },
+            ),
+            Text("No Appointment yet")
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(IconData icon, String text, Color color) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 16),
+          const SizedBox(width: 8),
+          Text(
+            text,
+            style: TextStyle(color: color),
+          ),
+        ],
       ),
     );
   }

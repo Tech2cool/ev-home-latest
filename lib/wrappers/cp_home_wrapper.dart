@@ -144,7 +144,13 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
 
   Widget _buildNavItem(String label, IconData icon, int index) {
     return GestureDetector(
-      onTap: () => setState(() => _currentIndex = index),
+      onTap: () => setState(() {
+        if (_isMenuVisible) {
+          _isMenuVisible = false;
+          _animationController.reverse(); // Close the bottom sheet animation
+        }
+        _currentIndex = index;
+      }),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -200,7 +206,6 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
                       color: Color.fromARGB(255, 133, 0, 0).withOpacity(0.8),
                       blurRadius: 2,
                       spreadRadius: 2,
-                      // offset: const Offset(4, 4),
                     ),
                   ],
                 ),

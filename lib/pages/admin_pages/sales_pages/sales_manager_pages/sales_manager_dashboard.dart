@@ -5,7 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:json_path/fun_extra.dart';
 
 class SalesmangerDashbord extends StatefulWidget {
-  const SalesmangerDashbord({super.key});
+  final String? id;
+  const SalesmangerDashbord({super.key, this.id});
 
   @override
   State<SalesmangerDashbord> createState() => _SalesmangerDashbordState();

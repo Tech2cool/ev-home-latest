@@ -120,73 +120,106 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
         totalValue);
 
     pdf.addPage(
-      pw.MultiPage(
+      pw.Page(
         pageFormat: PdfPageFormat.a4,
-        margin: const pw.EdgeInsets.all(20),
         build: (pw.Context context) {
-          return [
-            pw.Header(
-                level: 0,
-                child: pw.Text('PAYMENT SCHEDULE',
-                    style: pw.TextStyle(
-                        fontSize: 16, fontWeight: pw.FontWeight.bold))),
-            pw.SizedBox(height: 10),
-            pw.Text('Flat No: ${flatNoController.text}',
-                style: const pw.TextStyle(fontSize: 10)),
-            pw.Text('Phone: ${phoneController.text}',
-                style: const pw.TextStyle(fontSize: 10)),
-            pw.Text('Client Name: ${clientNameController.text}',
-                style: const pw.TextStyle(fontSize: 10)),
-            pw.Text('Carpet Area: ${carpetAreaController.text} sq. ft.',
-                style: const pw.TextStyle(fontSize: 10)),
-            pw.Text('Project: Nine Square',
-                style: const pw.TextStyle(fontSize: 10)),
-            pw.Text(
-                'All Inclusive Amount: ${formatter.format(allInclusiveAmount)}',
-                style: const pw.TextStyle(fontSize: 10)),
-            pw.SizedBox(height: 10),
-            pw.Table(
-              border: pw.TableBorder.all(width: 0.5),
-              columnWidths: {
-                0: const pw.FixedColumnWidth(20),
-                1: const pw.FlexColumnWidth(3),
-                2: const pw.FixedColumnWidth(40),
-                3: const pw.FlexColumnWidth(1.5),
-              },
-              children: [
-                pw.TableRow(
-                  decoration: pw.BoxDecoration(color: PdfColors.grey300),
-                  children: ['No.', 'Stage', '%', 'Amount']
-                      .map((header) => pw.Padding(
-                            padding: const pw.EdgeInsets.all(2),
-                            child: pw.Text(header,
-                                style: pw.TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: pw.FontWeight.bold)),
-                          ))
-                      .toList(),
-                ),
-                ...paymentSchedule.asMap().entries.map((entry) {
-                  int index = entry.key;
-                  List<String> row = entry.value;
-                  return pw.TableRow(
-                    children: row
-                        .map((cell) => pw.Padding(
-                              padding: const pw.EdgeInsets.all(0),
-                              child: pw.Text(cell,
-                                  style: const pw.TextStyle(fontSize: 8)),
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Text('PAYMENT SCHEDULE',
+                  style: pw.TextStyle(
+                      fontSize: 10, fontWeight: pw.FontWeight.bold)),
+              // pw.SizedBox(height: 10),
+              pw.Text('Flat No: ${flatNoController.text}'),
+              pw.Text('Phone: ${phoneController.text}'),
+              pw.Text('Client Name: ${clientNameController.text}'),
+              pw.Text('Carpet Area: ${carpetAreaController.text} sq. ft.'),
+              pw.Text(
+                  'All Inclusive Amount: ${formatter.format(allInclusiveAmount)}'),
+              pw.SizedBox(height: 1),
+              pw.Table(
+                border: pw.TableBorder.all(width: 0.5),
+                columnWidths: {
+                  0: const pw.FlexColumnWidth(0.5),
+                  1: const pw.FlexColumnWidth(2.5),
+                  2: const pw.FlexColumnWidth(0.5),
+                  3: const pw.FlexColumnWidth(1),
+                },
+                children: [
+                  pw.TableRow(
+                    children: ['No.', 'Stage', '%', 'Amount']
+                        .map((header) => pw.Padding(
+                              padding: const pw.EdgeInsets.all(2),
+                              child: pw.Text(header,
+                                  style: pw.TextStyle(
+                                      fontSize: 8,
+                                      fontWeight: pw.FontWeight.bold)),
                             ))
                         .toList(),
-                  );
-                }),
-              ],
-            ),
-            pw.SizedBox(height: 10),
-            pw.Text(
-                'Total up to selected slab: ${selectedSlabPercentage.toStringAsFixed(1)}% - ${formatter.format(selectedSlabAmount)}',
-                style:
-                    pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
-          ];
+                  ),
+                  ...paymentSchedule.asMap().entries.expand((entry) {
+                    int index = entry.key;
+                    List<String> row = entry.value;
+                    if (index == selectedSlabIndex - 1) {
+                      return [
+                        pw.TableRow(
+                          children: row
+                              .map((cell) => pw.Padding(
+                                    padding: const pw.EdgeInsets.all(2),
+                                    child: pw.Text(cell,
+                                        style: const pw.TextStyle(fontSize: 6)),
+                                  ))
+                              .toList(),
+                        ),
+                        pw.TableRow(
+                          children: [
+                            pw.Padding(
+                                padding: const pw.EdgeInsets.all(2),
+                                child: pw.Text('')),
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.all(2),
+                              child: pw.Text('Total up to selected slab',
+                                  style: pw.TextStyle(
+                                      fontSize: 6,
+                                      fontWeight: pw.FontWeight.bold)),
+                            ),
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.all(2),
+                              child: pw.Text(
+                                  '${selectedSlabPercentage.toStringAsFixed(1)} %',
+                                  style: pw.TextStyle(
+                                      fontSize: 6,
+                                      fontWeight: pw.FontWeight.bold)),
+                            ),
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.all(2),
+                              child: pw.Text(
+                                  formatter.format(selectedSlabAmount),
+                                  style: pw.TextStyle(
+                                      fontSize: 6,
+                                      fontWeight: pw.FontWeight.bold)),
+                            ),
+                          ],
+                        ),
+                      ];
+                    } else {
+                      return [
+                        pw.TableRow(
+                          children: row
+                              .map((cell) => pw.Padding(
+                                    padding: const pw.EdgeInsets.all(2),
+                                    child: pw.Text(cell,
+                                        style: const pw.TextStyle(fontSize: 6)),
+                                  ))
+                              .toList(),
+                        ),
+                      ];
+                    }
+                  }),
+                ],
+              ),
+            ],
+          );
         },
       ),
     );

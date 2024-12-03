@@ -263,7 +263,7 @@ class _ClosingManagerLeadDetailsPageState
         ),
         backgroundColor: Colors.indigo,
         elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white), // Back arrow color
+        iconTheme: const IconThemeData(color: Colors.white),
         actionsIconTheme: const IconThemeData(color: Colors.white),
         actions: [
           PopupMenuButton<String>(

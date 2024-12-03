@@ -78,72 +78,17 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
 
   double safeDivision(double numerator, double denominator) {
     if (denominator == 0) {
-      // Handle the zero denominator case
-      print('Denominator is zero. Returning 0 instead of infinity.');
-      return 0; // Or throw an exception, or handle as needed
+      return 0;
     }
-    return numerator / denominator;
+    return (numerator / denominator).floorToDouble();
   }
 
   @override
   Widget build(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(context);
     final teamLeaderLeads = settingProvider.leadsTeamLeader;
-    final leads = teamLeaderLeads.data;
     final target = settingProvider.myTarget;
     final graphInfo = settingProvider.closingManagerGraph;
-    double visitPercentage = (graphInfo.visitCount * 100) / graphInfo.leadCount;
-
-    final Map<String, List<PieChartSectionData>> chartData = {
-      "lead_to_visit": [
-        PieChartSectionData(
-          value: graphInfo.visitCount,
-          color: Colors.blue,
-          title: 'visit1 ${graphInfo.visitCount.toStringAsFixed(1)}%',
-        ),
-        PieChartSectionData(
-          value: graphInfo.leadCount,
-          color: Colors.purple,
-          title: 'Leads ${(graphInfo.leadCount).toStringAsFixed(1)}%',
-        ),
-      ],
-      "visit1_to_booking": [
-        PieChartSectionData(
-          value: graphInfo.visitCount,
-          color: Colors.red,
-          title: 'Booking ${graphInfo.bookingCount.toStringAsFixed(1)}%',
-        ),
-        PieChartSectionData(
-          value: graphInfo.bookingCount,
-          color: Colors.blue,
-          title: 'Visit1 ${(graphInfo.visitCount).toStringAsFixed(1)}%',
-        ),
-      ],
-      "visit2_to_booking": [
-        PieChartSectionData(
-          value: graphInfo.revisitCount,
-          color: Colors.green,
-          title: 'Booking ${graphInfo.bookingCount.toStringAsFixed(1)}%',
-        ),
-        PieChartSectionData(
-          value: graphInfo.revisitCount,
-          color: Colors.pink,
-          title: 'Visit2 ${(graphInfo.bookingCount).toStringAsFixed(1)}%',
-        ),
-      ],
-      "lead_to_booking": [
-        PieChartSectionData(
-          value: graphInfo.bookingCount,
-          color: Colors.brown,
-          title: 'Booking ${graphInfo.leadCount.toStringAsFixed(1)}%',
-        ),
-        PieChartSectionData(
-          value: graphInfo.leadCount,
-          color: Colors.blue,
-          title: 'Leads ${(100 - graphInfo.leadCount).toStringAsFixed(1)}%',
-        ),
-      ],
-    };
 
     return Stack(
       children: [

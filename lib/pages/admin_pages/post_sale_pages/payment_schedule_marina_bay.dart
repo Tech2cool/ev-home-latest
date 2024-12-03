@@ -11,7 +11,8 @@ class PaymentScheduleGenerator extends StatefulWidget {
   const PaymentScheduleGenerator({super.key});
 
   @override
-  _PaymentScheduleGeneratorState createState() => _PaymentScheduleGeneratorState();
+  _PaymentScheduleGeneratorState createState() =>
+      _PaymentScheduleGeneratorState();
 }
 
 class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
@@ -23,7 +24,7 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
   String selectedSlab = '1';
   String stampDuty = "5";
   String? pdfFilePath;
-  
+
   List<Map<String, String>> slabs = [
     {'value': '1', 'name': 'On Booking'},
     {'value': '2', 'name': 'On Registration'},
@@ -79,8 +80,18 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
     final List<List<String>> paymentSchedule = [
       ['1', 'On Booking', '9.5 %', formatter.format(totalValue * 0.095)],
       ['2', 'On Registration', '15.5 %', formatter.format(totalValue * 0.155)],
-      ['3', 'Commencement of Work', '10 %', formatter.format(totalValue * 0.10)],
-      ['4', 'On Completion of Foundation upto Plinth Level', '5 %', formatter.format(totalValue * 0.05)],
+      [
+        '3',
+        'Commencement of Work',
+        '10 %',
+        formatter.format(totalValue * 0.10)
+      ],
+      [
+        '4',
+        'On Completion of Foundation upto Plinth Level',
+        '5 %',
+        formatter.format(totalValue * 0.05)
+      ],
     ];
     for (int i = 5; i <= 30; i++) {
       paymentSchedule.add([
@@ -91,27 +102,51 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
       ]);
     }
     paymentSchedule.addAll([
-      ['31', 'On Commencement of Plumbing of Building', '2 %', formatter.format(totalValue* 0.02)],
-      ['32', 'On Commencement of Flooring & Tiling', '2 %', formatter.format(totalValue * 0.02)],
-      ['33', 'On Commencement of External Painting', '2 %', formatter.format(totalValue * 0.02)],
+      [
+        '31',
+        'On Commencement of Plumbing of Building',
+        '2 %',
+        formatter.format(totalValue * 0.02)
+      ],
+      [
+        '32',
+        'On Commencement of Flooring & Tiling',
+        '2 %',
+        formatter.format(totalValue * 0.02)
+      ],
+      [
+        '33',
+        'On Commencement of External Painting',
+        '2 %',
+        formatter.format(totalValue * 0.02)
+      ],
       ['34', 'On Possession', '2 %', formatter.format(totalValue * 0.02)],
       ['', 'TOTAL', '100 %', formatter.format(agreementValue + gstValue)],
-      ['', 'Before Registration (Stamp Duty & Registration Charges)', '', formatter.format(stampDutyValue + registrationCharges)],
+      [
+        '',
+        'Before Registration (Stamp Duty & Registration Charges)',
+        '',
+        formatter.format(stampDutyValue + registrationCharges)
+      ],
       ['', 'GRAND TOTAL', '', formatter.format(allInclusiveAmount)],
     ]);
     pdf.addPage(
       pw.Page(
+        pageFormat: PdfPageFormat.legal,
         build: (pw.Context context) {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              pw.Text('PAYMENT SCHEDULE', style: pw.TextStyle(fontSize: 14, fontWeight: pw.FontWeight.bold)),
+              pw.Text('PAYMENT SCHEDULE',
+                  style: pw.TextStyle(
+                      fontSize: 14, fontWeight: pw.FontWeight.bold)),
               pw.SizedBox(height: 10),
               pw.Text('Flat No: ${flatNoController.text}'),
               pw.Text('Phone: ${phoneController.text}'),
               pw.Text('Client Name: ${clientNameController.text}'),
               pw.Text('Carpet Area: ${carpetAreaController.text} sq. ft.'),
-              pw.Text('All Inclusive Amount: ${formatter.format(allInclusiveAmount)}'),
+              pw.Text(
+                  'All Inclusive Amount: ${formatter.format(allInclusiveAmount)}'),
               pw.SizedBox(height: 10),
               pw.Table(
                 border: pw.TableBorder.all(width: 1),
@@ -126,7 +161,10 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
                     children: ['No.', 'Stage', '%', 'Amount']
                         .map((header) => pw.Padding(
                               padding: const pw.EdgeInsets.all(2),
-                              child: pw.Text(header, style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
+                              child: pw.Text(header,
+                                  style: pw.TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: pw.FontWeight.bold)),
                             ))
                         .toList(),
                   ),
@@ -139,27 +177,39 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
                           children: row
                               .map((cell) => pw.Padding(
                                     padding: const pw.EdgeInsets.all(2),
-                                    child: pw.Text(cell, style: const pw.TextStyle(fontSize: 8)),
+                                    child: pw.Text(cell,
+                                        style:
+                                            const pw.TextStyle(fontSize: 10)),
                                   ))
                               .toList(),
                         ),
                         pw.TableRow(
                           children: [
-                            pw.Padding(padding: const pw.EdgeInsets.all(2), child: pw.Text('')),
+                            pw.Padding(
+                                padding: const pw.EdgeInsets.all(2),
+                                child: pw.Text('')),
                             pw.Padding(
                               padding: const pw.EdgeInsets.all(2),
                               child: pw.Text('Total up to selected slab',
-                                  style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold)),
+                                  style: pw.TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: pw.FontWeight.bold)),
                             ),
                             pw.Padding(
                               padding: const pw.EdgeInsets.all(2),
-                              child: pw.Text('${selectedSlabPercentage.toStringAsFixed(1)} %',
-                                  style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold)),
+                              child: pw.Text(
+                                  '${selectedSlabPercentage.toStringAsFixed(1)} %',
+                                  style: pw.TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: pw.FontWeight.bold)),
                             ),
                             pw.Padding(
                               padding: const pw.EdgeInsets.all(2),
-                              child: pw.Text(formatter.format(selectedSlabAmount),
-                                  style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold)),
+                              child: pw.Text(
+                                  formatter.format(selectedSlabAmount),
+                                  style: pw.TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: pw.FontWeight.bold)),
                             ),
                           ],
                         ),
@@ -170,7 +220,9 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
                           children: row
                               .map((cell) => pw.Padding(
                                     padding: const pw.EdgeInsets.all(2),
-                                    child: pw.Text(cell, style: const pw.TextStyle(fontSize: 8)),
+                                    child: pw.Text(cell,
+                                        style:
+                                            const pw.TextStyle(fontSize: 10)),
                                   ))
                               .toList(),
                         ),
@@ -197,8 +249,20 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
   }
 
   double _getSlabPercentage(int slabIndex) {
-    if (slabIndex <= 4) return 40.0;
-    return 40.0 + (slabIndex - 4) * 2.0;
+    List<double> percentages = [
+      9.5, // On Booking
+      15.5, // On Registration
+      10.0, // Commencement of Work
+      5.0, // On Completion of Foundation upto Plinth Level
+    ];
+
+    // Add 2% for each subsequent slab
+    for (int i = 5; i <= 34; i++) {
+      percentages.add(2.0);
+    }
+
+    // Calculate cumulative percentage up to the selected slab
+    return percentages.sublist(0, slabIndex).reduce((a, b) => a + b);
   }
 
   String _getOrdinalSuffix(int number) {

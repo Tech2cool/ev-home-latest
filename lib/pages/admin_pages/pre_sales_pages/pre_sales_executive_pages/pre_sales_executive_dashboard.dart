@@ -43,7 +43,7 @@ class _PreSalesExecutiveDashboardState
     for (Lead lead in leads) {
       if (lead.preSalesExecutive != null) {
         String monthYear =
-            "${Helper.getShortMonthName(lead.startDate.toString())} ${lead.startDate.year}";
+            "${Helper.getShortMonthName(lead.startDate?.toString() ?? '')} ${lead.startDate?.year}";
 
         // Increment the count for this month-year
         leadCountMap.update(monthYear, (count) => count + 1, ifAbsent: () => 1);

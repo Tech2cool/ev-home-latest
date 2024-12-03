@@ -66,7 +66,7 @@ class GeolocationProvider extends ChangeNotifier {
 
   GeolocationProvider() {
     _initializeLocationTracking();
-    _initWorkManager();
+    // _initWorkManager();
   }
 
   void _initializeLocationTracking() async {

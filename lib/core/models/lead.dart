@@ -24,8 +24,8 @@ class Lead {
   final int? altPhoneNumber;
   final String? remark;
   final String? stage;
-  final DateTime startDate;
-  final DateTime validTill;
+  final DateTime? startDate;
+  final DateTime? validTill;
   final DateTime? previousValidTill;
   final String? status;
   final Cycle? cycle;
@@ -165,8 +165,8 @@ class Lead {
       'altPhoneNumber': altPhoneNumber,
       'remark': remark,
       'stage': stage,
-      'startDate': startDate.toIso8601String(),
-      'validTill': validTill.toIso8601String(),
+      'startDate': startDate?.toIso8601String(),
+      'validTill': validTill?.toIso8601String(),
       'previousValidTill': previousValidTill?.toIso8601String(),
       'status': status,
       'approvalStatus': approvalStatus,

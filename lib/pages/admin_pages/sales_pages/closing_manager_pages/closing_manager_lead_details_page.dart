@@ -300,6 +300,113 @@ class _ClosingManagerLeadDetailsPageState
           children: [
             _buildClientOverview(),
             // MyTextCard(heading: "", value: ""),
+            Wrap(
+              children: [
+                Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  color: Colors.white.withOpacity(0.3),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.notification_add,
+                            size: 40,
+                            color: Colors.orangeAccent,
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Send Notification",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  color: Colors.white.withOpacity(0.3),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.notification_add,
+                            size: 40,
+                            color: Colors.orangeAccent,
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Send Notification",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Card(
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  color: Colors.white.withOpacity(0.3),
+                  child: InkWell(
+                    onTap: () {},
+                    child: Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.notification_add,
+                            size: 40,
+                            color: Colors.orangeAccent,
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              "Send Notification",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
             if (showNotification == true) _buildNotificationSection(),
 
             if (showScheduleMeeting == true) _buildAppointmentSection(),

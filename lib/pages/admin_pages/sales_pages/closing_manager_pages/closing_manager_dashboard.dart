@@ -76,6 +76,15 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
     _onRefresh();
   }
 
+  double safeDivision(double numerator, double denominator) {
+    if (denominator == 0) {
+      // Handle the zero denominator case
+      print('Denominator is zero. Returning 0 instead of infinity.');
+      return 0; // Or throw an exception, or handle as needed
+    }
+    return numerator / denominator;
+  }
+
   @override
   Widget build(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(context);
@@ -380,13 +389,16 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                             const SizedBox(width: 8),
                             InkWell(
                               onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => AdminCarryForwardPage(
-                                      id: widget.id,
-                                    ),
-                                  ),
+                                final selectedValue = showDialog<int>(
+                                  context: context,
+                                  builder: (context) =>
+                                      AdminCarryForwardDialog(id: "123"),
                                 );
+
+                                if (selectedValue != null) {
+                                  print(
+                                      "Selected Carry Forward Option: $selectedValue");
+                                }
                               },
                               child: TargetCircle(
                                 number: target?.carryForward.toString() ?? "0",
@@ -497,6 +509,8 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                         AnimatedPieChart(
                           visited: graphInfo.visitCount.toInt(),
                           notVisited: graphInfo.leadCount.toInt(),
+                          percentage: safeDivision((graphInfo.visitCount * 100),
+                              graphInfo.leadCount),
                           title: "Visits",
                           subtitle: "Visit",
                           notSubtitle: "Not Visit",
@@ -526,6 +540,9 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                         AnimatedPieChart(
                           visited: 60,
                           notVisited: 40,
+                          percentage: safeDivision(
+                              (graphInfo.bookingCount * 100),
+                              graphInfo.visitCount),
                           title: "Visits",
                           subtitle: "Visit",
                           notSubtitle: "Not Visit",
@@ -539,10 +556,8 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                 Card(
                   elevation: 4,
                   shadowColor: Colors.transparent,
-
                   margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  color: Colors.white
-                      .withOpacity(0.3), // Semi-transparent white background
+                  color: Colors.white.withOpacity(0.3),
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child: Column(
@@ -555,6 +570,9 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                         AnimatedPieChart(
                           visited: graphInfo.bookingCount.toInt(),
                           notVisited: graphInfo.visit2Count.toInt(),
+                          percentage: safeDivision(
+                              (graphInfo.bookingCount * 100),
+                              graphInfo.visit2Count),
                           title: "Bookings",
                           subtitle: "Visit",
                           notSubtitle: "Not Visit",
@@ -582,6 +600,9 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                         AnimatedPieChart(
                           visited: graphInfo.bookingCount.toInt(),
                           notVisited: graphInfo.leadCount.toInt(),
+                          percentage: safeDivision(
+                              (graphInfo.bookingCount * 100),
+                              graphInfo.leadCount),
                           title: "Bookings",
                           subtitle: "Visit",
                           notSubtitle: "Not Visit",

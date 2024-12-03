@@ -1,33 +1,28 @@
-import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class AdminCarryForwardPage extends StatefulWidget {
+class AdminCarryForwardDialog extends StatefulWidget {
   final String? id;
-  const AdminCarryForwardPage({super.key, this.id});
+  const AdminCarryForwardDialog({super.key, this.id});
 
   @override
-  State<AdminCarryForwardPage> createState() => _AdminCarryForwardPageState();
+  State<AdminCarryForwardDialog> createState() =>
+      _AdminCarryForwardDialogState();
 }
 
-class _AdminCarryForwardPageState extends State<AdminCarryForwardPage> {
+class _AdminCarryForwardDialogState extends State<AdminCarryForwardDialog> {
   int? selectedVal;
   bool isLoading = false;
+  List<int> carryForwards = [1, 2, 3, 4]; // Mocked options for demonstration
 
   Future<void> onRefresh() async {
-    final settingProvider = Provider.of<SettingProvider>(
-      context,
-      listen: false,
-    );
     try {
       setState(() {
         isLoading = true;
       });
-      await settingProvider.getCarryForwardOpt(
-        widget.id ?? settingProvider.loggedAdmin!.id!,
-      );
+      // Mocked delay to simulate async operation
+      await Future.delayed(const Duration(seconds: 1));
     } catch (e) {
-      //
+      // Handle exceptions
     } finally {
       setState(() {
         isLoading = false;
@@ -43,65 +38,66 @@ class _AdminCarryForwardPageState extends State<AdminCarryForwardPage> {
 
   @override
   Widget build(BuildContext context) {
-    final settingProvider = Provider.of<SettingProvider>(context);
-    final carryForwards = settingProvider.carryForwardsOptions;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Carry Forward Option"),
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
       ),
-      body: RefreshIndicator(
-        onRefresh: onRefresh,
-        child: ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: DropdownButtonFormField<int>(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "Carry Forward Option",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<int>(
                 value: carryForwards.contains(selectedVal) ? selectedVal : null,
                 decoration: InputDecoration(
-                  labelText: 'Select Carry Forward opt',
+                  labelText: 'Select Carry Forward Option',
                   border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                 ),
                 items: carryForwards.map((project) {
                   return DropdownMenuItem<int>(
                     value: project,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            project.toString(),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                        ),
-                        const SizedBox(width: 4),
-                      ],
+                    child: Text(
+                      project.toString(),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
                     ),
                   );
                 }).toList(),
                 onChanged: (newValue) {
                   setState(() {
-                    // updateCombinedText();
+                    selectedVal = newValue;
                   });
                 },
                 validator: (value) {
                   if (value == null) {
-                    return 'Please select a Unit No';
+                    return 'Please select a value';
                   }
                   return null;
                 },
                 isExpanded: true,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: ElevatedButton(
-                onPressed: () {},
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context, selectedVal);
+                },
                 child: const Text("Submit"),
               ),
-            )
-          ],
+              if (isLoading)
+                const Padding(
+                  padding: EdgeInsets.only(top: 16),
+                  child: CircularProgressIndicator(),
+                ),
+            ],
+          ),
         ),
       ),
     );

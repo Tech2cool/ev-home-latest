@@ -255,9 +255,16 @@ class _ClosingManagerLeadDetailsPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Client Details'),
+        title: const Text(
+          'Client Details',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
         backgroundColor: Colors.indigo,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white), // Back arrow color
+        actionsIconTheme: const IconThemeData(color: Colors.white),
         actions: [
           PopupMenuButton<String>(
             onSelected: (value) {
@@ -299,124 +306,139 @@ class _ClosingManagerLeadDetailsPageState
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildClientOverview(),
-            // MyTextCard(heading: "", value: ""),
-            Wrap(
-              children: [
-                Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  color: Colors.white.withOpacity(0.3),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.notification_add,
-                            size: 40,
-                            color: Colors.orangeAccent,
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Send Notification",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
+            const SizedBox(height: 20),
+            Center(
+              child: SizedBox(
+                width: 300, // Adjust width to control the grid layout
+                child: Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  children: [
+                    SizedBox(
+                      width: 140, // Half the width for two cards in a row
+                      child: Card(
+                        elevation: 1,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        color: Colors.white,
+                        child: InkWell(
+                          onTap: _onPressedSendNotification,
+                          child: const Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.notification_add,
+                                size: 40,
+                                color: Colors.orangeAccent,
                               ),
-                            ),
+                              SizedBox(height: 10),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Send Notification",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  color: Colors.white.withOpacity(0.3),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.notification_add,
-                            size: 40,
-                            color: Colors.orangeAccent,
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Send Notification",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
+                    SizedBox(
+                      width: 140, // Half the width for two cards in a row
+                      child: Card(
+                        elevation: 1,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        color: Colors.white,
+                        child: InkWell(
+                          onTap: _onPressedScheduleMeeting,
+                          child: const Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.meeting_room,
+                                size: 40,
+                                color: Colors.orangeAccent,
                               ),
-                            ),
+                              SizedBox(height: 10),
+                              Padding(
+                                padding: EdgeInsets.all(8.0),
+                                child: Text(
+                                  "Schedule Meeting",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
-                ),
-                Card(
-                  elevation: 0,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  color: Colors.white.withOpacity(0.3),
-                  child: InkWell(
-                    onTap: () {},
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.notification_add,
-                            size: 40,
-                            color: Colors.orangeAccent,
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Send Notification",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
+                    SizedBox(
+                      width:
+                          double.infinity, // Full width for the rectangle card
+                      child: Card(
+                        elevation: 1,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        color: Colors.white,
+                        child: InkWell(
+                          onTap: () => _showAssignTaskDialog(context),
+                          child: const Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.task,
+                                size: 40,
+                                color: Colors.orangeAccent,
                               ),
-                            ),
+                              SizedBox(height: 10),
+                              Text(
+                                "Assign",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              SizedBox(height: 4),
+                              Text(
+                                "Task",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
-
-            if (showNotification == true) _buildNotificationSection(),
-
-            if (showScheduleMeeting == true) _buildAppointmentSection(),
-            // _buildAppointmentSection(),
-            // _buildAppointmentHistory(),
+            SizedBox(
+              height: 12,
+            ),
             if (widget.lead.callHistory.isNotEmpty) ...[
               const Text(
                 'Follow-up History',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 8),
@@ -430,7 +452,8 @@ class _ClosingManagerLeadDetailsPageState
                       leading: const CircleAvatar(
                         child: Icon(Icons.calendar_today),
                       ),
-                      title: Row(
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             appl.caller != null
@@ -444,27 +467,127 @@ class _ClosingManagerLeadDetailsPageState
                           ),
                         ],
                       ),
-                      subtitle: Row(
+                      subtitle: Text(
+                        appl.remark ?? "NA",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ] else ...[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+                child: const Text(
+                  'Follow-up History',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade400),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: const Text(
+                      'No Follow-up Yet',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            SizedBox(
+              height: 12,
+            ),
+            if (widget.lead.callHistory.isNotEmpty) ...[
+              const Text(
+                'Contact History',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8),
+              ...List.generate(
+                widget.lead.callHistory.length,
+                (i) {
+                  final appl = widget.lead.callHistory[i];
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    child: ListTile(
+                      leading: const CircleAvatar(
+                        child: Icon(Icons.calendar_today),
+                      ),
+                      title: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            appl.remark ?? "NA",
+                            appl.caller != null
+                                ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
+                                : "NA",
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            Helper.formatDate(appl.callDate?.toString() ?? ''),
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
+                      subtitle: Text(
+                        appl.remark ?? "NA",
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                     ),
                   );
-                  return CustomTimelineTile(
-                    title: appl.caller != null
-                        ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
-                        : "NA",
-                    date: Helper.formatDate(appl.callDate?.toString() ?? ''),
-                    description: appl.remark ?? "NA",
-                    color: Colors.red.withOpacity(0.8),
-                    isFirst: i == 0,
-                    isLast: i == widget.lead.callHistory.length - 1,
-                  );
                 },
+              ),
+            ] else ...[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+                child: const Text(
+                  'Contact History',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade100,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey.shade400),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: const Text(
+                      'No Contact History Yet',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
             const SizedBox(height: 24),
@@ -485,7 +608,7 @@ class _ClosingManagerLeadDetailsPageState
             radius: 40,
             child: Text(
               widget.lead.firstName?.substring(0, 1).toUpperCase() ?? "",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24,
               ),
             ),
@@ -493,7 +616,7 @@ class _ClosingManagerLeadDetailsPageState
           const SizedBox(height: 16),
           Text(
             "${widget.lead.firstName} ${widget.lead.lastName}",
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -761,7 +884,7 @@ class _ClosingManagerLeadDetailsPageState
                 );
               },
             ),
-            Text("No Appointment yet")
+            const Text("No Appointment yet")
           ],
         ),
       ),

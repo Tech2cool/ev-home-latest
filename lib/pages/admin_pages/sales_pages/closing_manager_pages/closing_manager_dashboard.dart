@@ -56,6 +56,10 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
       await settingProvider.getClosingManagerGraph(
         widget.id ?? settingProvider.loggedAdmin!.id!,
       );
+      await settingProvider.getCarryForwardOpt(
+        widget.id ?? settingProvider.loggedAdmin!.id!,
+      );
+
       // await settingProvider.getLeadsTeamLeaderGraph(
       //   widget.id ?? settingProvider.loggedAdmin!.id!,
       // );
@@ -337,7 +341,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                 final selectedValue = showDialog<int>(
                                   context: context,
                                   builder: (context) =>
-                                      AdminCarryForwardDialog(id: "123"),
+                                      AdminCarryForwardDialog(id: widget.id),
                                 );
 
                                 if (selectedValue != null) {
@@ -483,14 +487,15 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                         ),
                         SizedBox(height: 10),
                         AnimatedPieChart(
-                          visited: 60,
-                          notVisited: 40,
+                          visited: graphInfo.bookingCount.toInt(),
+                          notVisited: graphInfo.visitCount.toInt(),
                           percentage: safeDivision(
-                              (graphInfo.bookingCount * 100),
-                              graphInfo.visitCount),
+                            (graphInfo.bookingCount * 100),
+                            graphInfo.visitCount,
+                          ),
                           title: "Visits",
-                          subtitle: "Visit",
-                          notSubtitle: "Not Visit",
+                          subtitle: "Booking",
+                          notSubtitle: "Visit 1",
                           visitedColor: Colors.green,
                           notVisitedColor: Colors.red,
                         ),

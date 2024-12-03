@@ -1,7 +1,9 @@
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/task.dart';
+import 'package:ev_homes/core/providers/setting_provider.dart';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class TaskDetailsPage extends StatefulWidget {
@@ -75,7 +77,6 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                     ),
                   ),
                   const SizedBox(height: 8),
-
                   const Text(
                     'Overview',
                     style: TextStyle(
@@ -140,67 +141,18 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                   Row(
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
-                        child: Text("Update Status"),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => TaskDialog(
+                              id: widget.task.id!,
+                            ),
+                          );
+                        },
+                        child: const Text("Update Status"),
                       ),
                     ],
                   ),
-                  // const SizedBox(height: 24),
-                  // SizedBox(
-                  //   width: double.infinity,
-                  //   height: 400, // Constrained height for the stepper
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.all(5.0),
-                  //     child: ListView(
-                  //       children: const [
-                  //         CustomTimelineTile(
-                  //           title: "Approved",
-                  //           date: "10/10/2024",
-                  //           description: "welcome to ev home",
-                  //           color: Colors.orange,
-                  //           isFirst: true,
-                  //         ),
-                  //         CustomTimelineTile(
-                  //           title: "Contacted",
-                  //           date: "10/10/2024",
-                  //           description: "welcome to ev home",
-                  //           color: Colors.orange,
-                  //         ),
-                  //         CustomTimelineTile(
-                  //           title: "Follow Up",
-                  //           date: "10/10/2024",
-                  //           description: "welcome to ev home",
-                  //           color: Colors.orange,
-                  //         ),
-                  //         CustomTimelineTile(
-                  //           title: "Site Visit",
-                  //           date: "10/10/2024",
-                  //           description: "welcome to ev home",
-                  //           color: Colors.orange,
-                  //         ),
-                  //         CustomTimelineTile(
-                  //           title: "Revisit",
-                  //           date: "10/10/2024",
-                  //           description: "welcome to ev home",
-                  //           color: Colors.orange,
-                  //         ),
-                  //         CustomTimelineTile(
-                  //           title: "Booking",
-                  //           date: "10/10/2024",
-                  //           description: "welcome to ev home",
-                  //           color: Colors.orange,
-                  //         ),
-                  //         CustomTimelineTile(
-                  //           title: "Registration",
-                  //           date: "10/10/2024",
-                  //           description: "welcome to ev home",
-                  //           color: Color.fromARGB(255, 255, 223, 174),
-                  //           isLast: true,
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -321,6 +273,9 @@ class CustomTimelineTile extends StatelessWidget {
 }
 
 class TaskDialog extends StatefulWidget {
+  final String id;
+
+  const TaskDialog({super.key, required this.id});
   @override
   _TaskDialogState createState() => _TaskDialogState();
 }
@@ -331,6 +286,10 @@ class _TaskDialogState extends State<TaskDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
     return AlertDialog(
       title: Text("Task Dialog"),
       content: Column(
@@ -339,12 +298,22 @@ class _TaskDialogState extends State<TaskDialog> {
           // Dropdown
           DropdownButtonFormField<String>(
             value: selectedTask,
-            items: ["Task Completed", "Unavailable"]
+            items: [
+              DropdownMenuItem(
+                value: "completed",
+                child: Text("Task Completed"),
+              ),
+              DropdownMenuItem(
+                value: "unavailable",
+                child: Text("Unavailable"),
+              ),
+            ],
+            /*["Task Completed", "Unavailable"]
                 .map((task) => DropdownMenuItem(
                       value: task,
                       child: Text(task),
                     ))
-                .toList(),
+                .toList(),*/
             onChanged: (value) {
               setState(() {
                 selectedTask = value;
@@ -379,7 +348,7 @@ class _TaskDialogState extends State<TaskDialog> {
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             ),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 final selected = selectedTask;
                 final remark = remarkController.text;
 
@@ -390,7 +359,10 @@ class _TaskDialogState extends State<TaskDialog> {
 
                   // You can use Hive here to store the data locally
                   // For example: box.put('task', {'task': selected, 'remark': remark});
-
+                  await settingProvider.updateTaskStatus(
+                    widget.id,
+                    selectedTask!,
+                  );
                   Navigator.pop(context);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(

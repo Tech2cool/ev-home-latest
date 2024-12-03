@@ -43,6 +43,7 @@ class SettingProvider extends ChangeNotifier {
   List<Employee> _postSalesExecutives = [];
   List<Employee> _employeeBydDesg = [];
   List<Employee> _preSaleExecutives = [];
+  List<Employee> _reportingEmps = [];
 
   List<ChannelPartner> _channelPartners = [];
   List<Employee> _teamLeaders = [];
@@ -146,6 +147,7 @@ class SettingProvider extends ChangeNotifier {
   List<Task> get tasks => _tasks;
 
   List<Employee> get employeeBydDesg => _employeeBydDesg;
+  List<Employee> get reportingEmps => _reportingEmps;
 
   List<Employee> get preSaleExecutives => _preSaleExecutives;
   List<ChannelPartner> get channelPartners => _channelPartners;
@@ -188,6 +190,15 @@ class SettingProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> getReportingToEmps(String rId) async {
+    final emps = await _apiService.getReportingToEmps(rId);
+    if (emps.isNotEmpty) {
+      print("got ");
+      _reportingEmps = emps;
+      notifyListeners();
+    }
+  }
+
   Future<void> getTeamLeaders() async {
     final emps = await _apiService.getTeamLeaders();
     if (emps.isNotEmpty) {
@@ -203,6 +214,13 @@ class SettingProvider extends ChangeNotifier {
       _tasks = emps;
       notifyListeners();
     }
+  }
+
+  Future<void> updateTaskStatus(String id, String status) async {
+    final emps = await _apiService.updateTask(id, {
+      "status": status,
+    });
+    notifyListeners();
   }
 
   Future<void> getCarryForwardOpt(String id) async {
@@ -414,6 +432,12 @@ class SettingProvider extends ChangeNotifier {
 
   Future<void> getMyTarget(String id) async {
     final targetResp = await _apiService.getMyTarget(id);
+    myTarget = targetResp;
+    notifyListeners();
+  }
+
+  Future<void> updateCarryForward(String id, Map<String, dynamic> data) async {
+    final targetResp = await _apiService.useCarryForward(id, data);
     myTarget = targetResp;
     notifyListeners();
   }

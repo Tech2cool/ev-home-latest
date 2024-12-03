@@ -255,7 +255,13 @@ class _ClosingManagerLeadDetailsPageState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Client Details'),
+        iconTheme: IconThemeData(),
+        title: const Text(
+          'Client Details',
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
         backgroundColor: Colors.indigo,
         elevation: 0,
         actions: [
@@ -300,100 +306,101 @@ class _ClosingManagerLeadDetailsPageState
           children: [
             _buildClientOverview(),
             // MyTextCard(heading: "", value: ""),
+            const SizedBox(
+              height: 20,
+            ),
             Wrap(
+              spacing: 10,
+              runSpacing: 10,
               children: [
                 Card(
-                  elevation: 0,
+                  elevation: 1,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white,
                   child: InkWell(
-                    onTap: () {},
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.notification_add,
-                            size: 40,
-                            color: Colors.orangeAccent,
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Send Notification",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
-                              ),
+                    onTap: _onPressedSendNotification,
+                    child: const Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.notification_add,
+                          size: 40,
+                          color: Colors.orangeAccent,
+                        ),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "Send Notification",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
                 Card(
-                  elevation: 0,
+                  elevation: 1,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white,
                   child: InkWell(
-                    onTap: () {},
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.notification_add,
-                            size: 40,
-                            color: Colors.orangeAccent,
-                          ),
-                          const SizedBox(height: 10),
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              "Send Notification",
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                color: Colors.black,
-                              ),
+                    onTap: _onPressedScheduleMeeting,
+                    child: const Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          Icons.meeting_room,
+                          size: 40,
+                          color: Colors.orangeAccent,
+                        ),
+                        SizedBox(height: 10),
+                        Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Text(
+                            "Schedule Meeting",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
                 Card(
-                  elevation: 0,
+                  elevation: 1,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  color: Colors.white.withOpacity(0.3),
+                  color: Colors.white,
                   child: InkWell(
-                    onTap: () {},
+                    onTap: () => _showAssignTaskDialog(context),
                     child: Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            Icons.notification_add,
+                            Icons.task,
                             size: 40,
                             color: Colors.orangeAccent,
                           ),
-                          const SizedBox(height: 10),
+                          SizedBox(height: 10),
                           Padding(
-                            padding: const EdgeInsets.all(8.0),
+                            padding: EdgeInsets.all(8.0),
                             child: Text(
-                              "Send Notification",
+                              "Assign Task",
                               textAlign: TextAlign.center,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 18,
                                 color: Colors.black,
                               ),
@@ -406,12 +413,6 @@ class _ClosingManagerLeadDetailsPageState
                 ),
               ],
             ),
-
-            if (showNotification == true) _buildNotificationSection(),
-
-            if (showScheduleMeeting == true) _buildAppointmentSection(),
-            // _buildAppointmentSection(),
-            // _buildAppointmentHistory(),
             if (widget.lead.callHistory.isNotEmpty) ...[
               const Text(
                 'Follow-up History',
@@ -454,17 +455,21 @@ class _ClosingManagerLeadDetailsPageState
                       ),
                     ),
                   );
-                  return CustomTimelineTile(
-                    title: appl.caller != null
-                        ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
-                        : "NA",
-                    date: Helper.formatDate(appl.callDate?.toString() ?? ''),
-                    description: appl.remark ?? "NA",
-                    color: Colors.red.withOpacity(0.8),
-                    isFirst: i == 0,
-                    isLast: i == widget.lead.callHistory.length - 1,
-                  );
                 },
+              ),
+            ] else ...[
+              const Text(
+                'Follow-up History',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'No Followup Yet',
+                style: TextStyle(
+                  fontSize: 14,
+                ),
               ),
             ],
             const SizedBox(height: 24),
@@ -485,7 +490,7 @@ class _ClosingManagerLeadDetailsPageState
             radius: 40,
             child: Text(
               widget.lead.firstName?.substring(0, 1).toUpperCase() ?? "",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 24,
               ),
             ),
@@ -493,7 +498,7 @@ class _ClosingManagerLeadDetailsPageState
           const SizedBox(height: 16),
           Text(
             "${widget.lead.firstName} ${widget.lead.lastName}",
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -761,7 +766,7 @@ class _ClosingManagerLeadDetailsPageState
                 );
               },
             ),
-            Text("No Appointment yet")
+            const Text("No Appointment yet")
           ],
         ),
       ),

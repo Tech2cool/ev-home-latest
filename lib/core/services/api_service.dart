@@ -778,6 +778,32 @@ class ApiService {
     }
   }
 
+  Future<Employee?> getReportingTo(String id) async {
+    try {
+      final Response response = await _dio.get('/employee-reporting/$id');
+      print("pass1");
+      final Map<String, dynamic> data = response.data["data"];
+      print(response.data);
+      final Employee employee = Employee.fromMap(data);
+      print("pass2");
+      return employee;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+      print("pass3");
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+      print("pass4");
+
+      Helper.showCustomSnackBar(errorMessage);
+      return null;
+    }
+  }
+
   Future<String?> deleteEmployeeById(String id) async {
     try {
       final Response response = await _dio.delete('/employee/$id');

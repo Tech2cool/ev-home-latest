@@ -20,33 +20,33 @@ class Place {
 }
 
 // Initialize WorkManager periodically
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    Position position = await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-      ),
-    );
+// void callbackDispatcher() {
+//   Workmanager().executeTask((task, inputData) async {
+//     Position position = await Geolocator.getCurrentPosition(
+//       locationSettings: const LocationSettings(
+//         accuracy: LocationAccuracy.high,
+//       ),
+//     );
 
-    double latitude = position.latitude;
-    double longitude = position.longitude;
+//     double latitude = position.latitude;
+//     double longitude = position.longitude;
 
-    // Get address from coordinates
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(latitude, longitude);
-    Placemark placemark = placemarks[0];
-    String address =
-        '${placemark.street}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
+//     // Get address from coordinates
+//     List<Placemark> placemarks =
+//         await placemarkFromCoordinates(latitude, longitude);
+//     Placemark placemark = placemarks[0];
+//     String address =
+//         '${placemark.street}, ${placemark.locality}, ${placemark.administrativeArea}, ${placemark.country}';
 
-    // Save location and address to Shared Preferences
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setDouble('latitude', latitude);
-    await prefs.setDouble('longitude', longitude);
-    await prefs.setString('address', address);
+//     // Save location and address to Shared Preferences
+//     final prefs = await SharedPreferences.getInstance();
+//     await prefs.setDouble('latitude', latitude);
+//     await prefs.setDouble('longitude', longitude);
+//     await prefs.setString('address', address);
 
-    return Future.value(true); // Indicates successful task execution
-  });
-}
+//     return Future.value(true); // Indicates successful task execution
+//   });
+// }
 
 class GeolocationProvider extends ChangeNotifier {
   double? latitude;
@@ -136,19 +136,19 @@ class GeolocationProvider extends ChangeNotifier {
   }
 
   // Initialize WorkManager
-  void _initWorkManager() {
-    Workmanager().initialize(
-      callbackDispatcher, // The top-level function
-      isInDebugMode: true,
-    );
+  // void _initWorkManager() {
+  //   Workmanager().initialize(
+  //     callbackDispatcher, // The top-level function
+  //     isInDebugMode: true,
+  //   );
 
-    // Register a periodic task to run every 15 minutes
-    Workmanager().registerPeriodicTask(
-      "locationTask",
-      "locationBackgroundTask",
-      frequency: const Duration(minutes: 1), // Minimum interval on Android
-    );
-  }
+  //   // Register a periodic task to run every 15 minutes
+  //   Workmanager().registerPeriodicTask(
+  //     "locationTask",
+  //     "locationBackgroundTask",
+  //     frequency: const Duration(minutes: 1), // Minimum interval on Android
+  //   );
+  // }
 
   // Update address from coordinates
   Future<void> _updateAddress(double lat, double lon) async {

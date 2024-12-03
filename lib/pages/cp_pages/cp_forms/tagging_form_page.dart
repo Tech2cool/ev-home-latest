@@ -1,30 +1,13 @@
-import 'package:ev_homes/core/helper/helper.dart';
+import 'package:ev_homes/components/searchable_dropdown.dart';
+import 'package:ev_homes/core/models/channel_partner.dart';
+import 'package:ev_homes/core/models/lead.dart';
+import 'package:ev_homes/core/models/our_project.dart';
+import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:multiselect_dropdown_flutter/multiselect_dropdown_flutter.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider/path_provider.dart';
-import 'dart:io';
-import 'package:open_file/open_file.dart';
-
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Client Tagging Form',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const ClientTaggingForm(),
-    );
-  }
-}
+import 'package:multi_dropdown/multi_dropdown.dart';
+import 'package:provider/provider.dart';
 
 class ClientTaggingForm extends StatefulWidget {
   const ClientTaggingForm({super.key});
@@ -37,35 +20,122 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
   final TextEditingController _startDateController = TextEditingController();
   final TextEditingController _validTillDateController =
       TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _firstNameController = TextEditingController();
+  final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _altPhoneController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _cpRemarkController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  DateTime? _selectedDate;
+
   bool iConfirm = false;
   bool isLoading = false;
-  final List myList2 = const ['2BHK', '3BHK'];
-  final List myList = const ['Ev 9 Square', 'Ev heart city', 'Marina Bay'];
-  List<String> selectedProject = [];
+  List<OurProject> selectedProject = [];
   List<String> selectedRequirement = [];
   bool _showClientInfo = false;
   bool _showCPDetails = false;
-  String selectedStatus = "In Progress";
+  String selectedStatus = "pending";
+  String selectedIntrestedStatus = "cold";
+  DateTime startDate = DateTime.now();
+  DateTime validTill = DateTime.now().add(const Duration(days: 60));
 
   @override
   void initState() {
     super.initState();
     final now = DateTime.now();
+    startDate = now;
+    validTill = now.add(const Duration(days: 60));
     _startDateController.text = DateFormat('yyyy-MM-dd HH:mm').format(now);
     _validTillDateController.text = DateFormat('yyyy-MM-dd HH:mm').format(
       now.add(const Duration(days: 60)),
     );
+    _onRefresh();
+  }
+
+  Future<void> _onRefresh() async {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      // Execute all three futures concurrently
+      await Future.wait([
+        settingProvider.getRequirements(),
+        settingProvider.getOurProject(),
+      ]);
+    } catch (e) {
+      // Handle any errors if needed
+      print('Error during refresh: $e');
+    } finally {
+      // Ensure isLoading is set to false in both success and error cases
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime today = DateTime.now();
+    final DateTime initialDate = _selectedDate ?? today;
+    // print(today);
+    // Date picker
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(today.year - 100),
+      lastDate: today,
+    );
+
+    if (pickedDate != null) {
+      // print(" picked $pickedDate");
+      // Time picker
+      if (context.mounted) {
+        final TimeOfDay? pickedTime = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.now(),
+        );
+
+        if (pickedTime != null) {
+          // print("pickedtime not null");
+          setState(() {
+            // Combine the selected date and time
+            _selectedDate = DateTime(
+              pickedDate.year,
+              pickedDate.month,
+              pickedDate.day,
+              pickedTime.hour,
+              pickedTime.minute,
+            );
+            // Format the combined date and time as you wish
+            _startDateController.text = DateFormat("yyyy-MM-dd HH:mm").format(
+              _selectedDate!,
+            );
+            startDate = _selectedDate!;
+            validTill = _selectedDate!.add(const Duration(days: 60));
+            _validTillDateController.text =
+                DateFormat('yyyy-MM-dd HH:mm').format(
+              _selectedDate!.add(const Duration(days: 60)),
+            );
+          });
+        }
+      }
+      // print(" final $_selectedDate");
+      // print(" final ${_startDateController.text}");
+    }
   }
 
   void _handleOnSubmit() async {
-    if (_nameController.text.isEmpty ||
-        _emailController.text.isEmpty ||
+    if (_firstNameController.text.isEmpty ||
+        _lastNameController.text.isEmpty ||
+        // _emailController.text.isEmpty ||
         _phoneController.text.isEmpty ||
+        selectedProject.isEmpty ||
         selectedRequirement.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -86,56 +156,99 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
     setState(() {
       isLoading = true;
     });
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
 
+    Lead newLead = Lead(
+      id: "",
+      email: _emailController.text.trim(),
+      project: selectedProject,
+      requirement: selectedRequirement,
+      firstName: _firstNameController.text,
+      lastName: _lastNameController.text,
+      countryCode: "+91",
+      phoneNumber: int.parse(_phoneController.text),
+      startDate: startDate,
+      address: _addressController.text,
+      validTill: validTill,
+      status: selectedStatus,
+      approvalStatus: selectedStatus,
+      interestedStatus: selectedIntrestedStatus,
+      channelPartner: settingProvider.loggedChannelPartner,
+    );
+    Map<String, dynamic> leadJson = newLead.toJson();
+
+    if (newLead.channelPartner != null) {
+      leadJson["channelPartner"] = newLead.channelPartner!.id;
+    }
+    try {
+      await settingProvider.addLead(leadJson);
+    } catch (e) {}
     // Simulate form submission
-    await Future.delayed(const Duration(seconds: 2));
+    // await Future.delayed(const Duration(seconds: 2));
 
     setState(() {
       isLoading = false;
     });
-    Helper.showCustomSnackBar("Lead Created", Colors.green);
-
-    _generatePDF();
+    if (!mounted) return;
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //   const SnackBar(
+    //     content: Text("Lead Created"),
+    //   ),
+    // );
+    Navigator.of(context).pop();
+    // await _generatePDF();
   }
 
-  Future<void> _generatePDF() async {
-    final pdf = pw.Document();
+  // Future<void> _generatePDF() async {
+  //   final pdf = pw.Document();
 
-    pdf.addPage(
-      pw.Page(
-        build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Text('Client Tagging Form',
-                  style: pw.TextStyle(
-                      fontSize: 20, fontWeight: pw.FontWeight.bold)),
-              pw.SizedBox(height: 20),
-              pw.Text('Tagged Date: ${_startDateController.text}'),
-              pw.Text('Valid Till: ${_validTillDateController.text}'),
-              pw.Text('Client Name: ${_nameController.text}'),
-              pw.Text('Phone Number: ${_phoneController.text}'),
-              pw.Text('Alternate Phone: ${_altPhoneController.text}'),
-              pw.Text('Email: ${_emailController.text}'),
-              pw.Text('Selected Projects: ${selectedProject.join(", ")}'),
-              pw.Text('Requirements: ${selectedRequirement.join(", ")}'),
-              pw.Text('Remarks: ${_cpRemarkController.text}'),
-              pw.Text('Status: $selectedStatus'),
-            ],
-          );
-        },
-      ),
-    );
+  //   pdf.addPage(
+  //     pw.Page(
+  //       build: (pw.Context context) {
+  //         return pw.Column(
+  //           crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //           children: [
+  //             pw.Text(
+  //               'Client Tagging Form',
+  //               style: pw.TextStyle(
+  //                 fontSize: 20,
+  //                 fontWeight: pw.FontWeight.bold,
+  //               ),
+  //             ),
+  //             pw.SizedBox(height: 20),
+  //             pw.Text('Tagged Date: ${_startDateController.text}'),
+  //             pw.Text('Valid Till: ${_validTillDateController.text}'),
+  //             pw.Text(
+  //               'Client Name: ${_firstNameController.text} ${_lastNameController.text}',
+  //             ),
+  //             pw.Text('Phone Number: ${_phoneController.text}'),
+  //             pw.Text('Alternate Phone: ${_altPhoneController.text}'),
+  //             pw.Text('Email: ${_emailController.text}'),
+  //             pw.Text('Selected Projects: ${selectedProject.join(", ")}'),
+  //             pw.Text('Requirements: ${selectedRequirement.join(", ")}'),
+  //             pw.Text('Remarks: ${_cpRemarkController.text}'),
+  //             pw.Text('Status: $selectedStatus'),
+  //           ],
+  //         );
+  //       },
+  //     ),
+  //   );
 
-    final output = await getTemporaryDirectory();
-    final file = File("${output.path}/client_tagging_form.pdf");
-    await file.writeAsBytes(await pdf.save());
+  //   final output = await getTemporaryDirectory();
+  //   final file = File("${output.path}/client_tagging_form.pdf");
+  //   await file.writeAsBytes(await pdf.save());
 
-    OpenFile.open(file.path);
-  }
+  //   await OpenFile.open(file.path);
+  // }
 
   @override
   Widget build(BuildContext context) {
+    final settingProvider = Provider.of<SettingProvider>(context);
+    final channelPartners = settingProvider.channelPartners;
+
     return Stack(
       children: [
         Scaffold(
@@ -158,10 +271,37 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
                     childrens: [
                       if (_showClientInfo) ...[
                         const SizedBox(height: 10),
+                        // Padding(
+                        //   padding: const EdgeInsets.all(8.0),
+                        //   child: TextFormField(
+                        //     controller: _startDateController,
+                        //     readOnly: true,
+                        //     decoration: InputDecoration(
+                        //       labelText: 'Tagged Date',
+                        //       prefixIcon: const Icon(Icons.calendar_today),
+                        //       focusedBorder: OutlineInputBorder(
+                        //         borderRadius: BorderRadius.circular(15),
+                        //         borderSide: BorderSide(
+                        //           color: Colors.grey.withOpacity(0.7),
+                        //         ),
+                        //       ),
+                        //       enabledBorder: OutlineInputBorder(
+                        //         borderRadius: BorderRadius.circular(12),
+                        //         borderSide: BorderSide(
+                        //           color: Colors.grey.withOpacity(0.4),
+                        //         ),
+                        //       ),
+                        //       contentPadding: const EdgeInsets.symmetric(
+                        //           vertical: 15, horizontal: 10),
+                        //     ),
+                        //     onTap: () => _selectDate(context),
+                        //   ),
+                        // ),
+
                         CustomTextField(
                           controller: _startDateController,
                           label: "Tagged Date",
-                          onTap: () {},
+                          onTap: () => _selectDate(context),
                           readOnly: true,
                           textColor: Colors.black.withAlpha(100),
                           borderColor: Colors.grey.withAlpha(100),
@@ -177,8 +317,13 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
                           fillColor: Colors.grey.withAlpha(60),
                         ),
                         CustomTextField(
-                          controller: _nameController,
-                          label: "Client Name",
+                          controller: _firstNameController,
+                          label: "Client First Name",
+                          onTap: () {},
+                        ),
+                        CustomTextField(
+                          controller: _lastNameController,
+                          label: "Client Last Name",
                           onTap: () {},
                         ),
                         CustomTextField(
@@ -204,47 +349,150 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(15),
-                          child: MultiSelectDropdown.simpleList(
-                            list: myList,
-                            boxDecoration: BoxDecoration(
-                              border: Border.all(),
-                              borderRadius: BorderRadius.circular(20),
+                          child: MultiDropdown<OurProject>(
+                            items: [
+                              ...settingProvider.ourProject.map(
+                                (ele) => DropdownItem(
+                                    value: ele, label: ele.name ?? ""),
+                              ),
+                            ],
+                            // controller: multiselectController,
+                            enabled: true,
+                            searchEnabled: true,
+                            chipDecoration: const ChipDecoration(
+                              backgroundColor: Colors.greenAccent,
+                              wrap: true,
+                              runSpacing: 2,
+                              spacing: 10,
                             ),
-                            initiallySelected: selectedProject,
-                            checkboxFillColor: Colors.grey.withOpacity(0.3),
-                            splashColor: Colors.grey.withOpacity(0.3),
-                            includeSearch: true,
-                            includeSelectAll: true,
-                            whenEmpty: "Projects",
-                            onChange: (newList) {
+                            fieldDecoration: FieldDecoration(
+                              hintText: 'Projects',
+                              hintStyle: const TextStyle(color: Colors.black87),
+                              prefixIcon:
+                                  const Icon(CupertinoIcons.building_2_fill),
+                              showClearIcon: false,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                            dropdownDecoration: const DropdownDecoration(
+                              marginTop: 2,
+                              maxHeight: 500,
+                              header: Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text(
+                                  'Select Projects',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            dropdownItemDecoration: DropdownItemDecoration(
+                              selectedIcon: const Icon(Icons.check_box,
+                                  color: Colors.grey),
+                              disabledIcon:
+                                  Icon(Icons.lock, color: Colors.grey.shade300),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select a project';
+                              }
+                              return null;
+                            },
+                            onSelectionChange: (selectedItems) {
                               setState(() {
-                                selectedProject =
-                                    newList.map((e) => e as String).toList();
+                                selectedProject = selectedItems;
                               });
                             },
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(15),
-                          child: MultiSelectDropdown.simpleList(
-                            list: myList2,
-                            boxDecoration: BoxDecoration(
-                              border: Border.all(),
-                              borderRadius: BorderRadius.circular(20),
+                          child: MultiDropdown<String>(
+                            items: [
+                              ...settingProvider.requirements.map(
+                                (ele) => DropdownItem(value: ele, label: ele),
+                              ),
+                            ],
+                            enabled: true,
+                            searchEnabled: false,
+                            chipDecoration: const ChipDecoration(
+                              backgroundColor: Colors.greenAccent,
+                              wrap: true,
+                              runSpacing: 2,
+                              spacing: 10,
                             ),
-                            initiallySelected: selectedRequirement,
-                            checkboxFillColor: Colors.grey.withOpacity(0.3),
-                            splashColor: Colors.grey.withOpacity(0.3),
-                            includeSearch: true,
-                            includeSelectAll: true,
-                            whenEmpty: "Requirement",
-                            onChange: (newList) {
+                            fieldDecoration: FieldDecoration(
+                              labelStyle: TextStyle(fontSize: 30),
+                              hintText: 'Requirements',
+                              hintStyle: const TextStyle(color: Colors.black87),
+                              prefixIcon:
+                                  const Icon(CupertinoIcons.building_2_fill),
+                              showClearIcon: false,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                            dropdownDecoration: const DropdownDecoration(
+                              marginTop: 2,
+                              maxHeight: 500,
+                              header: Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text(
+                                  'Select Apartments',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            dropdownItemDecoration: DropdownItemDecoration(
+                              selectedIcon: const Icon(Icons.check_box,
+                                  color: Colors.grey),
+                              disabledIcon:
+                                  Icon(Icons.lock, color: Colors.grey.shade300),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select a apartment';
+                              }
+                              return null;
+                            },
+                            onSelectionChange: (selectedItems) {
                               setState(() {
-                                selectedRequirement =
-                                    newList.map((e) => e as String).toList();
+                                selectedRequirement = selectedItems;
                               });
                             },
                           ),
+                        ),
+                        CustomTextField(
+                          controller: _addressController,
+                          label: "Client Address",
+                          maxLines: 3,
+                          keyboardType: TextInputType.text,
+                          onChange: (value) {},
+                          onTap: () {},
                         ),
                         CustomTextField(
                           controller: _cpRemarkController,
@@ -253,30 +501,6 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
                           keyboardType: TextInputType.text,
                           onChange: (value) {},
                           onTap: () {},
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: DropdownButtonFormField<String>(
-                            decoration: InputDecoration(
-                              labelText: 'Status',
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            value: selectedStatus,
-                            items: const [
-                              DropdownMenuItem(
-                                  value: 'In Progress',
-                                  child: Text('In Progress')),
-                              DropdownMenuItem(
-                                  value: 'Approved', child: Text('Approved')),
-                            ],
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                selectedStatus = newValue!;
-                              });
-                            },
-                          ),
                         ),
                       ]
                     ],
@@ -292,16 +516,23 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
                     },
                     childrens: [
                       if (_showCPDetails) ...[
-                        const CustomTile(title: "Name: ", subTitle: "John Doe"),
-                        const CustomTile(
+                        const SizedBox(height: 20),
+                        CustomTile(
+                            title: "Name: ",
+                            subTitle:
+                                "${settingProvider.loggedChannelPartner?.firstName ?? ""} ${settingProvider.loggedChannelPartner?.lastName ?? ''}"),
+                        CustomTile(
                             title: "Phone Number: ",
-                            subTitle: "+91 9876543210"),
-                        const CustomTile(
-                            title: "Email: ", subTitle: "johndoe@example.com"),
-                        const CustomTile(
-                            title: "Firm name: ", subTitle: "ABC Realty"),
-                        const CustomTile(
-                            title: "Rera Number: ", subTitle: "RERA123456"),
+                            subTitle:
+                                "${settingProvider.loggedChannelPartner?.phoneNumber ?? 'NA'}"),
+                        CustomTile(
+                            title: "Email: ",
+                            subTitle:
+                                "${settingProvider.loggedChannelPartner?.email ?? 'NA'}"),
+                        CustomTile(
+                            title: "Firm name: ",
+                            subTitle:
+                                "${settingProvider.loggedChannelPartner?.firmName ?? 'NA'}"),
                       ]
                     ],
                   ),

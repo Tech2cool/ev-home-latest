@@ -22,8 +22,10 @@ class _CostGeneratorState extends State<CostGenerators> {
   final TextEditingController addressController = TextEditingController();
   final TextEditingController referenceController = TextEditingController();
   final TextEditingController carpetAreaController = TextEditingController();
-  final TextEditingController allInclusiveAmountController = TextEditingController();
-  final TextEditingController additionalNameController = TextEditingController();
+  final TextEditingController allInclusiveAmountController =
+      TextEditingController();
+  final TextEditingController additionalNameController =
+      TextEditingController();
   final TextEditingController floorController = TextEditingController();
 
   final TextEditingController addressLine1Controller = TextEditingController();
@@ -62,11 +64,13 @@ class _CostGeneratorState extends State<CostGenerators> {
   }
 
   void calculateValues() {
-    final allInclusiveAmount = double.tryParse(allInclusiveAmountController.text) ?? 0;
+    final allInclusiveAmount =
+        double.tryParse(allInclusiveAmountController.text) ?? 0;
     final stamp = double.tryParse(stampDuty) ?? 0;
 
     if (allInclusiveAmount > 0 && stamp > 0) {
-      final agreementValue = (allInclusiveAmount - 30000) / (((stamp + gstPercentage) / 100) + 1);
+      final agreementValue =
+          (allInclusiveAmount - 30000) / (((stamp + gstPercentage) / 100) + 1);
       final gstAmount = agreementValue * (gstPercentage / 100);
       final stampDutyAmount = agreementValue * (stamp / 100);
 
@@ -121,27 +125,35 @@ class _CostGeneratorState extends State<CostGenerators> {
         margin: const pw.EdgeInsets.all(30),
         build: (pw.Context context) {
           // Calculate total number of clients
-          int totalClients = 1 + additionalNames.length; // Main client + additional names
+          int totalClients =
+              1 + additionalNames.length; // Main client + additional names
 
           // Determine the greeting
-          String greeting = totalClients > 2 ? 'Dear Sir/Ma\'am,' : (clientPrefix == 'Mr.' ? 'Dear Sir,' : 'Dear Ma\'am,');
- 
+          String greeting = totalClients > 2
+              ? 'Dear Sir/Ma\'am,'
+              : (clientPrefix == 'Mr.' ? 'Dear Sir,' : 'Dear Ma\'am,');
+
           return [
             pw.SizedBox(height: 65),
             pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
               children: [
-                pw.Text('Ref.: ${referenceController.text}',
-                style: pw.TextStyle(fontWeight: pw.FontWeight.bold),),
-                pw.Text('Date: ${DateFormat('dd-MM-yyyy').format(DateTime.now())}',
-                style: pw.TextStyle(fontWeight: pw.FontWeight.bold),),
+                pw.Text(
+                  'Ref.: ${referenceController.text}',
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                ),
+                pw.Text(
+                  'Date: ${DateFormat('dd-MM-yyyy').format(DateTime.now())}',
+                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+                ),
               ],
             ),
             pw.SizedBox(height: 20),
             pw.Text('To,'),
             pw.Text('$clientPrefix ${clientNameController.text}'),
             if (additionalNames.isNotEmpty) ...[
-              ...additionalNames.map((name) => pw.Text('${name['prefix']} ${name['name']}')),
+              ...additionalNames
+                  .map((name) => pw.Text('${name['prefix']} ${name['name']}')),
             ],
             pw.Text(addressLine1Controller.text),
             pw.Text(addressLine2Controller.text),
@@ -151,17 +163,20 @@ class _CostGeneratorState extends State<CostGenerators> {
             pw.Text(greeting),
             pw.Text(
               'Subject: Cost Sheet for Flat No. ${unitNoController.text}, ${floorController.text}th Floor, EV 9 Square',
-              style: const pw.TextStyle(decoration: pw.TextDecoration.underline),
+              style:
+                  const pw.TextStyle(decoration: pw.TextDecoration.underline),
             ),
             pw.SizedBox(height: 10),
-            pw.Text('Please find below given cost details for the flat booked by you in our project, EV 9 Square ,Plot no 16, sector-9,vashi, Navi Mumbai 400703'),
+            pw.Text(
+                'Please find below given cost details for the flat booked by you in our project, EV 9 Square ,Plot no 16, sector-9,vashi, Navi Mumbai 400703'),
             pw.SizedBox(height: 10),
             pw.RichText(
               text: pw.TextSpan(
                 children: [
                   const pw.TextSpan(text: 'Value of Flat '),
                   pw.TextSpan(
-                    text: formatAllInclusiveValue(double.parse(allInclusiveAmountController.text)),
+                    text: formatAllInclusiveValue(
+                        double.parse(allInclusiveAmountController.text)),
                     style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
                   ),
                   const pw.TextSpan(text: ' inclusive of all.'),
@@ -173,14 +188,17 @@ class _CostGeneratorState extends State<CostGenerators> {
             pw.SizedBox(height: 10),
             _buildPayableTable(accountDetails),
             pw.SizedBox(height: 10),
-            pw.Text('Kindly make arrangements for the payments as agreed by you.'),
+            pw.Text(
+                'Kindly make arrangements for the payments as agreed by you.'),
             pw.SizedBox(height: 10),
             pw.Text('Thanking you,'),
             pw.Text('Yours faithfully,'),
             pw.SizedBox(height: 10),
             pw.Text('For E V Homes Constructions Pvt. Ltd.'),
             pw.SizedBox(height: 35),
-            pw.Text('Authorized Signature', style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
+            pw.Text('Authorized Signature',
+                style:
+                    pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
           ];
         },
       ),
@@ -208,12 +226,22 @@ class _CostGeneratorState extends State<CostGenerators> {
         },
         children: [
           _buildTableHeader(['Particulars', 'Amount', 'Rounded']),
-          _buildTableRow('Agreement Value', calculatedValues['agreementValue']!),
-          _buildTableRow('Stamp duty @ $stampDuty%', calculatedValues['stampDutyAmount']!, rounded: calculatedValues['stampDutyRounded']!),
-          _buildTableRow('Registration', calculatedValues['registrationAmount']!),
+          _buildTableRow(
+              'Agreement Value', calculatedValues['agreementValue']!),
+          _buildTableRow(
+              'Stamp duty @ $stampDuty%', calculatedValues['stampDutyAmount']!,
+              rounded: calculatedValues['stampDutyRounded']!),
+          _buildTableRow(
+              'Registration', calculatedValues['registrationAmount']!),
           _buildTableRow('GST @ 5% inclusive', calculatedValues['gstAmount']!),
-          _buildTableRow('Total', double.parse(allInclusiveAmountController.text), isBold: true),
-          _buildTableRow('Adjusted for Stampduty', calculatedValues['stampDutyAmount']!, rounded: calculatedValues['stampDutyRounded']! - calculatedValues['stampDutyAmount']!, isBold: true),
+          _buildTableRow(
+              'Total', double.parse(allInclusiveAmountController.text),
+              isBold: true),
+          _buildTableRow(
+              'Adjusted for Stampduty', calculatedValues['stampDutyAmount']!,
+              rounded: calculatedValues['stampDutyRounded']! -
+                  calculatedValues['stampDutyAmount']!,
+              isBold: true),
         ],
       ),
     );
@@ -221,33 +249,48 @@ class _CostGeneratorState extends State<CostGenerators> {
 
   pw.TableRow _buildTableHeader(List<String> cells) {
     return pw.TableRow(
-      children: cells.map((cell) => pw.Padding(
-        padding: const pw.EdgeInsets.all(2),
-        child: pw.Text(cell, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9)),
-      )).toList(),
+      children: cells
+          .map((cell) => pw.Padding(
+                padding: const pw.EdgeInsets.all(2),
+                child: pw.Text(cell,
+                    style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold, fontSize: 9)),
+              ))
+          .toList(),
     );
   }
 
-  pw.TableRow _buildTableRow(String particular, double amount, {double? rounded, bool isBold = false}) {
-    final textStyle = pw.TextStyle(fontWeight: isBold ? pw.FontWeight.bold : pw.FontWeight.normal, fontSize: 9);
+  pw.TableRow _buildTableRow(String particular, double amount,
+      {double? rounded, bool isBold = false}) {
+    final textStyle = pw.TextStyle(
+        fontWeight: isBold ? pw.FontWeight.bold : pw.FontWeight.normal,
+        fontSize: 9);
     return pw.TableRow(
       children: [
-        pw.Padding(padding: const pw.EdgeInsets.all(2), child: pw.Text(particular, style: textStyle)),
+        pw.Padding(
+            padding: const pw.EdgeInsets.all(2),
+            child: pw.Text(particular, style: textStyle)),
         pw.Padding(
           padding: const pw.EdgeInsets.all(2),
-          child: pw.Align(alignment: pw.Alignment.center, child: pw.Text(formatCurrency(amount), style: textStyle)),
+          child: pw.Align(
+              alignment: pw.Alignment.center,
+              child: pw.Text(formatCurrency(amount), style: textStyle)),
         ),
         rounded != null
             ? pw.Padding(
                 padding: const pw.EdgeInsets.all(2),
-                child: pw.Align(alignment: pw.Alignment.center, child: pw.Text(formatCurrency(rounded), style: textStyle)),
+                child: pw.Align(
+                    alignment: pw.Alignment.center,
+                    child: pw.Text(formatCurrency(rounded), style: textStyle)),
               )
-            : pw.Padding(padding: const pw.EdgeInsets.all(2), child: pw.Text('')),
+            : pw.Padding(
+                padding: const pw.EdgeInsets.all(2), child: pw.Text('')),
       ],
     );
   }
 
-  pw.Widget _buildPayableTable(Map<String, Map<String, String>> accountDetails) {
+  pw.Widget _buildPayableTable(
+      Map<String, Map<String, String>> accountDetails) {
     final bookingAmount = calculatedValues['agreementValue']! * 0.1;
     final gstAmount = bookingAmount * 0.05;
     final tdsAmount = calculatedValues['agreementValue']! * 0.01;
@@ -262,7 +305,8 @@ class _CostGeneratorState extends State<CostGenerators> {
           2: const pw.FlexColumnWidth(2),
         },
         children: [
-          _buildPayableTableHeader(['Payable Now ', 'Amount', 'Account Details']),
+          _buildPayableTableHeader(
+              ['Payable Now ', 'Amount', 'Account Details']),
           _buildPayableTableRow(
             'Booking amount 10%',
             bookingAmount.ceil().toDouble(),
@@ -275,7 +319,10 @@ class _CostGeneratorState extends State<CostGenerators> {
           ),
           _buildPayableTableRow(
             'Stamp Duty + Registration amount (Full)',
-            (calculatedValues['stampDutyRounded']! + calculatedValues['registrationAmount']!).ceil().toDouble(),
+            (calculatedValues['stampDutyRounded']! +
+                    calculatedValues['registrationAmount']!)
+                .ceil()
+                .toDouble(),
             '${accountDetails['tax']!['accountNo']}\n${accountDetails['tax']!['ifscCode']}\n${accountDetails['tax']!['bankName']}',
           ),
           _buildPayableTableRow(
@@ -285,7 +332,13 @@ class _CostGeneratorState extends State<CostGenerators> {
           ),
           _buildPayableTableRow(
             'Total',
-            (bookingAmount + gstAmount + calculatedValues['stampDutyRounded']! + calculatedValues['registrationAmount']! + tdsAmount).ceil().toDouble(),
+            (bookingAmount +
+                    gstAmount +
+                    calculatedValues['stampDutyRounded']! +
+                    calculatedValues['registrationAmount']! +
+                    tdsAmount)
+                .ceil()
+                .toDouble(),
             '',
             isBold: true,
           ),
@@ -296,21 +349,33 @@ class _CostGeneratorState extends State<CostGenerators> {
 
   pw.TableRow _buildPayableTableHeader(List<String> cells) {
     return pw.TableRow(
-      children: cells.map((cell) => pw.Padding(
-        padding: const pw.EdgeInsets.all(2),
-        child: pw.Text(cell, style: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 9)),
-      )).toList(),
+      children: cells
+          .map((cell) => pw.Padding(
+                padding: const pw.EdgeInsets.all(2),
+                child: pw.Text(cell,
+                    style: pw.TextStyle(
+                        fontWeight: pw.FontWeight.bold, fontSize: 9)),
+              ))
+          .toList(),
     );
   }
 
-  pw.TableRow _buildPayableTableRow(String particular, double amount, String accountDetails, {bool isBold = false}) {
-    final textStyle = pw.TextStyle(fontWeight: isBold ? pw.FontWeight.bold : pw.FontWeight.normal, fontSize: 9);
+  pw.TableRow _buildPayableTableRow(
+      String particular, double amount, String accountDetails,
+      {bool isBold = false}) {
+    final textStyle = pw.TextStyle(
+        fontWeight: isBold ? pw.FontWeight.bold : pw.FontWeight.normal,
+        fontSize: 9);
     return pw.TableRow(
       children: [
-        pw.Padding(padding: const pw.EdgeInsets.all(2), child: pw.Text(particular, style: textStyle)),
+        pw.Padding(
+            padding: const pw.EdgeInsets.all(2),
+            child: pw.Text(particular, style: textStyle)),
         pw.Padding(
           padding: const pw.EdgeInsets.all(2),
-          child: pw.Align(alignment: pw.Alignment.centerRight, child: pw.Text(formatCurrency(amount), style: textStyle)),
+          child: pw.Align(
+              alignment: pw.Alignment.centerRight,
+              child: pw.Text(formatCurrency(amount), style: textStyle)),
         ),
         pw.Padding(
           padding: const pw.EdgeInsets.all(2),
@@ -370,7 +435,8 @@ class _CostGeneratorState extends State<CostGenerators> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildTextField("Unit No", unitNoController, isNumber: true),
+                      _buildTextField("Unit No", unitNoController,
+                          isNumber: true),
                       _buildTextField("Floor", floorController, isNumber: true),
                       Row(
                         children: [
@@ -390,7 +456,8 @@ class _CostGeneratorState extends State<CostGenerators> {
                           const SizedBox(width: 16),
                           Expanded(
                             flex: 3,
-                            child: _buildTextField("Client Name", clientNameController),
+                            child: _buildTextField(
+                                "Client Name", clientNameController),
                           ),
                         ],
                       ),
@@ -398,7 +465,8 @@ class _CostGeneratorState extends State<CostGenerators> {
                         Row(
                           children: [
                             Expanded(
-                              child: _buildTextField("Name", additionalNameController),
+                              child: _buildTextField(
+                                  "Name", additionalNameController),
                             ),
                             const SizedBox(width: 8),
                             SizedBox(
@@ -411,7 +479,8 @@ class _CostGeneratorState extends State<CostGenerators> {
                               ),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.check, color: Colors.green),
+                              icon:
+                                  const Icon(Icons.check, color: Colors.green),
                               onPressed: () {
                                 if (additionalNameController.text.isNotEmpty) {
                                   setState(() {
@@ -429,7 +498,8 @@ class _CostGeneratorState extends State<CostGenerators> {
                         )
                       else
                         IconButton(
-                          icon: const Icon(Icons.add_circle, color: Colors.blue),
+                          icon:
+                              const Icon(Icons.add_circle, color: Colors.blue),
                           onPressed: () {
                             setState(() {
                               showAdditionalNameInput = true;
@@ -437,7 +507,8 @@ class _CostGeneratorState extends State<CostGenerators> {
                           },
                         ),
                       _buildTextField("Reference No", referenceController),
-                      _buildTextField("Carpet Area", carpetAreaController, isNumber: true),
+                      _buildTextField("Carpet Area", carpetAreaController,
+                          isNumber: true),
                       const SizedBox(height: 16),
                       const Text("Project Name: EV 9 Square"),
                       const SizedBox(height: 16),
@@ -452,9 +523,12 @@ class _CostGeneratorState extends State<CostGenerators> {
                         },
                       ),
                       const SizedBox(height: 16),
-                      _buildTextField("All Inclusive Amount", allInclusiveAmountController, isNumber: true),
+                      _buildTextField(
+                          "All Inclusive Amount", allInclusiveAmountController,
+                          isNumber: true),
                       const SizedBox(height: 8),
-                      const Text("GST Percentage: 5%", style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text("GST Percentage: 5%",
+                          style: TextStyle(fontWeight: FontWeight.bold)),
                     ],
                   ),
                 ),
@@ -464,13 +538,17 @@ class _CostGeneratorState extends State<CostGenerators> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildTextField("Flat, House no., Building, Company, Apartment", addressLine1Controller),
-                      _buildTextField("Area, Street, Sector, Village", addressLine2Controller),
+                      _buildTextField(
+                          "Flat, House no., Building, Company, Apartment",
+                          addressLine1Controller),
+                      _buildTextField("Area, Street, Sector, Village",
+                          addressLine2Controller),
                       _buildTextField("Landmark", landmarkController),
                       Row(
                         children: [
                           Expanded(
-                            child: _buildTextField("Pincode", pincodeController, isNumber: true, hintText: "6-digit Pincode"),
+                            child: _buildTextField("Pincode", pincodeController,
+                                isNumber: true, hintText: "6-digit Pincode"),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
@@ -486,13 +564,15 @@ class _CostGeneratorState extends State<CostGenerators> {
                   "Booking Form Photo",
                   Column(
                     children: [
-                      if (_image != null) Image.file(_image!, height: 200, fit: BoxFit.cover),
+                      if (_image != null)
+                        Image.file(_image!, height: 200, fit: BoxFit.cover),
                       const SizedBox(height: 16),
                       Center(
                         child: _buildButton(
                           onPressed: handlePhotoUpload,
                           icon: photoUploaded ? Icons.check : Icons.upload_file,
-                          label: photoUploaded ? "Photo Uploaded" : "Upload Photo",
+                          label:
+                              photoUploaded ? "Photo Uploaded" : "Upload Photo",
                           color: photoUploaded ? Colors.green : Colors.blue,
                         ),
                       ),
@@ -511,7 +591,9 @@ class _CostGeneratorState extends State<CostGenerators> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(entry.key, style: const TextStyle(fontWeight: FontWeight.bold)),
+                              Text(entry.key,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
                               Text(formatCurrency(entry.value)),
                             ],
                           ),
@@ -564,7 +646,8 @@ class _CostGeneratorState extends State<CostGenerators> {
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, {bool isNumber = false, String? hintText}) {
+  Widget _buildTextField(String label, TextEditingController controller,
+      {bool isNumber = false, String? hintText}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextFormField(
@@ -574,35 +657,41 @@ class _CostGeneratorState extends State<CostGenerators> {
           labelText: label,
           hintText: hintText,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter $label';
-          }
-          return null;
-        },
       ),
     );
   }
 
-  Widget _buildDropdown({required String value, required List<String> items, required Function(String?) onChanged, String? label}) {
+  Widget _buildDropdown(
+      {required String value,
+      required List<String> items,
+      required Function(String?) onChanged,
+      String? label}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: DropdownButtonFormField<String>(
         value: value,
         onChanged: onChanged,
-        items: items.map((item) => DropdownMenuItem(value: item, child: Text(item))).toList(),
+        items: items
+            .map((item) => DropdownMenuItem(value: item, child: Text(item)))
+            .toList(),
         decoration: InputDecoration(
           labelText: label,
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
         ),
       ),
     );
   }
 
-  Widget _buildButton({required VoidCallback? onPressed, required IconData icon, required String label, required Color color}) {
+  Widget _buildButton(
+      {required VoidCallback? onPressed,
+      required IconData icon,
+      required String label,
+      required Color color}) {
     return ElevatedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon),

@@ -1,15 +1,21 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
+import 'package:ev_homes/components/animated_pie_chart.dart';
+import 'package:ev_homes/components/loading/loading_square.dart';
+import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
+import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/view_task_page.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:json_path/fun_extra.dart';
+import 'package:provider/provider.dart';
 
-class SalesmangerDashbord extends StatefulWidget {
+class SalesManagerDashboard extends StatefulWidget {
   final String? id;
-  const SalesmangerDashbord({super.key, this.id});
+
+  const SalesManagerDashboard({super.key, this.id});
 
   @override
-  State<SalesmangerDashbord> createState() => _SalesmangerDashbordState();
+  State<SalesManagerDashboard> createState() => _SalesManagerDashboardState();
 }
 
 double leadValue = 200;
@@ -22,466 +28,542 @@ double visitbooking = (booking * 100) / visitValue;
 double onthervisite = (booking * 100) / onthervisit;
 double leadbooking = (booking * 100) / leadValue;
 
-class _SalesmangerDashbordState extends State<SalesmangerDashbord> {
+class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
   bool showNotification = false;
   double notificationHeight = 0;
   String? selectedOption;
 
-  final Map<String, List<PieChartSectionData>> chartData = {
-    "lead_to_visit": [
-      PieChartSectionData(
-        value: visitepercentage,
-        color: Colors.blue,
-        title: 'visit1 ${visitepercentage.toStringAsFixed(1)}%',
-      ),
-      PieChartSectionData(
-        value: 100 - visitepercentage, // Remaining value
-        color: Colors.purple,
-        title: 'Leads ${(100 - visitepercentage).toStringAsFixed(1)}%',
-      ),
-    ],
-    "visit1_to_booking": [
-      PieChartSectionData(
-        value: visitbooking,
-        color: Colors.red,
-        title: 'Booking ${visitbooking.toStringAsFixed(1)}%',
-      ),
-      PieChartSectionData(
-        value: 100 - visitbooking, // Remaining value
-        color: Colors.blue,
-        title: 'Visit1 ${(100 - visitbooking).toStringAsFixed(1)}%',
-      ),
-    ],
-    "visit2_to_booking": [
-      PieChartSectionData(
-        value: onthervisite,
-        color: Colors.green,
-        title: 'Booking ${onthervisite.toStringAsFixed(1)}%',
-      ),
-      PieChartSectionData(
-        value: 100 - onthervisite, // Remaining value
-        color: Colors.pink,
-        title: 'Visit2 ${(100 - onthervisite).toStringAsFixed(1)}%',
-      ),
-    ],
-    "lead_to_booking": [
-      PieChartSectionData(
-        value: onthervisite,
-        color: Colors.brown,
-        title: 'Booking ${onthervisite.toStringAsFixed(1)}%',
-      ),
-      PieChartSectionData(
-        value: 100 - onthervisite, // Remaining value
-        color: Colors.blue,
-        title: 'Leads ${(100 - onthervisite).toStringAsFixed(1)}%',
-      ),
-    ],
-  };
+  bool isLoading = false;
+
+  Future<void> _onRefresh() async {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      // await settingProvider.searchLead();
+      await settingProvider.getTeamLeaderLeads(
+        widget.id ?? settingProvider.loggedAdmin!.reportingTo!.id!,
+      );
+
+      await settingProvider.getMyTarget(
+        widget.id ?? settingProvider.loggedAdmin!.id!,
+      );
+      await settingProvider.getClosingManagerGraph(
+        widget.id ?? settingProvider.loggedAdmin!.id!,
+      );
+      // await settingProvider.getLeadsTeamLeaderGraph(
+      //   widget.id ?? settingProvider.loggedAdmin!.id!,
+      // );
+      // await settingProvider.getPreSaleExecutiveGraph();
+      // await settingProvider.getLeadsFunnelGraph();
+    } catch (e) {
+      // Helper
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _onRefresh();
+  }
+
+  double safeDivision(double numerator, double denominator) {
+    if (denominator == 0) {
+      return 0;
+    }
+    return (numerator / denominator).floorToDouble();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Stack(
-        children: [
-          // Gradient Background
-          Positioned.fill(
-            child: AnimatedGradientBg(),
-          ),
-          Scaffold(
+    final settingProvider = Provider.of<SettingProvider>(context);
+    final teamLeaderLeads = settingProvider.leadsTeamLeader;
+    final target = settingProvider.myTarget;
+    final graphInfo = settingProvider.closingManagerGraph;
+
+    return Stack(
+      children: [
+        const Positioned.fill(
+          child: AnimatedGradientBg(),
+        ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            title: const Text("Dashboard"),
             backgroundColor: Colors.transparent,
-            appBar: AppBar(
-              title: const Text("Dashboard"),
-              backgroundColor: Colors.transparent, // Transparent AppBar
-              elevation: 0, // Remove AppBar shadow
-            ),
-            body: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        width: 10,
+            elevation: 0,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.filter_list),
+                onPressed: () {
+                  showMenu(
+                    context: context,
+                    position: RelativeRect.fromLTRB(
+                      MediaQuery.of(context).size.width - 50,
+                      kToolbarHeight + 10,
+                      0,
+                      0,
+                    ),
+                    items: const [
+                      PopupMenuItem(
+                        value: 'monthly',
+                        child: Text('Monthly'),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.filter_alt),
-                        onPressed: () {
-                          showMenu(
-                            context: context,
-                            position: RelativeRect.fromLTRB(100, 80, 20, 0),
-                            items: const [
-                              PopupMenuItem(
-                                value: 'monthly',
-                                child: Text('Monthly'),
-                              ),
-                              PopupMenuItem(
-                                value: 'quarterly',
-                                child: Text('Quarterly'),
-                              ),
-                              PopupMenuItem(
-                                value: 'semi_annually',
-                                child: Text('Semi-Annually'),
-                              ),
-                              PopupMenuItem(
-                                value: 'annually',
-                                child: Text('Annually'),
-                              ),
-                            ],
-                          ).then((selectedmonth) {
-                            if (selectedmonth != null) {
-                              print('Selected filter: $selectedmonth');
-                            }
-                          });
-                        },
+                      PopupMenuItem(
+                        value: 'quarterly',
+                        child: Text('Quarterly'),
+                      ),
+                      PopupMenuItem(
+                        value: 'semi_annually',
+                        child: Text('Semi-Annually'),
+                      ),
+                      PopupMenuItem(
+                        value: 'annually',
+                        child: Text('Annually'),
+                      ),
+                    ],
+                  ).then((selectedFilter) {
+                    if (selectedFilter != null) {
+                      print('Selected filter: $selectedFilter');
+                    }
+                  });
+                },
+              ),
+            ],
+          ),
+          body: RefreshIndicator(
+            onRefresh: _onRefresh,
+            child: ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            GoRouter.of(context).push(
+                              "/closing-manager-lead-list/total/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                            );
+                          },
+                          child: MyCard(
+                            label: "Leads",
+                            value: teamLeaderLeads.totalItems,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            GoRouter.of(context).push(
+                              "/closing-manager-lead-list/visit/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                            );
+                          },
+                          child: MyCard(
+                            textColor: Colors.green,
+                            label: "Visit 1",
+                            value: teamLeaderLeads.visitCount,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            GoRouter.of(context).push(
+                              "/closing-manager-lead-list/revisit/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                            );
+                          },
+                          child: MyCard(
+                            textColor: Colors.red,
+                            label: "Visit 2",
+                            value: teamLeaderLeads.revisitCount,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            //TODO: closing manager booking
+                            GoRouter.of(context).push(
+                              "/closing-manager-lead-list/booking/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                            );
+                          },
+                          child: MyCard(
+                            textColor: Colors.yellow.shade700,
+                            label: "Booking",
+                            value: teamLeaderLeads.bookingCount,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            GoRouter.of(context).push(
+                              "/closing-manager-lead-list/pending/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                            );
+                          },
+                          child: MyCard(
+                            textColor: Colors.red,
+                            label: "Pending",
+                            value: teamLeaderLeads.pendingCount,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              //TODO: leads route sale manager
-
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //       builder: (context) => SalesmangerLead()),
-                              // );
-                            },
-                            child: MyCard(
-                              label: "Leads",
-                              value: 10,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              //TODO: visit route sale manager
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //       builder: (context) =>
-                              //           SalesmanagerVisitone()),
-                              // );
-                            },
-                            child: MyCard(
-                              textColor: Colors.green,
-                              label: "Visit 1",
-                              value: 5,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              //TODO: revisit route sale manager
-
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //       builder: (context) =>
-                              //           SalesmanagerVisitetwo()),
-                              // );
-                            },
-                            child: MyCard(
-                              textColor: Colors.red,
-                              label: "Visit 2",
-                              value: 3,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              //TODO: booking route sale manager
-
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //       builder: (context) => SalemangerBooking()),
-                              // );
-                            },
-                            child: MyCard(
-                              textColor: Colors.yellow.shade700,
-                              label: "Booking",
-                              value: 2,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: const Color.fromARGB(116, 218, 207, 120),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Column(
-                      children: [
-                        Container(
-                          height: 60,
-                          width: double.infinity,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(154, 255, 254, 245),
-                            borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: Colors.grey.shade400),
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              isExpanded: true,
-                              hint: const Text("Select an option"),
-                              value: selectedOption,
-                              items: const [
-                                DropdownMenuItem(
-                                  value: "lead_to_visit",
-                                  child: Text("Lead to Visit"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "visit1_to_booking",
-                                  child: Text("Visit 1 to Booking"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "visit2_to_booking",
-                                  child: Text("Visit 2 to Booking"),
-                                ),
-                                DropdownMenuItem(
-                                  value: "lead_to_booking",
-                                  child: Text("Lead to Booking"),
-                                ),
-                              ],
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedOption = value;
-                                });
-                              },
-                              icon: const Icon(Icons.arrow_drop_down),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Target",
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
+                          IconButton(
+                            icon: const Icon(Icons.filter_alt),
+                            onPressed: () {
+                              showMenu(
+                                context: context,
+                                position:
+                                    const RelativeRect.fromLTRB(100, 80, 20, 0),
+                                items: const [
+                                  PopupMenuItem(
+                                    value: 'January',
+                                    child: Text('January'),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'February',
+                                    child: Text('February'),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'March',
+                                    child: Text('March'),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'April',
+                                    child: Text('April'),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'May',
+                                    child: Text('May'),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'June',
+                                    child: Text('June'),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'July',
+                                    child: Text('July'),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'August',
+                                    child: Text('August'),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'September',
+                                    child: Text('September'),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'October',
+                                    child: Text('October'),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'November',
+                                    child: Text('November'),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 'December',
+                                    child: Text('December'),
+                                  ),
+                                ],
+                              ).then((selectedmonth) {
+                                if (selectedmonth != null) {
+                                  print('Selected filter: $selectedmonth');
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            InkWell(
+                              onTap: () {},
+                              child: TargetCircle(
+                                number: target?.target.toString() ?? "0",
+                                label: "Target",
+                                backgroundColor: Colors.orange,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            InkWell(
+                              onTap: () {},
+                              child: TargetCircle(
+                                number: target?.achieved.toString() ?? "0",
+                                label: "Achieved",
+                                backgroundColor: Colors.green,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            InkWell(
+                              onTap: () {
+                                final selectedValue = showDialog<int>(
+                                  context: context,
+                                  builder: (context) =>
+                                      AdminCarryForwardDialog(id: "123"),
+                                );
+
+                                if (selectedValue != null) {
+                                  print(
+                                      "Selected Carry Forward Option: $selectedValue");
+                                }
+                              },
+                              child: TargetCircle(
+                                number: target?.carryForward.toString() ?? "0",
+                                label: "Carry Forward",
+                                backgroundColor: Colors.blue,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                          ],
                         ),
-                        if (selectedOption != null)
-                          SizedBox(
-                            height: 250,
-                            width: 400,
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                PieChart(
-                                  PieChartData(
-                                    sections: chartData[selectedOption]!,
-                                    centerSpaceRadius: 70,
-                                    sectionsSpace: 2,
+                      ),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 12.0,
+                        ),
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  //TODO: closing manager client List
+                                  GoRouter.of(context).push(
+                                    "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor:
+                                      const Color.fromARGB(255, 241, 118, 11),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
                                   ),
                                 ),
-                                const Text(
-                                  "Conversion",
+                                child: const Text(
+                                  'Follow Up Satus',
                                   style: TextStyle(
-                                    fontSize: 18,
+                                    color: Colors.white,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: const Color.fromARGB(116, 218, 207, 120),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            const Text(
-                              "Target",
-                              style: TextStyle(
-                                fontSize: 17,
-                                fontWeight: FontWeight.bold,
                               ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.filter_alt),
-                              onPressed: () {
-                                showMenu(
-                                  context: context,
-                                  position:
-                                      RelativeRect.fromLTRB(100, 80, 20, 0),
-                                  items: const [
-                                    PopupMenuItem(
-                                      value: 'January',
-                                      child: Text('January'),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 'February',
-                                      child: Text('February'),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 'March',
-                                      child: Text('March'),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 'April',
-                                      child: Text('April'),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 'May',
-                                      child: Text('May'),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 'June',
-                                      child: Text('June'),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 'July',
-                                      child: Text('July'),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 'August',
-                                      child: Text('August'),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 'September',
-                                      child: Text('September'),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 'October',
-                                      child: Text('October'),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 'November',
-                                      child: Text('November'),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 'December',
-                                      child: Text('April'),
-                                    ),
-                                  ],
-                                ).then((selectedmonth) {
-                                  if (selectedmonth != null) {
-                                    print('Selected filter: $selectedmonth');
-                                  }
-                                });
-                              },
                             ),
                           ],
                         ),
-                        const SizedBox(height: 10),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              InkWell(
-                                onTap: () {},
-                                child: const Target(
-                                  number:
-                                      "20", // Replace the icon with a number
-                                  label: "Target",
-                                  backgroundColor: Colors.orange,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              InkWell(
-                                onTap: () {},
-                                child: const Target(
-                                  number:
-                                      "15", // Replace the icon with a number
-                                  label: "Achieved",
-                                  backgroundColor: Colors.green,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              InkWell(
-                                onTap: () {},
-                                child: const Target(
-                                  number: "5", // Replace the icon with a number
-                                  label: "Carry Forward",
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 12.0,
+                        ),
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  //TODO: closing manager client List
+                                  _showTaskDialog(context);
+                                  // GoRouter.of(context).push(
+                                  //   "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                                  // );
+                                },
+                                style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 12.0),
-                          child: Row(
-                            children: [
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    //TODO: Client list
-                                    // Navigator.push(
-                                    //   context,
-                                    //   MaterialPageRoute(
-                                    //       builder: (context) =>
-                                    //           ManagerClientlist()),
-                                    // );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor:
-                                        Color.fromARGB(255, 241, 118, 11),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 10.0),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12.0),
-                                    ),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
                                   ),
-                                  child: const Text(
-                                    'Follow Up Satus',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                ),
+                                child: const Text(
+                                  'My Task',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Card(
+                  elevation: 4,
+                  shadowColor: Colors.transparent,
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  color: Colors.white.withOpacity(0.3),
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
                       children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            minimumSize: const Size(150, 40),
-                          ),
-                          onPressed: () {
-                            _showTaskDialog(context);
-                          },
-                          child: const Text(
-                            "Task",
-                            style: TextStyle(color: Colors.white), // Text color
-                          ),
+                        Text(
+                          "Lead to Visit 1",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        AnimatedPieChart(
+                          visited: graphInfo.visitCount.toInt(),
+                          notVisited: graphInfo.leadCount.toInt(),
+                          percentage: safeDivision((graphInfo.visitCount * 100),
+                              graphInfo.leadCount),
+                          title: "Visits",
+                          subtitle: "Visit",
+                          notSubtitle: "Not Visit",
+                          visitedColor: Colors.blue,
+                          notVisitedColor: Colors.orange,
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 30,
-                  )
-                ],
-              ),
+                ),
+                Card(
+                  elevation: 4,
+                  shadowColor: Colors.transparent,
+
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  color: Colors.white
+                      .withOpacity(0.3), // Semi-transparent white background
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Visit 1 to Booking",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        AnimatedPieChart(
+                          visited: 60,
+                          notVisited: 40,
+                          percentage: safeDivision(
+                              (graphInfo.bookingCount * 100),
+                              graphInfo.visitCount),
+                          title: "Visits",
+                          subtitle: "Visit",
+                          notSubtitle: "Not Visit",
+                          visitedColor: Colors.green,
+                          notVisitedColor: Colors.red,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  elevation: 4,
+                  shadowColor: Colors.transparent,
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  color: Colors.white.withOpacity(0.3),
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Visit 2 to Booking",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        AnimatedPieChart(
+                          visited: graphInfo.bookingCount.toInt(),
+                          notVisited: graphInfo.visit2Count.toInt(),
+                          percentage: safeDivision(
+                              (graphInfo.bookingCount * 100),
+                              graphInfo.visit2Count),
+                          title: "Bookings",
+                          subtitle: "Visit",
+                          notSubtitle: "Not Visit",
+                          visitedColor: Colors.purple,
+                          notVisitedColor: Colors.amber,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  elevation: 4,
+                  shadowColor: Colors.transparent,
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  color: Colors.white.withOpacity(0.3),
+                  child: Padding(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        Text(
+                          "Lead to Booking",
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10),
+                        AnimatedPieChart(
+                          visited: graphInfo.bookingCount.toInt(),
+                          notVisited: graphInfo.leadCount.toInt(),
+                          percentage: safeDivision(
+                              (graphInfo.bookingCount * 100),
+                              graphInfo.leadCount),
+                          title: "Bookings",
+                          subtitle: "Visit",
+                          notSubtitle: "Not Visit",
+                          visitedColor: Colors.teal,
+                          notVisitedColor: Colors.pink,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+        if (isLoading) const LoadingSquare(),
+      ],
     );
   }
 }
@@ -528,20 +610,24 @@ class MyCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text(
-            value.toString(),
-            style: TextStyle(
-              color: textColor ?? Colors.black,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
+          FittedBox(
+            child: Text(
+              value.toString(),
+              style: TextStyle(
+                color: textColor ?? Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-          Text(
-            label,
-            style: TextStyle(
-              color: textColor ?? Colors.black,
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
+          FittedBox(
+            child: Text(
+              label,
+              style: TextStyle(
+                color: textColor ?? Colors.black,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
         ],
@@ -550,12 +636,12 @@ class MyCard extends StatelessWidget {
   }
 }
 
-class Target extends StatelessWidget {
+class TargetCircle extends StatelessWidget {
   final String number; // Replace the icon with number
   final String label;
   final Color backgroundColor;
 
-  const Target({
+  const TargetCircle({
     required this.number,
     required this.label,
     required this.backgroundColor,
@@ -713,12 +799,12 @@ DataCell _buildNavigableDataCell(BuildContext context, String text) {
   return DataCell(
     GestureDetector(
       onTap: () {
-        //TODO: Client details route sale manager
+        //TODO: closing manager Client details
 
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(
-        //     builder: (context) => const ManagerClientDetails(),
+        //     builder: (context) => const ClientDetails(),
         //   ),
         // );
       },
@@ -750,34 +836,118 @@ void _showTaskDialog(BuildContext context) {
                 ),
               ),
               const SizedBox(height: 10),
-              const Expanded(
+              Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ListTile(
-                        leading: Icon(Icons.check_circle, color: Colors.green),
-                        title: Text("Complete Report"),
+                        leading: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            const Icon(Icons.check_circle, color: Colors.green),
+                            Positioned(
+                              top: -4,
+                              right: -4,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Text(
+                                  "11",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        title: const Text("First Call"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ViewTaskPage(),
+                            ),
+                          );
+                        },
                       ),
                       ListTile(
-                        leading: Icon(Icons.task_alt, color: Colors.blue),
-                        title: Text("Schedule Meeting"),
+                        leading: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            const Icon(Icons.task_alt, color: Colors.blue),
+                            Positioned(
+                              top: -4,
+                              right: -4,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Text(
+                                  "10",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        title: const Text("Follow-Up Call"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ViewTaskPage(),
+                            ),
+                          );
+                        },
                       ),
                       ListTile(
-                        leading: Icon(Icons.note, color: Colors.orange),
-                        title: Text("Review Notes"),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.email, color: Colors.red),
-                        title: Text("Send Emails"),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.add_alert, color: Colors.purple),
-                        title: Text("Set Reminder"),
-                      ),
-                      ListTile(
-                        leading: Icon(Icons.update, color: Colors.teal),
-                        title: Text("Update Database"),
+                        leading: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            const Icon(Icons.note, color: Colors.orange),
+                            Positioned(
+                              top: -4,
+                              right: -4,
+                              child: Container(
+                                padding: const EdgeInsets.all(2),
+                                decoration: const BoxDecoration(
+                                  color: Colors.red,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Text(
+                                  "4",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        title: const Text("Schedule Meeting"),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ViewTaskPage(),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -797,6 +967,120 @@ void _showTaskDialog(BuildContext context) {
                 ),
               ),
             ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
+void _showAssignTaskDialog(BuildContext context) {
+  String? selectedAssignee; // Variable for dropdown selection
+  final subjectController = TextEditingController();
+  final taskNameController = TextEditingController();
+  final taskDetailsController = TextEditingController();
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Assign Task",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text("Subject"),
+                const SizedBox(height: 5),
+                TextField(
+                  controller: subjectController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text("Task Name"),
+                const SizedBox(height: 5),
+                TextField(
+                  controller: taskNameController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text("Task Details"),
+                const SizedBox(height: 5),
+                TextField(
+                  controller: taskDetailsController,
+                  maxLines: 3,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text("Assign To"),
+                const SizedBox(height: 5),
+                DropdownButtonFormField<String>(
+                  value: selectedAssignee,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  items: ["John Doe", "Jane Smith", "Alex Brown", "Maria Lee"]
+                      .map((name) => DropdownMenuItem(
+                            value: name,
+                            child: Text(name),
+                          ))
+                      .toList(),
+                  onChanged: (value) {
+                    selectedAssignee = value;
+                  },
+                ),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close dialog
+                      },
+                      child: const Text("Cancel"),
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Close dialog
+                      },
+                      child: const Text("Submit"),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       );

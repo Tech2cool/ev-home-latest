@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class AnimatedPieChart extends StatefulWidget {
   final int visited;
   final int notVisited;
+  final double? percentage;
   final String title;
   final String notSubtitle;
   final String subtitle;
@@ -16,6 +17,7 @@ class AnimatedPieChart extends StatefulWidget {
     required this.notVisited,
     required this.title,
     required this.subtitle,
+    this.percentage,
     required this.notSubtitle,
     this.visitedColor = Colors.green,
     this.notVisitedColor = Colors.pink,
@@ -126,7 +128,7 @@ class _AnimatedPieChartState extends State<AnimatedPieChart>
                     duration: const Duration(milliseconds: 1000),
                     builder: (context, value, child) {
                       return Text(
-                        '$value',
+                        '${widget.percentage ?? value}%',
                         style: const TextStyle(
                           fontSize: 24, // Reduced from 36
                           fontWeight: FontWeight.bold,

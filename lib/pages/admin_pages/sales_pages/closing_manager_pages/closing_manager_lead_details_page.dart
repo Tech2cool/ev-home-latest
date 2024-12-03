@@ -27,6 +27,8 @@ class _ClosingManagerLeadDetailsPageState
   bool showNotification = false;
   bool showScheduleMeeting = false;
   final TextEditingController _notificationController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _templateController = TextEditingController();
 
   Future<void> _pickImages() async {
     final List<XFile> images = await _picker.pickMultiImage();
@@ -47,11 +49,13 @@ class _ClosingManagerLeadDetailsPageState
     showDialog(
       context: context,
       builder: (context) {
-        return Dialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12.0),
+        return SingleChildScrollView(
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: _buildNotificationSection(),
           ),
-          child: _buildNotificationSection(),
         );
       },
     );
@@ -96,6 +100,135 @@ class _ClosingManagerLeadDetailsPageState
       //   ),
       // );
     }
+  }
+
+  void _showNotificationPreview() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return SingleChildScrollView(
+          child: Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Notification Preview',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Title
+                  const Text(
+                    'Title:',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    _titleController.text,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Message
+                  const Text(
+                    'Message:',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    _notificationController.text,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Attached Files
+                  if (_selectedImages.isNotEmpty)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Attached Files:',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        SizedBox(
+                          height: 100,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: _selectedImages.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: Image.file(
+                                  File(_selectedImages[index].path),
+                                  width: 200,
+                                  height: 400,
+                                  fit: BoxFit.fill,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(height: 16),
+
+                  // Template
+                  const Text(
+                    'Template:',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    _templateController.text,
+                    style: const TextStyle(fontSize: 16),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Close Button
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.indigo[600],
+                      // padding: const EdgeInsets.symmetric(
+                      //     horizontal: 15, vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+                    child: Center(
+                      child: const Text(
+                        'Close Preview',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   void _showAssignTaskDialog(BuildContext context) {
@@ -723,6 +856,16 @@ class _ClosingManagerLeadDetailsPageState
           ),
           const SizedBox(height: 16),
           TextField(
+            controller: _titleController,
+            decoration: InputDecoration(
+              hintText: 'Enter Title',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          TextField(
             controller: _notificationController,
             maxLines: 3,
             decoration: InputDecoration(
@@ -750,42 +893,67 @@ class _ClosingManagerLeadDetailsPageState
             ],
           ),
           const SizedBox(height: 16),
-          if (_selectedImages.isNotEmpty)
-            SizedBox(
-              height: 100,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: _selectedImages.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8),
-                    child: Image.file(
-                      File(_selectedImages[index].path),
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  );
-                },
-              ),
-            ),
-          const SizedBox(height: 16),
-          // Center(
-          //   child: ElevatedButton(
-          //     onPressed: _submitAppointment,
-          //     child: const Text(
-          //       'Submit Appointmentt',
-          //       style: TextStyle(
-          //         color: Colors.white,
-          //       ),
-          //     ),
-          //     style: ElevatedButton.styleFrom(
-          //       backgroundColor: Colors.indigo,
-          //       padding:
-          //           const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          // if (_selectedImages.isNotEmpty)
+          //   SizedBox(
+          //     height: 100,
+          //     child: ListView.builder(
+          //       scrollDirection: Axis.horizontal,
+          //       itemCount: _selectedImages.length,
+          //       itemBuilder: (context, index) {
+          //         return Padding(
+          //           padding: const EdgeInsets.only(right: 8),
+          //           child: Image.file(
+          //             File(_selectedImages[index].path),
+          //             width: 100,
+          //             height: 100,
+          //             fit: BoxFit.cover,
+          //           ),
+          //         );
+          //       },
           //     ),
           //   ),
-          // ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: _templateController,
+            decoration: InputDecoration(
+              hintText: 'Enter Template',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {}, // Add your notification submit logic here
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.indigo[600],
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 25, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                ),
+                child: const Text(
+                  'Submit Notification',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 16),
+              IconButton(
+                iconSize: 30,
+                icon: const Icon(Icons.remove_red_eye),
+                color: Colors.indigo[600],
+                onPressed: _showNotificationPreview,
+              ),
+            ],
+          ),
         ],
       ),
     );

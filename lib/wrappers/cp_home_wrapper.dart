@@ -7,6 +7,7 @@ import 'package:ev_homes/pages/cp_pages/home_page.dart';
 import 'package:ev_homes/pages/customer_pages/emi_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:video_player/video_player.dart';
 
 class CpHomeWrapper extends StatefulWidget {
   const CpHomeWrapper({super.key});
@@ -22,20 +23,20 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
   late AnimationController _animationController;
   late Animation<double> _animation;
   late Animation<double> _iconAnimation;
-
-  final List<Widget> _pages = [
-    const CpHomeScreen(),
-    const DashboardScreen(),
-    const ChatScreen(),
-    const PerformanceScreen(),
-  ];
+  late VideoPlayerController _videoPlayerController;
+  DraggableScrollableController controller = DraggableScrollableController();
+  void goback() {
+    setState(() {
+      _currentIndex = 0;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      reverseDuration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 1200),
+      reverseDuration: const Duration(milliseconds: 1200),
       vsync: this,
     );
     _animation = CurvedAnimation(
@@ -43,11 +44,20 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
       curve: Curves.easeInOut,
     );
     _iconAnimation = Tween<double>(begin: 0, end: 0.125).animate(_animation);
+
+    _videoPlayerController =
+        VideoPlayerController.asset('assets/video/blue_bg.mp4')
+          ..initialize().then((_) {
+            _videoPlayerController.setLooping(true);
+            _videoPlayerController.play();
+            setState(() {});
+          });
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _videoPlayerController.dispose();
     super.dispose();
   }
 
@@ -64,13 +74,41 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _pages = [
+      const CpHomeScreen(),
+      const DashboardScreen(),
+      ChatScreen(
+        goBack: goback,
+      ),
+      const PerformanceScreen(),
+    ];
+
     return Scaffold(
       body: Stack(
         children: [
-          _pages[_currentIndex],
-          if (_isMenuVisible) _buildBottomSheet(),
-          _buildBottomNavBar(),
-          _buildFloatingActionButton(),
+          Expanded(
+            child: IndexedStack(
+              index: _currentIndex,
+              children: [
+                ..._pages,
+
+                // _buildFloatingActionButton(),
+              ],
+            ),
+          ),
+          if (_isMenuVisible) ...[
+            GestureDetector(
+              onTap: _toggleMenu,
+              child: Container(
+                color: Colors.transparent,
+              ),
+            ),
+            _buildBottomSheet(controller),
+          ],
+          if (_currentIndex != 2) ...[
+            _buildBottomNavBar(),
+            _buildFloatingActionButton(),
+          ],
         ],
       ),
     );
@@ -97,10 +135,10 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            _buildNavItem("Home", FluentIcons.home_20_regular, 0),
+            _buildNavItem("Home", FluentIcons.home_12_filled, 0),
             _buildNavItem("Dashboard", Icons.dashboard, 1),
             _buildNavItem("Performance", Icons.directions_walk_outlined, 3),
-            _buildNavItem("Chat", FluentIcons.chat_empty_20_regular, 2),
+            _buildNavItem("Chat", FluentIcons.chat_12_filled, 2),
           ],
         ),
       ),
@@ -164,8 +202,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
-                      color:
-                          const Color.fromARGB(255, 133, 0, 0).withOpacity(0.8),
+                      color: Color.fromARGB(255, 133, 0, 0).withOpacity(0.8),
                       blurRadius: 2,
                       spreadRadius: 1,
                       offset: const Offset(0, 4),
@@ -187,86 +224,101 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
     );
   }
 
-  Widget _buildBottomSheet() {
+  Widget _buildBottomSheet(DraggableScrollableController contr) {
     return DraggableScrollableSheet(
+      controller: contr,
       initialChildSize: 0.5, // Initial size of the sheet when displayed
       minChildSize: 0, // Minimum size the sheet can be dragged down to
       maxChildSize: 0.6, // Maximum size the sheet can be dragged up to
       builder: (BuildContext context, ScrollController scrollController) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                spreadRadius: 2,
-              ),
-            ],
-          ),
-          child: SingleChildScrollView(
-            controller: scrollController, // Attach scrollController
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildActionCard(
-                        'Enquiry Form',
-                        Icons.description,
-                        'Create a new enquiry',
-                        () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const CpEnquiryFormScreen())),
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildActionCard(
-                        'Client Tagging',
-                        Icons.label,
-                        'Tag your clients',
-                        () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ClientTaggingForm())),
-                      ),
-                    ),
-                  ],
+        return NotificationListener<DraggableScrollableNotification>(
+          onNotification: (notification) {
+            if (notification.extent == notification.minExtent) {
+              if (_isMenuVisible) {
+                setState(() {
+                  _isMenuVisible = false;
+                  _animationController.reverse();
+                });
+              }
+            }
+            return true;
+          },
+          child: Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 10,
+                  spreadRadius: 2,
                 ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildActionCard(
-                        'EMI Calculator',
-                        Icons.calculate,
-                        'Calculate your EMI',
-                        () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const EmiCalculator())),
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildActionCard(
-                        'Settings',
-                        Icons.settings,
-                        'Adjust app settings',
-                        () {
-                          // Navigate to Settings screen
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                    height: 100), // Extra space to account for the navigation b
               ],
+            ),
+            child: SingleChildScrollView(
+              controller: scrollController, // Attach scrollController
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildActionCard(
+                          'Enquiry Form',
+                          Icons.description,
+                          'Create a new enquiry',
+                          () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const CpEnquiryFormScreen())),
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildActionCard(
+                          'Client Tagging',
+                          Icons.label,
+                          'Tag your clients',
+                          () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ClientTaggingForm())),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildActionCard(
+                          'EMI Calculator',
+                          Icons.calculate,
+                          'Calculate your EMI',
+                          () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const EmiCalculator())),
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildActionCard(
+                          'Settings',
+                          Icons.settings,
+                          'Adjust app settings',
+                          () {
+                            // Navigate to Settings screen
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                      height:
+                          100), // Extra space to account for the navigation bar
+                ],
+              ),
             ),
           ),
         );

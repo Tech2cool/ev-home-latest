@@ -62,8 +62,8 @@ class _OfferPageState extends State<OfferPage> {
                     fit: StackFit.expand,
                     children: [
                       // Keep the image but move it within the app bar
-                      Image.asset(
-                        'assets/images/marina10.jpg',
+                      Image.network(
+                        'http://cdn.evhomes.tech/31622aa1-961a-4913-88e2-5b2e754bd651-IMG-20241204-WA0008.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6IjMxNjIyYWExLTk2MWEtNDkxMy04OGUyLTViMmU3NTRiZDY1MS1JTUctMjAyNDEyMDQtV0EwMDA4LmpwZyIsImlhdCI6MTczMzMxMDk2OH0.6I8OkFM4iKcw8AXZltgB6iZQoXTSZZzsv9cjU_Pqafw',
                         fit: BoxFit.cover,
                       ),
                       Container(

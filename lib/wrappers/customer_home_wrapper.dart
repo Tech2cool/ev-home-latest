@@ -45,7 +45,7 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
         Tween<double>(begin: 0, end: 0.125).animate(_animationController);
 
     _videoPlayerController =
-        VideoPlayerController.asset('assets/video/orange_bg.mp4')
+        VideoPlayerController.asset('assets/video/orange_bg.mov')
           ..initialize().then((_) {
             _videoPlayerController.setLooping(true);
             _videoPlayerController.play();

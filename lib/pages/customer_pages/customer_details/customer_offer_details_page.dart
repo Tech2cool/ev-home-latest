@@ -34,8 +34,8 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
     Offer(
       title: "New Project!!",
       images: [
-        'assets/images/whats_new_1.jpeg',
-        'assets/images/whats_new_2.jpeg',
+        'http://cdn.evhomes.tech/074b8d14-4026-4a58-9e6d-5a9b6ced8b9a-IMG-20241204-WA0013.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6IjA3NGI4ZDE0LTQwMjYtNGE1OC05ZTZkLTVhOWI2Y2VkOGI5YS1JTUctMjAyNDEyMDQtV0EwMDEzLmpwZyIsImlhdCI6MTczMzMxMTY4N30.rpTErQ8AjcA0trXr0s3nqrw-QU1juctPNWRIVaIIttM',
+        'http://cdn.evhomes.tech/b5c3df96-d7bd-4e87-9525-25615654d688-IMG-20241204-WA0014.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImI1YzNkZjk2LWQ3YmQtNGU4Ny05NTI1LTI1NjE1NjU0ZDY4OC1JTUctMjAyNDEyMDQtV0EwMDE0LmpwZyIsImlhdCI6MTczMzMxMTc3MH0.OVLnPp4mCfiHMgTtuGODn3yMQB_sXecQS9pYg643gw4',
         'assets/images/mb3.jpg'
       ],
       description: "Grab the opportunity and win high offers on booking.",
@@ -44,8 +44,8 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
     Offer(
       title: "Get 20% off on booking",
       images: [
-        'assets/images/whats_new_2.jpeg',
-        'assets/images/whats_new_2.jpeg',
+        'http://cdn.evhomes.tech/b5c3df96-d7bd-4e87-9525-25615654d688-IMG-20241204-WA0014.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImI1YzNkZjk2LWQ3YmQtNGU4Ny05NTI1LTI1NjE1NjU0ZDY4OC1JTUctMjAyNDEyMDQtV0EwMDE0LmpwZyIsImlhdCI6MTczMzMxMTc3MH0.OVLnPp4mCfiHMgTtuGODn3yMQB_sXecQS9pYg643gw4',
+        'http://cdn.evhomes.tech/b5c3df96-d7bd-4e87-9525-25615654d688-IMG-20241204-WA0014.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImI1YzNkZjk2LWQ3YmQtNGU4Ny05NTI1LTI1NjE1NjU0ZDY4OC1JTUctMjAyNDEyMDQtV0EwMDE0LmpwZyIsImlhdCI6MTczMzMxMTc3MH0.OVLnPp4mCfiHMgTtuGODn3yMQB_sXecQS9pYg643gw4',
       ],
       description: "Grab the opportunity and win high offers on booking.",
       terms: "Terms and conditions apply. Valid until 30th September only",
@@ -146,7 +146,7 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(
                                 10), // Slight rounding of image
-                            child: Image.asset(
+                            child: Image.network(
                               offer.images[0],
                               height: 120, // Adjust the height of the image
                               width: 120, // Adjust the width of the image

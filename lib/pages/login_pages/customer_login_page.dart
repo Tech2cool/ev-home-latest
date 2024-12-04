@@ -90,11 +90,14 @@ class _LoginPageState extends State<LoginPagee>
                     width: screenWidth,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage('assets/images/1.png'),
+                        image: NetworkImage(
+                          'https://cdn.evhomes.tech/eb5fe3bd-95cd-4c84-af13-3d211c8b1e18-1.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImViNWZlM2JkLTk1Y2QtNGM4NC1hZjEzLTNkMjExYzhiMWUxOC0xLnBuZyIsImlhdCI6MTczMDM3MjI2M30.Ylp0hKw7c6fMEuWdjMQw64umeDkQkd2QgLZM-Z_RfKY',
+                        ),
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 3),
                   const Center(
                     child: Text(

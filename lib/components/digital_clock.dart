@@ -35,7 +35,7 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: ColorScheme.dark(
-              primary: Colors.tealAccent,
+              primary: Colors.indigo,
               onPrimary: Colors.black,
               surface: Colors.grey[850]!,
               onSurface: Colors.white,
@@ -76,12 +76,12 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Colors.grey[900]!, Colors.grey[850]!],
+          colors: [Colors.white!, Colors.white!],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
+            color: const Color.fromARGB(255, 255, 251, 251).withOpacity(0.3),
             blurRadius: 30,
             spreadRadius: 5,
           ),
@@ -96,7 +96,7 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
               const Text(
                 'Select Date & Time',
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -105,7 +105,7 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
                 children: [
                   const Text(
                     '24h',
-                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                    style: TextStyle(color: Colors.black, fontSize: 14),
                   ),
                   const SizedBox(width: 2),
                   Switch(
@@ -115,8 +115,8 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
                         _is24HourFormat = value;
                       });
                     },
-                    activeColor: Colors.tealAccent,
-                    activeTrackColor: Colors.tealAccent.withOpacity(0.5),
+                    activeColor: Colors.indigo,
+                    activeTrackColor: Colors.indigo.withOpacity(0.5),
                   ),
                 ],
               ),
@@ -135,7 +135,7 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.calendar_today, color: Colors.tealAccent),
+                const Icon(Icons.calendar_today, color: Colors.indigo),
                 const SizedBox(width: 8),
                 Text(
                   DateFormat('MMM d, y').format(_selectedDateTime),
@@ -159,9 +159,9 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
               const Text(
                 ':',
                 style: TextStyle(
-                  fontSize: 36,
+                  fontSize: 26,
                   fontWeight: FontWeight.bold,
-                  color: Colors.tealAccent,
+                  color: Colors.indigo,
                 ),
               ),
               const SizedBox(width: 16),
@@ -185,7 +185,7 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
             style: const TextStyle(
               fontSize: 48,
               fontWeight: FontWeight.bold,
-              color: Colors.tealAccent,
+              color: Colors.indigo,
             ),
           ),
           const SizedBox(height: 8),
@@ -193,17 +193,17 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
             DateFormat('MMMM d, y').format(_selectedDateTime),
             style: const TextStyle(
               fontSize: 18,
-              color: Colors.white70,
+              color: Colors.black,
             ),
           ),
           const SizedBox(height: 24),
           ElevatedButton(
             onPressed: () => widget.onDateTimeChanged(_selectedDateTime),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.tealAccent,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+              backgroundColor: Colors.indigo,
+              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 13),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(30),
               ),
             ),
             child: const Text(
@@ -211,7 +211,7 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
           ),
@@ -244,7 +244,7 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: value == index
-                    ? Colors.tealAccent.withOpacity(0.2)
+                    ? Colors.indigo.withOpacity(0.2)
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -261,7 +261,7 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
                   fontSize: 24,
                   fontWeight:
                       value == index ? FontWeight.bold : FontWeight.normal,
-                  color: value == index ? Colors.tealAccent : Colors.white,
+                  color: value == index ? Colors.indigo : Colors.black,
                 ),
               ),
             );
@@ -285,7 +285,7 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: Colors.tealAccent.withOpacity(0.2),
+          color: Colors.indigo.withOpacity(0.2),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(
@@ -293,7 +293,7 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.tealAccent,
+            color: Colors.indigo,
           ),
         ),
       ),

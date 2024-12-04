@@ -77,11 +77,12 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Stack(
+                      
                       children: [
                         GestureDetector(
-                          onTap: () {
-                            GoRouter.of(context).push("/admin-profile");
-                          },
+                          // onTap: () {
+                          //   GoRouter.of(context).push("/admin-profile");
+                          // },
                           child: Container(
                             width: 60,
                             height: 60,

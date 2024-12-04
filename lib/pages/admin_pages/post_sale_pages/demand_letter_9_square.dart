@@ -1,3 +1,4 @@
+import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:flutter/material.dart';
 import 'package:ev_homes/core/models/customer_payment.dart';
 import 'package:ev_homes/core/services/api_service.dart';
@@ -52,7 +53,7 @@ class _DemandLetterState extends State<DemandLetter> {
   double remainingGst = 0.0;
   double remainingTds = 0.0;
 
-  Payment? getpayment;
+  PostSaleLead? getpayment;
 
   Map<String, double>? calculatedValues;
   String bankTableOption = 'bookingAmount';
@@ -310,7 +311,7 @@ class _DemandLetterState extends State<DemandLetter> {
                     Row(
                       children: [
                         Expanded(
-                          child: _buildTextField(
+                          child: _buildTextField( 
                             controller: additionalNameController,
                             label: 'Additional Name',
                             icon: Icons.person_add,
@@ -785,23 +786,24 @@ class _DemandLetterState extends State<DemandLetter> {
       setState(() {
         flatNoController.text = '$selectedFloor$selectedUnit';
       });
-      final res = await ApiService().getPaymentbyFlat(
-        "$selectedFloor$selectedUnit",
-      );
+      final res = await ApiService()
+          .getPostSaleLeadByFlat("$selectedFloor$selectedUnit");
+
       setState(() {
         getpayment = res;
-        carpetAreaController.text = res?.carpetArea ?? "";
-        clientNameController.text = res?.customerName ?? "";
+        carpetAreaController.text = res?.carpetArea?.toString() ?? '';
+        clientNameController.text =
+            '${res?.firstName ?? ""} ${res?.lastName ?? ""}';
         phoneController.text = res?.phoneNumber.toString() ?? "";
-        addressLine1Controller.text = res?.address1 ?? "";
-        addressLine2Controller.text = res?.address2 ?? "";
-        cityController.text = res?.city ?? "";
-        pincodeController.text = res?.pincode.toString() ?? "";
-        netAmountController.text = res?.bookingAmt.toString() ?? "";
-        cgstSgstController.text = res?.cgst.toString() ?? "";
-        totalAmountController.text = res?.amtReceived.toString() ?? "";
-        allInclusiveController.text = res?.allinclusiveamt.toString() ?? "";
-        tdsController.text = res?.tds.toString() ?? "";
+        addressLine1Controller.text = res?.address ?? "";
+        addressLine2Controller.text = res?.address ?? "";
+        // cityController.text = res?.city ?? "";
+        // pincodeController.text = res?.pincode.toString() ?? "";
+        netAmountController.text = res?.netAmount.toString() ?? "";
+        cgstSgstController.text = res?.cgstAmount.toString() ?? "";
+        totalAmountController.text = res?.totalAmount.toString() ?? "";
+        allInclusiveController.text = res?.allInclusiveAmount.toString() ?? "";
+        tdsController.text = res?.tdsAmount.toString() ?? "";
       });
     }
   }

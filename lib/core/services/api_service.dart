@@ -692,6 +692,32 @@ class ApiService {
     }
   }
 
+  Future<PostSaleLead?> getPostSaleLeadByFlat(String unitNo) async {
+    try {
+      final Response response =
+          await _dio.get('/post-sale-lead-by-flat?unitNo=$unitNo');
+      final Map<String, dynamic> data = response.data;
+      final items = data['data'];
+
+      return PostSaleLead.fromJson(items);
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+        print("pass 2");
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
+      print("pass 3");
+      return null;
+    }
+  }
+
   Future<PostSaleLead?> getBookingByFlat(String flatNo) async {
     try {
       final Response response = await _dio.get('/post-sale-lead-by-id/$flatNo');
@@ -772,6 +798,32 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
+
+      Helper.showCustomSnackBar(errorMessage);
+      return null;
+    }
+  }
+
+  Future<Employee?> getReportingTo(String id) async {
+    try {
+      final Response response = await _dio.get('/employee-reporting/$id');
+      print("pass1");
+      final Map<String, dynamic> data = response.data["data"];
+      print(response.data);
+      final Employee employee = Employee.fromMap(data);
+      print("pass2");
+      return employee;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+      print("pass3");
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+      print("pass4");
 
       Helper.showCustomSnackBar(errorMessage);
       return null;

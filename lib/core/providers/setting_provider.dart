@@ -326,6 +326,13 @@ class SettingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getReportingTo(String id) async {
+    final resp = await _apiService.getReportingTo(id);
+    if (resp == null) return;
+    await getEmployess();
+    notifyListeners();
+  }
+
   Future<void> addEmployee(
     BuildContext context,
     Map<String, dynamic> data,

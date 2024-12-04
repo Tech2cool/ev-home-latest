@@ -132,26 +132,26 @@ class _AdminHomePage2State extends State<AdminHomePage>
           size: 26,
         ),
         title: const Text(
-          "EV Home Peoples",
+          "EV Home People",
           style: TextStyle(
             fontSize: 18,
             color: Colors.white,
           ),
         ),
-        actions: const [
-          FaIcon(
-            FontAwesomeIcons.whatsapp,
-            size: 26,
-            color: Colors.white,
-          ),
-          SizedBox(width: 10),
-          Icon(
-            Icons.notifications_none_outlined,
-            color: Colors.white,
-            size: 26,
-          ),
-          SizedBox(width: 10),
-        ],
+        // actions: const [
+        //   FaIcon(
+        //     FontAwesomeIcons.whatsapp,
+        //     size: 26,
+        //     color: Colors.white,
+        //   ),
+        //   SizedBox(width: 10),
+        //   Icon(
+        //     Icons.notifications_none_outlined,
+        //     color: Colors.white,
+        //     size: 26,
+        //   ),
+        //   SizedBox(width: 10),
+        // ],
       ),
       // Drawer
       drawer: Drawer(
@@ -227,28 +227,37 @@ class _AdminHomePage2State extends State<AdminHomePage>
                       GoRouter.of(context).push("/admin-profile");
                     },
                   ),
-                  ListTile(
-                    leading: const Icon(Icons.info),
-                    title: const Text("About"),
-                    onTap: () {
-                      Navigator.of(context).pop(); // Close the drawer
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.settings),
-                    title: const Text("Settings"),
-                    onTap: () {
-                      Navigator.of(context).pop(); // Close the drawer
-                    },
-                  ),
+                  // ListTile(
+                  //   leading: const Icon(Icons.info),
+                  //   title: const Text("About"),
+                  //   onTap: () {
+                  //     Navigator.of(context).pop(); // Close the drawer
+                  //   },
+                  // ),
+                  // ListTile(
+                  //   leading: const Icon(Icons.settings),
+                  //   title: const Text("Settings"),
+                  //   onTap: () {
+                  //     Navigator.of(context).pop(); // Close the drawer
+                  //   },
+                  // ),
                   ListTile(
                     leading: const Icon(Icons.logout),
-                    title: const Text("Logout"),
+                    title: const Text("Log out"),
                     onTap: () async {
-                      await SharedPrefService.deleteUser();
-                      if (context.mounted) {
-                        GoRouter.of(context).pushReplacement("/auth-wrapper");
-                      }
+                      settingProvider.logoutUser(context);
+                      //     child: const Text(
+                      //       "Logout",
+                      //       style: TextStyle(
+                      //         color: Colors.white,
+                      //         fontSize: 12,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // await SharedPrefService.deleteUser();
+                      // if (context.mounted) {
+                      //   GoRouter.of(context).pushReplacement("/auth-wrapper");
+                      // }
                     },
                   ),
                 ],

@@ -256,6 +256,7 @@ class _ClosingManagerLeadDetailsPageState
       listen: false,
     );
     final loggedUser = settingProvider.loggedAdmin?.id;
+    
     String? selectedSubject;
     Employee? selectedAssignee;
     final subjectController = TextEditingController();

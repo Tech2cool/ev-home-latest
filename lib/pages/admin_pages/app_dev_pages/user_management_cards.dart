@@ -1,10 +1,15 @@
-import 'package:ev_homes/pages/admin_pages/app_dev_pages/analytic_dev_cards.dart';
-import 'package:ev_homes/pages/admin_pages/app_dev_pages/user_management_cards.dart';
+import 'package:ev_homes/pages/admin_pages/admin_management/manage_channel_partners.dart';
+import 'package:ev_homes/pages/admin_pages/admin_management/manage_employee.dart';
 import 'package:flutter/material.dart';
 
-class AppDevDashboard extends StatelessWidget {
-  const AppDevDashboard({super.key});
+class UserManagementCards extends StatefulWidget {
+  const UserManagementCards({super.key});
 
+  @override
+  State<UserManagementCards> createState() => UserManagementCardsState();
+}
+
+class UserManagementCardsState extends State<UserManagementCards> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +36,7 @@ class AppDevDashboard extends StatelessWidget {
               children: [
                 const SizedBox(height: 80),
                 const Text(
-                  "Select Section",
+                  "Welcome to the Dashboard",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -40,47 +45,38 @@ class AppDevDashboard extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
-                Expanded(
-                  child: GridView.count(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    children: [
-                      _buildDashboardCard(
-                        "Analytics",
-                        Icons.analytics,
-                        () {
-                          //TODO: analytic dev cards
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const AnalyticDevCards(),
-                            ),
-                          );
-                        },
-                      ),
-                      _buildDashboardCard(
-                        "User Management",
-                        Icons.people,
-                        () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const UserManagementCards(),
-                            ),
-                          );
-                        },
-                      ),
-                      _buildDashboardCard(
-                        "Settings",
-                        Icons.settings,
-                        () {},
-                      ),
-                      _buildDashboardCard(
-                        "Reports",
-                        Icons.report,
-                        () {},
-                      ),
-                    ],
-                  ),
+                Wrap(
+                  spacing: 16.0,
+                  runSpacing: 16.0,
+                  children: [
+                    _buildDashboardCard(
+                      "Employee",
+                      Icons.person,
+                      () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => ManageEmployee()),
+                        );
+                      },
+                    ),
+                    _buildDashboardCard(
+                      "Channel Partner",
+                      Icons.group,
+                      () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => ManageChannelPartners()),
+                        );
+                      },
+                    ),
+                    // _buildDashboardCard(
+                    //   "Admin",
+                    //   Icons.admin_panel_settings,
+                    //   () {
+                    //     // Add navigation or action here
+                    //   },
+                    // ),
+                  ],
                 ),
               ],
             ),

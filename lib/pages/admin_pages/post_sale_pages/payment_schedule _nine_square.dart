@@ -582,7 +582,7 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
                   _buildTextField(
                     controller: allInclusiveController,
                     label: 'All Inclusive Amount',
-                    icon: Icons.monetization_on,
+                    icon: Icons.currency_rupee_sharp,
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 16),

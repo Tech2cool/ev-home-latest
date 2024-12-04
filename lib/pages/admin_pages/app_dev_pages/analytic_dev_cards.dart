@@ -58,7 +58,7 @@ class _AnalyticDevCardsState extends State<AnalyticDevCards> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-            ),
+            ), 
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -85,7 +85,7 @@ class _AnalyticDevCardsState extends State<AnalyticDevCards> {
                         Icons.analytics,
                         () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(
+                            MaterialPageRoute(           
                               builder: (context) => AnalyticDesignationsPage(
                                 designations: team.designations,
                                 section: team.section,

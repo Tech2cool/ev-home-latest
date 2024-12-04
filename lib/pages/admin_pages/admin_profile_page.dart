@@ -441,46 +441,47 @@ class _AdminProfilePageState extends State<AdminProfilePage> {
                 ),
 
                 // Buttons for Change Password and Logout
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue[300],
-                          ),
-                          onPressed: _changePassword,
-                          child: const Text(
-                            "Change Password",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      child: Expanded(
+                        child: Center(
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue[300],
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 30),
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red[300],
-                          ),
-                          onPressed: () => settingProvider.logoutUser(context),
-                          child: const Text(
-                            "Logout",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
+                            onPressed: _changePassword,
+                            child: const Text(
+                              "Change Password",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(width: 30),
+                    // Expanded(
+                    //   child: ElevatedButton(
+                    //     style: ElevatedButton.styleFrom(
+                    //       backgroundColor: Colors.red[300],
+                    //     ),
+                    //     onPressed: () => settingProvider.logoutUser(context),
+                    //     child: const Text(
+                    //       "Logout",
+                    //       style: TextStyle(
+                    //         color: Colors.white,
+                    //         fontSize: 12,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                  ],
                 ),
                 const SizedBox(height: 30),
               ],

@@ -1,4 +1,5 @@
 import 'package:ev_homes/pages/admin_pages/app_dev_pages/analytic_dev_cards.dart';
+import 'package:ev_homes/pages/admin_pages/app_dev_pages/user_management_cards.dart';
 import 'package:flutter/material.dart';
 
 class AppDevDashboard extends StatelessWidget {
@@ -60,7 +61,13 @@ class AppDevDashboard extends StatelessWidget {
                       _buildDashboardCard(
                         "User Management",
                         Icons.people,
-                        () {},
+                        () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const UserManagementCards(),
+                            ),
+                          );
+                        },
                       ),
                       _buildDashboardCard(
                         "Settings",

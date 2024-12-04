@@ -145,6 +145,7 @@ class SettingProvider extends ChangeNotifier {
   List<Employee> get postSalesExecutives => _postSalesExecutives;
   List<TeamSection> get teamSections => _teamSections;
   List<Task> get tasks => _tasks;
+  List<MeetingSummary> get meeting => _meeting;
 
   List<Employee> get employeeBydDesg => _employeeBydDesg;
   List<Employee> get reportingEmps => _reportingEmps;
@@ -432,13 +433,17 @@ class SettingProvider extends ChangeNotifier {
 
   Future<void> getMyTarget(String id) async {
     final targetResp = await _apiService.getMyTarget(id);
-    myTarget = targetResp;
+    if (targetResp != null) {
+      myTarget = targetResp;
+    }
     notifyListeners();
   }
 
   Future<void> updateCarryForward(String id, Map<String, dynamic> data) async {
     final targetResp = await _apiService.useCarryForward(id, data);
-    myTarget = targetResp;
+    if (targetResp != null) {
+      myTarget = targetResp;
+    }
     notifyListeners();
   }
 

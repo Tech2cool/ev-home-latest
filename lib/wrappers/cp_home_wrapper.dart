@@ -47,7 +47,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
     );
 
     _videoPlayerController =
-        VideoPlayerController.asset('assets/video/blue_bg.mp4')
+        VideoPlayerController.asset('assets/video/orange_bg.mov')
           ..initialize().then((_) {
             _videoPlayerController.setLooping(true);
             _videoPlayerController.play();

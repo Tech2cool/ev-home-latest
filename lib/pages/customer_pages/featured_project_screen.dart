@@ -32,7 +32,7 @@ class FeaturedProjectScreen extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
+          Image.network(
             logoImagePath,
             width: 150,
             height: 150,

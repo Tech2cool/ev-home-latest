@@ -328,6 +328,12 @@ class PostSaleLead {
   final List<Applicant> applicants;
   final PreRegistrationChecklist preRegistrationCheckList;
   final List<DisbursementRecord> disbursementRecord;
+  final int? allInclusiveAmount;
+  final int? totalAmount;
+  final int? cgstAmount;
+  final int? netAmount;
+  final int? stampDutyAmount;
+  final int? tdsAmount;
 
   PostSaleLead({
     required this.id,
@@ -353,6 +359,12 @@ class PostSaleLead {
     this.applicants = const [],
     required this.preRegistrationCheckList,
     this.disbursementRecord = const [],
+    this.allInclusiveAmount,
+    this.cgstAmount,
+    this.netAmount,
+    this.stampDutyAmount,
+    this.tdsAmount,
+    this.totalAmount,
   });
 
   factory PostSaleLead.fromJson(Map<String, dynamic> json) {
@@ -397,6 +409,13 @@ class PostSaleLead {
               ?.map((e) => DisbursementRecord.fromJson(e))
               .toList() ??
           [],
+          allInclusiveAmount: json['allInclusiveAmount'],
+          cgstAmount: json['cgstAmount'],
+          tdsAmount: json['tdsAmount'],
+          netAmount: json['netAmount'],
+          stampDutyAmount: json['stampDutyAmount'],
+          totalAmount: json['totalAmount'],
+          
     );
   }
 

@@ -30,7 +30,9 @@ const storage = FlutterSecureStorage();
 
 // final dio = Dio();
 
-const baseUrl = "http://192.168.1.180:8082";
+// const baseUrl = "http://192.168.1.180:8082";
+const baseUrl = "http://192.168.1.168:8082";
+
 // const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
@@ -674,6 +676,32 @@ class ApiService {
       final items = data['data'];
 
       return Payment.fromMap(items);
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+        print("pass 2");
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
+      print("pass 3");
+      return null;
+    }
+  }
+
+  Future<PostSaleLead?> getPostSaleLeadByFlat(String unitNo) async {
+    try {
+      final Response response =
+          await _dio.get('/post-sale-lead-by-flat?unitNo=$unitNo');
+      final Map<String, dynamic> data = response.data;
+      final items = data['data'];
+
+      return PostSaleLead.fromJson(items);
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
 

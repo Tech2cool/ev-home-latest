@@ -25,7 +25,7 @@ class RegistrationPendingScreen extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset(
+          Image.network(
             Constant.logoIcon,
             width: 150,
             height: 150,

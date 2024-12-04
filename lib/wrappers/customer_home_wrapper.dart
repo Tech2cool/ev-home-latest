@@ -24,13 +24,14 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
   late AnimationController _animationController;
   late Animation<double> _iconAnimation;
   late VideoPlayerController _videoPlayerController;
+  DraggableScrollableController controller = DraggableScrollableController();
+  double _sheetHeight = 0.0;
 
-  final List<Widget> _pages = [
-    const HomeScreen(),
-    MyMeetings(),
-    const ChatScreen(),
-    const OfferDetailPage(showDiolog: true),
-  ];
+  void gback() {
+    setState(() {
+      _currentIndex = 0;
+    });
+  }
 
   @override
   void initState() {
@@ -45,7 +46,7 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
         Tween<double>(begin: 0, end: 0.125).animate(_animationController);
 
     _videoPlayerController =
-        VideoPlayerController.asset('assets/video/orange_bg.mp4')
+        VideoPlayerController.asset('assets/video/orange_bg.mov')
           ..initialize().then((_) {
             _videoPlayerController.setLooping(true);
             _videoPlayerController.play();
@@ -73,11 +74,20 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _pages = [
+      const HomeScreen(),
+      MyMeetings(),
+      ChatScreen(
+        gBack: gback,
+      ),
+      const OfferDetailPage(showDiolog: true),
+    ];
+
     return Scaffold(
       body: Stack(
         children: [
           _pages[_currentIndex],
-          if (_isMenuVisible) _buildBottomSheet(),
+          if (_isMenuVisible) _buildBottomSheet(controller),
           if (_currentIndex != 2) ...[
             _buildBottomNavBar(),
             _buildFloatingActionButton(),
@@ -150,7 +160,7 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
 
   Widget _buildFloatingActionButton() {
     return Positioned(
-      bottom: 50.0,
+      bottom: 55.0,
       left: MediaQuery.of(context).size.width / 2 - 25,
       child: GestureDetector(
         onTap: _toggleMenu,
@@ -160,18 +170,25 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
             return Transform.rotate(
               angle: _iconAnimation.value * 2 * 3.14159,
               child: Container(
-                width: 45,
-                height: 45,
+                width: 50,
+                height: 50,
                 decoration: BoxDecoration(
-                  color: Colors.orange,
+                  gradient: const LinearGradient(
+                    colors: [
+                      Colors.orange,
+                      Colors.orange,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: const Color(0xFF2e2252).withOpacity(0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: Color.fromARGB(255, 133, 0, 0).withOpacity(0.8),
+                  //     blurRadius: 2,
+                  //     spreadRadius: 2,
+                  //   ),
+                  // ],
                 ),
                 child: const Center(
                   child: Icon(
@@ -188,106 +205,130 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
     );
   }
 
-  Widget _buildBottomSheet() {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.5,
-      minChildSize: 0,
-      maxChildSize: 0.6,
-      builder: (BuildContext context, ScrollController scrollController) {
-        return Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-          ),
-          child: ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-            child: Stack(
-              children: [
-                // Video background
-                SizedBox.expand(
-                  child: _videoPlayerController.value.isInitialized
-                      ? FittedBox(
-                          fit: BoxFit.cover,
-                          child: SizedBox(
-                            width: _videoPlayerController.value.size.width ?? 0,
-                            height:
-                                _videoPlayerController.value.size.height ?? 0,
-                            child: VideoPlayer(_videoPlayerController),
-                          ),
-                        )
-                      : const Center(child: CircularProgressIndicator()),
+  Widget _buildBottomSheet(DraggableScrollableController contr) {
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        _sheetHeight = _animationController.value *
+            0.5; // Adjust the max height during the animation
+        return DraggableScrollableSheet(
+          initialChildSize: _sheetHeight,
+          minChildSize: 0,
+          maxChildSize: 0.6,
+          builder: (BuildContext context, ScrollController scrollController) {
+            return NotificationListener<DraggableScrollableNotification>(
+              onNotification: (notification) {
+                if (notification.extent == notification.minExtent) {
+                  if (_isMenuVisible) {
+                    setState(() {
+                      _isMenuVisible = false;
+                      _animationController.reverse();
+                    });
+                  }
+                }
+                return true;
+              },
+              child: Container(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
                 ),
-                // Semi-transparent overlay
-                Container(
-                  color: Colors.black.withOpacity(0.5),
-                ),
-                // Content
-                SingleChildScrollView(
-                  controller: scrollController,
-                  child: Column(
+                child: ClipRRect(
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(30)),
+                  child: Stack(
                     children: [
-                      const SizedBox(height: 20),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildActionCard(
-                              'Enquiry Form',
-                              Icons.description,
-                              'Create a new enquiry',
-                              () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const EnquiryForm())),
-                            ),
-                          ),
-                          Expanded(
-                            child: _buildActionCard(
-                              'Meeting',
-                              Icons.label,
-                              'Schedule your meetings',
-                              () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ScheduleMeeting())),
-                            ),
-                          ),
-                        ],
+                      // Video background
+                      SizedBox.expand(
+                        child: _videoPlayerController.value.isInitialized
+                            ? FittedBox(
+                                fit: BoxFit.cover,
+                                child: SizedBox(
+                                  width:
+                                      _videoPlayerController.value.size.width ??
+                                          0,
+                                  height: _videoPlayerController
+                                          .value.size.height ??
+                                      0,
+                                  child: VideoPlayer(_videoPlayerController),
+                                ),
+                              )
+                            : const Center(child: CircularProgressIndicator()),
                       ),
-                      _buildCircularButton(),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildActionCard(
-                              'EMI Calculator',
-                              Icons.calculate,
-                              'Calculate your EMI',
-                              () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const EmiCalculator())),
-                            ),
-                          ),
-                          Expanded(
-                            child: _buildActionCard(
-                              'Settings',
-                              Icons.settings,
-                              'Adjust app settings',
-                              () {
-                                // Navigate to Settings screen
-                              },
-                            ),
-                          ),
-                        ],
+                      // Semi-transparent overlay
+                      Container(
+                        color: Colors.black.withOpacity(0.5),
                       ),
-                      const SizedBox(height: 20),
+                      // Content
+                      SingleChildScrollView(
+                        controller: scrollController,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 20),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _buildActionCard(
+                                    'Enquiry Form',
+                                    Icons.description,
+                                    'Create a new enquiry',
+                                    () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const EnquiryForm())),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: _buildActionCard(
+                                    'Meeting',
+                                    Icons.label,
+                                    'Schedule your meetings',
+                                    () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const ScheduleMeeting())),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            _buildCircularButton(),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: _buildActionCard(
+                                    'EMI Calculator',
+                                    Icons.calculate,
+                                    'Calculate your EMI',
+                                    () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const EmiCalculator())),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: _buildActionCard(
+                                    'Settings',
+                                    Icons.settings,
+                                    'Adjust app settings',
+                                    () {
+                                      // Navigate to Settings screen
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 20),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         );
       },
     );

@@ -108,6 +108,148 @@ class _ClosingManagerLeadDetailsPageState
     }
   }
 
+  // void _showNotificationPreview() {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return Dialog(
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(12.0),
+  //         ),
+  //         child: SingleChildScrollView(
+  //           child: Padding(
+  //             padding: const EdgeInsets.all(16),
+  //             child: Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Row(
+  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //                   children: [
+  //                     Row(
+  //                       children: [
+  //                         Container(
+  //                           decoration: BoxDecoration(
+  //                             shape: BoxShape.circle,
+  //                             color: Colors.indigo[600],
+  //                           ),
+  //                           padding: const EdgeInsets.all(8),
+  //                           child: const Icon(
+  //                             Icons.notifications,
+  //                             color: Colors.white,
+  //                             size: 12,
+  //                           ),
+  //                         ),
+  //                         const SizedBox(width: 8),
+  //                         const Text(
+  //                           'EV Home',
+  //                           style: TextStyle(
+  //                             fontSize: 16,
+  //                             fontWeight: FontWeight.bold,
+  //                           ),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                     IconButton(
+  //                       icon: const Icon(Icons.arrow_drop_down),
+  //                       onPressed: () {
+  //                         Navigator.pop(context);
+  //                       },
+  //                     ),
+  //                   ],
+  //                 ),
+  //                 const SizedBox(height: 16),
+  //                 Padding(
+  //                   padding: const EdgeInsets.only(left: 32.0),
+  //                   child: Text(
+  //                     _titleController.text,
+  //                     style: const TextStyle(
+  //                       fontSize: 16,
+  //                       fontWeight: FontWeight.bold,
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 const SizedBox(height: 8),
+  //                 Padding(
+  //                   padding: const EdgeInsets.only(left: 32.0),
+  //                   child: Text(
+  //                     _notificationController.text,
+  //                     style: const TextStyle(fontSize: 16),
+  //                   ),
+  //                 ),
+  //                 const SizedBox(height: 8),
+  //                 if (_selectedImages.isNotEmpty)
+  //                   Padding(
+  //                     padding: const EdgeInsets.only(left: 32.0),
+  //                     child: SizedBox(
+  //                       height: 150,
+  //                       child: ListView.builder(
+  //                         scrollDirection: Axis.horizontal,
+  //                         itemCount: _selectedImages.length,
+  //                         itemBuilder: (context, index) {
+  //                           return Padding(
+  //                             padding: const EdgeInsets.only(right: 8),
+  //                             child: ClipRRect(
+  //                               borderRadius: BorderRadius.circular(12),
+  //                               child: Container(
+  //                                 decoration: BoxDecoration(
+  //                                   boxShadow: [
+  //                                     BoxShadow(
+  //                                       color: Colors.grey.withOpacity(0.6),
+  //                                       offset: const Offset(3, 3),
+  //                                       blurRadius: 8,
+  //                                       spreadRadius: 3,
+  //                                     ),
+  //                                   ],
+  //                                 ),
+  //                                 child: Image.file(
+  //                                   File(_selectedImages[index].path),
+  //                                   width: 250,
+  //                                   height: 400,
+  //                                   fit: BoxFit.fill,
+  //                                 ),
+  //                               ),
+  //                             ),
+  //                           );
+  //                         },
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 const SizedBox(height: 16),
+  //                 // Show preview section if _isPreviewVisible is true
+  //                 if (_isPreviewVisible)
+  //                   Padding(
+  //                     padding: const EdgeInsets.all(16),
+  //                     child: Column(
+  //                       children: [
+  //                         Text(
+  //                           'Preview Notification',
+  //                           style: TextStyle(
+  //                             fontSize: 18,
+  //                             fontWeight: FontWeight.bold,
+  //                           ),
+  //                         ),
+  //                         const SizedBox(height: 16),
+  //                         Text(
+  //                           'Title: ${_titleController.text}',
+  //                           style: const TextStyle(fontSize: 16),
+  //                         ),
+  //                         const SizedBox(height: 8),
+  //                         Text(
+  //                           'Notification: ${_notificationController.text}',
+  //                           style: const TextStyle(fontSize: 16),
+  //                         ),
+  //                       ],
+  //                     ),
+  //                   ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
   void _showAssignTaskDialog(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(
       context,

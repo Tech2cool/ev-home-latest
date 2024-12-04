@@ -54,7 +54,7 @@ class _FirstPageState extends State<CustomerLoginSection>
                   MainAxisAlignment.spaceEvenly, // Center the row
               children: [
                 buildAnimatedContainer(
-                    'assets/images/new_customer.jpg', 'new customer'),
+                    'assets/images/new_customer.jpg', 'New Customer'),
                 buildAnimatedContainer('assets/images/returning_customer.jpg',
                     'Returning Customer'),
               ],
@@ -68,16 +68,13 @@ class _FirstPageState extends State<CustomerLoginSection>
   Widget buildAnimatedContainer(String imagePath, String label) {
     return GestureDetector(
       onTap: () {
-        if (label == 'new customer') {
-          // TODO: Customer Register Route
+        if (label == 'New Customer') {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const SignUpTabBarPage()),
           );
         }
         if (label == 'Returning Customer') {
-          // TODO: Customer Login Route
-
           Navigator.push(
             context,
             MaterialPageRoute(

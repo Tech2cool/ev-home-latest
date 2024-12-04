@@ -7,7 +7,8 @@ class Constant {
 
   // images
   // static String logoIcon = "assets/tech/logo.png";
-  static String logoIcon = "$imagePath/logo_no-bg.png";
+  static String logoIcon =
+      "http://cdn.evhomes.tech/b53a78a3-0b27-43e2-9bad-6f5f25b6372f-IMG-20241204-WA0007.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImI1M2E3OGEzLTBiMjctNDNlMi05YmFkLTZmNWYyNWI2MzcyZi1JTUctMjAyNDEyMDQtV0EwMDA3LmpwZyIsImlhdCI6MTczMzMxMTI5NX0.YYJaKXaddHrn0cTHUuHqjgijgSRHmIGJOHvGzvKYDWU";
   static String emiIcon = "$imagePath/emi.jpg";
   static String loginBgImg = "$imagePath/BGlogin.png";
   static String projIcon = "$imagePath/View_01.jpg";

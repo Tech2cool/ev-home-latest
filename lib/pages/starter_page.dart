@@ -6,6 +6,7 @@ import 'package:ev_homes/core/models/designation.dart';
 import 'package:ev_homes/core/models/division.dart';
 import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/pagination_model.dart';
+import 'package:ev_homes/pages/login_pages/admin_login_page.dart';
 import 'package:ev_homes/sections/login_sections/admin_login_section.dart';
 import 'package:ev_homes/sections/login_sections/channel_partner_login_section.dart';
 import 'package:ev_homes/sections/login_sections/customer_login_section.dart';
@@ -120,7 +121,7 @@ class _StarterPageState extends State<StarterPage>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const AdminLoginSection(),
+                          builder: (context) => const AdminLoginPage(),
                         ),
                       );
                     },

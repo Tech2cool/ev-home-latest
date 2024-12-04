@@ -33,6 +33,7 @@ class Task {
   // Factory constructor for creating a Task object from JSON
   factory Task.fromMap(Map<String, dynamic> json) {
     return Task(
+      id: json['_id'],
       assignTo:
           json['assignTo'] != null ? Employee.fromMap(json['assignTo']) : null,
       assignBy:

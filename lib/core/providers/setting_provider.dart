@@ -20,6 +20,7 @@ import 'package:ev_homes/core/models/task.dart';
 import 'package:ev_homes/core/models/team_section.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/core/services/shared_pref_service.dart';
+import 'package:ev_homes/sections/login_sections/admin_login_section.dart';
 import 'package:ev_homes/wrappers/cp_home_wrapper.dart';
 import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,7 @@ class SettingProvider extends ChangeNotifier {
   List<Employee> _postSalesExecutives = [];
   List<Employee> _employeeBydDesg = [];
   List<Employee> _preSaleExecutives = [];
+  List<Employee> _reportingEmps = [];
 
   List<ChannelPartner> _channelPartners = [];
   List<Employee> _teamLeaders = [];
@@ -61,6 +63,16 @@ class SettingProvider extends ChangeNotifier {
     totalItems: 0,
     data: [],
   );
+  PaginationModel<Lead> _leadsTeamLeaderReportingTo = PaginationModel<Lead>(
+    code: 404,
+    message: '',
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+    totalItems: 0,
+    data: [],
+  );
+
   PaginationModel<Lead> _leadsPreSalesExectives = PaginationModel<Lead>(
     code: 404,
     message: '',
@@ -144,14 +156,19 @@ class SettingProvider extends ChangeNotifier {
   List<Employee> get postSalesExecutives => _postSalesExecutives;
   List<TeamSection> get teamSections => _teamSections;
   List<Task> get tasks => _tasks;
+  List<MeetingSummary> get meeting => _meeting;
 
   List<Employee> get employeeBydDesg => _employeeBydDesg;
+  List<Employee> get reportingEmps => _reportingEmps;
 
   List<Employee> get preSaleExecutives => _preSaleExecutives;
   List<ChannelPartner> get channelPartners => _channelPartners;
   List<Lead> get leads => _leads;
   PaginationModel<PostSaleLead> get leadsPostSale => _leadsPostSale;
   PaginationModel<Lead> get leadsTeamLeader => _leadsTeamLeader;
+  PaginationModel<Lead> get leadsTeamLeaderReportingTo =>
+      _leadsTeamLeaderReportingTo;
+
   PaginationModel<Lead> get leadsPreSaleExecutive => _leadsPreSalesExectives;
   PaginationModel<PostSaleLead> get leadsPostSaleExecutive =>
       _leadsPostSalesExectives;
@@ -188,6 +205,15 @@ class SettingProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> getReportingToEmps(String rId) async {
+    final emps = await _apiService.getReportingToEmps(rId);
+    if (emps.isNotEmpty) {
+      print("got ");
+      _reportingEmps = emps;
+      notifyListeners();
+    }
+  }
+
   Future<void> getTeamLeaders() async {
     final emps = await _apiService.getTeamLeaders();
     if (emps.isNotEmpty) {
@@ -203,6 +229,13 @@ class SettingProvider extends ChangeNotifier {
       _tasks = emps;
       notifyListeners();
     }
+  }
+
+  Future<void> updateTaskStatus(String id, String status) async {
+    final emps = await _apiService.updateTask(id, {
+      "status": status,
+    });
+    notifyListeners();
   }
 
   Future<void> getCarryForwardOpt(String id) async {
@@ -421,7 +454,17 @@ class SettingProvider extends ChangeNotifier {
 
   Future<void> getMyTarget(String id) async {
     final targetResp = await _apiService.getMyTarget(id);
-    myTarget = targetResp;
+    if (targetResp != null) {
+      myTarget = targetResp;
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateCarryForward(String id, Map<String, dynamic> data) async {
+    final targetResp = await _apiService.useCarryForward(id, data);
+    if (targetResp != null) {
+      myTarget = targetResp;
+    }
     notifyListeners();
   }
 
@@ -670,6 +713,26 @@ class SettingProvider extends ChangeNotifier {
     return leads;
   }
 
+  //get leads
+  Future<PaginationModel<Lead>> getTeamLeaderReportingToLeads(
+    String id, [
+    String query = '',
+    int page = 1,
+    int limit = 10,
+    String? status,
+  ]) async {
+    final leads = await _apiService.getTeamLeaderReportingToLeads(
+      id,
+      query,
+      page,
+      limit,
+      status,
+    );
+    _leadsTeamLeaderReportingTo = leads;
+    notifyListeners();
+    return leads;
+  }
+
   Future<void> updateCallHistoryPreSales(
     String id,
     Map<String, dynamic> data,
@@ -746,8 +809,12 @@ class SettingProvider extends ChangeNotifier {
       resp.role!,
       playerId!,
     );
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const AdminLoginSection()),
+    );
 
-    GoRouter.of(context).go("/admin-home-wrapper");
+    // GoRouter.of(context).go("/admin-home-wrapper");
   }
 
   void updateLoggedAdmin(Employee emp) {

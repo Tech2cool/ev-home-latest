@@ -112,9 +112,12 @@ class _ManageChannelPartnersState extends State<ManageChannelPartners> {
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text("(${cp.firmName})"),
-                                    const SizedBox(height: 4),
-                                    Text(cp.email ?? ""),
+                                    Text(
+                                        "(${cp.firmName})"), // Firm name in parentheses
+                                    const SizedBox(
+                                        height:
+                                            4), // Space between firmName and email
+                                    Text(cp.email ?? ''), // Email
                                   ],
                                 ),
                                 trailing: PopupMenuButton<String>(

@@ -4,7 +4,8 @@ import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final Function() gBack;
+  const ChatScreen({super.key, required this.gBack});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -124,14 +125,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             const Text('EV Homes Chat', style: TextStyle(color: Colors.black)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const CustomerHomeWrapper(),
-              ),
-            );
-          },
+          onPressed: widget.gBack,
         ),
       ),
       body: Stack(

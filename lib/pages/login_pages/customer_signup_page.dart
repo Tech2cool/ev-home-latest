@@ -202,8 +202,8 @@ class _SignUpTabBarState extends State<SignUpTabBar>
               children: [
                 const SizedBox(height: 15),
                 Center(
-                  child: Image.asset(
-                    'assets/images/3.png',
+                  child: Image.network(
+                    'https://cdn.evhomes.tech/af8c2924-628d-4a10-8a5d-9c8463af5ce9-IMG-20241204-WA0000.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImFmOGMyOTI0LTYyOGQtNGExMC04YTVkLTljODQ2M2FmNWNlOS1JTUctMjAyNDEyMDQtV0EwMDAwLmpwZyIsImlhdCI6MTczMzMwOTQ0OH0.pdtQDRILe__UGYprzT79aW_BhKbFTMxDiemxdJHMFyM',
                     height: 100,
                     width: 100,
                   ),

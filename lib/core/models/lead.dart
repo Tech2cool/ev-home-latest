@@ -33,7 +33,7 @@ class Lead {
   final String? approvalStatus;
   final String? visitStatus;
   final String? revisitStatus;
-  
+
   final String? bookingStatus;
   final String? interestedStatus;
   final SiteVisit? visitRef;
@@ -43,6 +43,7 @@ class Lead {
   final List<ApprovalHistory> approvalHistory;
   final List<UpdateHistory> updateHistory;
   final List<Cycle> cycleHistory;
+  final List<CallHistory> followupHistory;
 
   Lead({
     required this.id,
@@ -78,6 +79,7 @@ class Lead {
     this.approvalHistory = const [],
     this.updateHistory = const [],
     this.cycleHistory = const [],
+    this.followupHistory = const [],
   });
 
   factory Lead.fromJson(Map<String, dynamic> json) {
@@ -137,6 +139,9 @@ class Lead {
       callHistory: (json['callHistory'] as List)
           .map((item) => CallHistory.fromJson(item))
           .toList(),
+      followupHistory: (json['followupHistory'] as List)
+          .map((item) => CallHistory.fromJson(item))
+          .toList(),
       approvalHistory: (json['approvalHistory'] as List)
           .map((item) => ApprovalHistory.fromJson(item))
           .toList(),
@@ -177,6 +182,7 @@ class Lead {
       'bookingStatus': bookingStatus,
       'interestedStatus': interestedStatus,
       'callHistory': callHistory.map((item) => item.toJson()).toList(),
+      'followupHistory': followupHistory.map((item) => item.toJson()).toList(),
       'approvalHistory': approvalHistory.map((item) => item.toJson()).toList(),
       'updateHistory': updateHistory.map((item) => item.toJson()).toList(),
       'cycleHistory': cycleHistory.map((item) => item.toMap()).toList(),

@@ -788,6 +788,7 @@ class _DemandLetterState extends State<DemandLetter> {
       });
       final res = await ApiService()
           .getPostSaleLeadByFlat("$selectedFloor$selectedUnit");
+
       setState(() {
         getpayment = res;
         carpetAreaController.text = res?.carpetArea?.toString() ?? '';

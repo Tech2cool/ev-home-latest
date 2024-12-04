@@ -5,12 +5,14 @@ import '../../pages/cp_pages/resale_screen.dart';
 class ResalePropertyList extends StatelessWidget {
   final List<Map<String, String>> properties = [
     {
-      'image': 'assets/images/resale1.png',
+      'image':
+          'http://cdn.evhomes.tech/f0d5ed78-2df7-4221-a40f-898d1f471a5c-IMG-20241204-WA0010.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImYwZDVlZDc4LTJkZjctNDIyMS1hNDBmLTg5OGQxZjQ3MWE1Yy1JTUctMjAyNDEyMDQtV0EwMDEwLmpwZyIsImlhdCI6MTczMzMxMTYwN30.nxcZtLFHlaOLndXYrjd52C85vF8yEPmv-mVFJkgZ6EI',
       'title': 'Property 1',
       'location': 'Ghansoli',
     },
     {
-      'image': 'assets/images/resale1.png',
+      'image':
+          'http://cdn.evhomes.tech/f0d5ed78-2df7-4221-a40f-898d1f471a5c-IMG-20241204-WA0010.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImYwZDVlZDc4LTJkZjctNDIyMS1hNDBmLTg5OGQxZjQ3MWE1Yy1JTUctMjAyNDEyMDQtV0EwMDEwLmpwZyIsImlhdCI6MTczMzMxMTYwN30.nxcZtLFHlaOLndXYrjd52C85vF8yEPmv-mVFJkgZ6EI',
       'title': 'Property 2',
       'location': 'Vashi',
     },
@@ -105,7 +107,7 @@ class PropertyCardVertical1 extends StatelessWidget {
                           ],
                         ),
                         child: ClipOval(
-                          child: Image.asset(
+                          child: Image.network(
                             property['image']!,
                             height: 100,
                             width: 100,

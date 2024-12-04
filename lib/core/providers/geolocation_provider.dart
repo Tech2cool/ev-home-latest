@@ -108,6 +108,13 @@ class GeolocationProvider extends ChangeNotifier {
     if (permission == LocationPermission.deniedForever) {
       return Future.error('Location permissions are permanently denied.');
     }
+    Position position = await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+      ),
+    );
+    await _updateAddress(position.latitude, position.longitude);
+    notifyListeners();
   }
 
   Future<Position?> getCurrentLocation() async {

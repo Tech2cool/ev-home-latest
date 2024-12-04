@@ -4,7 +4,6 @@ import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/task_list_page.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -18,16 +17,6 @@ class ClosingManagerDashboard extends StatefulWidget {
   State<ClosingManagerDashboard> createState() =>
       _ClosingManagerDashboardState();
 }
-
-double leadValue = 200;
-double visitValue = 150;
-double booking = 50;
-double onthervisit = 100;
-
-double visitepercentage = (visitValue * 100) / leadValue;
-double visitbooking = (booking * 100) / visitValue;
-double onthervisite = (booking * 100) / onthervisit;
-double leadbooking = (booking * 100) / leadValue;
 
 class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
   bool showNotification = false;
@@ -56,11 +45,12 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
       await settingProvider.getClosingManagerGraph(
         widget.id ?? settingProvider.loggedAdmin!.id!,
       );
-      // await settingProvider.getLeadsTeamLeaderGraph(
-      //   widget.id ?? settingProvider.loggedAdmin!.id!,
-      // );
-      // await settingProvider.getPreSaleExecutiveGraph();
-      // await settingProvider.getLeadsFunnelGraph();
+      await settingProvider.getCarryForwardOpt(
+        widget.id ?? settingProvider.loggedAdmin!.id!,
+      );
+      await settingProvider.getTask(
+        widget.id ?? settingProvider.loggedAdmin!.id!,
+      );
     } catch (e) {
       // Helper
     } finally {
@@ -337,7 +327,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                 final selectedValue = showDialog<int>(
                                   context: context,
                                   builder: (context) =>
-                                      AdminCarryForwardDialog(id: "123"),
+                                      AdminCarryForwardDialog(id: widget.id),
                                 );
 
                                 if (selectedValue != null) {
@@ -457,8 +447,8 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           percentage: safeDivision((graphInfo.visitCount * 100),
                               graphInfo.leadCount),
                           title: "Visits",
-                          subtitle: "Visit",
-                          notSubtitle: "Not Visit",
+                          subtitle: "Visit 1",
+                          notSubtitle: "Lead",
                           visitedColor: Colors.blue,
                           notVisitedColor: Colors.orange,
                         ),
@@ -483,14 +473,15 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                         ),
                         SizedBox(height: 10),
                         AnimatedPieChart(
-                          visited: 60,
-                          notVisited: 40,
+                          visited: graphInfo.bookingCount.toInt(),
+                          notVisited: graphInfo.visitCount.toInt(),
                           percentage: safeDivision(
-                              (graphInfo.bookingCount * 100),
-                              graphInfo.visitCount),
+                            (graphInfo.bookingCount * 100),
+                            graphInfo.visitCount,
+                          ),
                           title: "Visits",
-                          subtitle: "Visit",
-                          notSubtitle: "Not Visit",
+                          subtitle: "Booking",
+                          notSubtitle: "Visit 1",
                           visitedColor: Colors.green,
                           notVisitedColor: Colors.red,
                         ),
@@ -519,8 +510,8 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                               (graphInfo.bookingCount * 100),
                               graphInfo.visit2Count),
                           title: "Bookings",
-                          subtitle: "Visit",
-                          notSubtitle: "Not Visit",
+                          subtitle: "Booking",
+                          notSubtitle: "Visit 2",
                           visitedColor: Colors.purple,
                           notVisitedColor: Colors.amber,
                         ),
@@ -549,8 +540,8 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                               (graphInfo.bookingCount * 100),
                               graphInfo.leadCount),
                           title: "Bookings",
-                          subtitle: "Visit",
-                          notSubtitle: "Not Visit",
+                          subtitle: "Booking",
+                          notSubtitle: "Lead",
                           visitedColor: Colors.teal,
                           notVisitedColor: Colors.pink,
                         ),

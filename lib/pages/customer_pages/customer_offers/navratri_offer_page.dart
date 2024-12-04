@@ -129,7 +129,9 @@ class _NavratriOfferPopupState extends State<NavratriOfferPopup>
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: const DecorationImage(
-              image: AssetImage('assets/images/navratri.jpg'),
+              image: NetworkImage(
+                'http://cdn.evhomes.tech/241b4126-09f3-4fa6-9e91-c79389318178-IMG-20241204-WA0009.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6IjI0MWI0MTI2LTA5ZjMtNGZhNi05ZTkxLWM3OTM4OTMxODE3OC1JTUctMjAyNDEyMDQtV0EwMDA5LmpwZyIsImlhdCI6MTczMzMxMTA2OH0.8wVkLeVgP2Ud-WhJFSHkHnietI4V4pLRcXI5tHg3krE',
+              ),
               fit: BoxFit.cover,
             ),
           ),

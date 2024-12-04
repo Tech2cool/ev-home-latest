@@ -397,7 +397,7 @@ class _LineChartDemoState extends State<LineChartDemo> {
                       LineChartBarData(
                         spots: chartData,
                         isCurved: true,
-                        color: Constant.bgColor,
+                        color: Color.fromARGB(199, 248, 85, 4),
                         barWidth: 3,
                         isStrokeCapRound: true,
                         dotData: const FlDotData(show: true),

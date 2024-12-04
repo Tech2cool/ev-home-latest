@@ -31,9 +31,7 @@ const storage = FlutterSecureStorage();
 // final dio = Dio();
 
 // const baseUrl = "http://192.168.1.180:8082";
-const baseUrl = "http://192.168.1.168:8082";
-
-// const baseUrl = "https://api.evhomes.tech";
+const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -2107,6 +2105,43 @@ class ApiService {
     }
   }
 
+  Future<Target?> useCarryForward(
+    String id,
+    Map<String, dynamic> data,
+  ) async {
+    try {
+      // print('pass api 1');
+      // print(data);
+      final Response response = await _dio.post(
+        '/use-carry-forward/$id',
+        data: data,
+      );
+      // print('pass api resp');
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return null;
+      }
+      // print('pass api resp 200');
+      Helper.showCustomSnackBar(response.data['message'], Colors.green);
+      // print('pass api resp 200');
+      return Target.fromMap(response.data['data']);
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+      // print(e);
+      Helper.showCustomSnackBar(errorMessage);
+
+      return null;
+    }
+  }
+
   // Leads for teamleader
   Future<PaginationModel<Lead>> getTeamLeaderLeads(
     String id, [
@@ -2117,6 +2152,88 @@ class ApiService {
   ]) async {
     try {
       var url = '/leads-team-leader/$id?query=$query&page=$page&limit=$limit';
+      if (status != null) {
+        url += '&status=$status';
+      }
+
+      final Response response = await _dio.get(url);
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        final emptyPagination = PaginationModel<Lead>(
+          code: 404,
+          message: '',
+          page: page,
+          limit: limit,
+          totalPages: 1,
+          totalItems: 0,
+          data: [],
+        );
+
+        return emptyPagination;
+      }
+
+      // print('pass 0');
+      final List<dynamic> dataList = response.data["data"];
+      // print(dataList);
+
+      final List<Lead> leads = dataList.map((data) {
+        return Lead.fromJson(data as Map<String, dynamic>);
+      }).toList();
+
+      // print('pass id $id');
+      print('leads ${leads.length}');
+      // print('leads data ${dataList.length}');
+      return PaginationModel<Lead>(
+        code: 404,
+        message: response.data["message"],
+        page: page,
+        limit: limit,
+        totalPages: response.data["totalPages"],
+        totalItems: response.data["totalItems"],
+        pendingCount: response.data["pendingCount"],
+        visitCount: response.data["visitCount"],
+        revisitCount: response.data["revisitCount"],
+        bookingCount: response.data["bookingCount"],
+        assignedCount: response.data["assignedCount"],
+        followUpCount: response.data["followUpCount"],
+        contactedCount: response.data["contactedCount"],
+        data: leads,
+      );
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+      Helper.showCustomSnackBar(errorMessage);
+
+      return PaginationModel<Lead>(
+        code: 500,
+        message: e.response?.data['message'] ?? errorMessage,
+        page: page,
+        limit: limit,
+        totalPages: 1,
+        totalItems: 0,
+        data: [],
+      );
+    }
+  }
+
+  // Leads for teamleader
+  Future<PaginationModel<Lead>> getTeamLeaderReportingToLeads(
+    String id, [
+    String query = '',
+    int page = 1,
+    int limit = 10,
+    String? status,
+  ]) async {
+    try {
+      var url =
+          '/leads-team-leader-reporting/$id?query=$query&page=$page&limit=$limit';
       if (status != null) {
         url += '&status=$status';
       }
@@ -2878,6 +2995,122 @@ class ApiService {
 
       Helper.showCustomSnackBar(errorMessage);
       return [];
+    }
+  }
+
+  Future<List<Employee>> getReportingToEmps(String rId) async {
+    try {
+      print(rId);
+      final Response response = await _dio.get('/employee-reporting/$rId');
+
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return [];
+      }
+      final Map<String, dynamic> data = response.data;
+      print(response.data["data"]);
+      final items = data['data'] as List<dynamic>? ?? [];
+      print("passed data null");
+
+      List<Employee> empItems = [];
+      if (items.isNotEmpty) {
+        empItems = items.map((emp) => Employee.fromMap(emp)).toList();
+      }
+      print("passed data list emps");
+
+      return empItems;
+    } on DioException catch (e) {
+      // print("error $e");
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        errorMessage = e.message.toString();
+      }
+      print("$e");
+
+      Helper.showCustomSnackBar(errorMessage);
+      return [];
+    }
+  }
+
+  Future<Task?> addTask(String assigneId, Map<String, dynamic> data) async {
+    try {
+      final response = await _dio.post('/assign-task/$assigneId', data: data);
+
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return null;
+      }
+
+      Helper.showCustomSnackBar(response.data['message'], Colors.green);
+
+      final parsedTarget = Task.fromMap(response.data['data']);
+      return parsedTarget;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        errorMessage = e.message.toString();
+      }
+      Helper.showCustomSnackBar(errorMessage);
+      return null;
+    }
+  }
+
+  Future<String?> sendCustomNotification(Map<String, dynamic> data) async {
+    try {
+      final response = await _dio.post('/send-notification', data: data);
+
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return null;
+      }
+
+      Helper.showCustomSnackBar(response.data['message'], Colors.green);
+
+      final parsedTarget = response.data['message'];
+      return parsedTarget;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        errorMessage = e.message.toString();
+      }
+      Helper.showCustomSnackBar(errorMessage);
+      return null;
+    }
+  }
+
+  Future<Task?> updateTask(String taskId, Map<String, dynamic> data) async {
+    try {
+      final response = await _dio.post('/update-task/$taskId', data: data);
+
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return null;
+      }
+
+      final parsedTarget = Task.fromMap(response.data['data']);
+      return parsedTarget;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        errorMessage = e.message.toString();
+      }
+      Helper.showCustomSnackBar(errorMessage);
+      return null;
     }
   }
 

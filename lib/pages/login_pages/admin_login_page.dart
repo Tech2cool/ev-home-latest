@@ -27,7 +27,6 @@ class _AdminLoginPageState extends State<AdminLoginPage> {
     setState(() {
       _isLoading = true;
     });
-
     try {
       await settingProvider.loginAdmin(
         context,

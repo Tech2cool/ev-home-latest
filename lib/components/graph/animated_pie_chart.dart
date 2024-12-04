@@ -20,8 +20,6 @@ class AnimatedPieChart extends StatefulWidget {
   @override
   State<AnimatedPieChart> createState() => _AnimatedPieChartState();
 }
-
-
 class _AnimatedPieChartState extends State<AnimatedPieChart> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -154,7 +152,6 @@ class _AnimatedPieChartState extends State<AnimatedPieChart> with SingleTickerPr
       ],
     );
   }
-
   Widget _buildLegendItem(String label, int value, Color color) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -180,7 +177,6 @@ class _AnimatedPieChartState extends State<AnimatedPieChart> with SingleTickerPr
     );
   }
 }
-
 class PieChartPainter extends CustomPainter {
   final double animation;
   final int visited;
@@ -211,7 +207,6 @@ class PieChartPainter extends CustomPainter {
       ..strokeWidth = strokeWidth;
 
     canvas.drawCircle(center, radius - strokeWidth / 2, bgPaint);
-
     // Draw segments
     final visitedPaint = Paint()
       ..color = visitedColor
@@ -233,7 +228,6 @@ class PieChartPainter extends CustomPainter {
       false,
       visitedPaint,
     );
-
     // Draw not visited segment
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: radius - strokeWidth / 2),
@@ -242,19 +236,15 @@ class PieChartPainter extends CustomPainter {
       false,
       notVisitedPaint,
     );
-
     // Draw animated particles
     _drawAnimatedParticles(canvas, size, visitedAngle, notVisitedAngle);
   }
-
   void _drawAnimatedParticles(Canvas canvas, Size size, double visitedAngle, double notVisitedAngle) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = min(size.width / 2, size.height / 2);
     final particleRadius = 2.0;
-
     final visitedParticlePaint = Paint()..color = visitedColor;
     final notVisitedParticlePaint = Paint()..color = notVisitedColor;
-
     final particleCount = 50;
     for (var i = 0; i < particleCount; i++) {
       final t = i / particleCount;

@@ -117,17 +117,17 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
               pw.Table(
                 border: pw.TableBorder.all(width: 1),
                 columnWidths: {
-                  0: const pw.FlexColumnWidth(0.5),
-                  1: const pw.FlexColumnWidth(3),
-                  2: const pw.FlexColumnWidth(0.7),
-                  3: const pw.FlexColumnWidth(1.2),
+                  0: const pw.FlexColumnWidth(0.6),
+                  1: const pw.FlexColumnWidth(4),
+                  2: const pw.FlexColumnWidth(0.9),
+                  3: const pw.FlexColumnWidth(1.5),
                 },
                 children: [
                   pw.TableRow(
                     children: ['No.', 'Stage', '%', 'Amount']
                         .map((header) => pw.Padding(
                               padding: const pw.EdgeInsets.all(2),
-                              child: pw.Text(header, style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
+                              child: pw.Text(header, style: pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold)),
                             ))
                         .toList(),
                   ),
@@ -140,7 +140,7 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
                           children: row
                               .map((cell) => pw.Padding(
                                     padding: const pw.EdgeInsets.all(2),
-                                    child: pw.Text(cell, style: const pw.TextStyle(fontSize: 8)),
+                                    child: pw.Text(cell, style: const pw.TextStyle(fontSize: 10)),
                                   ))
                               .toList(),
                         ),
@@ -150,17 +150,17 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
                             pw.Padding(
                               padding: const pw.EdgeInsets.all(2),
                               child: pw.Text('Total up to selected slab',
-                                  style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold)),
+                                  style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
                             ),
                             pw.Padding(
                               padding: const pw.EdgeInsets.all(2),
                               child: pw.Text('${selectedSlabPercentage.toStringAsFixed(1)} %',
-                                  style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold)),
+                                  style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
                             ),
                             pw.Padding(
                               padding: const pw.EdgeInsets.all(2),
                               child: pw.Text(formatter.format(selectedSlabAmount),
-                                  style: pw.TextStyle(fontSize: 8, fontWeight: pw.FontWeight.bold)),
+                                  style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
                             ),
                           ],
                         ),
@@ -171,7 +171,7 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
                           children: row
                               .map((cell) => pw.Padding(
                                     padding: const pw.EdgeInsets.all(2),
-                                    child: pw.Text(cell, style: const pw.TextStyle(fontSize: 8)),
+                                    child: pw.Text(cell, style: const pw.TextStyle(fontSize: 10)),
                                   ))
                               .toList(),
                         ),
@@ -204,12 +204,10 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
     10.0, // Commencement of Work
     5.0,  // On Completion of Foundation upto Plinth Level
   ];
-  
   // Add 2% for each subsequent slab
   for (int i = 5; i <= 34; i++) {
     percentages.add(2.0);
   }
-  
   // Calculate cumulative percentage up to the selected slab
   return percentages.sublist(0, slabIndex).reduce((a, b) => a + b);
 }

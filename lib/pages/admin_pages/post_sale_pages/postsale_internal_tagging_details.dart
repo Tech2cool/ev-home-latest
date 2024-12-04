@@ -554,9 +554,14 @@ class _PostsaleInternalTaggingDetailsState
                 child: Text('Edit'),
               ),
               const PopupMenuItem<String>(
+                value: 'Demand History',
+                child: Text('Demand History'),
+              ),
+              const PopupMenuItem<String>(
                 value: 'Cancel',
                 child: Text('Cancel'),
               ),
+              
             ],
           ),
         ],

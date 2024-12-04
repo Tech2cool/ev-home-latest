@@ -7,6 +7,7 @@ import 'package:ev_homes/pages/cp_pages/home_page.dart';
 import 'package:ev_homes/pages/customer_pages/emi_calculator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
+import 'package:video_player/video_player.dart';
 
 class CpHomeWrapper extends StatefulWidget {
   const CpHomeWrapper({super.key});
@@ -21,33 +22,43 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
   bool _isMenuVisible = false;
   late AnimationController _animationController;
   late Animation<double> _animation;
-  late Animation<double> _iconAnimation;
+  late VideoPlayerController _videoPlayerController;
+  DraggableScrollableController controller = DraggableScrollableController();
+  double _sheetHeight = 0.0; // To control the height of the bottom sheet
 
-  final List<Widget> _pages = [
-    const CpHomeScreen(),
-    const DashboardScreen(),
-    const ChatScreen(),
-    const PerformanceScreen(),
-  ];
+  void goback() {
+    setState(() {
+      _currentIndex = 0;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      reverseDuration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 1500),
       vsync: this,
     );
+
     _animation = CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
+      reverseCurve: Curves.easeInOut, // Ensure the reverse curve matches
     );
-    _iconAnimation = Tween<double>(begin: 0, end: 0.125).animate(_animation);
+
+    _videoPlayerController =
+        VideoPlayerController.asset('assets/video/blue_bg.mp4')
+          ..initialize().then((_) {
+            _videoPlayerController.setLooping(true);
+            _videoPlayerController.play();
+            setState(() {});
+          });
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _videoPlayerController.dispose();
     super.dispose();
   }
 
@@ -55,22 +66,46 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
     setState(() {
       _isMenuVisible = !_isMenuVisible;
       if (_isMenuVisible) {
-        _animationController.forward(); // Slide-in
+        _animationController.forward(); // Open the sheet slowly
       } else {
-        _animationController.reverse(); // Slide-out
+        _animationController.reverse(); // Close the sheet slowly
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final List<Widget> _pages = [
+      const CpHomeScreen(),
+      const DashboardScreen(),
+      ChatScree(goBack: goback),
+      const PerformanceScreen(),
+    ];
+
     return Scaffold(
       body: Stack(
         children: [
-          _pages[_currentIndex],
-          if (_isMenuVisible) _buildBottomSheet(),
-          _buildBottomNavBar(),
-          _buildFloatingActionButton(),
+          Expanded(
+            child: IndexedStack(
+              index: _currentIndex,
+              children: [
+                ..._pages,
+              ],
+            ),
+          ),
+          if (_isMenuVisible) ...[
+            GestureDetector(
+              onTap: _toggleMenu,
+              child: Container(
+                color: Colors.transparent,
+              ),
+            ),
+            _buildBottomSheet(controller),
+          ],
+          if (_currentIndex != 2) ...[
+            _buildBottomNavBar(),
+            _buildFloatingActionButton(),
+          ],
         ],
       ),
     );
@@ -97,10 +132,10 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            _buildNavItem("Home", FluentIcons.home_20_regular, 0),
+            _buildNavItem("Home", FluentIcons.home_12_filled, 0),
             _buildNavItem("Dashboard", Icons.dashboard, 1),
             _buildNavItem("Performance", Icons.directions_walk_outlined, 3),
-            _buildNavItem("Chat", FluentIcons.chat_empty_20_regular, 2),
+            _buildNavItem("Chat", FluentIcons.chat_12_filled, 2),
           ],
         ),
       ),
@@ -117,7 +152,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
             icon,
             color: _currentIndex == index
                 ? const Color.fromARGB(255, 133, 0, 0)
-                : const Color.fromARGB(255, 133, 0, 0),
+                : Colors.grey[600],
             size: 24,
           ),
           Text(
@@ -143,10 +178,10 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
       child: GestureDetector(
         onTap: _toggleMenu,
         child: AnimatedBuilder(
-          animation: _iconAnimation,
+          animation: _animation,
           builder: (context, child) {
             return Transform.rotate(
-              angle: _iconAnimation.value * 2 * 3.14159,
+              angle: _animation.value * 2 * 3.14159,
               child: Container(
                 width: 50,
                 height: 50,
@@ -156,19 +191,16 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
                       Color(0xFFeedbcd),
                       Color(0xFFeedbcd),
                     ],
-                    begin:
-                        Alignment.topLeft, // Gradient starts from the top left
-                    end: Alignment
-                        .bottomRight, // Gradient ends at the bottom right
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(25),
                   boxShadow: [
                     BoxShadow(
-                      color:
-                          const Color.fromARGB(255, 133, 0, 0).withOpacity(0.8),
+                      color: Color.fromARGB(255, 133, 0, 0).withOpacity(0.8),
                       blurRadius: 2,
-                      spreadRadius: 1,
-                      offset: const Offset(0, 4),
+                      spreadRadius: 2,
+                      // offset: const Offset(4, 4),
                     ),
                   ],
                 ),
@@ -187,88 +219,109 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
     );
   }
 
-  Widget _buildBottomSheet() {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.5, // Initial size of the sheet when displayed
-      minChildSize: 0, // Minimum size the sheet can be dragged down to
-      maxChildSize: 0.6, // Maximum size the sheet can be dragged up to
-      builder: (BuildContext context, ScrollController scrollController) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black12,
-                blurRadius: 10,
-                spreadRadius: 2,
+  Widget _buildBottomSheet(DraggableScrollableController contr) {
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        _sheetHeight = _animationController.value *
+            0.5; // Adjust the max height during the animation
+        return DraggableScrollableSheet(
+          controller: contr,
+          initialChildSize: _sheetHeight,
+          minChildSize: 0,
+          maxChildSize: 0.6, // Adjust maximum size
+          builder: (BuildContext context, ScrollController scrollController) {
+            return NotificationListener<DraggableScrollableNotification>(
+              onNotification: (notification) {
+                if (notification.extent == notification.minExtent) {
+                  if (_isMenuVisible) {
+                    setState(() {
+                      _isMenuVisible = false;
+                      _animationController.reverse();
+                    });
+                  }
+                }
+                return true;
+              },
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black12,
+                      blurRadius: 10,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildActionCard(
+                              'Enquiry Form',
+                              Icons.description,
+                              'Create a new enquiry',
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CpEnquiryFormScreen())),
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildActionCard(
+                              'Client Tagging',
+                              Icons.label,
+                              'Tag your clients',
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ClientTaggingForm())),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildActionCard(
+                              'EMI Calculator',
+                              Icons.calculate,
+                              'Calculate your EMI',
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const EmiCalculator())),
+                            ),
+                          ),
+                          Expanded(
+                            child: _buildActionCard(
+                              'Settings',
+                              Icons.settings,
+                              'Adjust app settings',
+                              () {
+                                // Navigate to Settings screen
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 100),
+                    ],
+                  ),
+                ),
               ),
-            ],
-          ),
-          child: SingleChildScrollView(
-            controller: scrollController, // Attach scrollController
-            child: Column(
-              children: [
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildActionCard(
-                        'Enquiry Form',
-                        Icons.description,
-                        'Create a new enquiry',
-                        () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const CpEnquiryFormScreen())),
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildActionCard(
-                        'Client Tagging',
-                        Icons.label,
-                        'Tag your clients',
-                        () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const ClientTaggingForm())),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildActionCard(
-                        'EMI Calculator',
-                        Icons.calculate,
-                        'Calculate your EMI',
-                        () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const EmiCalculator())),
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildActionCard(
-                        'Settings',
-                        Icons.settings,
-                        'Adjust app settings',
-                        () {
-                          // Navigate to Settings screen
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                    height: 100), // Extra space to account for the navigation b
-              ],
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -288,40 +341,19 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
               blurRadius: 10,
-              spreadRadius: 0,
+              spreadRadius: 3,
             ),
           ],
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 133, 0, 0).withOpacity(0.1),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Icon(icon,
-                  color: const Color.fromARGB(255, 133, 0, 0), size: 24),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 133, 0, 0),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              description,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
-              ),
-            ),
+            Icon(icon, size: 40),
+            const SizedBox(height: 10),
+            Text(title,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 5),
+            Text(description, style: TextStyle(color: Colors.grey[600])),
           ],
         ),
       ),

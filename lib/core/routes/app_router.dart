@@ -30,6 +30,7 @@ import 'package:ev_homes/pages/login_pages/admin_forgot_password_page.dart';
 import 'package:ev_homes/pages/login_pages/admin_register_page.dart';
 import 'package:ev_homes/pages/splash_screen.dart';
 import 'package:ev_homes/pages/starter_page.dart';
+import 'package:ev_homes/sections/login_sections/admin_login_section.dart';
 import 'package:ev_homes/wrappers/admin_home_wrapper.dart';
 import 'package:ev_homes/wrappers/auth_wrapper.dart';
 import 'package:go_router/go_router.dart';
@@ -280,6 +281,12 @@ class AppRoutes {
         },
       ),
       GoRoute(
+        path: '/login-card',
+        builder: (context, state) {
+          return const AdminLoginSection();
+        },
+      ),
+      GoRoute(
         path: '/post-sales-lead-details',
         builder: (context, state) {
           final lead = state.extra as PostSaleLead;
@@ -290,3 +297,4 @@ class AppRoutes {
     ],
   );
 }
+

@@ -290,7 +290,6 @@ class _OfferPageState extends State<OfferPage> {
       ),
     );
   }
-
   Widget _buildViewSimilarOffersButton() {
     return Center(
       child: ElevatedButton.icon(

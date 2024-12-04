@@ -23,6 +23,7 @@ class Constant {
   static String cpIcon = "$imagePath/CP.png";
   static String customerIcon = "$imagePath/Customer.png";
   static String adminIcon = "$imagePath/admin.png";
+  static String HRIcon = "$imagePath/HR.png";
 
   static String salesIcon = "$imagePath/Sales.png";
   static String accountsIcon = "$imagePath/accounts1.png";

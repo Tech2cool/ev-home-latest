@@ -1,7 +1,9 @@
 import 'package:ev_homes/components/animated_box.dart';
 import 'package:ev_homes/core/constant/constant.dart';
 import 'package:ev_homes/core/helper/helper.dart';
+import 'package:ev_homes/pages/cp_pages/cp_dashboard_page.dart';
 import 'package:ev_homes/sections/login_sections/admin_login_sub_section.dart';
+import 'package:ev_homes/wrappers/admin_home_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class AdminLoginSection extends StatefulWidget {
@@ -77,7 +79,7 @@ class _AdminLoginSectionState extends State<AdminLoginSection>
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const AdminLoginSubSection(),
+                          builder: (context) => const AdminHomeWrapper(),
                         ),
                       );
                     },
@@ -101,6 +103,14 @@ class _AdminLoginSectionState extends State<AdminLoginSection>
                   AnimatedBox(
                     imagePath: Constant.designIcon,
                     label: 'Design',
+                    colorAnimation: _colorAnimation,
+                    onPress: () {
+                      Helper.showCustomSnackBar("Coming soon...", Colors.green);
+                    },
+                  ),
+                  AnimatedBox(
+                    imagePath: Constant.HRIcon,
+                    label: 'HR',
                     colorAnimation: _colorAnimation,
                     onPress: () {
                       Helper.showCustomSnackBar("Coming soon...", Colors.green);

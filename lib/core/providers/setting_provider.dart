@@ -18,6 +18,7 @@ import 'package:ev_homes/core/models/target_model.dart';
 import 'package:ev_homes/core/models/team_section.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/core/services/shared_pref_service.dart';
+import 'package:ev_homes/sections/login_sections/admin_login_section.dart';
 import 'package:ev_homes/wrappers/cp_home_wrapper.dart';
 import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -657,7 +658,10 @@ class SettingProvider extends ChangeNotifier {
       playerId!,
     );
 
-    GoRouter.of(context).go("/admin-home-wrapper");
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const AdminLoginSection()),
+    );
   }
 
   void updateLoggedAdmin(Employee emp) {

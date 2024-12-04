@@ -57,7 +57,7 @@ class SiteVisit {
       'email': email,
       'feedback': feedback,
       'residence': residence,
-      'projects': projects,
+      'projects': projects.map((ele) => ele.id).toList(),
       'visitType': visitType,
       'choiceApt': choiceApt,
       'gender': gender,

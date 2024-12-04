@@ -1,17 +1,23 @@
 import 'dart:async';
-import 'package:ev_homes/core/models/configuration.dart';
+import 'dart:math';
+import 'package:dio/dio.dart';
+import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/models/site_visit.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:ev_homes/core/services/api_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
 import 'package:multi_select_flutter/util/multi_select_item.dart';
 import 'package:multiselect_dropdown_flutter/multiselect_dropdown_flutter.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:provider/provider.dart';
-import 'package:multi_dropdown/multi_dropdown.dart';
+import 'package:multiselect_dropdown_flutter/multiselect_dropdown_flutter.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
 class AddSiteVisitFormPage extends StatefulWidget {
   const AddSiteVisitFormPage({super.key});
@@ -40,59 +46,75 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   TextEditingController teamLeaderNameController = TextEditingController();
   TextEditingController teamLeaderEmailController = TextEditingController();
   TextEditingController teamLeaderPhoneController = TextEditingController();
+  TextEditingController otpController = TextEditingController();
   MultiSelectController<OurProject> multiselectController =
       MultiSelectController<OurProject>();
   MultiSelectController<String> multiselectController1 =
       MultiSelectController<String>();
   MultiSelectController<Employee> multiselectController2 =
       MultiSelectController<Employee>();
+
   Timer? _periodicTimer;
   int _counter = 10;
   bool showTimer = false;
+  String? _otpMessage;
   final TextEditingController _dateController = TextEditingController();
   DateTime? _selectedDate;
   String? selectedPrefix = 'Mr.';
   final List<String> prefixes = ['Mr.', 'Ms.', 'Miss', 'Dr.'];
   String? selectedAddress;
   bool isLoading = false;
-  final List myList2 = const [
+  final List fallbackRequirements = const [
     '1RK',
     '1BHK',
     '2BHK',
     '3BHK',
+    '4BHK',
     'Jodi',
   ];
   bool resendPass = false;
   String? _selectedSource;
   Employee? _selectedClosingManger;
-  Employee? _selectedTeamLeader;
 
+  Employee? _selectedSeniorClosingManager;
   Employee? _selectedSalesManager;
   List<Employee> _selectedSalesManagers1 = [];
+  Employee? _selectedTeamLeader;
+  final List myList = const ['Ev 9 Square', 'Ev heart city', 'Marina Bay'];
+  // List<String> selectedProject = [];
+  List<String> selectedRequirement = [];
+  List<String> listofSource = ['Walk-in', 'CP', 'Ref'];
+  Employee? _selectedDataEntryUser;
+  String? selectedProj;
 
-  final List<String> myList = const [
-    'Ev 9 Square',
-    'Ev heart city',
-    'Marina Bay'
-  ];
+  List<OurProject> selectedProject = [];
+  // String? selectedProj;
+  String? selectedVisit;
 
+  // List of projects for the dropdown
   final List<String> projects = [
     '10 Marina Bay',
     '9 Square',
   ];
-
-  final List<String> visitType = [
-    'visit',
-    'revisit',
+  final List<String> assignnames = [
+    'Jaspreet Arora',
+    'Harshal Kokate',
+    'Ricky Mane',
+    'Deepak Karki'
   ];
-
-  List<OurProject> selectedProject = [];
-  String? selectedProj;
-  String? selectedVisit;
-
-  List<String> selectedRequirement = [];
-  List<String> listofSource = ['Walk-in', 'CP', 'Ref'];
-  Employee? _selectedDataEntryUser;
+  String? selectedassignName;
+  // final Map<String, List<String>> subordinatesassignnames = {
+  //   'Jaspreet Arora': ['John Doe', 'Jane Smith', 'Sam Wilson', 'Alice Brown'],
+  //   'Harshal Kokate': ['Tom Hardy', 'Jerry Lin', 'Sarah Connor', 'Bruce Wayne'],
+  //   'Ricky Mane': ['Clark Kent', 'Diana Prince', 'Peter Parker', 'Tony Stark'],
+  //   'Deepak Karki': [
+  //     'Steve Rogers',
+  //     'Natasha Romanoff',
+  //     'Wanda Maximoff',
+  //     'Stephen Strange'
+  //   ],
+  // };
+  List<String> selectedsubordinateassignNames = [];
 
   void startPeriodicTimer() {
     if (_periodicTimer?.isActive == true) {
@@ -145,7 +167,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
               pickedTime.minute,
             );
             // Format the combined date and time as you wish
-            _dateController.text = DateFormat("dd MMM yy hh:mm a").format(
+            _dateController.text = DateFormat("yyyy-MM-dd HH:mm").format(
               _selectedDate!,
             );
           });
@@ -155,14 +177,270 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   }
 
   Future<void> onPressSubmit() async {
-    setState(() {
-      isLoading = true;
-    });
+    if (selectedProject.isEmpty ||
+        selectedRequirement.isEmpty ||
+        firstNameController.text.isEmpty ||
+        lastNameController.text.isEmpty ||
+        _selectedSeniorClosingManager == null ||
+        _selectedSalesManagers1.isEmpty ||
+        _selectedDate == null ||
+        phoneController.text.isEmpty ||
+        emailController.text.isEmpty ||
+        addressController.text.isEmpty ||
+        _selectedDataEntryUser == null ||
+        selectedPrefix == null) {
+      Helper.showCustomSnackBar("All Fields Required");
+      return;
+    }
+    await generateOtp();
+  }
 
+  void updatMessageOtp(String? message) {
+    setState(() {
+      _otpMessage = message;
+    });
+    Future.delayed(const Duration(seconds: 2), () {
+      setState(() {
+        _otpMessage = null;
+      });
+    });
+  }
+
+  Future<void> generateOtp([bool resent = false]) async {
     try {
-      // Simulate successful submission
+      setState(() {
+        isLoading = true;
+      });
+      final recievedOtp = await ApiService().sentOtpSiteVisit({
+        "project": selectedProj,
+        "firstName": firstNameController.text,
+        "lastName": lastNameController.text,
+        "phoneNumber": phoneController.text,
+        "email": emailController.text,
+        "closingManager": _selectedSeniorClosingManager!.id,
+      });
+      if (recievedOtp != null) {
+        _showOtpVerificationDialog();
+        if (resent) {
+          updatMessageOtp("Otp resent Successfullly");
+        } else {
+          updatMessageOtp("Otp Sent Successfullly");
+        }
+      } else {
+        Helper.showCustomSnackBar("Unable send OTP at moment");
+      }
+    } catch (e) {
+      Helper.showCustomSnackBar("Failed To send OTP");
+    } finally {
       setState(() {
         isLoading = false;
+      });
+    }
+  }
+
+  _showOtpVerificationDialog() {
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        insetPadding: const EdgeInsets.all(10),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 8,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        ),
+        content: SizedBox(
+          width: MediaQuery.sizeOf(context).width,
+          height: MediaQuery.sizeOf(context).height * 0.4,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Otp sent to whatsapp Number",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                  ),
+                ),
+                Text(
+                  Helper.maskPhoneNumber(phoneController.text),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                // if (_otpMessage != null)
+                //   Text(
+                //     _otpMessage!,
+                //     textAlign: TextAlign.center,
+                //     style: const TextStyle(
+                //       fontWeight: FontWeight.w500,
+                //       color: Colors.blue,
+                //     ),
+                //   ),
+                const SizedBox(height: 10),
+                PinCodeTextField(
+                  controller: otpController,
+                  appContext: context,
+                  length: 6,
+                  pinTheme: PinTheme(
+                    shape: PinCodeFieldShape.box,
+                    borderRadius: BorderRadius.circular(8),
+                    fieldHeight: 40,
+                    fieldWidth: 40,
+                    activeFillColor: Colors.white,
+                    inactiveFillColor: Colors.white,
+                    selectedFillColor: Colors.white,
+                    activeColor: const Color(0xFFFF745C),
+                    inactiveColor: const Color.fromARGB(255, 238, 136, 118),
+                    selectedColor: const Color(0xFFFF745C),
+                  ),
+                  keyboardType: TextInputType.number,
+                  enableActiveFill: true,
+                ),
+
+                // TextFormField(
+                //   keyboardType: TextInputType.number,
+                //   controller: otpController,
+                //   maxLength: 6,
+                //   decoration: InputDecoration(
+                //     hintText: "6 Digit OTP",
+                //     enabledBorder: OutlineInputBorder(
+                //       borderSide: BorderSide(
+                //         color: Colors.black.withOpacity(0.2),
+                //       ),
+                //       borderRadius: BorderRadius.circular(5),
+                //     ),
+                //     border: OutlineInputBorder(
+                //       borderSide: BorderSide(
+                //         color: Colors.black.withOpacity(0.2),
+                //       ),
+                //       borderRadius: BorderRadius.circular(5),
+                //     ),
+                //     errorBorder: OutlineInputBorder(
+                //       borderSide: BorderSide(
+                //         color: Colors.red.withOpacity(0.4),
+                //       ),
+                //       borderRadius: BorderRadius.circular(5),
+                //     ),
+                //   ),
+                // ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red[300],
+                        ),
+                        onPressed: () async {
+                          Navigator.of(context).pop();
+                          await onVerfiredOrSkipOtp();
+                        },
+                        child: const Text(
+                          "Skip",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 30),
+                    Expanded(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green[300],
+                        ),
+                        onPressed: () async {
+                          final resp = await ApiService().verifySiteVisitOtp(
+                            phoneController.text,
+                            otpController.text,
+                            emailController.text,
+                          );
+                          if (resp == false) return;
+
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
+                          // print("otp ok: $resp");
+                          await onVerfiredOrSkipOtp(true);
+                        },
+                        child: const Text(
+                          "Submit",
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () => generateOtp(true),
+                    child: const Text(
+                      "Resent OTP?",
+                      textAlign: TextAlign.end,
+                      style: TextStyle(
+                        color: Colors.blue,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _onRefresh() async {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      // Execute all three futures concurrently
+      await Future.wait([
+        settingProvider.getRequirements(),
+        settingProvider.getClosingManagers(),
+        settingProvider.getTeamLeaders(),
+        // settingProvider.getSeniorClosingManagers(),
+        settingProvider.getSalesManager(),
+        settingProvider.getOurProject(),
+        settingProvider.getDataEntryEmployess(),
+      ]);
+    } catch (e) {
+      // Handle any errors if needed
+      print('Error during refresh: $e');
+    } finally {
+      // Ensure isLoading is set to false in both success and error cases
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> onVerfiredOrSkipOtp([bool verified = false]) async {
+    try {
+      print("in ok: $verified");
+      // Simulate successful submission
+      setState(() {
+        isLoading = true;
       });
       final settingProvider = Provider.of<SettingProvider>(
         context,
@@ -170,17 +448,19 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
       );
       final newVisit = SiteVisit(
         projects: selectedProject,
-        visitType: selectedVisit,
         choiceApt: selectedRequirement,
         firstName: firstNameController.text,
         lastName: lastNameController.text,
-        closingManager: _selectedClosingManger,
+        closingManager: _selectedSeniorClosingManager,
+        closingTeam: _selectedSalesManagers1,
         date: _selectedDate,
         phoneNumber: int.parse(phoneController.text),
         email: emailController.text.trim(),
         residence: addressController.text,
         dataEntryBy: _selectedDataEntryUser,
         namePrefix: selectedPrefix,
+        countryCode: "+91",
+        verified: verified,
         gender: selectedPrefix?.toLowerCase() == 'mr' ? 'male' : 'female',
       );
 
@@ -200,7 +480,15 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
       try {
         await settingProvider.addSiteVisit(visitMap);
       } catch (e) {
+        // Helper.showCustomSnackBar("Error Adding Site Visit");
         // print(e);
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+        // if (mounted) {
+        //   Navigator.of(context).pop();
+        // }
       }
 
       if (mounted) {
@@ -219,7 +507,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text("Data Saved Succesfully"),
+                const Text("Site visit added Succesfully"),
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -236,6 +524,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                           ),
                         ),
                         onPressed: () {
+                          Navigator.of(context).pop();
                           Navigator.of(context).pop();
                           // GoRouter.of(context)
                           //     .pushReplacement("/manage-site-visit");
@@ -257,37 +546,6 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
         );
       }
     } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _onRefresh() async {
-    final settingProvider = Provider.of<SettingProvider>(
-      context,
-      listen: false,
-    );
-
-    try {
-      setState(() {
-        isLoading = true;
-      });
-
-      // Execute all three futures concurrently
-      await Future.wait([
-        settingProvider.getRequirements(),
-        settingProvider.getClosingManagers(),
-        settingProvider.getDataEntryEmployess(),
-        settingProvider.getTeamLeaders(),
-        settingProvider.getOurProject(),
-        settingProvider.getSalesManager(),
-      ]);
-    } catch (e) {
-      // Handle any errors if needed
-      // print('Error during refresh: $e');
-    } finally {
-      // Ensure isLoading is set to false in both success and error cases
       setState(() {
         isLoading = false;
       });
@@ -320,6 +578,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
     teamLeaderNameController.dispose();
     teamLeaderEmailController.dispose();
     teamLeaderPhoneController.dispose();
+    otpController.dispose();
     _periodicTimer?.cancel();
     super.dispose();
   }
@@ -353,10 +612,12 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   @override
   Widget build(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(context);
-    final closingMangers = settingProvider.dataEntryUsers;
+    final closingMangers = settingProvider.closingManagers;
+    final seniorClosingManagers = settingProvider.seniorClosingManagers;
     final salesManager = settingProvider.salesManager;
     final teamLeaders = settingProvider.teamLeaders;
     final requirements = settingProvider.requirements;
+    print(_selectedClosingManger);
 
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -478,53 +739,6 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                     ),
 
                     const SizedBox(height: 16),
-
-                    DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        label: RichText(
-                          text: TextSpan(
-                            text: 'Select Visit',
-                            style: TextStyle(
-                              color: Colors.grey[700],
-                              fontSize: 16,
-                            ),
-                            children: const [
-                              TextSpan(
-                                text: '*',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.black.withOpacity(0.2),
-                          ),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      value: selectedVisit,
-                      items: visitType.map((String visits) {
-                        return DropdownMenuItem<String>(
-                          value: visits,
-                          child: Text(
-                            visits[0].toUpperCase() +
-                                visits.substring(1).toLowerCase(),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedVisit = newValue;
-                        });
-                      },
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
 
                     // Date of Birth
                     TextFormField(
@@ -806,6 +1020,138 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                           ),
                         ),
                         const SizedBox(height: 16),
+                        const Row(
+                          children: [
+                            // Expanded(
+                            //   child: MultiSelectDropdown.simpleList(
+                            //     list: myList,
+                            //     boxDecoration: BoxDecoration(
+                            //       border: Border.all(
+                            //           color: Colors.grey.withOpacity(0.4)),
+                            //       borderRadius: BorderRadius.circular(12),
+                            //     ),
+                            //     initiallySelected: selectedProject,
+                            //     checkboxFillColor: Colors.grey.withOpacity(0.3),
+                            //     splashColor: Colors.grey.withOpacity(0.3),
+                            //     includeSearch: true,
+                            //     whenEmpty: "Projects",
+                            //     onChange: (newList) {
+                            //       selectedProject =
+                            //           newList.map((e) => e as String).toList();
+                            //     },
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: MultiDropdown<String>(
+                                items: [
+                                  ...settingProvider.requirements.map(
+                                    (ele) =>
+                                        DropdownItem(value: ele, label: ele),
+                                  ),
+                                ],
+                                controller: multiselectController1,
+                                enabled: true,
+                                searchEnabled: false,
+                                chipDecoration: const ChipDecoration(
+                                  backgroundColor: Colors.greenAccent,
+                                  wrap: true,
+                                  runSpacing: 2,
+                                  spacing: 10,
+                                ),
+                                fieldDecoration: FieldDecoration(
+                                  labelStyle: TextStyle(fontSize: 30),
+                                  hintText: 'Choice of Apartment',
+                                  hintStyle:
+                                      const TextStyle(color: Colors.black87),
+                                  prefixIcon: const Icon(
+                                      CupertinoIcons.building_2_fill),
+                                  showClearIcon: false,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ),
+                                dropdownDecoration: const DropdownDecoration(
+                                  marginTop: 2,
+                                  maxHeight: 500,
+                                  header: Padding(
+                                    padding: EdgeInsets.all(8),
+                                    child: Text(
+                                      'Select Apartments',
+                                      textAlign: TextAlign.start,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                dropdownItemDecoration: DropdownItemDecoration(
+                                  selectedIcon: const Icon(Icons.check_box,
+                                      color: Colors.grey),
+                                  disabledIcon: Icon(Icons.lock,
+                                      color: Colors.grey.shade300),
+                                ),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Please select a apartment';
+                                  }
+                                  return null;
+                                },
+                                onSelectionChange: (selectedItems) {
+                                  setState(() {
+                                    selectedRequirement = selectedItems;
+                                  });
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: MultiSelectDropdown.simpleList(
+                        //         list: requirements.isNotEmpty
+                        //             ? requirements
+                        //             : fallbackRequirements,
+
+                        //         boxDecoration: BoxDecoration(
+                        //           border: Border.all(
+                        //             color: Colors.grey.withOpacity(0.4),
+                        //           ),
+                        //           borderRadius: BorderRadius.circular(12),
+                        //         ),
+                        //         initiallySelected: selectedRequirement,
+                        //         checkboxFillColor: Colors.grey.withOpacity(0.3),
+                        //         splashColor: Colors.grey.withOpacity(0.3),
+                        //         // includeSearch: true,
+                        //         whenEmpty: "Choice of Apartment",
+                        //         onChange: (newList) {
+                        //           selectedRequirement =
+                        //               requirements.map((e) => e).toList();
+                        //         },
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        const SizedBox(
+                          height: 16,
+                        ),
 
                         Row(
                           children: [
@@ -887,84 +1233,6 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         Row(
                           children: [
                             Expanded(
-                              child: MultiDropdown<String>(
-                                items: [
-                                  ...settingProvider.requirements.map(
-                                    (ele) =>
-                                        DropdownItem(value: ele, label: ele),
-                                  ),
-                                ],
-                                controller: multiselectController1,
-                                enabled: true,
-                                searchEnabled: false,
-                                chipDecoration: const ChipDecoration(
-                                  backgroundColor: Colors.greenAccent,
-                                  wrap: true,
-                                  runSpacing: 2,
-                                  spacing: 10,
-                                ),
-                                fieldDecoration: FieldDecoration(
-                                  labelStyle: TextStyle(fontSize: 30),
-                                  hintText: 'Choice of Apartment',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.black87),
-                                  prefixIcon: const Icon(
-                                      CupertinoIcons.building_2_fill),
-                                  showClearIcon: false,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                                dropdownDecoration: const DropdownDecoration(
-                                  marginTop: 2,
-                                  maxHeight: 500,
-                                  header: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Text(
-                                      'Select Apartments',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                dropdownItemDecoration: DropdownItemDecoration(
-                                  selectedIcon: const Icon(Icons.check_box,
-                                      color: Colors.grey),
-                                  disabledIcon: Icon(Icons.lock,
-                                      color: Colors.grey.shade300),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select a apartment';
-                                  }
-                                  return null;
-                                },
-                                onSelectionChange: (selectedItems) {
-                                  setState(() {
-                                    selectedRequirement = selectedItems;
-                                  });
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Row(
-                          children: [
-                            Expanded(
                               child: DropdownButtonFormField<String>(
                                 value: _selectedSource,
                                 decoration: InputDecoration(
@@ -1031,7 +1299,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                           children: [
                             Expanded(
                               child: DropdownButtonFormField<Employee>(
-                                value: _selectedClosingManger,
+                                value: _selectedSeniorClosingManager,
                                 decoration: InputDecoration(
                                   labelText: 'Closing Manager',
                                   border: OutlineInputBorder(
@@ -1066,7 +1334,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                 }).toList(),
                                 onChanged: (newValue) {
                                   setState(() {
-                                    _selectedClosingManger = newValue;
+                                    _selectedSeniorClosingManager = newValue;
                                   });
                                 },
                                 validator: (value) {
@@ -1083,89 +1351,72 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         const SizedBox(
                           height: 16,
                         ),
-
                         Row(
                           children: [
                             Expanded(
-                              child: MultiDropdown<Employee>(
-                                items: [
-                                  ...settingProvider.salesManager.map(
-                                    (ele) => DropdownItem(
-                                        value: ele,
-                                        label:
-                                            "${ele.firstName} ${ele.lastName} (${ele.designation?.designation ?? ""})"),
-                                  ),
-                                ],
-                                controller: multiselectController2,
-                                enabled: true,
-                                searchEnabled: true,
-                                chipDecoration: const ChipDecoration(
-                                  backgroundColor: Colors.greenAccent,
-                                  wrap: true,
-                                  runSpacing: 2,
-                                  spacing: 10,
-                                ),
-                                fieldDecoration: FieldDecoration(
-                                  hintText: 'Select Sales Managers',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.black87),
-                                  prefixIcon:
-                                      const Icon(CupertinoIcons.person_2),
-                                  showClearIcon: false,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                    borderSide: const BorderSide(
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                                dropdownDecoration: const DropdownDecoration(
-                                  marginTop: 2,
-                                  maxHeight: 500,
-                                  header: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Text(
-                                      'Assign To',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
+                              child: MultiSelectDialogField<Employee>(
+                                items: salesManager
+                                    .map(
+                                      (teamleader) => MultiSelectItem<Employee>(
+                                        teamleader,
+                                        "${teamleader.firstName} ${teamleader.lastName}",
                                       ),
-                                    ),
-                                  ),
+                                    )
+                                    .toList(),
+                                title: const Text("Assign To"),
+                                selectedColor:
+                                    const Color.fromARGB(255, 0, 0, 0),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(color: Colors.blue),
                                 ),
-                                dropdownItemDecoration: DropdownItemDecoration(
-                                  selectedIcon: const Icon(
-                                    Icons.check_box,
-                                    color: Colors.grey,
-                                  ),
-                                  disabledIcon: Icon(
-                                    Icons.lock,
-                                    color: Colors.grey.shade300,
-                                  ),
+                                buttonText: Text(
+                                  _selectedSalesManagers1.isEmpty
+                                      ? 'Select Sales Managers'
+                                      : '${_selectedSalesManagers1.length} Selected',
                                 ),
+                                onConfirm: (values) {
+                                  setState(() {
+                                    _selectedSalesManagers1 =
+                                        values; // Capture selected sales managers
+                                  });
+                                },
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
-                                    return 'Please select Sales Managers';
+                                    return 'Please select at least one Sales Manager';
                                   }
                                   return null;
-                                },
-                                onSelectionChange: (selectedItems) {
-                                  setState(() {
-                                    _selectedSalesManagers1 = selectedItems;
-                                  });
-                                  // debugPrint(
-                                  //     "OnSelectionChange: $selectedItems");
                                 },
                               ),
                             ),
                           ],
                         ),
+
+                        // if (selectedassignName != null) ...[
+                        //   const SizedBox(height: 16),
+                        //   MultiSelectDropdown.simpleList(
+                        //     // Assign a unique key to force rebuild when selectedassignName changes
+                        //     key: ValueKey(selectedassignName),
+                        //     list: subordinatesassignnames[selectedassignName] ??
+                        //         [],
+                        //     boxDecoration: BoxDecoration(
+                        //       border: Border.all(
+                        //           color: Colors.black.withOpacity(0.8)),
+                        //       borderRadius: BorderRadius.circular(20),
+                        //     ),
+                        //     initiallySelected: selectedsubordinateassignNames,
+                        //     checkboxFillColor: Colors.grey.withOpacity(0.3),
+                        //     splashColor: Colors.grey.withOpacity(0.3),
+                        //     includeSearch: true,
+                        //     whenEmpty: "Reporting To",
+                        //     onChange: (newList) {
+                        //       setState(() {
+                        //         selectedsubordinateassignNames =
+                        //             newList.map((e) => e as String).toList();
+                        //       });
+                        //     },
+                        //   ),
+                        // ],
 
                         // Row(
                         // children: [
@@ -1305,7 +1556,14 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                   ),
                 ),
               ),
-            ]
+            ],
+            if (isLoading)
+              Container(
+                color: Colors.black.withOpacity(0.3),
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )
           ],
         ),
       );

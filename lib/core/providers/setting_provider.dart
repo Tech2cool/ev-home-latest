@@ -45,6 +45,7 @@ class SettingProvider extends ChangeNotifier {
   List<Employee> _employeeBydDesg = [];
   List<Employee> _preSaleExecutives = [];
   List<Employee> _reportingEmps = [];
+  List<Employee> _seniorClosingManagers = [];
 
   List<ChannelPartner> _channelPartners = [];
   List<Employee> _teamLeaders = [];
@@ -142,6 +143,8 @@ class SettingProvider extends ChangeNotifier {
   Target? myTarget;
 
   ClosingManagerGraph _closingManagerGraph = ClosingManagerGraph();
+  List<Employee> get seniorClosingManagers => _seniorClosingManagers;
+
   ClosingManagerGraph get closingManagerGraph => _closingManagerGraph;
   List<Designation> get designations => _designation;
   List<int> get carryForwardsOptions => _carryForwardsOptions;
@@ -236,6 +239,15 @@ class SettingProvider extends ChangeNotifier {
       "status": status,
     });
     notifyListeners();
+  }
+
+  Future<void> getSeniorClosingManagers() async {
+    final emps = await _apiService.getSeniorClosingManagers();
+    if (emps.isNotEmpty) {
+      _seniorClosingManagers = emps;
+      // print(_seniorClosingManagers);
+      notifyListeners();
+    }
   }
 
   Future<void> getCarryForwardOpt(String id) async {
@@ -367,24 +379,24 @@ class SettingProvider extends ChangeNotifier {
     final cust = await _apiService.getAllCustomer();
     if (cust.isNotEmpty) {
       _customer = cust;
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<void> getOurProject() async {
     final projects = await _apiService.getOurProject();
     if (projects.isNotEmpty) {
       _ourProject = projects;
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<void> getClosingManagers() async {
     final emps = await _apiService.getClosingManagers();
     if (emps.isNotEmpty) {
       _closingManagers = emps;
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<void> getSalesManager() async {
@@ -399,8 +411,8 @@ class SettingProvider extends ChangeNotifier {
     final emps = await _apiService.getDataEntryEmployees();
     if (emps.isNotEmpty) {
       _dataEntryUsers = emps;
-      notifyListeners();
     }
+    notifyListeners();
   }
 
   Future<void> getPostSalesEx() async {

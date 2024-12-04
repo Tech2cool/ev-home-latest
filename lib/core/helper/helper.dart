@@ -228,4 +228,16 @@ class Helper {
     if (text.isEmpty) return text;
     return text[0].toUpperCase() + text.substring(1).toLowerCase();
   }
+
+  static bool hasValueChanged(dynamic oldValue, dynamic newValue) {
+    return oldValue != newValue;
+  }
+
+  static String maskPhoneNumber(String input) {
+    if (input.length <= 4) {
+      return input;
+    }
+    // Mask all but the last four digits
+    return '*' * (input.length - 4) + input.substring(input.length - 4);
+  }
 }

@@ -12,6 +12,7 @@ import 'package:ev_homes/core/models/designation.dart';
 import 'package:ev_homes/core/models/division.dart';
 import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/models/meetingSummary.dart';
+import 'package:ev_homes/core/models/otp.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/models/pagination_model.dart';
 import 'package:ev_homes/core/models/post_sale_lead.dart';
@@ -30,8 +31,8 @@ const storage = FlutterSecureStorage();
 
 // final dio = Dio();
 
-// const baseUrl = "http://192.168.1.180:8082";
-const baseUrl = "https://api.evhomes.tech";
+const baseUrl = "http://192.168.1.180:8082";
+// const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -3327,6 +3328,116 @@ class ApiService {
       print(e);
       Helper.showCustomSnackBar(errorMessage);
       return [];
+    }
+  }
+
+  Future<List<Employee>> getSeniorClosingManagers() async {
+    try {
+      print("pass1");
+      final Response response = await _dio.get('/employee-closing-manager-s');
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return [];
+      }
+      print("pass2");
+      final Map<String, dynamic> data = response.data;
+      // print(response.data["data"]);
+      final items = data['data'] as List<dynamic>? ?? [];
+      // print("passed data null");
+      print("pass3");
+      List<Employee> empItems = [];
+      if (items.isNotEmpty) {
+        empItems = items.map((emp) => Employee.fromMap(emp)).toList();
+      }
+
+      print("pass4");
+      return empItems;
+    } on DioException catch (e) {
+      // print("error $e");
+      String errorMessage = 'Something went wrong';
+      print("pass5");
+      if (e.response != null) {
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
+      return [];
+    }
+  }
+
+  Future<Otp?> sentOtpSiteVisit(Map<String, dynamic> data) async {
+    try {
+      // loginCancelToken?.cancel("duplicate request cancelled");
+      // loginCancelToken = CancelToken();
+      final Response response = await _dio.post(
+        '/site-visit-generate-otp',
+        data: data,
+      );
+
+      if (response.data['code'] != 200 && response.data['data'] == null) {
+        Helper.showCustomSnackBar(response.data['message']);
+
+        return null;
+      }
+      Helper.showCustomSnackBar(response.data['message'], Colors.green);
+      return Otp.fromMap(response.data['data']);
+    } on DioException catch (e) {
+      // print("error $e");
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
+      return null;
+    }
+  }
+
+  Future<bool> verifySiteVisitOtp(
+    String phoneNumber,
+    String otp, [
+    String? email,
+  ]) async {
+    try {
+      // loginCancelToken?.cancel("duplicate request cancelled");
+      // loginCancelToken = CancelToken();
+      final Response response = await _dio.post(
+        '/site-visit-otp-verify',
+        data: {
+          "otp": otp,
+          "phoneNumber": phoneNumber,
+          "email": email,
+        },
+      );
+
+      if (response.data['code'] != 200 && response.data['data'] == null) {
+        Helper.showCustomSnackBar(response.data['message']);
+
+        return false;
+      }
+      Helper.showCustomSnackBar(response.data['message'], Colors.green);
+      return true;
+    } on DioException catch (e) {
+      // print("error $e");
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
+      return false;
     }
   }
 }

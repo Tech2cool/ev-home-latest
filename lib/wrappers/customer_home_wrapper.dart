@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:video_player/video_player.dart';
 
+import '../pages/customer_pages/youtube_home_page.dart';
+
 class CustomerHomeWrapper extends StatefulWidget {
   const CustomerHomeWrapper({super.key});
 
@@ -274,9 +276,10 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
                               'Settings',
                               Icons.settings,
                               'Adjust app settings',
-                              () {
-                                // Navigate to Settings screen
-                              },
+                              () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => YouTubePage())),
                             ),
                           ),
                         ],

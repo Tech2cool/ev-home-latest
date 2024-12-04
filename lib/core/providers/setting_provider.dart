@@ -16,6 +16,7 @@ import 'package:ev_homes/core/models/pagination_model.dart';
 import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:ev_homes/core/models/site_visit.dart';
 import 'package:ev_homes/core/models/target_model.dart';
+import 'package:ev_homes/core/models/task.dart';
 import 'package:ev_homes/core/models/team_section.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/core/services/shared_pref_service.dart';
@@ -42,6 +43,7 @@ class SettingProvider extends ChangeNotifier {
   List<Employee> _postSalesExecutives = [];
   List<Employee> _employeeBydDesg = [];
   List<Employee> _preSaleExecutives = [];
+  List<Employee> _reportingEmps = [];
 
   List<ChannelPartner> _channelPartners = [];
   List<Employee> _teamLeaders = [];
@@ -60,6 +62,16 @@ class SettingProvider extends ChangeNotifier {
     totalItems: 0,
     data: [],
   );
+  PaginationModel<Lead> _leadsTeamLeaderReportingTo = PaginationModel<Lead>(
+    code: 404,
+    message: '',
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+    totalItems: 0,
+    data: [],
+  );
+
   PaginationModel<Lead> _leadsPreSalesExectives = PaginationModel<Lead>(
     code: 404,
     message: '',
@@ -81,6 +93,7 @@ class SettingProvider extends ChangeNotifier {
   );
 
   List<TeamSection> _teamSections = [];
+  List<Task> _tasks = [];
   List<SiteVisit> _siteVisits = [];
   List<OurProject> _ourProject = [];
   List<ChannelPartner> _channelPartner = [];
@@ -141,14 +154,20 @@ class SettingProvider extends ChangeNotifier {
   List<Employee> get dataEntryUsers => _dataEntryUsers;
   List<Employee> get postSalesExecutives => _postSalesExecutives;
   List<TeamSection> get teamSections => _teamSections;
+  List<Task> get tasks => _tasks;
+  List<MeetingSummary> get meeting => _meeting;
 
   List<Employee> get employeeBydDesg => _employeeBydDesg;
+  List<Employee> get reportingEmps => _reportingEmps;
 
   List<Employee> get preSaleExecutives => _preSaleExecutives;
   List<ChannelPartner> get channelPartners => _channelPartners;
   List<Lead> get leads => _leads;
   PaginationModel<PostSaleLead> get leadsPostSale => _leadsPostSale;
   PaginationModel<Lead> get leadsTeamLeader => _leadsTeamLeader;
+  PaginationModel<Lead> get leadsTeamLeaderReportingTo =>
+      _leadsTeamLeaderReportingTo;
+
   PaginationModel<Lead> get leadsPreSaleExecutive => _leadsPreSalesExectives;
   PaginationModel<PostSaleLead> get leadsPostSaleExecutive =>
       _leadsPostSalesExectives;
@@ -185,12 +204,37 @@ class SettingProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> getReportingToEmps(String rId) async {
+    final emps = await _apiService.getReportingToEmps(rId);
+    if (emps.isNotEmpty) {
+      print("got ");
+      _reportingEmps = emps;
+      notifyListeners();
+    }
+  }
+
   Future<void> getTeamLeaders() async {
     final emps = await _apiService.getTeamLeaders();
     if (emps.isNotEmpty) {
       _teamLeaders = emps;
       notifyListeners();
     }
+  }
+
+  Future<void> getTask(String id) async {
+    final emps = await _apiService.getTasks(id);
+
+    if (emps.isNotEmpty) {
+      _tasks = emps;
+      notifyListeners();
+    }
+  }
+
+  Future<void> updateTaskStatus(String id, String status) async {
+    final emps = await _apiService.updateTask(id, {
+      "status": status,
+    });
+    notifyListeners();
   }
 
   Future<void> getCarryForwardOpt(String id) async {
@@ -402,7 +446,17 @@ class SettingProvider extends ChangeNotifier {
 
   Future<void> getMyTarget(String id) async {
     final targetResp = await _apiService.getMyTarget(id);
-    myTarget = targetResp;
+    if (targetResp != null) {
+      myTarget = targetResp;
+    }
+    notifyListeners();
+  }
+
+  Future<void> updateCarryForward(String id, Map<String, dynamic> data) async {
+    final targetResp = await _apiService.useCarryForward(id, data);
+    if (targetResp != null) {
+      myTarget = targetResp;
+    }
     notifyListeners();
   }
 
@@ -647,6 +701,26 @@ class SettingProvider extends ChangeNotifier {
       status,
     );
     _leadsTeamLeader = leads;
+    notifyListeners();
+    return leads;
+  }
+
+  //get leads
+  Future<PaginationModel<Lead>> getTeamLeaderReportingToLeads(
+    String id, [
+    String query = '',
+    int page = 1,
+    int limit = 10,
+    String? status,
+  ]) async {
+    final leads = await _apiService.getTeamLeaderReportingToLeads(
+      id,
+      query,
+      page,
+      limit,
+      status,
+    );
+    _leadsTeamLeaderReportingTo = leads;
     notifyListeners();
     return leads;
   }

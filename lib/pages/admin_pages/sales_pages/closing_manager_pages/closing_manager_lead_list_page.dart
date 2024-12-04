@@ -82,6 +82,18 @@ class _ClosingManagerLeadListPageState
     return lead.status;
   }
 
+  String getStatus1(Lead lead) {
+    if (lead.stage == "visit") {
+      return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
+    } else if (lead.stage == "revisit") {
+      return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.revisitStatus ?? '')}";
+    } else if (lead.stage == "booking") {
+      return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.bookingStatus ?? '')}";
+    }
+
+    return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
+  }
+
   @override
   void initState() {
     super.initState();
@@ -153,13 +165,6 @@ class _ClosingManagerLeadListPageState
                             '/closing-manager-lead-details',
                             extra: lead,
                           );
-
-                          // Navigator.of(context).push(
-                          //   MaterialPageRoute(
-                          //     builder: (context) =>
-                          //         AnalyserInternalTaggingDetails(lead: lead),
-                          //   ),
-                          // );
                         },
                         child: Container(
                           padding: const EdgeInsets.all(10),
@@ -189,12 +194,12 @@ class _ClosingManagerLeadListPageState
                                     children: [
                                       Text(
                                         Helper.capitalize(
-                                          getStatus(lead) ?? "",
+                                          getStatus1(lead),
                                         ),
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: _getStatusColor(
-                                            getStatus(lead) ?? "",
+                                            getStatus1(lead),
                                           ),
                                         ),
                                       ),
@@ -230,10 +235,15 @@ class _ClosingManagerLeadListPageState
                                         ),
                                         const SizedBox(width: 5),
                                         NamedCard(
-                                          heading: "Valid Till",
-                                          value: Helper.formatDate(
-                                            lead.validTill.toString(),
+                                          heading: lead.cycle != null
+                                              ? "${Helper.capitalize(lead.cycle?.stage ?? "")} Deadline: "
+                                              : "Visit Deadline: ",
+                                          value: Helper.formatDateOnly(
+                                            lead.cycle?.validTill.toString() ??
+                                                '',
                                           ),
+                                          // valueColor: Colors.red,
+                                          // headingColor: Colors.white,
                                         ),
                                         const SizedBox(width: 5),
                                       ],
@@ -293,17 +303,15 @@ class _ClosingManagerLeadListPageState
 }
 
 Color _getStatusColor(String status) {
-  switch (status) {
-    case 'approved':
-      return Colors.green;
-    case 'rejected':
-      return Colors.red;
-    case 'in progress':
-    case 'pending':
-      return Colors.orange;
-    default:
-      return Colors.grey;
+  if (status.toLowerCase().contains("booked")) {
+    return Colors.green;
+  } else if (status.toLowerCase().contains("rejected")) {
+    return const Color.fromARGB(255, 255, 248, 248);
+  } else if (status.toLowerCase().contains("pending") ||
+      status.toLowerCase().contains("in progress")) {
+    return Colors.orange;
   }
+  return Colors.grey;
 }
 
 class NamedCard extends StatelessWidget {

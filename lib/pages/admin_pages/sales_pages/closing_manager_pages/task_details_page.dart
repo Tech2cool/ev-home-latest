@@ -1,4 +1,5 @@
-import 'package:ev_homes/core/models/lead.dart';
+import 'package:ev_homes/core/helper/helper.dart';
+import 'package:ev_homes/core/models/task.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 
 import 'package:flutter/material.dart';
@@ -6,6 +7,9 @@ import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 class TaskDetailsPage extends StatefulWidget {
+  final Task task;
+  const TaskDetailsPage({super.key, required this.task});
+
   @override
   State<TaskDetailsPage> createState() => _TaskDetailsPageState();
 }
@@ -18,7 +22,7 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: const Text('Client Details'),
+            title: const Text('Task Details'),
           ),
           body: SingleChildScrollView(
             child: Padding(
@@ -26,6 +30,53 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text(
+                    'Task',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            MyTextCard(
+                              heading: "Task: ",
+                              value: widget.task.name ?? "",
+                            ),
+                            const SizedBox(height: 8),
+                            MyTextCard(
+                              heading: "Description: ",
+                              value: widget.task.details ?? "",
+                            ),
+                            const SizedBox(height: 8),
+                            MyTextCard(
+                              heading: "Deadline: ",
+                              value: Helper.formatDateOnly(
+                                widget.task.deadline?.toIso8601String() ?? "",
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            MyTextCard(
+                              heading: "Assign by: ",
+                              value:
+                                  "${widget.task.assignBy?.firstName ?? ""}  ${widget.task.assignBy?.lastName ?? ""}",
+                            ),
+                            const SizedBox(height: 8),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
                   const Text(
                     'Overview',
                     style: TextStyle(
@@ -40,184 +91,69 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       elevation: 2,
-                      child: const Padding(
-                        padding: EdgeInsets.all(16.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MyTextCard(
                               heading: "Client Name: ",
-                              value: "Somiya Agarwal",
+                              value:
+                                  "${widget.task.lead?.firstName ?? ""} ${widget.task.lead?.lastName ?? ""}",
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             MyTextCard(
-                                heading: "Phone: ", value: "+91 90876542109"),
-                            SizedBox(height: 8),
+                              heading: "Phone: ",
+                              value:
+                                  "${widget.task.lead?.countryCode ?? ""} ${widget.task.lead?.phoneNumber ?? ""}",
+                            ),
+                            const SizedBox(height: 8),
                             MyTextCard(
-                                heading: "Alternate Number: ",
-                                value: "+91 987654221"),
-                            SizedBox(height: 8),
+                              heading: "Alternate Number: ",
+                              value:
+                                  "${widget.task.lead?.countryCode ?? ""} ${widget.task.lead?.altPhoneNumber ?? ""}",
+                            ),
+                            const SizedBox(height: 8),
                             MyTextCard(
                               heading: "Email: ",
-                              value: "Roh@gmail.com",
+                              value: widget.task.lead?.email ?? "NA",
                             ),
-                            SizedBox(height: 8),
-                            MyTextCard(
-                              heading: "Requirement: ",
-                              value: "2BHK",
-                            ),
-                            SizedBox(height: 8),
-                            MyTextCard(
-                                heading: "Call Status: ",
-                                value: "Follow Up Call"),
-                            SizedBox(height: 8),
-                            MyTextCard(
-                                heading: "Lead Status: ", value: "approved"),
-                            SizedBox(height: 8),
-                            MyTextCard(
-                              heading: "Interested: ",
-                              value: "Hot",
-                            ),
-                            SizedBox(height: 8),
-                            MyTextCard(
-                              heading: "Team Leader: ",
-                              value: "Harshal Kokate",
-                            ),
-                            SizedBox(height: 8),
-                            MyTextCard(
-                              heading: "Data Analyzer: ",
-                              value: "Narayan Jha",
-                            ),
-                            SizedBox(height: 8),
-                            MyTextCard(
-                              heading: "Task Assing To: ",
-                              value: "Manisha",
-                            ),
-                            SizedBox(height: 8),
-                            MyTextCard(
-                                heading: "Start Date: ", value: "02 Dec 2024"),
-                            SizedBox(height: 8),
-                            MyTextCard(
-                                heading: "Valid Till: ", value: "31 Jan 2025 "),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             MyTextCard(
                               heading: "Project: ",
-                              value: "9 Square",
+                              value: widget.task.lead?.project
+                                      .map((proj) => proj.name)
+                                      .join(", ") ??
+                                  'NA',
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                             MyTextCard(
-                              heading: "Requirement: ",
-                              value: "2BHK3BHK",
+                              heading: "Project: ",
+                              value: widget.task.lead?.requirement.join(", ") ??
+                                  'NA',
                             ),
-                            SizedBox(height: 8),
+                            const SizedBox(height: 8),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  const Text(
-                    'Channel Partner Details',
-                    style: TextStyle(
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                  Row(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => TaskDialog(
+                              id: widget.task.id!,
+                            ),
+                          );
+                        },
+                        child: const Text("Update Status"),
                       ),
-                      elevation: 4,
-                      child: const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            MyTextCard(
-                              heading: "Name: ",
-                              value: "Rohit Rathate",
-                            ),
-                            SizedBox(height: 8),
-                            MyTextCard(
-                              heading: "Firm Name: ",
-                              value: "Rohit2",
-                            ),
-                            SizedBox(height: 8),
-                            MyTextCard(
-                              heading: "Rera Registration: ",
-                              value: "No",
-                            ),
-                            SizedBox(height: 8),
-                            MyTextCard(
-                              heading: "Rera Id: ",
-                              value: "A12",
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    height: 400, // Constrained height for the stepper
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: ListView(
-                        children: const [
-                          CustomTimelineTile(
-                            title: "Approved",
-                            date: "10/10/2024",
-                            description: "welcome to ev home",
-                            color: Colors.orange,
-                            isFirst: true,
-                          ),
-                          CustomTimelineTile(
-                            title: "Contacted",
-                            date: "10/10/2024",
-                            description: "welcome to ev home",
-                            color: Colors.orange,
-                          ),
-                          CustomTimelineTile(
-                            title: "Follow Up",
-                            date: "10/10/2024",
-                            description: "welcome to ev home",
-                            color: Colors.orange,
-                          ),
-                          CustomTimelineTile(
-                            title: "Site Visit",
-                            date: "10/10/2024",
-                            description: "welcome to ev home",
-                            color: Colors.orange,
-                          ),
-                          CustomTimelineTile(
-                            title: "Revisit",
-                            date: "10/10/2024",
-                            description: "welcome to ev home",
-                            color: Colors.orange,
-                          ),
-                          CustomTimelineTile(
-                            title: "Booking",
-                            date: "10/10/2024",
-                            description: "welcome to ev home",
-                            color: Colors.orange,
-                          ),
-                          CustomTimelineTile(
-                            title: "Registration",
-                            date: "10/10/2024",
-                            description: "welcome to ev home",
-                            color: Color.fromARGB(255, 255, 223, 174),
-                            isLast: true,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
+                  const SizedBox(
                     height: 20,
                   ),
                 ],
@@ -332,6 +268,113 @@ class CustomTimelineTile extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class TaskDialog extends StatefulWidget {
+  final String id;
+
+  const TaskDialog({super.key, required this.id});
+  @override
+  _TaskDialogState createState() => _TaskDialogState();
+}
+
+class _TaskDialogState extends State<TaskDialog> {
+  String? selectedTask; // To store selected dropdown value
+  final TextEditingController remarkController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+    return AlertDialog(
+      title: Text("Task Dialog"),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Dropdown
+          DropdownButtonFormField<String>(
+            value: selectedTask,
+            items: [
+              DropdownMenuItem(
+                value: "completed",
+                child: Text("Task Completed"),
+              ),
+              DropdownMenuItem(
+                value: "unavailable",
+                child: Text("Unavailable"),
+              ),
+            ],
+            /*["Task Completed", "Unavailable"]
+                .map((task) => DropdownMenuItem(
+                      value: task,
+                      child: Text(task),
+                    ))
+                .toList(),*/
+            onChanged: (value) {
+              setState(() {
+                selectedTask = value;
+              });
+            },
+            decoration: InputDecoration(
+              labelText: "Select Task",
+              border: OutlineInputBorder(),
+            ),
+          ),
+          SizedBox(height: 16),
+          // Text Field
+          TextField(
+            controller: remarkController,
+            decoration: InputDecoration(
+              labelText: "Remark (e.g., Address)",
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        // Buttons
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Text("Cancel"),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                final selected = selectedTask;
+                final remark = remarkController.text;
+
+                if (selected != null && remark.isNotEmpty) {
+                  // Handle submission
+                  print("Task: $selected");
+                  print("Remark: $remark");
+
+                  // You can use Hive here to store the data locally
+                  // For example: box.put('task', {'task': selected, 'remark': remark});
+                  await settingProvider.updateTaskStatus(
+                    widget.id,
+                    selectedTask!,
+                  );
+                  Navigator.pop(context);
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Please fill all fields")),
+                  );
+                }
+              },
+              child: Text("Submit"),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

@@ -41,8 +41,9 @@ class _DashboardPageState extends State<DashboardPage> {
       return const AppDevDashboard();
     } else if (loggedDesg.toLowerCase() == "desg-post-sales-head") {
       return PostSaleHeadDashboard(id: widget.id);
-    } else if (loggedDesg.toLowerCase() == "desg-sales-manager") {
-      return SalesmangerDashbord(id: widget.id);
+    } else if (loggedDesg.toLowerCase() == "desg-sales-manager" ||
+        loggedDesg.toLowerCase() == "desg-desg-sales-executive") {
+      return SalesManagerDashboard(id: widget.id);
     } else if (loggedDesg.toLowerCase() == "desg-post-sales-executive") {
       return const PostsaleexcecutiveDashboard();
     }

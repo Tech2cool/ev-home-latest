@@ -27,6 +27,8 @@ import 'package:ev_homes/pages/admin_pages/pre_sales_pages/pre_sales_executive_p
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/pre_sales_executive_pages/pre_sales_executive_lead_list_page.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/closing_manager_lead_details_page.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/closing_manager_lead_list_page.dart';
+import 'package:ev_homes/pages/admin_pages/sales_pages/sales_manager_pages/sales_manager_lead_details_page.dart';
+import 'package:ev_homes/pages/admin_pages/sales_pages/sales_manager_pages/sales_manager_lead_list_page.dart';
 import 'package:ev_homes/pages/admin_pages/view_payment.dart';
 import 'package:ev_homes/pages/login_pages/admin_forgot_password_page.dart';
 import 'package:ev_homes/pages/login_pages/admin_register_page.dart';
@@ -244,6 +246,25 @@ class AppRoutes {
             status: status,
             id: id,
           );
+        },
+      ),
+
+      GoRoute(
+        path: '/sales-manager-lead-list/:status/:id',
+        builder: (context, state) {
+          final status = state.pathParameters['status'] ?? '';
+          final id = state.pathParameters['id'];
+          return SalesManagerLeadListPage(
+            status: status,
+            id: id,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/sales-manager-lead-details',
+        builder: (context, state) {
+          final lead = state.extra as Lead;
+          return SalesManagerLeadDetailsPage(lead: lead);
         },
       ),
 

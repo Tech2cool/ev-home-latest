@@ -1,4 +1,6 @@
+import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AdminCarryForwardDialog extends StatefulWidget {
   final String? id;
@@ -12,14 +14,20 @@ class AdminCarryForwardDialog extends StatefulWidget {
 class _AdminCarryForwardDialogState extends State<AdminCarryForwardDialog> {
   int? selectedVal;
   bool isLoading = false;
-  List<int> carryForwards = [1, 2, 3, 4]; // Mocked options for demonstration
 
   Future<void> onRefresh() async {
     try {
+      final settingProvider = Provider.of<SettingProvider>(
+        context,
+        listen: false,
+      );
       setState(() {
         isLoading = true;
       });
       // Mocked delay to simulate async operation
+      await settingProvider.getCarryForwardOpt(
+        widget.id ?? settingProvider.loggedAdmin!.id!,
+      );
       await Future.delayed(const Duration(seconds: 1));
     } catch (e) {
       // Handle exceptions
@@ -27,6 +35,26 @@ class _AdminCarryForwardDialogState extends State<AdminCarryForwardDialog> {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  Future<void> updateCarry() async {
+    try {
+      final settingProvider = Provider.of<SettingProvider>(
+        context,
+        listen: false,
+      );
+
+      final resp = await settingProvider.updateCarryForward(
+        widget.id ?? settingProvider.loggedAdmin!.id!,
+        {
+          "carryForward": selectedVal,
+        },
+      );
+    } catch (e) {
+      //
+    } finally {
+      Navigator.of(context).pop();
     }
   }
 
@@ -38,6 +66,12 @@ class _AdminCarryForwardDialogState extends State<AdminCarryForwardDialog> {
 
   @override
   Widget build(BuildContext context) {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+    final carryForwards = settingProvider.carryForwardsOptions;
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
@@ -86,9 +120,7 @@ class _AdminCarryForwardDialogState extends State<AdminCarryForwardDialog> {
               ),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context, selectedVal);
-                },
+                onPressed: updateCarry,
                 child: const Text("Submit"),
               ),
               if (isLoading)

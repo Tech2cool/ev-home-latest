@@ -785,8 +785,9 @@ class _DemandLetterState extends State<DemandLetter> {
       setState(() {
         flatNoController.text = '$selectedFloor$selectedUnit';
       });
-      final res =
-          await ApiService().getPaymentbyFlat("$selectedFloor$selectedUnit");
+      final res = await ApiService().getPaymentbyFlat(
+        "$selectedFloor$selectedUnit",
+      );
       setState(() {
         getpayment = res;
         carpetAreaController.text = res?.carpetArea ?? "";

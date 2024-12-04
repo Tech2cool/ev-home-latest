@@ -117,7 +117,7 @@ class _ManageChannelPartnersState extends State<ManageChannelPartners> {
                                     const SizedBox(
                                         height:
                                             4), // Space between firmName and email
-                                    Text(cp.email ?? ""), // Email
+                                    Text(cp.email ?? ''), // Email
                                   ],
                                 ),
                                 trailing: PopupMenuButton<String>(

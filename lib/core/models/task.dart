@@ -1,8 +1,11 @@
+import 'package:ev_homes/core/models/employee.dart';
+import 'package:ev_homes/core/models/lead.dart';
+
 class Task {
   final String? id;
-  final String? assignTo;
-  final String? assignBy;
-  final String? lead;
+  final Employee? assignTo;
+  final Employee? assignBy;
+  final Lead? lead;
   final String? visit;
   final String? booking;
   final String? name;
@@ -10,6 +13,7 @@ class Task {
   final String? type;
   final bool completed;
   final DateTime? completedDate;
+  final DateTime? deadline;
 
   Task({
     this.id,
@@ -23,14 +27,18 @@ class Task {
     required this.type,
     this.completed = false,
     this.completedDate,
+    this.deadline,
   });
 
   // Factory constructor for creating a Task object from JSON
   factory Task.fromMap(Map<String, dynamic> json) {
     return Task(
-      assignTo: json['assignTo'],
-      assignBy: json['assignBy'],
-      lead: json['lead'],
+      id: json['_id'],
+      assignTo:
+          json['assignTo'] != null ? Employee.fromMap(json['assignTo']) : null,
+      assignBy:
+          json['assignBy'] != null ? Employee.fromMap(json['assignBy']) : null,
+      lead: json['lead'] != null ? Lead.fromJson(json['lead']) : null,
       visit: json['visit'],
       booking: json['booking'],
       name: json['name'],
@@ -40,6 +48,8 @@ class Task {
       completedDate: json['completedDate'] != null
           ? DateTime.parse(json['completedDate'])
           : null,
+      deadline:
+          json['deadline'] != null ? DateTime.parse(json['deadline']) : null,
     );
   }
 

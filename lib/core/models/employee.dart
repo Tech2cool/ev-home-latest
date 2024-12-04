@@ -102,7 +102,7 @@ class Employee {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is Employee && other.employeeId == employeeId;
+    return other is Employee && other.id == id;
   }
 
   @override

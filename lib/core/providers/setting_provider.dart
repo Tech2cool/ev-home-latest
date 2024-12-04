@@ -62,6 +62,16 @@ class SettingProvider extends ChangeNotifier {
     totalItems: 0,
     data: [],
   );
+  PaginationModel<Lead> _leadsTeamLeaderReportingTo = PaginationModel<Lead>(
+    code: 404,
+    message: '',
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+    totalItems: 0,
+    data: [],
+  );
+
   PaginationModel<Lead> _leadsPreSalesExectives = PaginationModel<Lead>(
     code: 404,
     message: '',
@@ -155,6 +165,9 @@ class SettingProvider extends ChangeNotifier {
   List<Lead> get leads => _leads;
   PaginationModel<PostSaleLead> get leadsPostSale => _leadsPostSale;
   PaginationModel<Lead> get leadsTeamLeader => _leadsTeamLeader;
+  PaginationModel<Lead> get leadsTeamLeaderReportingTo =>
+      _leadsTeamLeaderReportingTo;
+
   PaginationModel<Lead> get leadsPreSaleExecutive => _leadsPreSalesExectives;
   PaginationModel<PostSaleLead> get leadsPostSaleExecutive =>
       _leadsPostSalesExectives;
@@ -688,6 +701,26 @@ class SettingProvider extends ChangeNotifier {
       status,
     );
     _leadsTeamLeader = leads;
+    notifyListeners();
+    return leads;
+  }
+
+  //get leads
+  Future<PaginationModel<Lead>> getTeamLeaderReportingToLeads(
+    String id, [
+    String query = '',
+    int page = 1,
+    int limit = 10,
+    String? status,
+  ]) async {
+    final leads = await _apiService.getTeamLeaderReportingToLeads(
+      id,
+      query,
+      page,
+      limit,
+      status,
+    );
+    _leadsTeamLeaderReportingTo = leads;
     notifyListeners();
     return leads;
   }

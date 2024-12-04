@@ -48,6 +48,9 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
       await settingProvider.getCarryForwardOpt(
         widget.id ?? settingProvider.loggedAdmin!.id!,
       );
+      await settingProvider.getTask(
+        widget.id ?? settingProvider.loggedAdmin!.id!,
+      );
     } catch (e) {
       // Helper
     } finally {

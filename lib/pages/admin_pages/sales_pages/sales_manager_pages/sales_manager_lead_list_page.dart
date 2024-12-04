@@ -6,22 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-class PreSalesExecutiveLeadListPage extends StatefulWidget {
+class SalesManagerLeadListPage extends StatefulWidget {
   final String status;
   final String? id;
-  const PreSalesExecutiveLeadListPage({
+  const SalesManagerLeadListPage({
     super.key,
     required this.status,
     this.id,
   });
 
   @override
-  State<PreSalesExecutiveLeadListPage> createState() =>
-      _PreSalesExecutiveLeadListPageState();
+  State<SalesManagerLeadListPage> createState() =>
+      _SalesManagerLeadListPageState();
 }
 
-class _PreSalesExecutiveLeadListPageState
-    extends State<PreSalesExecutiveLeadListPage> {
+class _SalesManagerLeadListPageState extends State<SalesManagerLeadListPage> {
   bool isLoading = false;
   bool isFetchingMore = false;
   String searchQuery = '';
@@ -162,7 +161,7 @@ class _PreSalesExecutiveLeadListPageState
                         onTap: () {
                           // TODO: details page Lead DTA
                           GoRouter.of(context).push(
-                            '/pre-sales-executive-lead-details',
+                            '/sales-manager-lead-details',
                             extra: lead,
                           );
                         },

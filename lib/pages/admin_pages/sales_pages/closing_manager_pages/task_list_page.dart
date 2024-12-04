@@ -74,6 +74,7 @@ class TaskListPageState extends State<TaskListPage> {
   ];
 
   String searchQuery = '';
+  bool isLoading = false;
 
   @override
   void initState() {
@@ -87,10 +88,19 @@ class TaskListPageState extends State<TaskListPage> {
         context,
         listen: false,
       );
+      setState(() {
+        isLoading = true;
+      });
       await settingProvider.getTask(
         widget.id ?? settingProvider.loggedAdmin!.id!,
       );
-    } catch (e) {}
+    } catch (e) {
+      //
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override

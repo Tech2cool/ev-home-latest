@@ -2,27 +2,25 @@ import 'dart:io';
 import 'package:ev_homes/components/digital_clock.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/helper/helper.dart';
-import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
-import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-class ClosingManagerLeadDetailsPage extends StatefulWidget {
+class SalesManagerLeadDetailsPage extends StatefulWidget {
   final Lead lead;
-  const ClosingManagerLeadDetailsPage({super.key, required this.lead});
+  const SalesManagerLeadDetailsPage({super.key, required this.lead});
 
   @override
-  _ClosingManagerLeadDetailsPageState createState() =>
-      _ClosingManagerLeadDetailsPageState();
+  State<SalesManagerLeadDetailsPage> createState() =>
+      _SalesManagerLeadDetailsPageState();
 }
 
-class _ClosingManagerLeadDetailsPageState
-    extends State<ClosingManagerLeadDetailsPage> {
+class _SalesManagerLeadDetailsPageState
+    extends State<SalesManagerLeadDetailsPage> {
   final ImagePicker _picker = ImagePicker();
   List<XFile> _selectedImages = [];
   DateTime? _selectedDateTime;
@@ -30,9 +28,6 @@ class _ClosingManagerLeadDetailsPageState
   bool showScheduleMeeting = false;
   bool isLoading = false;
   bool _isPreviewVisible = false;
-  DateTime? _selectedDate;
-
-  final TextEditingController _dateController = TextEditingController();
 
   final TextEditingController _notificationController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
@@ -108,217 +103,6 @@ class _ClosingManagerLeadDetailsPageState
     }
   }
 
-  void _showAssignTaskDialog(BuildContext context) {
-    final settingProvider = Provider.of<SettingProvider>(
-      context,
-      listen: false,
-    );
-    final loggedUser = settingProvider.loggedAdmin?.id;
-    String? selectedSubject;
-    Employee? selectedAssignee;
-    final subjectController = TextEditingController();
-    final taskNameController = TextEditingController();
-    final taskDetailsController = TextEditingController();
-
-    if (loggedUser != null) {
-      final reportingEmployees = settingProvider.reportingEmps;
-      print(
-          "Employees reporting to loggedUser ($loggedUser):$reportingEmployees");
-      // print(settingProvider.employees);
-      showDialog(
-        context: context,
-        builder: (context) {
-          return Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Assign Task",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    // const SizedBox(height: 10),
-                    // Row(
-                    //   children: [
-                    //     Text(
-                    //       "Refrence: ",
-                    //       style: TextStyle(
-                    //         fontSize: 16,
-                    //         fontWeight: FontWeight.w500,
-                    //       ),
-                    //     ),
-                    //     Text("This Lead"),
-                    //   ],
-                    // ),
-                    const SizedBox(height: 10),
-                    const Text("Subject"),
-                    const SizedBox(height: 5),
-                    DropdownButtonFormField<String>(
-                      value: selectedSubject,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      items: [
-                        const DropdownMenuItem(
-                          value: "first-call",
-                          child: Text("First Call"),
-                        ),
-                        const DropdownMenuItem(
-                          value: "followup",
-                          child: Text("Follow-Up"),
-                        ),
-                        const DropdownMenuItem(
-                          value: "schedule-meeting",
-                          child: Text("Schedule Meeting"),
-                        ),
-                      ],
-                      onChanged: (value) {
-                        selectedSubject = value;
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    const SizedBox(height: 10),
-                    const Text("Task Name"),
-                    const SizedBox(height: 5),
-                    TextField(
-                      controller: taskNameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text("Task Details"),
-                    const SizedBox(height: 5),
-                    TextField(
-                      controller: taskDetailsController,
-                      maxLines: 3,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text("Assign To"),
-                    const SizedBox(height: 5),
-                    DropdownButtonFormField<Employee>(
-                      value: reportingEmployees.contains(selectedAssignee)
-                          ? selectedAssignee
-                          : null,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      items: reportingEmployees
-                          .map((employee) => DropdownMenuItem<Employee>(
-                                value: employee,
-                                child: Text(
-                                    '${employee.firstName} ${employee.lastName}'),
-                              ))
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          selectedAssignee = value;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: 20),
-                    TextFormField(
-                      controller: _dateController,
-                      readOnly: true,
-                      decoration: InputDecoration(
-                        labelText: 'Deadline',
-                        prefixIcon: const Icon(Icons.calendar_today),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: Colors.grey.withOpacity(0.7),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: Colors.grey.withOpacity(0.4),
-                          ),
-                        ),
-                      ),
-                      onTap: () => _selectDate(context),
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white.withOpacity(0.9),
-                            elevation: 1,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("Cancel"),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor:
-                                const Color.fromARGB(255, 151, 245, 154),
-                          ),
-                          onPressed: () async {
-                            Map<String, dynamic> data = {
-                              "assignBy": settingProvider.loggedAdmin!.id!,
-                              "assignTo": selectedAssignee!.id!,
-                              "name": taskNameController.text,
-                              "details": taskDetailsController.text,
-                              "lead": widget.lead.id,
-                              "type": selectedSubject,
-                              "deadline": _selectedDate,
-                            };
-                            setState(() {
-                              isLoading = true;
-                            });
-                            try {
-                              await ApiService().addTask(
-                                selectedAssignee!.id!,
-                                data,
-                              );
-                            } catch (e) {
-                              //
-                            } finally {
-                              setState(() {
-                                isLoading = false;
-                              });
-
-                              Navigator.of(context).pop();
-                            }
-                          },
-                          child: const Text("Submit"),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    }
-  }
-
   String getStatus(Lead lead) {
     if (lead.stage == "visit") {
       return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
@@ -347,25 +131,6 @@ class _ClosingManagerLeadDetailsPageState
     } finally {
       setState(() {
         isLoading = false;
-      });
-    }
-  }
-
-  Future<void> _selectDate(BuildContext context) async {
-    final DateTime today = DateTime.now();
-    final DateTime initialDate = _selectedDate ?? today;
-
-    final DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime(today.year - 100),
-      lastDate: today,
-    );
-
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-        _dateController.text = "${picked.toLocal()}".split(' ')[0];
       });
     }
   }
@@ -402,9 +167,6 @@ class _ClosingManagerLeadDetailsPageState
                     case 'schedule_meeting':
                       _submitAppointment();
                       break;
-                    case 'assign_tasks':
-                      _showAssignTaskDialog(context);
-                      break;
                   }
                 },
                 itemBuilder: (BuildContext context) {
@@ -418,10 +180,6 @@ class _ClosingManagerLeadDetailsPageState
                       value: 'schedule_meeting',
                       child: const Text('Schedule Meeting'),
                       onTap: _onPressedScheduleMeeting,
-                    ),
-                    const PopupMenuItem<String>(
-                      value: 'assign_tasks',
-                      child: Text('Assign Tasks'),
                     ),
                   ];
                 },
@@ -440,14 +198,13 @@ class _ClosingManagerLeadDetailsPageState
                       const SizedBox(height: 20),
                       Center(
                         child: SizedBox(
-                          width: 300, // Adjust width to control the grid layout
+                          width: 300,
                           child: Wrap(
                             spacing: 10,
                             runSpacing: 10,
                             children: [
                               SizedBox(
-                                width:
-                                    140, // Half the width for two cards in a row
+                                width: 140,
                                 child: Card(
                                   elevation: 1,
                                   shape: RoundedRectangleBorder(
@@ -482,8 +239,7 @@ class _ClosingManagerLeadDetailsPageState
                                 ),
                               ),
                               SizedBox(
-                                width:
-                                    140, // Half the width for two cards in a row
+                                width: 140,
                                 child: Card(
                                   elevation: 1,
                                   shape: RoundedRectangleBorder(
@@ -517,49 +273,6 @@ class _ClosingManagerLeadDetailsPageState
                                   ),
                                 ),
                               ),
-                              SizedBox(
-                                width: double
-                                    .infinity, // Full width for the rectangle card
-                                child: Card(
-                                  elevation: 1,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  color: Colors.white,
-                                  child: InkWell(
-                                    onTap: () => _showAssignTaskDialog(context),
-                                    child: const Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.task,
-                                          size: 40,
-                                          color: Colors.orangeAccent,
-                                        ),
-                                        SizedBox(height: 10),
-                                        Text(
-                                          "Assign",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                        SizedBox(height: 4),
-                                        Text(
-                                          "Task",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -567,7 +280,7 @@ class _ClosingManagerLeadDetailsPageState
                       const SizedBox(
                         height: 12,
                       ),
-                      if (widget.lead.callHistory.isNotEmpty) ...[
+                      if (widget.lead.followupHistory.isNotEmpty) ...[
                         const Text(
                           'Follow-up History',
                           style: TextStyle(
@@ -577,9 +290,9 @@ class _ClosingManagerLeadDetailsPageState
                         ),
                         const SizedBox(height: 8),
                         ...List.generate(
-                          widget.lead.callHistory.length,
+                          widget.lead.followupHistory.length,
                           (i) {
-                            final appl = widget.lead.callHistory[i];
+                            final appl = widget.lead.followupHistory[i];
                             return Card(
                               margin: const EdgeInsets.only(bottom: 8),
                               child: ListTile(
@@ -653,7 +366,7 @@ class _ClosingManagerLeadDetailsPageState
                       ),
                       if (widget.lead.callHistory.isNotEmpty) ...[
                         const Text(
-                          'Contact History',
+                          'Call History',
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -899,10 +612,10 @@ class _ClosingManagerLeadDetailsPageState
               const SizedBox(height: 16),
               TextField(
                 controller: _notificationController,
-                maxLines: 3,
                 onChanged: (value) {
                   setState(() {});
                 },
+                maxLines: 3,
                 decoration: InputDecoration(
                   hintText: 'Type your message here...',
                   border: OutlineInputBorder(
@@ -942,28 +655,7 @@ class _ClosingManagerLeadDetailsPageState
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
-                    onPressed: () async {
-                      String imageUrl = '';
-                      if (_selectedImages.isNotEmpty) {
-                        final imageResp = await ApiService().uploadFile(
-                          File(_selectedImages[0].path),
-                        );
-                        if (imageResp != null) {
-                          imageUrl = imageResp.downloadUrl;
-                        }
-                      }
-
-                      //TODO:Send Notification
-                      Map<String, dynamic> data = {
-                        "title": _titleController.text,
-                        "message": _notificationController,
-                        "image": imageUrl,
-                        "leadRef": widget.lead.id,
-                        "templateName": _templateController.text,
-                      };
-                      await ApiService().sendCustomNotification(data);
-                      Navigator.of(context).pop();
-                    }, // Add your notification submit logic here
+                    onPressed: () {}, // Add your notification submit logic here
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.indigo[600],
                       padding: const EdgeInsets.symmetric(
@@ -1049,7 +741,7 @@ class _ClosingManagerLeadDetailsPageState
                             IconButton(
                               icon: const Icon(Icons.arrow_drop_down),
                               onPressed: () {
-                                // Navigator.pop(context);
+                                Navigator.pop(context);
                               },
                             ),
                           ],

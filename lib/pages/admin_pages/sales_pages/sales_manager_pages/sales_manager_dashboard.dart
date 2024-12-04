@@ -4,7 +4,6 @@ import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/task_list_page.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -17,16 +16,6 @@ class SalesManagerDashboard extends StatefulWidget {
   @override
   State<SalesManagerDashboard> createState() => _SalesManagerDashboardState();
 }
-
-double leadValue = 200;
-double visitValue = 150;
-double booking = 50;
-double onthervisit = 100;
-
-double visitepercentage = (visitValue * 100) / leadValue;
-double visitbooking = (booking * 100) / visitValue;
-double onthervisite = (booking * 100) / onthervisit;
-double leadbooking = (booking * 100) / leadValue;
 
 class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
   bool showNotification = false;
@@ -45,8 +34,8 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
     });
     try {
       // await settingProvider.searchLead();
-      await settingProvider.getTeamLeaderLeads(
-        widget.id ?? settingProvider.loggedAdmin!.reportingTo!.id!,
+      await settingProvider.getTeamLeaderReportingToLeads(
+        widget.id ?? settingProvider.loggedAdmin!.id!,
       );
 
       await settingProvider.getMyTarget(
@@ -55,11 +44,9 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
       await settingProvider.getClosingManagerGraph(
         widget.id ?? settingProvider.loggedAdmin!.id!,
       );
-      // await settingProvider.getLeadsTeamLeaderGraph(
-      //   widget.id ?? settingProvider.loggedAdmin!.id!,
-      // );
-      // await settingProvider.getPreSaleExecutiveGraph();
-      // await settingProvider.getLeadsFunnelGraph();
+      await settingProvider.getCarryForwardOpt(
+        widget.id ?? settingProvider.loggedAdmin!.id!,
+      );
     } catch (e) {
       // Helper
     } finally {
@@ -85,7 +72,7 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
   @override
   Widget build(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(context);
-    final teamLeaderLeads = settingProvider.leadsTeamLeader;
+    final teamLeaderLeads = settingProvider.leadsTeamLeaderReportingTo;
     final target = settingProvider.myTarget;
     final graphInfo = settingProvider.closingManagerGraph;
 
@@ -152,7 +139,7 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/closing-manager-lead-list/total/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                              "/sales-manager-lead-list/total/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                             );
                           },
                           child: MyCard(
@@ -165,7 +152,7 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/closing-manager-lead-list/visit/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                              "/sales-manager-lead-list/visit/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                             );
                           },
                           child: MyCard(
@@ -179,7 +166,7 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/closing-manager-lead-list/revisit/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                              "/sales-manager-lead-list/revisit/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                             );
                           },
                           child: MyCard(
@@ -194,7 +181,7 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                           onTap: () {
                             //TODO: closing manager booking
                             GoRouter.of(context).push(
-                              "/closing-manager-lead-list/booking/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                              "/sales-manager-lead-list/booking/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                             );
                           },
                           child: MyCard(
@@ -208,7 +195,7 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/closing-manager-lead-list/pending/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                              "/sales-manager-lead-list/pending/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                             );
                           },
                           child: MyCard(
@@ -336,7 +323,7 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                                 final selectedValue = showDialog<int>(
                                   context: context,
                                   builder: (context) =>
-                                      AdminCarryForwardDialog(id: "123"),
+                                      AdminCarryForwardDialog(id: widget.id),
                                 );
 
                                 if (selectedValue != null) {
@@ -366,7 +353,6 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                             Expanded(
                               child: ElevatedButton(
                                 onPressed: () {
-                                  //TODO: closing manager client List
                                   GoRouter.of(context).push(
                                     "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                                   );
@@ -381,7 +367,7 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                                   ),
                                 ),
                                 child: const Text(
-                                  'Follow Up Satus',
+                                  'Follow Up Status',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -457,8 +443,8 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                           percentage: safeDivision((graphInfo.visitCount * 100),
                               graphInfo.leadCount),
                           title: "Visits",
-                          subtitle: "Visit",
-                          notSubtitle: "Not Visit",
+                          subtitle: "Visit 1",
+                          notSubtitle: "Lead",
                           visitedColor: Colors.blue,
                           notVisitedColor: Colors.orange,
                         ),
@@ -483,14 +469,15 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                         ),
                         SizedBox(height: 10),
                         AnimatedPieChart(
-                          visited: 60,
-                          notVisited: 40,
+                          visited: graphInfo.bookingCount.toInt(),
+                          notVisited: graphInfo.visitCount.toInt(),
                           percentage: safeDivision(
-                              (graphInfo.bookingCount * 100),
-                              graphInfo.visitCount),
+                            (graphInfo.bookingCount * 100),
+                            graphInfo.visitCount,
+                          ),
                           title: "Visits",
-                          subtitle: "Visit",
-                          notSubtitle: "Not Visit",
+                          subtitle: "Booking",
+                          notSubtitle: "Visit 1",
                           visitedColor: Colors.green,
                           notVisitedColor: Colors.red,
                         ),
@@ -519,8 +506,8 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                               (graphInfo.bookingCount * 100),
                               graphInfo.visit2Count),
                           title: "Bookings",
-                          subtitle: "Visit",
-                          notSubtitle: "Not Visit",
+                          subtitle: "Booking",
+                          notSubtitle: "Visit 2",
                           visitedColor: Colors.purple,
                           notVisitedColor: Colors.amber,
                         ),
@@ -549,8 +536,8 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                               (graphInfo.bookingCount * 100),
                               graphInfo.leadCount),
                           title: "Bookings",
-                          subtitle: "Visit",
-                          notSubtitle: "Not Visit",
+                          subtitle: "Booking",
+                          notSubtitle: "Lead",
                           visitedColor: Colors.teal,
                           notVisitedColor: Colors.pink,
                         ),
@@ -564,6 +551,177 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
         ),
         if (isLoading) const LoadingSquare(),
       ],
+    );
+  }
+
+  void _showTaskDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            height: 300, // Dialog height
+            width: 200, // Dialog width
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Tasks",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ListTile(
+                          leading: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              const Icon(Icons.check_circle,
+                                  color: Colors.green),
+                              Positioned(
+                                top: -4,
+                                right: -4,
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Text(
+                                    "11",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          title: const Text("First Call"),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TaskListPage(
+                                  id: widget.id,
+                                  type: "First Call",
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              const Icon(Icons.task_alt, color: Colors.blue),
+                              Positioned(
+                                top: -4,
+                                right: -4,
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Text(
+                                    "10",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          title: const Text("Follow-Up Call"),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TaskListPage(
+                                  id: widget.id,
+                                  type: "Follow-Up Call",
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              const Icon(Icons.note, color: Colors.orange),
+                              Positioned(
+                                top: -4,
+                                right: -4,
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: const Text(
+                                    "4",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          title: const Text("Schedule Meeting"),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TaskListPage(
+                                  id: widget.id,
+                                  type: "Schedule Meeting",
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                    ),
+                    child: const Text("Close"),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -810,167 +968,6 @@ DataCell _buildNavigableDataCell(BuildContext context, String text) {
       },
       child: Text(text),
     ),
-  );
-}
-
-void _showTaskDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: Container(
-          padding: const EdgeInsets.all(16.0),
-          height: 300, // Dialog height
-          width: 200, // Dialog width
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Tasks",
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ListTile(
-                        leading: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            const Icon(Icons.check_circle, color: Colors.green),
-                            Positioned(
-                              top: -4,
-                              right: -4,
-                              child: Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Text(
-                                  "11",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        title: const Text("First Call"),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TaskListPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      ListTile(
-                        leading: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            const Icon(Icons.task_alt, color: Colors.blue),
-                            Positioned(
-                              top: -4,
-                              right: -4,
-                              child: Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Text(
-                                  "10",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        title: const Text("Follow-Up Call"),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TaskListPage(),
-                            ),
-                          );
-                        },
-                      ),
-                      ListTile(
-                        leading: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            const Icon(Icons.note, color: Colors.orange),
-                            Positioned(
-                              top: -4,
-                              right: -4,
-                              child: Container(
-                                padding: const EdgeInsets.all(2),
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Text(
-                                  "4",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        title: const Text("Schedule Meeting"),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TaskListPage(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey,
-                  ),
-                  child: const Text("Close"),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    },
   );
 }
 

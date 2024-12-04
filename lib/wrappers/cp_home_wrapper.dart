@@ -147,7 +147,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
       onTap: () => setState(() {
         if (_isMenuVisible) {
           _isMenuVisible = false;
-          _animationController.reverse(); // Close the bottom sheet animation
+          _animationController.reverse();
         }
         _currentIndex = index;
       }),
@@ -194,20 +194,20 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [
-                      Color(0xFFeedbcd),
-                      Color(0xFFeedbcd),
+                      Color.fromARGB(255, 133, 0, 0),
+                      Colors.white,
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(25),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromARGB(255, 133, 0, 0).withOpacity(0.8),
-                      blurRadius: 2,
-                      spreadRadius: 2,
-                    ),
-                  ],
+                  // boxShadow: [
+                  //   BoxShadow(
+                  //     color: Color.fromARGB(255, 133, 0, 0).withOpacity(0.8),
+                  //     blurRadius: 2,
+                  //     spreadRadius: 2,
+                  //   ),
+                  // ],
                 ),
                 child: const Center(
                   child: Icon(

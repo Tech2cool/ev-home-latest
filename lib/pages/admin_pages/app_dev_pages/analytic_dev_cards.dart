@@ -49,7 +49,7 @@ class _AnalyticDevCardsState extends State<AnalyticDevCards> {
         children: [
           // Translucent gradient background
           Container(
-            decoration: const BoxDecoration(
+            decoration: const BoxDecoration( 
               gradient: LinearGradient(
                 colors: [
                   Color.fromRGBO(255, 165, 0, 0.2),
@@ -190,4 +190,5 @@ class _AnalyticDevCardsState extends State<AnalyticDevCards> {
       ),
     );
   }
+
 }

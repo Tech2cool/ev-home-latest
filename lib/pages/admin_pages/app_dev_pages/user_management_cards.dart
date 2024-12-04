@@ -1,3 +1,5 @@
+import 'package:ev_homes/pages/admin_pages/admin_management/manage_channel_partners.dart';
+import 'package:ev_homes/pages/admin_pages/admin_management/manage_employee.dart';
 import 'package:flutter/material.dart';
 
 class UserManagementCards extends StatefulWidget {
@@ -51,23 +53,29 @@ class UserManagementCardsState extends State<UserManagementCards> {
                       "Employee",
                       Icons.person,
                       () {
-                        // Add navigation or action here
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => ManageEmployee()),
+                        );
                       },
                     ),
                     _buildDashboardCard(
                       "Channel Partner",
                       Icons.group,
                       () {
-                        // Add navigation or action here
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => ManageChannelPartners()),
+                        );
                       },
                     ),
-                    _buildDashboardCard(
-                      "Admin",
-                      Icons.admin_panel_settings,
-                      () {
-                        // Add navigation or action here
-                      },
-                    ),
+                    // _buildDashboardCard(
+                    //   "Admin",
+                    //   Icons.admin_panel_settings,
+                    //   () {
+                    //     // Add navigation or action here
+                    //   },
+                    // ),
                   ],
                 ),
               ],
@@ -84,29 +92,28 @@ class UserManagementCardsState extends State<UserManagementCards> {
     GestureTapCallback? onTap,
   ) {
     return Card(
-      elevation: 2,
+      elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
-      color: const Color.fromARGB(255, 211, 177, 83).withOpacity(0.8),
+      color: Colors.white.withOpacity(0.3),
       child: InkWell(
         onTap: onTap,
-        child: Container(
-          width: 150, // Adjust the width of the card
-          height: 150, // Adjust the height of the card
-          padding: const EdgeInsets.all(16.0),
+        child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
               Icon(icon, size: 40, color: Colors.orangeAccent),
               const SizedBox(height: 10),
-              Text(
-                title,
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  title,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ],

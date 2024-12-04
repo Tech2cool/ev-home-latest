@@ -88,7 +88,7 @@ class _ManageChannelPartnersState extends State<ManageChannelPartners> {
                 Expanded(
                   child: filteredCp.isEmpty
                       ? const Center(
-                          child: Text('No employees found.'),
+                          child: Text('No channel partner found.'),
                         )
                       : RefreshIndicator(
                           onRefresh: onRefresh,
@@ -96,28 +96,25 @@ class _ManageChannelPartnersState extends State<ManageChannelPartners> {
                             itemCount: filteredCp.length,
                             itemBuilder: (context, index) {
                               final cp = filteredCp[index];
+                              // print(cp);
+
                               return ListTile(
                                 contentPadding: const EdgeInsets.symmetric(
                                     horizontal: 4, vertical: 5),
                                 leading: CircleAvatar(
                                   backgroundColor: Colors.blue,
                                   child: Text(
-                                    cp.firstName![0]
-                                        .toUpperCase(), // Initial of the first name
+                                    cp.firstName![0].toUpperCase(),
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
-                                title: Text(
-                                    "${cp.firstName} ${cp.lastName}"), // Full name
+                                title: Text("${cp.firstName} ${cp.lastName}"),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                        "(${cp.firmName})"), // Firm name in parentheses
-                                    const SizedBox(
-                                        height:
-                                            4), // Space between firmName and email
-                                    Text(cp.email ?? ""), // Email
+                                    Text("(${cp.firmName})"),
+                                    const SizedBox(height: 4),
+                                    Text(cp.email ?? ""),
                                   ],
                                 ),
                                 trailing: PopupMenuButton<String>(

@@ -2,6 +2,7 @@ import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_channer_partner_page.dart';
+import 'package:ev_homes/pages/admin_pages/admin_forms/add_employee_page.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_new_project_page.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_payment.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_postsale_lead.dart';
@@ -278,6 +279,12 @@ class AppRoutes {
             status: status,
             id: id,
           );
+        },
+      ),
+      GoRoute(
+        path: '/add-employee',
+        builder: (context, state) {
+          return AddEmployeePage();
         },
       ),
 

@@ -6,7 +6,6 @@ import 'package:ev_homes/core/models/designation.dart';
 import 'package:ev_homes/core/models/division.dart';
 import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -683,7 +682,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
                           ),
                           onPressed: onPressSubmit,
                           child: const Text(
-                            "Submit",
+                            "Update details",
                             style: TextStyle(
                               color: Colors.white,
                             ),

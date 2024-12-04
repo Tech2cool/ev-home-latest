@@ -1599,6 +1599,7 @@ class ApiService {
         return [];
       }
       final List<dynamic> dataList = response.data["data"];
+
       final List<Department> departments = dataList.map((data) {
         return Department.fromMap(data as Map<String, dynamic>);
       }).toList();

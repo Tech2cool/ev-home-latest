@@ -44,6 +44,9 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
       });
       await settingProvider.getPostSaleLead();
       await settingProvider.getOurProject();
+      await settingProvider.getDesignation();
+      await settingProvider.getDivision();
+      await settingProvider.getDepartment();
     } catch (e) {
       //
     } finally {

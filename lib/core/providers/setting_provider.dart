@@ -20,6 +20,7 @@ import 'package:ev_homes/core/models/task.dart';
 import 'package:ev_homes/core/models/team_section.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/core/services/shared_pref_service.dart';
+import 'package:ev_homes/pages/login_pages/customer_otp_verification_page.dart';
 import 'package:ev_homes/sections/login_sections/admin_login_section.dart';
 import 'package:ev_homes/wrappers/cp_home_wrapper.dart';
 import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
@@ -852,7 +853,6 @@ class SettingProvider extends ChangeNotifier {
     if (resp == null) return;
 
     loggedCustomer = resp;
-    //TODO: Customer Wrapper Route
 
     Navigator.push(
       context,
@@ -882,10 +882,7 @@ class SettingProvider extends ChangeNotifier {
       passsword,
     );
     if (resp == null) return;
-
     loggedChannelPartner = resp;
-    //TODO: Channel Partner Wrapper Route
-
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const CpHomeWrapper()),
@@ -911,12 +908,12 @@ class SettingProvider extends ChangeNotifier {
     loggedPhone = resp;
     //TODO: Customer Otp Page Route
 
-    // Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: (context) => const OtpVerificationPage(),
-    //   ),
-    // );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const OtpVerificationPage(),
+      ),
+    );
   }
 
   Future<void> addDesignation(String designation) async {

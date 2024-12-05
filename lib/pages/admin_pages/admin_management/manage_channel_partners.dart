@@ -96,7 +96,7 @@ class _ManageChannelPartnersState extends State<ManageChannelPartners> {
                             itemCount: filteredCp.length,
                             itemBuilder: (context, index) {
                               final cp = filteredCp[index];
-                              // print(cp);
+                              print(filteredCp.length);
 
                               return ListTile(
                                 contentPadding: const EdgeInsets.symmetric(

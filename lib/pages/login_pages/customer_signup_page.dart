@@ -331,6 +331,7 @@ class _SignUpTabBarState extends State<SignUpTabBar>
                 _buildTLDropdown(employees),
 
                 const SizedBox(height: 16),
+
                 _buildResidenceDropdown(),
 
                 if (_showOtherLocations) const SizedBox(height: 16),
@@ -338,7 +339,6 @@ class _SignUpTabBarState extends State<SignUpTabBar>
 
                 const SizedBox(height: 32),
                 _buildRegisterButton(context),
-
                 const SizedBox(height: 16),
 
                 // Align(

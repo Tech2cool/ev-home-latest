@@ -906,8 +906,6 @@ class SettingProvider extends ChangeNotifier {
       return;
     }
     loggedPhone = resp;
-    //TODO: Customer Otp Page Route
-
     Navigator.push(
       context,
       MaterialPageRoute(

@@ -45,7 +45,7 @@ class Customer {
       address: map['address'],
       isVerifiedEmail: map['isVerifiedEmail'] ?? false,
       isVerifiedPhone: map['isVerifiedPhone'] ?? false,
-      altPhoneNumber: map['altPhoneNumber'],
+      altPhoneNumber: map['altPhoneNumber'] ?? 0,
       projects: map['projects'] != null
           ? OurProject.fromJson(map['projects'])
           : map['projects'],

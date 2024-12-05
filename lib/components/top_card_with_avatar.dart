@@ -77,7 +77,6 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Stack(
-                      
                       children: [
                         GestureDetector(
                           // onTap: () {
@@ -173,14 +172,15 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                         const SizedBox(height: 5),
                         ElevatedButton(
                           onPressed: () {
-                            setState(() {
-                              if (!isCheckedIn) {
-                                _startTimer();
-                              } else {
-                                _stopTimer();
-                              }
-                              isCheckedIn = !isCheckedIn;
-                            });
+                            GoRouter.of(context).push("/check-in-out");
+                            // setState(() {
+                            //   if (!isCheckedIn) {
+                            //     _startTimer();
+                            //   } else {
+                            //     _stopTimer();
+                            //   }
+                            //   isCheckedIn = !isCheckedIn;
+                            // });
                           },
                           style: ElevatedButton.styleFrom(
                             elevation: 4,

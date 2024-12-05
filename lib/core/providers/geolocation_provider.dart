@@ -4,7 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:workmanager/workmanager.dart';
+// import 'package:workmanager/workmanager.dart';
 
 // Define a data class for a place
 class Place {
@@ -57,8 +57,8 @@ class GeolocationProvider extends ChangeNotifier {
 
   // Define multiple places with their radii
   final List<Place> _places = [
-    Place(latitude: 19.0777475, longitude: 72.9974897, radius: 5),
-    Place(latitude: 19.0877475, longitude: 72.9874897, radius: 10),
+    Place(latitude: 19.0777475, longitude: 72.9974897, radius: 100),
+    Place(latitude: 19.0877475, longitude: 72.9874897, radius: 100),
     // Add more places as needed
   ];
 

@@ -203,15 +203,17 @@ class SettingProvider extends ChangeNotifier {
   Future<void> getRequirements() async {
     final emps = await _apiService.getReuirements();
     if (emps.isNotEmpty) {
+      print("got reqs");
+
       _requirements = emps;
-      notifyListeners();
     }
+    notifyListeners();
+    print("notified reqs");
   }
 
   Future<void> getReportingToEmps(String rId) async {
     final emps = await _apiService.getReportingToEmps(rId);
     if (emps.isNotEmpty) {
-      print("got ");
       _reportingEmps = emps;
       notifyListeners();
     }
@@ -386,9 +388,11 @@ class SettingProvider extends ChangeNotifier {
   Future<void> getOurProject() async {
     final projects = await _apiService.getOurProject();
     if (projects.isNotEmpty) {
+      print("got projects");
       _ourProject = projects;
     }
     notifyListeners();
+    print("notified projects");
   }
 
   Future<void> getClosingManagers() async {
@@ -410,9 +414,12 @@ class SettingProvider extends ChangeNotifier {
   Future<void> getDataEntryEmployess() async {
     final emps = await _apiService.getDataEntryEmployees();
     if (emps.isNotEmpty) {
+      print("got entry emps");
+
       _dataEntryUsers = emps;
     }
     notifyListeners();
+    print("notified entry emps");
   }
 
   Future<void> getPostSalesEx() async {
@@ -803,30 +810,38 @@ class SettingProvider extends ChangeNotifier {
   }
 
   Future<void> loginAdmin(context, String email, String password) async {
+    print("pass 0.1");
     final resp = await _apiService.loginEmployee(
       email,
       password,
     );
+    print("pass 0");
     if (resp == null) return;
+    print("pass 1");
 
     loggedAdmin = resp;
     notifyListeners();
     await OneSignal.Notifications.requestPermission(true);
+    print("pass 2");
 
     // final playerId = await OneSignal.User.getOnesignalId();
     String? playerId = OneSignal.User.pushSubscription.id;
 
+    print("pass 3");
     await ApiService().saveOneSignalId(
       resp.id!,
       resp.role!,
       playerId!,
     );
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const AdminLoginSection()),
-    );
+    print("pass 4");
 
-    // GoRouter.of(context).go("/admin-home-wrapper");
+    // Navigator.pushReplacement(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const AdminLoginSection()),
+    // );
+
+    GoRouter.of(context).go("/admin-login-cards");
+    print("pass 5");
   }
 
   void updateLoggedAdmin(Employee emp) {

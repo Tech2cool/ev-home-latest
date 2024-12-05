@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:math';
-import 'package:dio/dio.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/our_project.dart';
@@ -11,13 +9,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
-import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
-import 'package:multi_select_flutter/util/multi_select_item.dart';
-import 'package:multiselect_dropdown_flutter/multiselect_dropdown_flutter.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+
 import 'package:provider/provider.dart';
-import 'package:multiselect_dropdown_flutter/multiselect_dropdown_flutter.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 
 class AddSiteVisitFormPage extends StatefulWidget {
   const AddSiteVisitFormPage({super.key});
@@ -416,13 +410,13 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
 
       // Execute all three futures concurrently
       await Future.wait([
-        settingProvider.getRequirements(),
+        settingProvider.getDataEntryEmployess(),
         settingProvider.getClosingManagers(),
-        settingProvider.getTeamLeaders(),
+        settingProvider.getRequirements(),
+        settingProvider.getOurProject(),
+        // settingProvider.getTeamLeaders(),
         // settingProvider.getSeniorClosingManagers(),
         settingProvider.getSalesManager(),
-        settingProvider.getOurProject(),
-        settingProvider.getDataEntryEmployess(),
       ]);
     } catch (e) {
       // Handle any errors if needed
@@ -613,10 +607,12 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   Widget build(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(context);
     final closingMangers = settingProvider.closingManagers;
+    final dataEntryUsers = settingProvider.dataEntryUsers;
     final seniorClosingManagers = settingProvider.seniorClosingManagers;
     final salesManager = settingProvider.salesManager;
     final teamLeaders = settingProvider.teamLeaders;
     final requirements = settingProvider.requirements;
+    final ourProjects = settingProvider.ourProject;
     print(_selectedClosingManger);
 
     return LayoutBuilder(
@@ -1046,187 +1042,146 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         const SizedBox(
                           height: 16,
                         ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: MultiDropdown<String>(
-                                items: [
-                                  ...settingProvider.requirements.map(
-                                    (ele) =>
-                                        DropdownItem(value: ele, label: ele),
-                                  ),
-                                ],
-                                controller: multiselectController1,
-                                enabled: true,
-                                searchEnabled: false,
-                                chipDecoration: const ChipDecoration(
-                                  backgroundColor: Colors.greenAccent,
-                                  wrap: true,
-                                  runSpacing: 2,
-                                  spacing: 10,
-                                ),
-                                fieldDecoration: FieldDecoration(
-                                  labelStyle: TextStyle(fontSize: 30),
-                                  hintText: 'Choice of Apartment',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.black87),
-                                  prefixIcon: const Icon(
-                                      CupertinoIcons.building_2_fill),
-                                  showClearIcon: false,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                                dropdownDecoration: const DropdownDecoration(
-                                  marginTop: 2,
-                                  maxHeight: 500,
-                                  header: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Text(
-                                      'Select Apartments',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                dropdownItemDecoration: DropdownItemDecoration(
-                                  selectedIcon: const Icon(Icons.check_box,
-                                      color: Colors.grey),
-                                  disabledIcon: Icon(Icons.lock,
-                                      color: Colors.grey.shade300),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select a apartment';
-                                  }
-                                  return null;
-                                },
-                                onSelectionChange: (selectedItems) {
-                                  setState(() {
-                                    selectedRequirement = selectedItems;
-                                  });
-                                },
-                              ),
+                        MultiDropdown<OurProject>(
+                          items: [
+                            ...ourProjects.map(
+                              (ele) => DropdownItem(
+                                  value: ele, label: ele.name ?? ""),
                             ),
                           ],
+                          // controller: multiselectController,
+                          enabled: true,
+                          searchEnabled: true,
+                          chipDecoration: const ChipDecoration(
+                            backgroundColor: Colors.greenAccent,
+                            wrap: true,
+                            runSpacing: 2,
+                            spacing: 10,
+                          ),
+                          fieldDecoration: FieldDecoration(
+                            hintText: 'Projects',
+                            hintStyle: const TextStyle(color: Colors.black87),
+                            prefixIcon:
+                                const Icon(CupertinoIcons.building_2_fill),
+                            showClearIcon: false,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(color: Colors.grey),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(15),
+                              borderSide: const BorderSide(
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                          dropdownDecoration: const DropdownDecoration(
+                            marginTop: 2,
+                            maxHeight: 500,
+                            header: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: Text(
+                                'Select Projects',
+                                textAlign: TextAlign.start,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                          dropdownItemDecoration: DropdownItemDecoration(
+                            selectedIcon:
+                                const Icon(Icons.check_box, color: Colors.grey),
+                            disabledIcon:
+                                Icon(Icons.lock, color: Colors.grey.shade300),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please select a project';
+                            }
+                            return null;
+                          },
+                          onSelectionChange: (selectedItems) {
+                            setState(() {
+                              selectedProject = selectedItems;
+                            });
+                          },
                         ),
-
-                        // Row(
-                        //   children: [
-                        //     Expanded(
-                        //       child: MultiSelectDropdown.simpleList(
-                        //         list: requirements.isNotEmpty
-                        //             ? requirements
-                        //             : fallbackRequirements,
-
-                        //         boxDecoration: BoxDecoration(
-                        //           border: Border.all(
-                        //             color: Colors.grey.withOpacity(0.4),
-                        //           ),
-                        //           borderRadius: BorderRadius.circular(12),
-                        //         ),
-                        //         initiallySelected: selectedRequirement,
-                        //         checkboxFillColor: Colors.grey.withOpacity(0.3),
-                        //         splashColor: Colors.grey.withOpacity(0.3),
-                        //         // includeSearch: true,
-                        //         whenEmpty: "Choice of Apartment",
-                        //         onChange: (newList) {
-                        //           selectedRequirement =
-                        //               requirements.map((e) => e).toList();
-                        //         },
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
                         const SizedBox(
                           height: 16,
                         ),
 
-                        Row(
-                          children: [
-                            Expanded(
-                              child: MultiDropdown<OurProject>(
-                                items: [
-                                  ...settingProvider.ourProject.map(
-                                    (ele) => DropdownItem(
-                                        value: ele, label: ele.name ?? ""),
-                                  ),
-                                ],
-                                controller: multiselectController,
-                                enabled: true,
-                                searchEnabled: true,
-                                chipDecoration: const ChipDecoration(
-                                  backgroundColor: Colors.greenAccent,
-                                  wrap: true,
-                                  runSpacing: 2,
-                                  spacing: 10,
+                        Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: MultiDropdown<String>(
+                            items: [
+                              ...requirements.map(
+                                (ele) => DropdownItem(value: ele, label: ele),
+                              ),
+                            ],
+                            enabled: true,
+                            searchEnabled: false,
+                            chipDecoration: const ChipDecoration(
+                              backgroundColor: Colors.greenAccent,
+                              wrap: true,
+                              runSpacing: 2,
+                              spacing: 10,
+                            ),
+                            fieldDecoration: FieldDecoration(
+                              labelStyle: TextStyle(fontSize: 30),
+                              hintText: 'Choice of Apartment',
+                              hintStyle: const TextStyle(color: Colors.black87),
+                              prefixIcon:
+                                  const Icon(CupertinoIcons.building_2_fill),
+                              showClearIcon: false,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                  color: Colors.black87,
                                 ),
-                                fieldDecoration: FieldDecoration(
-                                  hintText: 'Projects',
-                                  hintStyle:
-                                      const TextStyle(color: Colors.black87),
-                                  prefixIcon: const Icon(
-                                      CupertinoIcons.building_2_fill),
-                                  showClearIcon: false,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                                dropdownDecoration: const DropdownDecoration(
-                                  marginTop: 2,
-                                  maxHeight: 500,
-                                  header: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Text(
-                                      'Select Projects',
-                                      textAlign: TextAlign.start,
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                dropdownItemDecoration: DropdownItemDecoration(
-                                  selectedIcon: const Icon(Icons.check_box,
-                                      color: Colors.grey),
-                                  disabledIcon: Icon(Icons.lock,
-                                      color: Colors.grey.shade300),
-                                ),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select a project';
-                                  }
-                                  return null;
-                                },
-                                onSelectionChange: (selectedItems) {
-                                  setState(() {
-                                    selectedProject = selectedItems;
-                                  });
-                                },
                               ),
                             ),
-                          ],
+                            dropdownDecoration: const DropdownDecoration(
+                              marginTop: 2,
+                              maxHeight: 500,
+                              header: Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text(
+                                  'Select Apartments',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            dropdownItemDecoration: DropdownItemDecoration(
+                              selectedIcon: const Icon(Icons.check_box,
+                                  color: Colors.grey),
+                              disabledIcon:
+                                  Icon(Icons.lock, color: Colors.grey.shade300),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select a apartment';
+                              }
+                              return null;
+                            },
+                            onSelectionChange: (selectedItems) {
+                              setState(() {
+                                selectedRequirement = selectedItems;
+                              });
+                            },
+                          ),
                         ),
+
                         const SizedBox(
                           height: 16,
                         ),
@@ -1351,46 +1306,46 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         const SizedBox(
                           height: 16,
                         ),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: MultiSelectDialogField<Employee>(
-                                items: salesManager
-                                    .map(
-                                      (teamleader) => MultiSelectItem<Employee>(
-                                        teamleader,
-                                        "${teamleader.firstName} ${teamleader.lastName}",
-                                      ),
-                                    )
-                                    .toList(),
-                                title: const Text("Assign To"),
-                                selectedColor:
-                                    const Color.fromARGB(255, 0, 0, 0),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: Colors.blue),
-                                ),
-                                buttonText: Text(
-                                  _selectedSalesManagers1.isEmpty
-                                      ? 'Select Sales Managers'
-                                      : '${_selectedSalesManagers1.length} Selected',
-                                ),
-                                onConfirm: (values) {
-                                  setState(() {
-                                    _selectedSalesManagers1 =
-                                        values; // Capture selected sales managers
-                                  });
-                                },
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Please select at least one Sales Manager';
-                                  }
-                                  return null;
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     Expanded(
+                        //       child: MultiSelectDialogField<Employee>(
+                        //         items: salesManager
+                        //             .map(
+                        //               (teamleader) => MultiSelectItem<Employee>(
+                        //                 teamleader,
+                        //                 "${teamleader.firstName} ${teamleader.lastName}",
+                        //               ),
+                        //             )
+                        //             .toList(),
+                        //         title: const Text("Assign To"),
+                        //         selectedColor:
+                        //             const Color.fromARGB(255, 0, 0, 0),
+                        //         decoration: BoxDecoration(
+                        //           borderRadius: BorderRadius.circular(20),
+                        //           border: Border.all(color: Colors.blue),
+                        //         ),
+                        //         buttonText: Text(
+                        //           _selectedSalesManagers1.isEmpty
+                        //               ? 'Select Sales Managers'
+                        //               : '${_selectedSalesManagers1.length} Selected',
+                        //         ),
+                        //         onConfirm: (values) {
+                        //           setState(() {
+                        //             _selectedSalesManagers1 =
+                        //                 values; // Capture selected sales managers
+                        //           });
+                        //         },
+                        //         validator: (value) {
+                        //           if (value == null || value.isEmpty) {
+                        //             return 'Please select at least one Sales Manager';
+                        //           }
+                        //           return null;
+                        //         },
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
 
                         // if (selectedassignName != null) ...[
                         //   const SizedBox(height: 16),
@@ -1547,7 +1502,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                 child: Center(
                   child: DataEntryScreen(
                     selectedEmployee: _selectedDataEntryUser,
-                    listOfUser: closingMangers,
+                    listOfUser: dataEntryUsers,
                     onSelect: (emp) {
                       setState(() {
                         _selectedDataEntryUser = emp;

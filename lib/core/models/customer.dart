@@ -1,14 +1,15 @@
 import 'package:ev_homes/core/models/employee.dart';
+import 'package:ev_homes/core/models/our_project.dart';
 
 class Customer {
   final String id;
   final String firstName;
   final String lastName;
   final String email;
-  final String gender;
+  final String? gender;
   final int phoneNumber;
   final String? address;
-  final List<String>? projects;
+  final OurProject projects;
   final List<String>? choiceApt;
   final Employee? closingManager;
   final bool? isVerifiedPhone;
@@ -22,7 +23,7 @@ class Customer {
     required this.firstName,
     required this.lastName,
     required this.email,
-    required this.gender,
+    this.gender,
     required this.phoneNumber,
     required this.address,
     required this.projects,
@@ -45,7 +46,9 @@ class Customer {
       isVerifiedEmail: map['isVerifiedEmail'] ?? false,
       isVerifiedPhone: map['isVerifiedPhone'] ?? false,
       altPhoneNumber: map['altPhoneNumber'],
-      projects: List<String>.from(map['projects'] ?? []),
+      projects: map['projects'] != null
+          ? OurProject.fromJson(map['projects'])
+          : map['projects'],
       choiceApt: List<String>.from(map['choiceApt'] ?? []),
       // closingManager: null,
       closingManager: map['closingManager'] != null

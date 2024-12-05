@@ -32,7 +32,9 @@ const storage = FlutterSecureStorage();
 // final dio = Dio();
 
 // const baseUrl = "http://192.168.1.180:8082";
-const baseUrl = "https://api.evhomes.tech";
+
+const baseUrl = "http://192.168.1.168:8082";
+// const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -2768,20 +2770,24 @@ class ApiService {
         data: data,
         // cancelToken: loginCancelToken,
       );
-
+      print(response.data);
       if (response.data['code'] == 200) {
         Helper.showCustomSnackBar(response.data['message'], Colors.green);
       }
+      print("pass1");
       Helper.showCustomSnackBar(response.data['message']);
       final Response response2 = await _dio.post(
         '/siteVisits-add',
         data: data,
       );
+
+      print("pass2");
       if (response2.data['code'] == 200) {
         Helper.showCustomSnackBar(response2.data['message'], Colors.green);
       }
       Helper.showCustomSnackBar(response2.data['message']);
 
+      print("pass3");
       return null;
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
@@ -2791,7 +2797,7 @@ class ApiService {
         errorMessage = e.response?.data['message'] ?? errorMessage;
       } else {
         // Other types of errors (network, etc.)
-        errorMessage = e.message.toString();
+        errorMessage = e.message.toString(); 
       }
 
       Helper.showCustomSnackBar(errorMessage);

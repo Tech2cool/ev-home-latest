@@ -3489,6 +3489,31 @@ class ApiService {
       return null;
     }
   }
+
+  Future<String?> deleteProject(String id) async {
+    try {
+      final Response response = await _dio.delete('/ourProjects/$id');
+
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return null;
+      }
+      Helper.showCustomSnackBar(response.data['message'], Colors.green);
+
+      return response.data['message'];
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
+      return null;
+    }
+  }
 }
 
 class _AuthInterceptor extends Interceptor {

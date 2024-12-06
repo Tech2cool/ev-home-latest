@@ -150,12 +150,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildUserInfo(String userEmail) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 16.0, 12.0),
+      
       child: Text(
         userEmail,
         style: const TextStyle(
           fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Colors.blue, // substitute for the constant bgColor
+          fontWeight: FontWeight.normal,
+          fontFamily: "serif",
+          color: Color.fromARGB(
+              255, 11, 136, 126), // substitute for the constant bgColor
         ),
       ),
     );

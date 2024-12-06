@@ -311,7 +311,7 @@ class _DemandLetterState extends State<DemandLetter> {
                     Row(
                       children: [
                         Expanded(
-                          child: _buildTextField( 
+                          child: _buildTextField(
                             controller: additionalNameController,
                             label: 'Additional Name',
                             icon: Icons.person_add,
@@ -367,17 +367,15 @@ class _DemandLetterState extends State<DemandLetter> {
                       label: 'Address Line 2',
                       icon: Icons.location_on),
                   _buildRow([
-                    Expanded(
-                        child: _buildTextField(
-                            controller: cityController,
-                            label: 'City',
-                            icon: Icons.location_city)),
-                    Expanded(
-                        child: _buildTextField(
-                            controller: pincodeController,
-                            label: 'Pincode',
-                            icon: Icons.pin_drop,
-                            keyboardType: TextInputType.number)),
+                    _buildTextField(
+                        controller: cityController,
+                        label: 'City',
+                        icon: Icons.location_city),
+                    _buildTextField(
+                        controller: pincodeController,
+                        label: 'Pincode',
+                        icon: Icons.pin_drop,
+                        keyboardType: TextInputType.number),
                   ]),
                   _buildTextField(
                       controller: referenceController,

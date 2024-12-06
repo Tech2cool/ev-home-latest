@@ -44,14 +44,21 @@ class _LoginPageState extends State<LoginPagee>
   Future<void> _handleLogin() async {
     final settingProvider =
         Provider.of<SettingProvider>(context, listen: false);
-    setState(() {});
+    bool _isLoading = false;
+    setState(() {
+      _isLoading = true;
+    });
 
     try {
       int phone = int.parse(_phoneController.text);
       await settingProvider.loginPhone(context, phone);
-      setState(() {});
+      setState(() {
+        _isLoading = false;
+      });
     } catch (error) {
-      setState(() {});
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 

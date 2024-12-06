@@ -2,6 +2,7 @@
 // import 'package:ev_homes/Customer%20pages/otp_verification.dart';
 import 'package:ev_homes/core/models/customer.dart';
 import 'package:ev_homes/core/models/employee.dart';
+import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/pages/login_pages/customer_login_page.dart';
@@ -79,6 +80,7 @@ class SignUpTabBar extends StatefulWidget {
   final FocusNode passwordFocusNode;
   final bool passwordVisibility;
   final TextEditingController confirmPasswordController;
+
   // final bool confirmPasswordVisibility;
   // final Function() onPressPassVisibility;
   final Function() onPressSignup;
@@ -116,20 +118,48 @@ class _SignUpTabBarState extends State<SignUpTabBar>
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   //List<Project> _projects = []; // This will be your project list fetched from the database
-  String? _selectedProject;
+  OurProject? _selectedProject;
+  Employee? _selectedClosingManger;
 
-  Employee? _selectedTL;
   String? _selectedResidence;
   String? _selectedOtherLocation;
   String? _selectedApartment;
   bool _showOtherLocations = false;
-
+  bool isLoading = false;
   bool _passwordVisibility = false;
   bool _confirmPasswordVisibility = false;
+
+  Future<void> _onRefresh() async {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      // Execute all three futures concurrently
+      await (
+        settingProvider.getOurProject(),
+        settingProvider.ourProject,
+        settingProvider.getClosingManagers(),
+        settingProvider.closingManagers,
+        // settingProvider.getPayment(),
+      );
+    } catch (e) {
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -137,6 +167,7 @@ class _SignUpTabBarState extends State<SignUpTabBar>
 
     _shinyAnimation =
         Tween<double>(begin: -1, end: 2).animate(_animationController);
+    _onRefresh();
   }
 
   void _togglePasswordVisibility() {
@@ -167,17 +198,20 @@ class _SignUpTabBarState extends State<SignUpTabBar>
       firstName: _nameController.text,
       lastName: _lastNameController.text,
       email: widget.emailAddressTextController.text,
-      gender: "Male",
       phoneNumber: int.parse(_phoneController.text),
       address: _selectedResidence,
-      projects: [_selectedProject!],
+      projects: _selectedProject!,
       choiceApt: [_selectedApartment!],
-      closingManager: _selectedTL,
+      closingManager: _selectedClosingManger,
     );
     Map<String, dynamic> mapped = newCustomer.toMap();
     if (mapped['closingManager'] != null) {
       mapped['closingManager'] = mapped['closingManager']['id'];
     }
+    if (_selectedProject != null) {
+      mapped["projects"] = _selectedProject!.id;
+    }
+    print(_selectedProject);
 
     mapped['password'] = widget.passwordController.text;
     await ApiService().registerCustomerAndSiteVisit(
@@ -297,6 +331,7 @@ class _SignUpTabBarState extends State<SignUpTabBar>
                 _buildTLDropdown(employees),
 
                 const SizedBox(height: 16),
+
                 _buildResidenceDropdown(),
 
                 if (_showOtherLocations) const SizedBox(height: 16),
@@ -304,7 +339,6 @@ class _SignUpTabBarState extends State<SignUpTabBar>
 
                 const SizedBox(height: 32),
                 _buildRegisterButton(context),
-
                 const SizedBox(height: 16),
 
                 // Align(
@@ -459,25 +493,34 @@ class _SignUpTabBarState extends State<SignUpTabBar>
   }
 
   Widget _buildProjectDropdown() {
+    final settingProvider = Provider.of<SettingProvider>(context);
+    final projects = settingProvider.ourProject;
+    print(projects);
     return Column(
       children: [
-        DropdownButtonFormField<String>(
-          value: _selectedProject,
+        DropdownButtonFormField<OurProject>(
+          value: projects.contains(_selectedProject) ? _selectedProject : null,
           decoration: InputDecoration(
             labelText: 'Select Project',
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(5),
             ),
           ),
-          items: [
-            'MARINA BAY',
-            'EV9 SQUARE',
-            'Heart City',
-            'Other',
-          ].map((project) {
-            return DropdownMenuItem<String>(
+          items: projects.map((project) {
+            return DropdownMenuItem<OurProject>(
               value: project,
-              child: FittedBox(child: Text(project)),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      project.name ?? "",
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                ],
+              ),
             );
           }).toList(),
           onChanged: (newValue) {
@@ -486,11 +529,12 @@ class _SignUpTabBarState extends State<SignUpTabBar>
             });
           },
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Please select a project';
+            if (value == null) {
+              return 'Please select a Project';
             }
             return null;
           },
+          isExpanded: true,
         ),
         if (_selectedProject == 'Other') ...[
           const SizedBox(height: 10),
@@ -515,15 +559,17 @@ class _SignUpTabBarState extends State<SignUpTabBar>
   }
 
   Widget _buildTLDropdown(List<Employee> emps) {
+    final settingProvider = Provider.of<SettingProvider>(context);
+    final closingMangers = settingProvider.closingManagers;
     return DropdownButtonFormField<Employee>(
-      value: _selectedTL,
+      value: _selectedClosingManger,
       decoration: InputDecoration(
         labelText: 'Closing Manager',
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(5),
         ),
       ),
-      items: emps.map((teamleader) {
+      items: closingMangers.map((teamleader) {
         return DropdownMenuItem<Employee>(
           value: teamleader,
           child: Row(
@@ -550,7 +596,7 @@ class _SignUpTabBarState extends State<SignUpTabBar>
       }).toList(),
       onChanged: (newValue) {
         setState(() {
-          _selectedTL = newValue;
+          _selectedClosingManger = newValue;
         });
       },
       validator: (value) {

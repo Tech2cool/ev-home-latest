@@ -4,10 +4,12 @@ import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/lead.dart';
+import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_details_page.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +33,7 @@ class _ClosingManagerLeadDetailsPageState
   bool isLoading = false;
   bool _isPreviewVisible = false;
   DateTime? _selectedDate;
+  String? selectedStatus;
 
   final TextEditingController _dateController = TextEditingController();
 
@@ -256,7 +259,7 @@ class _ClosingManagerLeadDetailsPageState
       listen: false,
     );
     final loggedUser = settingProvider.loggedAdmin?.id;
-    
+
     String? selectedSubject;
     Employee? selectedAssignee;
     final subjectController = TextEditingController();
@@ -548,6 +551,9 @@ class _ClosingManagerLeadDetailsPageState
                     case 'assign_tasks':
                       _showAssignTaskDialog(context);
                       break;
+                    case 'status':
+                      // Handle status logic if needed
+                      break;
                   }
                 },
                 itemBuilder: (BuildContext context) {
@@ -565,6 +571,48 @@ class _ClosingManagerLeadDetailsPageState
                     const PopupMenuItem<String>(
                       value: 'assign_tasks',
                       child: Text('Assign Tasks'),
+                    ),
+                    PopupMenuItem<String>(
+                      enabled: false,
+                      child: Row(
+                        children: [
+                          const Text(
+                            'Status',
+                            style: TextStyle(
+                              color: Colors.black, // Black color for the text
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          DropdownButton<String>(
+                            value: selectedStatus,
+                            underline: SizedBox.shrink(),
+                            onChanged: (value) {
+                              setState(() {
+                                selectedStatus = value;
+
+                                if (value == 'Booked') {
+                                  GoRouter.of(context).push(
+                                    "/post-sales-lead-details",
+                                    // extra: lead,
+                                  );
+                                }
+                              });
+                            },
+                            items: <String>[
+                              'Called',
+                              'Visited',
+                              'Revisited',
+                              'Booked'
+                            ].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
                     ),
                   ];
                 },

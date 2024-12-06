@@ -5,6 +5,7 @@ import 'package:ev_homes/components/graph/line_chart.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/chart_model.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -263,6 +264,33 @@ class _PostsaleexcecutiveDashboardState
                         ),
                       ],
                     ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        print("Inventory button pressed");
+                      },
+                      icon: const Icon(
+                        FluentIcons.box_24_regular,
+                        color: Colors.white,
+                      ),
+                      label: const Text(
+                        "Inventory",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        textStyle: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
                   ),
 
                   // Line Chart with Blurred Background

@@ -464,6 +464,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Calculated Values',
+<<<<<<< HEAD
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -477,6 +478,14 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
                 'TDS +GST/SGST ${currencyFormat.format(calculatedValues!['gstAmount']! + calculatedValues!['tdsAmount']!)}'),
             Text(
                 'Total Due: ${currencyFormat.format(calculatedValues!['totalDue'])}'),
+=======
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade700)),
+            const SizedBox(height: 8),
+            Text('Net Amount: ${currencyFormat.format(calculatedValues!['baseAmount'])}'),
+            Text('GST/SGST Amount: ${currencyFormat.format(calculatedValues!['gstAmount'])}'),
+            Text('TDS +GST/SGST ${currencyFormat.format(calculatedValues!['gstAmount']! + calculatedValues!['tdsAmount']!)}'),
+            Text('Total Due: ${currencyFormat.format(calculatedValues!['totalDue'])}'),
+>>>>>>> eff17cedf14077a94d8506ec0bd25dcdebd0181d
           ],
         ),
       ),
@@ -779,7 +788,11 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
                 'Vashi, Navi Mumbai',
               ),
               _buildPdfBankDetails(
+<<<<<<< HEAD
                 'IDBI Bank (for GST And TDS amount payment ${currencyFormat.format(bankTableOption == 'bookingAmount' ? (remainingGst + remainingTds).ceil() : remainingBase.ceil())}',
+=======
+                'IDBI Bank (for GST And TDS amount payment ${currencyFormat.format(bankTableOption == 'bookingAmount' ?  (remainingGst + remainingTds).ceil():remainingBase.ceil())}',
+>>>>>>> eff17cedf14077a94d8506ec0bd25dcdebd0181d
                 'Account Name:- E V Homes Construction Pvt.Ltd',
                 '0123102000043254',
                 'IBKL0000123',
@@ -840,12 +853,22 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
     remainingGst = gstAmount - receivedGst;
     remainingTds = tdsAmount - receivedTds;
     double remainingTotal = (remainingBase - remainingTds) + remainingGst;
+<<<<<<< HEAD
 
     double latePaymentCharge = remainingBase * (reminderDays / 100.0);
     double latePaymentGST = latePaymentCharge * 0.18;
     double latetdspayment = 0.0;
     double totalLatePayment = latePaymentCharge + latePaymentGST;
 
+=======
+    
+    double latePaymentCharge = remainingBase * (reminderDays / 100.0);
+    double latePaymentGST = latePaymentCharge * 0.18;
+    double latetdspayment = 0.0;
+    double totalLatePayment =
+        latePaymentCharge + latePaymentGST;
+        
+>>>>>>> eff17cedf14077a94d8506ec0bd25dcdebd0181d
     double finalBase = remainingBase + latePaymentCharge;
     double finalGst = remainingGst + latePaymentGST;
     double finaltds = remainingTds;
@@ -1021,21 +1044,32 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Bank Details',
+<<<<<<< HEAD
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: Colors.blue.shade700)),
+=======
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.blue.shade700)),
+>>>>>>> eff17cedf14077a94d8506ec0bd25dcdebd0181d
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
               value: bankTableOption,
               decoration: InputDecoration(
                 labelText: 'Select value for PDF',
+<<<<<<< HEAD
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               ),
               items: const [
                 DropdownMenuItem(
                     value: 'bookingAmount', child: Text('Booking Amount')),
+=======
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              items: [
+                DropdownMenuItem(value: 'bookingAmount', child: Text('Booking Amount')),
+>>>>>>> eff17cedf14077a94d8506ec0bd25dcdebd0181d
                 DropdownMenuItem(value: 'gstAmount', child: Text('GST Amount')),
               ],
               onChanged: (value) {
@@ -1048,6 +1082,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
             Table(
               border: TableBorder.all(),
               children: [
+<<<<<<< HEAD
                 const TableRow(
                   children: [
                     TableCell(
@@ -1067,11 +1102,27 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
                       padding: EdgeInsets.all(8.0),
                       child: Text('Amount',
                           style: TextStyle(fontWeight: FontWeight.bold)),
+=======
+                TableRow(
+                  children: [
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Bank Name', style: TextStyle(fontWeight: FontWeight.bold)),
+                    )),
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Account Number', style: TextStyle(fontWeight: FontWeight.bold)),
+                    )),
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('Amount', style: TextStyle(fontWeight: FontWeight.bold)),
+>>>>>>> eff17cedf14077a94d8506ec0bd25dcdebd0181d
                     )),
                   ],
                 ),
                 TableRow(
                   children: [
+<<<<<<< HEAD
                     const TableCell(
                         child: Padding(
                       padding: EdgeInsets.all(8.0),
@@ -1090,12 +1141,29 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
                               bankTableOption == 'bookingAmount'
                                   ? calculatedValues!['baseAmount']!
                                   : calculatedValues!['gstAmount']!)
+=======
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('ICICI Bank Limited'),
+                    )),
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('015105022186'),
+                    )),
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(calculatedValues != null
+                          ? currencyFormat.format(bankTableOption == 'bookingAmount'
+                              ? calculatedValues!['baseAmount']!
+                              : calculatedValues!['gstAmount']!)
+>>>>>>> eff17cedf14077a94d8506ec0bd25dcdebd0181d
                           : '0.00'),
                     )),
                   ],
                 ),
                 TableRow(
                   children: [
+<<<<<<< HEAD
                     const TableCell(
                         child: Padding(
                       padding: EdgeInsets.all(8.0),
@@ -1114,6 +1182,22 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
                               bankTableOption == 'bookingAmount'
                                   ? calculatedValues!['gstAmount']!
                                   : calculatedValues!['baseAmount']!)
+=======
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('ICICI Bank'),
+                    )),
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text('015105022390'),
+                    )),
+                    TableCell(child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(calculatedValues != null
+                          ? currencyFormat.format(bankTableOption == 'bookingAmount'
+                              ? calculatedValues!['gstAmount']!
+                              : calculatedValues!['baseAmount']!)
+>>>>>>> eff17cedf14077a94d8506ec0bd25dcdebd0181d
                           : '0.00'),
                     )),
                   ],
@@ -1125,4 +1209,8 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
       ),
     );
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> eff17cedf14077a94d8506ec0bd25dcdebd0181d

@@ -100,7 +100,7 @@ class PropertyCard extends StatelessWidget {
                             fit: BoxFit.cover,
                           ),
                           Positioned(
-                            bottom: 0,
+                            bottom: 0,   
                             child: Container(
                               width: 250,
                               height: 30,

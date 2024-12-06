@@ -1,5 +1,9 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
+<<<<<<< HEAD
 import 'package:ev_homes/components/animated_pie_chart.dart';
+=======
+import 'package:ev_homes/components/graph/animated_pie_chart.dart';
+>>>>>>> eff17cedf14077a94d8506ec0bd25dcdebd0181d
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
@@ -60,6 +64,16 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
     }
   }
 
+<<<<<<< HEAD
+=======
+  final Map<String, Map<String, int>> chartData = {
+    "lead_to_visit": {"visited": 60, "notVisited": 40},
+    "visit1_to_booking": {"visited": 30, "notVisited": 70},
+    "visit2_to_booking": {"booking": 20, "Visited2": 80},
+    "lead_to_booking": {"booking": 15, "notVisited": 85},
+  };
+
+>>>>>>> eff17cedf14077a94d8506ec0bd25dcdebd0181d
   @override
   void initState() {
     super.initState();
@@ -212,6 +226,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                     ],
                   ),
                 ),
+<<<<<<< HEAD
                 Container(
                   margin:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -219,7 +234,69 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     color: const Color.fromARGB(116, 218, 207, 120),
+=======
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 60,
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(154, 255, 254, 245),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey.shade400),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              isExpanded: true,
+                              hint: const Text("Select an option"),
+                              value: selectedOption,
+                              items: const [
+                                DropdownMenuItem(
+                                  value: "lead_to_visit",
+                                  child: Text("Leads to Visit"),
+                                ),
+                                DropdownMenuItem(
+                                  value: "visit1_to_booking",
+                                  child: Text("Visit 1 to Booking"),
+                                ),
+                                DropdownMenuItem(
+                                  value: "visit2_to_booking",
+                                  child: Text("Visit 2 to Booking"),
+                                ),
+                                DropdownMenuItem(
+                                  value: "lead_to_booking",
+                                  child: Text("Lead to Booking"),
+                                ),
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedOption = value;
+                                });
+                              },
+                              icon: const Icon(Icons.arrow_drop_down),
+                            ),
+                          ),
+                        ),
+                        if (selectedOption != null)
+                          AnimatedPieChart(
+                            visited: chartData[selectedOption]!['visited']!,
+                            notVisited: chartData[selectedOption]!['notVisited']!,
+                            title: ' conversion', 
+                          ),
+                      ],
+                    ),
+>>>>>>> eff17cedf14077a94d8506ec0bd25dcdebd0181d
                   ),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: const Color.fromARGB(255, 39, 46, 84),
+                    ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [

@@ -221,7 +221,7 @@ class _MoreOptionPageState extends State<MoreOptionPage> {
                 color: Colors.deepPurple,
               ),
               title: const Text(
-                "Upload Shorts",
+                "Upload Files",
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,

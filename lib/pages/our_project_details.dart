@@ -44,16 +44,16 @@ class PropertyCard extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         // Navigate to Lottiepage on tap
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => const Lottiepage(), // Navigate to Lottiepage
+        //   ),
+        // );
+
+        // await Future.delayed(const Duration(seconds: 1));
+
         Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Lottiepage(), // Navigate to Lottiepage
-          ),
-        );
-
-        await Future.delayed(const Duration(seconds: 2));
-
-        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => DescriptionScreen(

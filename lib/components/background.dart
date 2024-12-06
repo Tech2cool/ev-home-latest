@@ -20,10 +20,7 @@ class Background extends StatelessWidget {
       ),
       child: Stack(
         alignment: Alignment.center,
-        children: [
-          // Add your child widget on top of the background
-          child
-        ],
+        children: [Positioned.fill(child: child)],
       ),
     );
   }

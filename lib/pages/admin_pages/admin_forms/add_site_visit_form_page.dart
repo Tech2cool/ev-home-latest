@@ -608,6 +608,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
     final settingProvider = Provider.of<SettingProvider>(context);
     final closingMangers = settingProvider.closingManagers;
     final dataEntryUsers = settingProvider.dataEntryUsers;
+    print(dataEntryUsers);
     final seniorClosingManagers = settingProvider.seniorClosingManagers;
     final salesManager = settingProvider.salesManager;
     final teamLeaders = settingProvider.teamLeaders;
@@ -619,7 +620,9 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
         builder: (BuildContext context, BoxConstraints constraints) {
       return Scaffold(
         appBar: _selectedDataEntryUser != null
+        
             ? AppBar(
+
                 title: const Text("Site Visit Form"),
                 actions: [
                   if (_selectedDataEntryUser != null)

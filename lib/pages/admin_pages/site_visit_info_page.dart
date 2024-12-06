@@ -12,6 +12,7 @@ class SiteVisitInfoPage extends StatelessWidget {
         title: const Text("Site Visit Info"),
       ),
       body: Padding(
+        
         padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

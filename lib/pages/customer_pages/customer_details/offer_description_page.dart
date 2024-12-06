@@ -175,8 +175,8 @@ class _OfferPageState extends State<OfferPage> {
                             return Dialog(
                               child: Container(
                                 padding: const EdgeInsets.all(10),
-                                child: Image.asset(
-                                  'assets/images/livingroom1.jpg',
+                                child: Image.network(
+                                  'http://cdn.evhomes.tech/e5cbeb61-20fb-4d32-ba21-e3543ccf5f14-IMG-20241128-WA0010(1).jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImU1Y2JlYjYxLTIwZmItNGQzMi1iYTIxLWUzNTQzY2NmNWYxNC1JTUctMjAyNDExMjgtV0EwMDEwKDEpLmpwZyIsImlhdCI6MTczMzM5NDc0MX0.Gwv3haMjg2hwsyP0cV0glu4ZMh5snlbDeHRlZ3jzTGU',
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -184,8 +184,8 @@ class _OfferPageState extends State<OfferPage> {
                           },
                         );
                       },
-                      child: Image.asset(
-                        'assets/images/livingroom1.jpg',
+                      child: Image.network(
+                        'http://cdn.evhomes.tech/e5cbeb61-20fb-4d32-ba21-e3543ccf5f14-IMG-20241128-WA0010(1).jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImU1Y2JlYjYxLTIwZmItNGQzMi1iYTIxLWUzNTQzY2NmNWYxNC1JTUctMjAyNDExMjgtV0EwMDEwKDEpLmpwZyIsImlhdCI6MTczMzM5NDc0MX0.Gwv3haMjg2hwsyP0cV0glu4ZMh5snlbDeHRlZ3jzTGU',
                         height: 110,
                       ),
                     ),

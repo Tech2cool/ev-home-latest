@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as path;
 
 class UploadShorts extends StatefulWidget {
   const UploadShorts({super.key});
@@ -14,6 +15,7 @@ class _UploadShortsState extends State<UploadShorts> {
   // final FilePicker imagePicker = FilePicker();
 
   File? _uploadShorts;
+  String? _fileName;
 
   void onSelectVideo() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -24,6 +26,7 @@ class _UploadShortsState extends State<UploadShorts> {
     if (result != null && result.files.single.path != null) {
       setState(() {
         _uploadShorts = File(result.files.single.path!);
+        _fileName = path.basename(result.files.single.path!);
       });
     }
   }
@@ -36,7 +39,31 @@ class _UploadShortsState extends State<UploadShorts> {
       final uShowcaseVideo = await apiService.uploadFile(_uploadShorts!);
       if (uShowcaseVideo != null) {
         upShowCaseVideo = uShowcaseVideo.downloadUrl;
+
+        // Display the SnackBar upon successful upload
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Uploaded File Successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } else {
+        // Optionally handle the case when the upload fails
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to upload file'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
+    } else {
+      // Handle the case when no file is selected
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select a file to upload'),
+          backgroundColor: Colors.orange,
+        ),
+      );
     }
   }
 
@@ -49,23 +76,29 @@ class _UploadShortsState extends State<UploadShorts> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
-                child: Text(
-                  'Upload Shorts',
-                  style: TextStyle(
-                    fontSize: 16,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                child: const Expanded(
+                  child: Text(
+                    'Upload Files (Storage)',
+                    style: TextStyle(
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
-              MaterialButton(
-                color: Colors.blue,
-                onPressed: onSelectVideo,
-                child: const Text(
-                  "Browse",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                child: MaterialButton(
+                  color: Colors.blue,
+                  onPressed: onSelectVideo,
+                  child: const Text(
+                    "Browse",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ),
@@ -84,12 +117,16 @@ class _UploadShortsState extends State<UploadShorts> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                const Text("Selected Video"),
+                Text(
+                  _fileName ?? "Selected Video", // Display the file name
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 const Spacer(),
                 IconButton(
                   onPressed: () {
                     setState(() {
                       _uploadShorts = null;
+                      _fileName = null;
                     });
                   },
                   icon: const Icon(

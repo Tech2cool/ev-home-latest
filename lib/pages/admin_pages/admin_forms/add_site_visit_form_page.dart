@@ -1306,6 +1306,78 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         const SizedBox(
                           height: 16,
                         ),
+                        Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: MultiDropdown<Employee>(
+                            items: [
+                              ...salesManager.map(
+                                (ele) => DropdownItem(
+                                    value: ele,
+                                    label: "${ele.firstName} ${ele.lastName}"),
+                              ),
+                            ],
+                            enabled: true,
+                            searchEnabled: true,
+                            chipDecoration: const ChipDecoration(
+                              backgroundColor: Colors.greenAccent,
+                              wrap: true,
+                              runSpacing: 2,
+                              spacing: 10,
+                            ),
+                            fieldDecoration: FieldDecoration(
+                              labelStyle: TextStyle(fontSize: 30),
+                              hintText: 'Sales Manager',
+                              hintStyle: const TextStyle(color: Colors.black87),
+                              prefixIcon:
+                                  const Icon(CupertinoIcons.person_3_fill),
+                              showClearIcon: false,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                            dropdownDecoration: const DropdownDecoration(
+                              marginTop: 2,
+                              maxHeight: 500,
+                              header: Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text(
+                                  'Select Sales Managers',
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            dropdownItemDecoration: DropdownItemDecoration(
+                              selectedIcon: const Icon(Icons.check_box,
+                                  color: Colors.grey),
+                              disabledIcon:
+                                  Icon(Icons.lock, color: Colors.grey.shade300),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please select a apartment';
+                              }
+                              return null;
+                            },
+                            onSelectionChange: (selectedItems) {
+                              setState(() {
+                                _selectedSalesManagers1 = selectedItems;
+                              });
+                            },
+                          ),
+                        ),
+
                         // Row(
                         //   children: [
                         //     Expanded(

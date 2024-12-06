@@ -256,7 +256,7 @@ class _ClosingManagerLeadDetailsPageState
       listen: false,
     );
     final loggedUser = settingProvider.loggedAdmin?.id;
-    
+
     String? selectedSubject;
     Employee? selectedAssignee;
     final subjectController = TextEditingController();
@@ -967,7 +967,7 @@ class _ClosingManagerLeadDetailsPageState
             value: Helper.formatDateOnly(
               widget.lead.cycle?.validTill.toString() ?? '',
             ),
-            valueColor: Colors.red,
+            valueColor: const Color.fromARGB(255, 255, 134, 126),
             headingColor: Colors.white,
           ),
           if (widget.lead.visitRef != null)

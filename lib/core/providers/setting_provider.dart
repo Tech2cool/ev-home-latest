@@ -20,6 +20,7 @@ import 'package:ev_homes/core/models/task.dart';
 import 'package:ev_homes/core/models/team_section.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/core/services/shared_pref_service.dart';
+import 'package:ev_homes/pages/admin_pages/admin_forms/add_channer_partner_page.dart';
 import 'package:ev_homes/pages/login_pages/customer_otp_verification_page.dart';
 import 'package:ev_homes/sections/login_sections/admin_login_section.dart';
 import 'package:ev_homes/wrappers/cp_home_wrapper.dart';
@@ -1004,6 +1005,7 @@ class SettingProvider extends ChangeNotifier {
   }
 
   Future<void> addChannelPartner(
+      BuildContext context,
       String firstName,
       String lastName,
       String email,
@@ -1033,6 +1035,7 @@ class SettingProvider extends ChangeNotifier {
     if (resp == null) return;
     await getChannelPartner();
     notifyListeners();
+    Navigator.pop(context);
   }
 
   Future<void> addPayment(Map<String, dynamic> data) async {

@@ -463,6 +463,7 @@ class _AddChannerPartnerPageState extends State<AddChannerPartnerPage> {
                               isLoading = true;
                             });
                             await settingProvider.addChannelPartner(
+                              context,
                               FirstNameController.text,
                               LastNameController.text,
                               emailController.text,

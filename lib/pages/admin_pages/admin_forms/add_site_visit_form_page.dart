@@ -69,7 +69,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   bool resendPass = false;
   String? _selectedSource;
   Employee? _selectedClosingManger;
-
+  String? selectedVisit;
   Employee? _selectedSeniorClosingManager;
   Employee? _selectedSalesManager;
   List<Employee> _selectedSalesManagers1 = [];
@@ -78,24 +78,24 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   // List<String> selectedProject = [];
   List<String> selectedRequirement = [];
   List<String> listofSource = ['Walk-in', 'CP', 'Ref'];
+  List<String> listofType = ['Visit', 'Revisit'];
   Employee? _selectedDataEntryUser;
   String? selectedProj;
 
   List<OurProject> selectedProject = [];
   // String? selectedProj;
-  String? selectedVisit;
 
   // List of projects for the dropdown
   final List<String> projects = [
     '10 Marina Bay',
     '9 Square',
   ];
-  final List<String> assignnames = [
-    'Jaspreet Arora',
-    'Harshal Kokate',
-    'Ricky Mane',
-    'Deepak Karki'
-  ];
+  // final List<String> assignnames = [
+  //   'Jaspreet Arora',
+  //   'Harshal Kokate',
+  //   'Ricky Mane',
+  //   'Deepak Karki'
+  // ];
   String? selectedassignName;
   // final Map<String, List<String>> subordinatesassignnames = {
   //   'Jaspreet Arora': ['John Doe', 'Jane Smith', 'Sam Wilson', 'Alice Brown'],
@@ -441,6 +441,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
         listen: false,
       );
       final newVisit = SiteVisit(
+        visitType: selectedVisit,
         projects: selectedProject,
         choiceApt: selectedRequirement,
         firstName: firstNameController.text,
@@ -620,9 +621,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
         builder: (BuildContext context, BoxConstraints constraints) {
       return Scaffold(
         appBar: _selectedDataEntryUser != null
-        
             ? AppBar(
-
                 title: const Text("Site Visit Form"),
                 actions: [
                   if (_selectedDataEntryUser != null)
@@ -1045,6 +1044,73 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         const SizedBox(
                           height: 16,
                         ),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: DropdownButtonFormField<String>(
+                                value: selectedVisit,
+                                decoration: InputDecoration(
+                                  labelText: 'Select Visit Type',
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                                items: listofType.map((visit) {
+                                  return DropdownMenuItem<String>(
+                                    value: visit,
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            visit,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (newValue) {
+                                  setState(() {
+                                    selectedVisit = newValue;
+                                  });
+                                },
+                                validator: (value) {
+                                  if (value == null) {
+                                    return 'Please select a Visit Type';
+                                  }
+                                  return null;
+                                },
+                                isExpanded: true,
+                              ),
+                            ),
+                            // Expanded(
+                            //   child: MultiSelectDropdown.simpleList(
+                            //     list: listofSource,
+                            //     boxDecoration: BoxDecoration(
+                            //       border: Border.all(
+                            //           color: Colors.grey.withOpacity(0.4)),
+                            //       borderRadius: BorderRadius.circular(12),
+                            //     ),
+                            //     initiallySelected: selectedRequirement,
+                            //     checkboxFillColor: Colors.grey.withOpacity(0.3),
+                            //     splashColor: Colors.grey.withOpacity(0.3),
+                            //     includeSearch: true,
+                            //     whenEmpty: "Source",
+                            //     onChange: (newList) {
+                            //       selectedRequirement =
+                            //           newList.map((e) => e as String).toList();
+                            //     },
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 16,
+                        ),
+
                         MultiDropdown<OurProject>(
                           items: [
                             ...ourProjects.map(

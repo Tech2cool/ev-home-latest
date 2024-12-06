@@ -109,7 +109,7 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                 return GestureDetector(
                   onTap: () {
                     // Add custom transition and back navigation using pushReplacement
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       PageRouteBuilder(
                         transitionDuration: const Duration(milliseconds: 500),
@@ -131,7 +131,7 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                     );
                   },
                   child: Card(
-                    color: Colors.transparent,
+                    color: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(15), // Circular corners
@@ -148,8 +148,8 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
                                 10), // Slight rounding of image
                             child: Image.network(
                               offer.images[0],
-                              height: 120, // Adjust the height of the image
-                              width: 120, // Adjust the width of the image
+                              height: 120,
+                              width: 120,
                               fit: BoxFit.cover,
                             ),
                           ),

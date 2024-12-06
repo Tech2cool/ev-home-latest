@@ -42,6 +42,14 @@ IconData getIconData(String name) {
       name.toLowerCase().contains("garden") ||
       name.toLowerCase().contains("ball")) {
     icon = FluentIcons.sport_24_regular;
+  } else if (name.toLowerCase().contains("lounge") ||
+      name.toLowerCase().contains("party") ||
+      name.toLowerCase().contains("party")) {
+    icon = FluentIcons.music_note_2_16_filled;
+  } else if (name.toLowerCase().contains("area") ||
+      name.toLowerCase().contains("kids") ||
+      name.toLowerCase().contains("kids")) {
+    icon = FluentIcons.people_community_28_regular;
   }
 
   return icon;
@@ -68,6 +76,10 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).unfocus();
+    });
+
     final filteredBhkList = selectedConfiguration == "All"
         ? widget.project.configurations // Show all configurations
         : widget.project.configurations
@@ -223,28 +235,33 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       ),
                     ),
                   ),
+                  //TODO: hero fix
                   SizedBox(
                     width: double.infinity,
                     height: 160,
                     child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        shrinkWrap: true,
-                        itemCount: filteredBhkList.length,
-                        itemBuilder: (context, i) {
-                          return Container(
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: filteredBhkList.length,
+                      itemBuilder: (context, i) {
+                        return Hero(
+                          tag:
+                              'configuration-${filteredBhkList[i].configuration}-$i', // Unique tag
+                          child: Container(
                             width: 290,
                             height: 80,
                             margin: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
-                                color: const Color(0xfff4e9e0),
-                                borderRadius: BorderRadius.circular(15),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.grey.withOpacity(0.4),
-                                    blurRadius: 2,
-                                    spreadRadius: 1,
-                                  )
-                                ]),
+                              color: const Color(0xfff4e9e0),
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.4),
+                                  blurRadius: 2,
+                                  spreadRadius: 1,
+                                ),
+                              ],
+                            ),
                             child: Row(
                               children: [
                                 Padding(
@@ -323,9 +340,12 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                 ),
                               ],
                             ),
-                          );
-                        }),
+                          ),
+                        );
+                      },
+                    ),
                   ),
+
                   const SizedBox(
                     height: 100,
                   ),
@@ -848,14 +868,22 @@ class HorizontalStaggeredGallery extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return Dialog(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                              16), // Adjust the radius here
-                          child: Image.network(
-                            newImages[index].image,
-                            width: double.infinity,
-                            height: 250,
-                            fit: BoxFit.cover,
+                        insetPadding: EdgeInsets.all(0),
+                        backgroundColor: Colors.transparent,
+                        child: InteractiveViewer(
+                          maxScale: 2.2,
+                          child: Container(
+                            height: MediaQuery.sizeOf(context).height / 2,
+                            color: Colors.transparent,
+                            child: AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: Image.network(
+                                newImages[index].image,
+                                width: double.infinity,
+                                height: 250,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
                           ),
                         ),
                       );

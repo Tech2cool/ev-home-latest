@@ -85,13 +85,11 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
     return Scaffold(
       body: Stack(
         children: [
-          Expanded(
-            child: IndexedStack(
-              index: _currentIndex,
-              children: [
-                ..._pages,
-              ],
-            ),
+          IndexedStack(
+            index: _currentIndex,
+            children: [
+              ..._pages,
+            ],
           ),
           if (_isMenuVisible) ...[
             GestureDetector(

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:ev_homes/core/helper/helper.dart';
+import 'package:ev_homes/core/providers/attendance_provider.dart';
 import 'package:ev_homes/core/providers/geolocation_provider.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/api_service.dart';
@@ -137,6 +138,10 @@ class _TimeInOutScreenState extends State<TimeInOutScreen> {
       context,
       listen: false,
     );
+    final attendanceProvider = Provider.of<AttendanceProvider>(
+      context,
+      listen: false,
+    );
 
     // Attendance? todayAttendance = attendanceProvider.attendanceToday;
     setState(() {
@@ -166,12 +171,15 @@ class _TimeInOutScreenState extends State<TimeInOutScreen> {
             return;
           }
 
-          final resp = await ApiService().checkInAttendance({
+          Map<String, dynamic> data = {
             "userId": settingProvider.loggedAdmin!.id!,
             "checkInLatitude": geolocationProvider.latitude,
             "checkInLongitude": geolocationProvider.longitude,
             "checkInPhoto": uploadedResp.downloadUrl,
-          });
+          };
+          print("opcm 0");
+          final resp = await attendanceProvider.checkIn(data);
+          print("opcm 1");
 
           // final bool checkIn = todayAttendance == null ||
           //     (todayAttendance != null &&
@@ -225,6 +233,7 @@ class _TimeInOutScreenState extends State<TimeInOutScreen> {
     // final user = Provider.of<UserProvider>(context).user;
     // final attendanceProvider = Provider.of<AttendanceProvider>(context);
     final geolocationProvider = Provider.of<GeolocationProvider>(context);
+    final attendanceProvider = Provider.of<AttendanceProvider>(context);
 
     // final Attendance? todayAttendance = attendanceProvider.attendanceToday;
     // bool checkOut = todayAttendance != null &&

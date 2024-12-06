@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'package:ev_homes/components/spinning_icon_btn.dart';
 import 'package:ev_homes/core/constant/constant.dart';
+import 'package:ev_homes/core/providers/attendance_provider.dart';
 import 'package:ev_homes/core/providers/geolocation_provider.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:slide_countdown/slide_countdown.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class TopcardWithAvatar extends StatefulWidget {
@@ -49,6 +51,8 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
   Widget build(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(context);
     final geolocationProvider = Provider.of<GeolocationProvider>(context);
+    final attendanceProvider = Provider.of<AttendanceProvider>(context);
+    final duration = attendanceProvider.currentTimerDuration;
 
     final loggedAdmin = settingProvider.loggedAdmin;
     final bool isInRadius = geolocationProvider.isWithinRadius;
@@ -162,13 +166,27 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text(
-                          formatTime(_elapsedSeconds),
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
+                        SlideCountdown(
+                          countUpAtDuration: true,
+                          duration: duration,
+                          separatorStyle: TextStyle(color: Colors.black),
+                          style: TextStyle(color: Colors.black),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(5),
                           ),
+                          // Always show minutes and seconds
+                          shouldShowMinutes: (duration) => true,
+                          shouldShowSeconds: (duration) => true,
+                          shouldShowHours: (duration) => true,
                         ),
+                        // Text(
+                        //   formatTime(_elapsedSeconds),
+                        //   style: const TextStyle(
+                        //     fontSize: 14,
+                        //     fontWeight: FontWeight.bold,
+                        //   ),
+                        // ),
                         const SizedBox(height: 5),
                         ElevatedButton(
                           onPressed: () {

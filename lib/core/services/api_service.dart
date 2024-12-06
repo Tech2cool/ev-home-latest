@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:ev_homes/core/helper/helper.dart';
+import 'package:ev_homes/core/models/attendance.dart';
 import 'package:ev_homes/core/models/channel_partner.dart';
 import 'package:ev_homes/core/models/chart_model.dart';
 import 'package:ev_homes/core/models/closing_manager_graph.dart';
@@ -1113,12 +1114,15 @@ class ApiService {
         },
         cancelToken: loginCancelToken,
       );
+      print(response.data['message']);
 
       if (response.data['code'] != 200 && response.data['data'] == null) {
         Helper.showCustomSnackBar(response.data['message']);
 
         return null;
       }
+      print("pass 1");
+
       await storage.write(
         key: "accessToken",
         value: response.data['accessToken'],
@@ -1131,7 +1135,10 @@ class ApiService {
         SharedPrefService.key,
         response.data['data'],
       );
+      print("pass 2");
+
       final user = Employee.fromMap(response.data['data']);
+      print("pass 3");
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
       return user;
     } on DioException catch (e) {
@@ -1144,7 +1151,7 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
-
+      print(e);
       Helper.showCustomSnackBar(errorMessage);
       return null;
     }
@@ -3452,6 +3459,36 @@ class ApiService {
 
       Helper.showCustomSnackBar(errorMessage);
       return false;
+    }
+  }
+
+  //Attendance
+  Future<Attendance?> checkInAttendance(Map<String, dynamic> data) async {
+    try {
+      final Response response = await _dio.post('/check-in', data: data);
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return null;
+      }
+      Helper.showCustomSnackBar(response.data['message'], Colors.green);
+      print(response.data['message']);
+
+      // return null;
+      return Attendance.fromJson(response.data['data']);
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
+      print(e);
+      return null;
     }
   }
 }

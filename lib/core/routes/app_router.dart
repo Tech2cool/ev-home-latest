@@ -31,10 +31,12 @@ import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/clo
 import 'package:ev_homes/pages/admin_pages/sales_pages/sales_manager_pages/sales_manager_lead_details_page.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/sales_manager_pages/sales_manager_lead_list_page.dart';
 import 'package:ev_homes/pages/admin_pages/view_payment.dart';
+import 'package:ev_homes/pages/attendance_pages/time_in_out_screen.dart';
 import 'package:ev_homes/pages/login_pages/admin_forgot_password_page.dart';
 import 'package:ev_homes/pages/login_pages/admin_register_page.dart';
 import 'package:ev_homes/pages/splash_screen.dart';
 import 'package:ev_homes/pages/starter_page.dart';
+import 'package:ev_homes/sections/login_sections/admin_login_section.dart';
 import 'package:ev_homes/wrappers/admin_home_wrapper.dart';
 import 'package:ev_homes/wrappers/auth_wrapper.dart';
 import 'package:go_router/go_router.dart';
@@ -54,6 +56,12 @@ class AppRoutes {
         path: '/first-page',
         builder: (context, state) {
           return const StarterPage();
+        },
+      ),
+      GoRoute(
+        path: '/admin-login-cards',
+        builder: (context, state) {
+          return const AdminLoginSection();
         },
       ),
 
@@ -333,6 +341,14 @@ class AppRoutes {
             status: status,
             id: id,
           );
+        },
+      ),
+
+      //Attendance
+      GoRoute(
+        path: '/check-in-out',
+        builder: (context, state) {
+          return const TimeInOutScreen();
         },
       ),
     ],

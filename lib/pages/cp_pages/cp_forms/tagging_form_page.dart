@@ -434,7 +434,7 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
                               spacing: 10,
                             ),
                             fieldDecoration: FieldDecoration(
-                              labelStyle: TextStyle(fontSize: 30),
+                              labelStyle: const TextStyle(fontSize: 30),
                               hintText: 'Requirements',
                               hintStyle: const TextStyle(color: Colors.black87),
                               prefixIcon:
@@ -528,11 +528,11 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
                         CustomTile(
                             title: "Email: ",
                             subTitle:
-                                "${settingProvider.loggedChannelPartner?.email ?? 'NA'}"),
+                                settingProvider.loggedChannelPartner?.email ?? 'NA'),
                         CustomTile(
                             title: "Firm name: ",
                             subTitle:
-                                "${settingProvider.loggedChannelPartner?.firmName ?? 'NA'}"),
+                                settingProvider.loggedChannelPartner?.firmName ?? 'NA'),
                       ]
                     ],
                   ),

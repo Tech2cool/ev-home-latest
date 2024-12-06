@@ -26,7 +26,7 @@ class _SpinningIconBtnState extends State<SpinningIconBtn>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: const Duration(seconds: 1),
     );
   }
 
@@ -40,7 +40,7 @@ class _SpinningIconBtnState extends State<SpinningIconBtn>
     widget.onTap();
     setState(() {
       _controller?.repeat();
-      Future.delayed(Duration(seconds: 3), () {
+      Future.delayed(const Duration(seconds: 3), () {
         _controller?.stop();
       });
     });

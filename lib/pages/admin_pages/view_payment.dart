@@ -52,8 +52,8 @@ class _ViewPaymentState extends State<ViewPayment> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text("Customer Details",
-                                style: const TextStyle(
+                            const Text("Customer Details",
+                                style: TextStyle(
                                     fontSize: 16, fontWeight: FontWeight.bold)),
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,

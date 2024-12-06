@@ -1033,7 +1033,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              items: [
+              items: const [
                 DropdownMenuItem(
                     value: 'bookingAmount', child: Text('Booking Amount')),
                 DropdownMenuItem(value: 'gstAmount', child: Text('GST Amount')),
@@ -1048,23 +1048,23 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
             Table(
               border: TableBorder.all(),
               children: [
-                TableRow(
+                const TableRow(
                   children: [
                     TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('Bank Name',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                     )),
                     TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('Account Number',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                     )),
                     TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('Amount',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                     )),
@@ -1072,14 +1072,14 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
                 ),
                 TableRow(
                   children: [
-                    TableCell(
+                    const TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('ICICI Bank Limited'),
                     )),
-                    TableCell(
+                    const TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('015105022186'),
                     )),
                     TableCell(
@@ -1096,14 +1096,14 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
                 ),
                 TableRow(
                   children: [
-                    TableCell(
+                    const TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('ICICI Bank'),
                     )),
-                    TableCell(
+                    const TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('015105022390'),
                     )),
                     TableCell(

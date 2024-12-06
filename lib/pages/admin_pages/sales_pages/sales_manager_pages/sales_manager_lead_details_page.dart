@@ -127,7 +127,6 @@ class _SalesManagerLeadDetailsPageState
       await settingProvider.getReportingToEmps(
         widget.lead.teamLeader!.id!,
       );
-    } catch (e) {
     } finally {
       setState(() {
         isLoading = false;
@@ -173,13 +172,13 @@ class _SalesManagerLeadDetailsPageState
                   return [
                     PopupMenuItem<String>(
                       value: 'send_notification',
-                      child: const Text('Send Notification'),
                       onTap: _onPressedSendNotification,
+                      child: const Text('Send Notification'),
                     ),
                     PopupMenuItem<String>(
                       value: 'schedule_meeting',
-                      child: const Text('Schedule Meeting'),
                       onTap: _onPressedScheduleMeeting,
+                      child: const Text('Schedule Meeting'),
                     ),
                   ];
                 },
@@ -579,7 +578,7 @@ class _SalesManagerLeadDetailsPageState
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
@@ -692,7 +691,7 @@ class _SalesManagerLeadDetailsPageState
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+                    padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(15),
@@ -702,7 +701,7 @@ class _SalesManagerLeadDetailsPageState
                           ),
                           width: 2,
                         ),
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
                             color: Colors.grey,
                           )

@@ -1,5 +1,4 @@
 import 'package:ev_homes/core/providers/setting_provider.dart';
-import 'package:ev_homes/pages/customer_pages/customer_home_page.dart';
 import 'package:ev_homes/pages/login_pages/customer_forgot_password_page.dart';
 import 'package:flutter/material.dart';
 

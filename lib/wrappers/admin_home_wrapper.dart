@@ -1,11 +1,8 @@
-import 'package:ev_homes/components/unkown_error_page.dart';
-import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/admin_pages/admin_home_page.dart';
 import 'package:ev_homes/pages/admin_pages/dashboard_page.dart';
 import 'package:ev_homes/pages/admin_pages/more_option_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 class BottomModel {
   final IconData icon;

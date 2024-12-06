@@ -439,7 +439,7 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
                               spacing: 10,
                             ),
                             fieldDecoration: FieldDecoration(
-                              labelStyle: TextStyle(fontSize: 30),
+                              labelStyle: const TextStyle(fontSize: 30),
                               hintText: 'Requirements',
                               hintStyle: const TextStyle(color: Colors.black87),
                               prefixIcon:

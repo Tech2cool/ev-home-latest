@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:ev_homes/components/animated_gradient_bg.dart';
-import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
 import 'package:flutter/material.dart';
 
 class ChatScreen extends StatefulWidget {

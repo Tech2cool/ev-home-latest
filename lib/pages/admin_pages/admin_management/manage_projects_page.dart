@@ -15,6 +15,37 @@ class ManageProjectsPage extends StatefulWidget {
 class _ManageProjectsPageState extends State<ManageProjectsPage> {
   String searchQuery = '';
   bool isLoading = false;
+  void _deleteProject(OurProject project) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Project'),
+        content: const Text('Are you sure you want to delete this project?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.of(context).pop(); // Close the dialog
+              final settingProvider = context.read<SettingProvider>();
+              await settingProvider.deleteProject(project.id!);
+            },
+            child: const Text(
+              'Delete',
+              style: TextStyle(
+                color: Colors.red,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
 
   Future<void> getPorjects() async {
     try {
@@ -153,7 +184,6 @@ class _ManageProjectsPageState extends State<ManageProjectsPage> {
       ],
     );
   }
-
   // Function to handle edit action
   void _editProject(OurProject project) {
     //TODO: Edit Project
@@ -163,37 +193,36 @@ class _ManageProjectsPageState extends State<ManageProjectsPage> {
       ),
     );
   }
-
   // Function to handle delete action
-  void _deleteProject(OurProject project) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Delete Project'),
-        content: const Text('Are you sure you want to delete this project?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
-            },
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                // projects.removeWhere((p) => p['id'] == project['id']);
-              });
-              Navigator.of(context).pop(); // Close the dialog
-            },
-            child: const Text(
-              'Delete',
-              style: TextStyle(
-                color: Colors.red,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+  // void _deleteProject(OurProject project) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) => AlertDialog(
+  //       title: const Text('Delete Project'),
+  //       content: const Text('Are you sure you want to delete this project?'),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () {
+  //             Navigator.of(context).pop(); // Close the dialog
+  //           },
+  //           child: const Text('Cancel'),
+  //         ),
+  //         TextButton(
+  //           onPressed: () {
+  //             setState(() {
+  //               // projects.removeWhere((p) => p['id'] == project['id']);
+  //             });
+  //             Navigator.of(context).pop(); // Close the dialog
+  //           },
+  //           child: const Text(
+  //             'Delete',
+  //             style: TextStyle(
+  //               color: Colors.red,
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+    // );
   }
-}
+// }

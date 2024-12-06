@@ -1,7 +1,5 @@
 import 'package:ev_homes/core/providers/setting_provider.dart';
-import 'package:ev_homes/core/services/shared_pref_service.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class AdminProfilePage extends StatefulWidget {

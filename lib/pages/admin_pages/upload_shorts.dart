@@ -100,7 +100,7 @@ class _UploadShortsState extends State<UploadShorts> {
               ],
             ),
           ],
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           ElevatedButton(

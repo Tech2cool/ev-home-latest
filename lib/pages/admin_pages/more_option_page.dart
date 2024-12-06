@@ -213,9 +213,9 @@ class _MoreOptionPageState extends State<MoreOptionPage> {
                 TODO: // Upload Shorts
 
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => UploadShorts()));
+                    MaterialPageRoute(builder: (context) => const UploadShorts()));
               },
-              leading: Icon(
+              leading: const Icon(
                 Icons.create_new_folder_outlined,
                 size: 30,
                 color: Colors.deepPurple,

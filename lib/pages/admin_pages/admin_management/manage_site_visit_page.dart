@@ -1,5 +1,4 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
-import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/site_visit.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';

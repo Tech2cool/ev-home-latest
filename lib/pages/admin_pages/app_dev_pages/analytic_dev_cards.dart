@@ -1,7 +1,5 @@
 import 'package:ev_homes/core/providers/setting_provider.dart';
-import 'package:ev_homes/pages/admin_pages/app_dev_pages/analytic_post_sales_page.dart';
 import 'package:ev_homes/pages/admin_pages/app_dev_pages/analytic_pre_sales_page.dart';
-import 'package:ev_homes/pages/admin_pages/app_dev_pages/analytic_sales_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

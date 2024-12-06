@@ -904,7 +904,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                   spacing: 10,
                                 ),
                                 fieldDecoration: FieldDecoration(
-                                  labelStyle: TextStyle(fontSize: 30),
+                                  labelStyle: const TextStyle(fontSize: 30),
                                   hintText: 'Choice of Apartment',
                                   hintStyle:
                                       const TextStyle(color: Colors.black87),
@@ -959,7 +959,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                             ),
                           ],
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 16,
                         ),
                         Row(

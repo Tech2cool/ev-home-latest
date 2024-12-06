@@ -455,7 +455,7 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                                     .contains("marina")) {
                                   Navigator.of(context).push(MaterialPageRoute(
                                     builder: (context) =>
-                                        PaymentScheduleGenerator(),
+                                        const PaymentScheduleGenerator(),
                                   ));
                                 } else if (selectedProject!.name!
                                     .toLowerCase()

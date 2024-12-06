@@ -11,7 +11,7 @@ import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class DemandLetter extends StatefulWidget {
-  const DemandLetter({Key? key}) : super(key: key);
+  const DemandLetter({super.key});
 
   @override
   _DemandLetterState createState() => _DemandLetterState();
@@ -569,7 +569,7 @@ class _DemandLetterState extends State<DemandLetter> {
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
               ),
-              items: [
+              items: const [
                 DropdownMenuItem(
                     value: 'bookingAmount', child: Text('Booking Amount')),
                 DropdownMenuItem(value: 'gstAmount', child: Text('GST Amount')),
@@ -584,23 +584,23 @@ class _DemandLetterState extends State<DemandLetter> {
             Table(
               border: TableBorder.all(),
               children: [
-                TableRow(
+                const TableRow(
                   children: [
                     TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('Bank Name',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                     )),
                     TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('Account Number',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                     )),
                     TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('Amount',
                           style: TextStyle(fontWeight: FontWeight.bold)),
                     )),
@@ -608,14 +608,14 @@ class _DemandLetterState extends State<DemandLetter> {
                 ),
                 TableRow(
                   children: [
-                    TableCell(
+                    const TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('ICICI Bank Limited'),
                     )),
-                    TableCell(
+                    const TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('015105022186'),
                     )),
                     TableCell(
@@ -633,14 +633,14 @@ class _DemandLetterState extends State<DemandLetter> {
                 ),
                 TableRow(
                   children: [
-                    TableCell(
+                    const TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('ICICI Bank'),
                     )),
-                    TableCell(
+                    const TableCell(
                         child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: EdgeInsets.all(8.0),
                       child: Text('015105022390'),
                     )),
                     TableCell(

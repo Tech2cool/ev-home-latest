@@ -687,14 +687,14 @@ class CustomTimelineTile extends StatelessWidget {
   final bool isLast;
 
   const CustomTimelineTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.date,
     required this.description,
     required this.color,
     this.isFirst = false,
     this.isLast = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

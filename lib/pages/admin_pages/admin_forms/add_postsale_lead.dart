@@ -648,7 +648,7 @@ class _AddPostsaleLeadState extends State<AddPostsaleLead> {
 
                         // Flat No Field (Combined Floor and Unit No)
                         if (whichFloor != null && selectedFlat != null) ...[
-                          SizedBox(
+                          const SizedBox(
                             width: 12,
                           ),
                           Expanded(

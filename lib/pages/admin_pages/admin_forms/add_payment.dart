@@ -121,7 +121,6 @@ class _AddPaymentState extends State<AddPayment> {
         settingProvider.getOurProject(),
         settingProvider.getPayment(),
       ]);
-    } catch (e) {
     } finally {
       setState(() {
         isLoading = false;
@@ -364,7 +363,7 @@ class _AddPaymentState extends State<AddPayment> {
                         },
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 6,
                     ),
                     Expanded(
@@ -625,7 +624,7 @@ class CustomTextField extends StatelessWidget {
   final String? Function(String?)? validator;
 
   const CustomTextField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.labelText,
     this.keyboardType = TextInputType.text,
@@ -633,7 +632,7 @@ class CustomTextField extends StatelessWidget {
     this.onTap,
     this.inputFormatters,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -663,13 +662,13 @@ class CustomDropdown extends StatelessWidget {
   final String? Function(String?)? validator;
 
   const CustomDropdown({
-    Key? key,
+    super.key,
     required this.labelText,
     required this.value,
     required this.items,
     required this.onChanged,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

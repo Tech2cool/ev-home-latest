@@ -234,7 +234,7 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                         children: [
                           Text(
                             geolocationProvider.address,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 12,
                             ),
                           ),

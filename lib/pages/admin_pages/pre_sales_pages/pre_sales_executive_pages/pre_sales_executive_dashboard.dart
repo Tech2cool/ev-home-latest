@@ -428,17 +428,17 @@ class _PreSalesExecutiveDashboardState
                 Card(
                   elevation: 4,
                   shadowColor: Colors.transparent,
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   color: Colors.white.withOpacity(0.3),
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           "Lead to Visit 1",
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         AnimatedPieChart(
                           visited: graphInfo.visitCount.toInt(),
                           notVisited: graphInfo.leadCount.toInt(),
@@ -458,18 +458,18 @@ class _PreSalesExecutiveDashboardState
                   elevation: 4,
                   shadowColor: Colors.transparent,
 
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   color: Colors.white
                       .withOpacity(0.3), // Semi-transparent white background
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           "Visit 1 to Booking",
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         AnimatedPieChart(
                           visited: graphInfo.bookingCount.toInt(),
                           notVisited: graphInfo.visitCount.toInt(),
@@ -490,17 +490,17 @@ class _PreSalesExecutiveDashboardState
                 Card(
                   elevation: 4,
                   shadowColor: Colors.transparent,
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   color: Colors.white.withOpacity(0.3),
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           "Visit 2 to Booking",
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         AnimatedPieChart(
                           visited: graphInfo.bookingCount.toInt(),
                           notVisited: graphInfo.visit2Count.toInt(),
@@ -520,17 +520,17 @@ class _PreSalesExecutiveDashboardState
                 Card(
                   elevation: 4,
                   shadowColor: Colors.transparent,
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   color: Colors.white.withOpacity(0.3),
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           "Lead to Booking",
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         AnimatedPieChart(
                           visited: graphInfo.bookingCount.toInt(),
                           notVisited: graphInfo.leadCount.toInt(),
@@ -736,7 +736,7 @@ class MyCard extends StatelessWidget {
   final Color? bgColor;
   final List<BoxShadow>? boxShadow;
 
-  const MyCard({
+  const MyCard({super.key, 
     required this.label,
     required this.value,
     this.textColor,

@@ -4,6 +4,7 @@ import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/api_service.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_history.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
@@ -540,28 +541,44 @@ class _PostsaleInternalTaggingDetailsState
     final projects = settingProvider.ourProject;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Booking details"),
-        actions: [
-          PopupMenuButton<String>(
-            onSelected: (String choice) {
-              setState(() {
-                isUpdating = choice == 'Edit';
-              });
-            },
-            itemBuilder: (BuildContext context) => [
-              const PopupMenuItem<String>(
-                value: 'Edit',
-                child: Text('Edit'),
+  appBar: AppBar(
+    title: Text("Booking details"),
+    actions: [
+      PopupMenuButton<String>(
+        onSelected: (String choice) {
+          if (choice == 'Edit') {
+            setState(() {
+              isUpdating = true;
+            });
+          } else if (choice == 'Cancel') {
+            setState(() {
+              isUpdating = false;
+            });
+          } else if (choice == 'demand history') {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => const DemandHistoryPage(),
               ),
-              const PopupMenuItem<String>(
-                value: 'Cancel',
-                child: Text('Cancel'),
-              ),
-            ],
+            );
+          }
+        },
+        itemBuilder: (BuildContext context) => [
+          const PopupMenuItem<String>(
+            value: 'Edit',
+            child: Text('Edit'),
+          ),
+          const PopupMenuItem<String>(
+            value: 'Cancel',
+            child: Text('Cancel'),
+          ),
+          const PopupMenuItem<String>(
+            value: 'demand history',
+            child: Text('Demand History'),
           ),
         ],
       ),
+    ],
+  ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -2017,4 +2034,4 @@ class CustomDropdownField extends StatelessWidget {
       }).toList(),
     );
   }
-}
+} 

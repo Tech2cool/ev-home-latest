@@ -526,7 +526,7 @@ class _CommentReviewPageState extends State<DataAnalyzerReviewPage> {
                       ),
                     )
                   else
-                    Text("No Similar Leads")
+                    const Text("No Similar Leads")
                 ],
               ],
             ),

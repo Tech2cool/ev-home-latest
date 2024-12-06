@@ -75,7 +75,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       const CpHomeScreen(),
       const DashboardScreen(),
       ChatScreen(goBack: goback),
@@ -89,7 +89,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
             child: IndexedStack(
               index: _currentIndex,
               children: [
-                ..._pages,
+                ...pages,
               ],
             ),
           ),

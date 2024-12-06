@@ -68,7 +68,7 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
             _buildTextField('Email', loggedCustomer?.email ?? ""),
             const SizedBox(height: 10.0),
             _buildTextField(
-                'Phone', loggedCustomer?.phoneNumber?.toString() ?? ""),
+                'Phone', loggedCustomer?.phoneNumber.toString() ?? ""),
             const SizedBox(height: 10.0),
 
             // _buildTextField('Address', loggedCustomer?.firmAddress ?? ""),

@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PostSaleDemandLetter extends StatefulWidget {
-  const PostSaleDemandLetter({Key? key}) : super(key: key);
+  const PostSaleDemandLetter({super.key});
 
   @override
   _PaymentScheduleAndDemandLetterState createState() =>

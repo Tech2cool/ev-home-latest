@@ -209,14 +209,14 @@ class CustomTimelineTile extends StatelessWidget {
   final bool isLast;
 
   const CustomTimelineTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.date,
     required this.description,
     required this.color,
     this.isFirst = false,
     this.isLast = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -291,14 +291,14 @@ class _TaskDialogState extends State<TaskDialog> {
       listen: false,
     );
     return AlertDialog(
-      title: Text("Task Dialog"),
+      title: const Text("Task Dialog"),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           // Dropdown
           DropdownButtonFormField<String>(
             value: selectedTask,
-            items: [
+            items: const [
               DropdownMenuItem(
                 value: "completed",
                 child: Text("Task Completed"),
@@ -319,16 +319,16 @@ class _TaskDialogState extends State<TaskDialog> {
                 selectedTask = value;
               });
             },
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: "Select Task",
               border: OutlineInputBorder(),
             ),
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           // Text Field
           TextField(
             controller: remarkController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: "Remark (e.g., Address)",
               border: OutlineInputBorder(),
             ),
@@ -344,8 +344,8 @@ class _TaskDialogState extends State<TaskDialog> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: Text("Cancel"),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: Text("Cancel"),
             ),
             ElevatedButton(
               onPressed: () async {
@@ -366,11 +366,11 @@ class _TaskDialogState extends State<TaskDialog> {
                   Navigator.pop(context);
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("Please fill all fields")),
+                    const SnackBar(content: Text("Please fill all fields")),
                   );
                 }
               },
-              child: Text("Submit"),
+              child: const Text("Submit"),
             ),
           ],
         ),

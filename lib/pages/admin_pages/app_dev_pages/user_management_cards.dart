@@ -55,7 +55,7 @@ class UserManagementCardsState extends State<UserManagementCards> {
                       () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) => ManageEmployee()),
+                              builder: (context) => const ManageEmployee()),
                         );
                       },
                     ),
@@ -65,7 +65,7 @@ class UserManagementCardsState extends State<UserManagementCards> {
                       () {
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) => ManageChannelPartners()),
+                              builder: (context) => const ManageChannelPartners()),
                         );
                       },
                     ),

@@ -209,7 +209,7 @@ class _AdminHomePage2State extends State<AdminHomePage>
                   ListTile(
                     leading: const Icon(Icons.badge),
                     title: Text(
-                        "${loggedAdmin?.designation?.designation ?? "NA"}"),
+                        loggedAdmin?.designation?.designation ?? "NA"),
                   ),
                   const Divider(),
                   ListTile(

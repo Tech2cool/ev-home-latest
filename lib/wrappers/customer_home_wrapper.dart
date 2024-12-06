@@ -74,7 +74,7 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
 
   @override
   Widget build(BuildContext context) {
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       const HomeScreen(),
       MyMeetings(),
       ChatScreen(
@@ -86,7 +86,7 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
     return Scaffold(
       body: Stack(
         children: [
-          _pages[_currentIndex],
+          pages[_currentIndex],
           if (_isMenuVisible) _buildBottomSheet(controller),
           if (_currentIndex != 2) ...[
             _buildBottomNavBar(),

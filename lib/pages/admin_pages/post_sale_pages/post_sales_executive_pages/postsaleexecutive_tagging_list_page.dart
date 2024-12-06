@@ -110,7 +110,7 @@ class _PostsaleexecutiveTaggingListPageState
           ),
           body: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 6,
               ),
               Padding(

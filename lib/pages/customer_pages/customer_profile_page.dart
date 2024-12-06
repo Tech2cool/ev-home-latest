@@ -96,7 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => AuthWrapper(),
+                    builder: (context) => const AuthWrapper(),
                   ),
                 );
               }

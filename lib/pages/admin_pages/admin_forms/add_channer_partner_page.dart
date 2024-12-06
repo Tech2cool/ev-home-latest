@@ -155,6 +155,7 @@ class _AddChannerPartnerPageState extends State<AddChannerPartnerPage> {
                       // Phone Number Field
                       TextFormField(
                         controller: phoneController,
+                        keyboardType: TextInputType.phone,
                         decoration: InputDecoration(
                           labelText: 'Phone ',
                           prefixIcon: const Icon(Icons.phone),

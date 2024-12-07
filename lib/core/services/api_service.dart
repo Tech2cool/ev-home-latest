@@ -32,8 +32,7 @@ const storage = FlutterSecureStorage();
 
 // final dio = Dio();
 
-// const baseUrl = "http://192.168.1.180:8082";
-const baseUrl = "https://api.evhomes.tech";
+const baseUrl = "http://192.168.1.168:8082";
 // const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
@@ -1075,6 +1074,7 @@ class ApiService {
       final Response response = await _dio.get('/channel-partner');
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
+
         return [];
       }
       final Map<String, dynamic> data = response.data;

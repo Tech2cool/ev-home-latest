@@ -32,8 +32,8 @@ const storage = FlutterSecureStorage();
 
 // final dio = Dio();
 
-// const baseUrl = "http://192.168.1.168:8082";
-const baseUrl = "https://api.evhomes.tech";
+const baseUrl = "http://192.168.1.168:8082";
+// const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -3486,6 +3486,31 @@ class ApiService {
 
       Helper.showCustomSnackBar(errorMessage);
       print(e);
+      return null;
+    }
+  }
+
+  Future<String?> deleteProject(String id) async {
+    try {
+      final Response response = await _dio.delete('/ourProjects/$id');
+
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return null;
+      }
+      Helper.showCustomSnackBar(response.data['message'], Colors.green);
+
+      return response.data['message'];
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
       return null;
     }
   }

@@ -3,6 +3,8 @@ import 'package:ev_homes/components/graph/doughnut_chart.dart';
 import 'package:ev_homes/components/graph/funnel_chart.dart';
 import 'package:ev_homes/components/graph/line_chart.dart';
 import 'package:ev_homes/core/models/chart_model.dart';
+import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_marina_bay.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_nine_square.dart';
@@ -257,8 +259,53 @@ class _PostsaleexecutiveDashboardState
                             ),
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        print("Inventory button pressed");
+                      },
+                      icon: const Icon(
+                        FluentIcons.box_24_regular,
+                        color: Colors.white,
                       ),
-                    ],
+                      label: const Text(
+                        "Inventory",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 12),
+                        textStyle: const TextStyle(fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  // Line Chart with Blurred Background
+                  LineChart(
+                    title: "Booking Over Month",
+                    chartData: leadsOverMonths,
+                  ),
+                  // Doughnut Charts
+                  DoughnutChart(
+                    title: "Booking Report",
+                    chartData: presalesData,
+                    onPressFilter: (filter) {},
+                  ),
+
+                  FunnelChart(
+                    title: "Booking Funnel",
+                    initialFunnelData: initialFunnelData,
+                    onPressFilter: (filter) {},
                   ),
                 ),
                 ElevatedButton(

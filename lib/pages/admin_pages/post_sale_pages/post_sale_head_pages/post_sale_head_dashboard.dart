@@ -12,6 +12,7 @@ import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule%20_n
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule_marina_bay.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/update_payment_schedule_9_squre.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/update_status_10%20marina_bay.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -294,6 +295,33 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      print("Inventory button pressed");
+                    },
+                    icon: const Icon(
+                      FluentIcons.box_24_regular,
+                      color: Colors.white,
+                    ),
+                    label: const Text(
+                      "Inventory",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      textStyle: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
                 ),
                 LineChart(
                   title: "Booking Over Month",

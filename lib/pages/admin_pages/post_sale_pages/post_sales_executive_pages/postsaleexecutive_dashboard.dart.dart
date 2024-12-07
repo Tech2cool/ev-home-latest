@@ -19,7 +19,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/models/post_sale_lead.dart';
-import 'package:ev_homes/core/providers/setting_provider.dart';
 
 class PostsaleexecutiveDashboard extends StatefulWidget {
   final String? id;
@@ -511,7 +510,7 @@ class _PostsaleexecutiveDashboardState
             ),
           ),
         ),
-        // if (isLoading) const LoadingSquare()
+        if (isLoading) const LoadingSquare()
       ],
     );
   }

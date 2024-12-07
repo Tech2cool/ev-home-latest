@@ -188,7 +188,7 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                           onTap: () {
                             GoRouter.of(context).push(
                                 // "/post-sale-head-lead-list/Total",
-                                "/post-sales-executive-lead-list/Total/${widget.id ?? settingProvider.loggedAdmin!.id!}");
+                                "/post-sale-head-lead-list/Total");
                           },
                           child: SizedBox(
                             height: 80,
@@ -205,7 +205,7 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                           onTap: () {
                             GoRouter.of(context).push(
                                 // "/post-sale-head-lead-list/Registration Done",
-                                "/post-sales-executive-lead-list/Registration Done/${widget.id ?? settingProvider.loggedAdmin!.id!}");
+                                "/post-sale-head-lead-list/Registration Done");
                           },
                           child: SizedBox(
                             height: 80,
@@ -221,8 +221,8 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            GoRouter.of(context).push(
-                                "/post-sales-executive-lead-list/EOI Received/${widget.id ?? settingProvider.loggedAdmin!.id!}");
+                            GoRouter.of(context)
+                                .push("/post-sale-head-lead-list/EOI Received");
                           },
                           child: SizedBox(
                             height: 80,
@@ -238,9 +238,8 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            GoRouter.of(context).push(
-                                // "/post-sale-head-lead-list/Cancelled",
-                                "/post-sales-executive-lead-list/Cancelled/${widget.id ?? settingProvider.loggedAdmin!.id!}");
+                            GoRouter.of(context)
+                                .push("/post-sale-head-lead-list/Cancelled");
                           },
                           child: SizedBox(
                             height: 80,

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/employee.dart';
+import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
@@ -13,7 +14,8 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:provider/provider.dart';
 
 class AddPostsaleLead extends StatefulWidget {
-  const AddPostsaleLead({super.key});
+  final Lead? lead;
+  const AddPostsaleLead({super.key, this.lead});
 
   @override
   State<AddPostsaleLead> createState() => _AddPostsaleLeadState();
@@ -203,7 +205,20 @@ class _AddPostsaleLeadState extends State<AddPostsaleLead> {
     super.initState();
     _onRefresh();
     updateApplicantFieldsKyc(1);
-    // combinedController.text = '';
+    if (widget.lead != null) {
+      firstNameController[0].text = widget.lead?.firstName ?? "";
+      lastNameController[0].text = widget.lead?.lastName ?? "";
+      contactNumberController[0].text =
+          widget.lead?.phoneNumber?.toString() ?? "";
+      _selectedProject = widget.lead?.project?[0] ?? null;
+      addressController[0].text = widget.lead?.address ?? "";
+      emailController[0].text = widget.lead?.email ?? "";
+      _selectedClosingManger = widget.lead?.teamLeader;
+      selectedDate = DateTime.now();
+      dateTimeController.text = Helper.formatDateLong(
+        DateTime.now().toString(),
+      );
+    }
   }
 
   @override
@@ -299,6 +314,7 @@ class _AddPostsaleLeadState extends State<AddPostsaleLead> {
       setState(() {
         isLoading = true;
       });
+      print("entering uploads");
 
       for (var _ in firstNameController) {
         String uploadedAdhar = '';
@@ -328,6 +344,7 @@ class _AddPostsaleLeadState extends State<AddPostsaleLead> {
           // print(e);
           Helper.showCustomSnackBar("Error uploading Documents");
         }
+
         // final aadharFile = uploadedAdhar;
         // final panFile = uploadedPan;
         // final otherFile = uploadedOther;
@@ -349,20 +366,24 @@ class _AddPostsaleLeadState extends State<AddPostsaleLead> {
         );
         i++;
       }
+      print("uploaded uploads");
+
+      print("project is null checking");
 
       // Ensure selectedProject is not null
       if (_selectedProject == null) {
         Helper.showCustomSnackBar("Please select a project");
         return;
       }
+      print("project pass null check");
 
       final newPostLead = PostSaleLead(
         id: "",
         unitNo: selectedFlat!.flatNo!,
         floor: whichFloor,
         number: selectedFlat!.number,
-        flatCost: int.parse(flatCostController.text),
-        carpetArea: int.tryParse(carpetAreaController.text),
+        flatCost: int.tryParse(flatCostController.text) ?? 0,
+        carpetArea: int.tryParse(carpetAreaController.text) ?? 0,
         project: _selectedProject,
         date: dateTimeController.text,
         firstName: firstNameController[0].text.trim(),
@@ -403,21 +424,32 @@ class _AddPostsaleLeadState extends State<AddPostsaleLead> {
           ),
         ),
       );
+      print("post lead model pass");
 
       Map<String, dynamic> jsonLead = newPostLead.toJson();
-      if (newPostLead.closingManager != null) {
-        jsonLead['closingManager'] = newPostLead.closingManager!.id;
-      }
+      print("post lead model json pass");
 
-      if (newPostLead.project != null) {
-        jsonLead['project'] = newPostLead.project!.id;
-      }
+      // if (newPostLead.closingManager != null) {
+      //   jsonLead['closingManager'] = newPostLead.closingManager!.id;
+      // }
 
-      if (newPostLead.postSaleExecutive != null) {
-        jsonLead['postSaleExecutive'] = newPostLead.postSaleExecutive!.id;
-      }
+      // if (newPostLead.project != null) {
+      //   jsonLead['project'] = newPostLead.project!.id;
+      // }
 
-      await settingProvider.addPostSaleLead(jsonLead);
+      // if (newPostLead.postSaleExecutive != null) {
+      //   jsonLead['postSaleExecutive'] = newPostLead.postSaleExecutive!.id;
+      // }
+      print("adding booking");
+      print(jsonLead);
+      final respBooking = await settingProvider.addPostSaleLead(jsonLead);
+      if (widget.lead != null) {
+        await ApiService().updateLeadStatus(widget.lead!.id, {
+          "status": "booked",
+          "bookingRef": respBooking!.id,
+        });
+      }
+      print("added booking");
 
       if (!mounted) return;
       Navigator.of(context).pop();

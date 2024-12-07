@@ -1,5 +1,6 @@
 import 'package:ev_homes/components/unkown_error_page.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:ev_homes/pages/admin_pages/admin_management/manage_site_visit_page.dart';
 import 'package:ev_homes/pages/admin_pages/app_dev_pages/app_dev_dashboard.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/post_sale_head_pages/post_sale_head_dashboard.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/post_sales_executive_pages/postsaleexecutive_dashboard.dart.dart';
@@ -42,10 +43,13 @@ class _DashboardPageState extends State<DashboardPage> {
     } else if (loggedDesg.toLowerCase() == "desg-post-sales-head") {
       return PostSaleHeadDashboard(id: widget.id);
     } else if (loggedDesg.toLowerCase() == "desg-sales-manager" ||
-        loggedDesg.toLowerCase() == "desg-desg-sales-executive") {
+        loggedDesg.toLowerCase() == "desg-sales-executive") {
       return SalesManagerDashboard(id: widget.id);
     } else if (loggedDesg.toLowerCase() == "desg-post-sales-executive") {
       return PostsaleexecutiveDashboard(id: widget.id);
+    } else if (loggedDesg.toLowerCase() == "desg-floor-manager" ||
+        loggedDesg.toLowerCase() == "desg-front-desk-executive") {
+      return ManageSiteVisitPage();
     }
 
     return const UnknownErrorPage();

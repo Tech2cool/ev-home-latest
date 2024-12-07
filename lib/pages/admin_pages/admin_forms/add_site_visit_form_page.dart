@@ -66,6 +66,16 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
     '4BHK',
     'Jodi',
   ];
+  final List<OurProject> fallbackProjects = [
+    OurProject(
+      id: "project-ev-9-square-vashi-sector-9",
+      name: "EV9 Square",
+    ),
+    OurProject(
+      id: "project-ev-10-marina-bay-vashi-sector-10",
+      name: "EV 10 Marina Bay",
+    ),
+  ];
   bool resendPass = false;
   String? _selectedSource;
   Employee? _selectedClosingManger;
@@ -78,7 +88,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   // List<String> selectedProject = [];
   List<String> selectedRequirement = [];
   List<String> listofSource = ['Walk-in', 'CP', 'Ref'];
-  List<String> listofType = ['Visit', 'Revisit'];
+  List<String> listofType = ['visit', 'revisit'];
   Employee? _selectedDataEntryUser;
   String? selectedProj;
 
@@ -420,7 +430,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
       ]);
     } catch (e) {
       // Handle any errors if needed
-      print('Error during refresh: $e');
+      // print('Error during refresh: $e');
     } finally {
       // Ensure isLoading is set to false in both success and error cases
       setState(() {
@@ -431,7 +441,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
 
   Future<void> onVerfiredOrSkipOtp([bool verified = false]) async {
     try {
-      print("in ok: $verified");
+      // print("in ok: $verified");
       // Simulate successful submission
       setState(() {
         isLoading = true;
@@ -609,13 +619,13 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
     final settingProvider = Provider.of<SettingProvider>(context);
     final closingMangers = settingProvider.closingManagers;
     final dataEntryUsers = settingProvider.dataEntryUsers;
-    print(dataEntryUsers);
-    final seniorClosingManagers = settingProvider.seniorClosingManagers;
     final salesManager = settingProvider.salesManager;
-    final teamLeaders = settingProvider.teamLeaders;
-    final requirements = settingProvider.requirements;
-    final ourProjects = settingProvider.ourProject;
-    print(_selectedClosingManger);
+    final requirements = settingProvider.requirements.isNotEmpty
+        ? settingProvider.requirements
+        : fallbackRequirements;
+    final ourProjects = settingProvider.ourProject.isNotEmpty
+        ? settingProvider.ourProject
+        : fallbackProjects;
 
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -715,11 +725,17 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                             ],
                           ),
                         ),
-                        enabledBorder: OutlineInputBorder(
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
                           borderSide: BorderSide(
-                            color: Colors.black.withOpacity(0.2),
+                            color: Colors.grey.withOpacity(0.7),
                           ),
-                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                          borderSide: BorderSide(
+                            color: Colors.grey.withOpacity(0.4),
+                          ),
                         ),
                       ),
                       value: selectedProj,
@@ -1053,7 +1069,15 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                 decoration: InputDecoration(
                                   labelText: 'Select Visit Type',
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(20),
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide:
+                                        const BorderSide(color: Colors.grey),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                      color: Colors.black87,
+                                    ),
                                   ),
                                 ),
                                 items: listofType.map((visit) {
@@ -1063,7 +1087,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                       children: [
                                         Expanded(
                                           child: Text(
-                                            visit,
+                                            Helper.capitalize(visit),
                                             overflow: TextOverflow.ellipsis,
                                             maxLines: 1,
                                           ),
@@ -1086,25 +1110,6 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                 isExpanded: true,
                               ),
                             ),
-                            // Expanded(
-                            //   child: MultiSelectDropdown.simpleList(
-                            //     list: listofSource,
-                            //     boxDecoration: BoxDecoration(
-                            //       border: Border.all(
-                            //           color: Colors.grey.withOpacity(0.4)),
-                            //       borderRadius: BorderRadius.circular(12),
-                            //     ),
-                            //     initiallySelected: selectedRequirement,
-                            //     checkboxFillColor: Colors.grey.withOpacity(0.3),
-                            //     splashColor: Colors.grey.withOpacity(0.3),
-                            //     includeSearch: true,
-                            //     whenEmpty: "Source",
-                            //     onChange: (newList) {
-                            //       selectedRequirement =
-                            //           newList.map((e) => e as String).toList();
-                            //     },
-                            //   ),
-                            // ),
                           ],
                         ),
                         const SizedBox(

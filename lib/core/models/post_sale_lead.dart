@@ -336,7 +336,7 @@ class PostSaleLead {
   final int? tdsAmount;
 
   PostSaleLead({
-    required this.id,
+    this.id = "",
     required this.unitNo,
     required this.floor,
     required this.number,
@@ -409,14 +409,39 @@ class PostSaleLead {
               ?.map((e) => DisbursementRecord.fromJson(e))
               .toList() ??
           [],
-          allInclusiveAmount: json['allInclusiveAmount'],
-          cgstAmount: json['cgstAmount'],
-          tdsAmount: json['tdsAmount'],
-          netAmount: json['netAmount'],
-          stampDutyAmount: json['stampDutyAmount'],
-          totalAmount: json['totalAmount'],
-          
+      allInclusiveAmount: json['allInclusiveAmount'],
+      cgstAmount: json['cgstAmount'],
+      tdsAmount: json['tdsAmount'],
+      netAmount: json['netAmount'],
+      stampDutyAmount: json['stampDutyAmount'],
+      totalAmount: json['totalAmount'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'unitNo': unitNo,
+      'floor': floor,
+      'number': number,
+      'project': project?.id,
+      'date': date,
+      'firstName': firstName,
+      'lastName': lastName,
+      'requirement': requirement,
+      'countryCode': countryCode,
+      'phoneNumber': phoneNumber,
+      'address': address,
+      'email': email,
+      'carpetArea': carpetArea,
+      'sellableCarpetArea': sellableCarpetArea,
+      'flatCost': flatCost,
+      'closingManager': closingManager?.id,
+      'postSaleExecutive': postSaleExecutive?.id,
+      'applicants': applicants.map((e) => e.toMap()).toList(),
+      'closingManagerTeam': closingManagerTeam.map((e) => e.id).toList(),
+      'bookingStatus': bookingStatus?.toMap(),
+    };
   }
 
   int? get revenue => null;
@@ -432,32 +457,6 @@ class PostSaleLead {
   int? get eoiRecieved => null;
 
   int? get cancelled => null;
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'unitNo': unitNo,
-      'floor': floor,
-      'number': number,
-      'project': project?.toJson(),
-      'date': date,
-      'firstName': firstName,
-      'lastName': lastName,
-      'requirement': requirement,
-      'countryCode': countryCode,
-      'phoneNumber': phoneNumber,
-      'address': address,
-      'email': email,
-      'carpetArea': carpetArea,
-      'sellableCarpetArea': sellableCarpetArea,
-      'flatCost': flatCost,
-      'closingManager': closingManager?.toMap(),
-      'postSaleExecutive': postSaleExecutive?.toMap(),
-      'applicants': applicants.map((e) => e.toMap()).toList(),
-      'closingManagerTeam': closingManagerTeam.map((e) => e.toMap()).toList(),
-      'bookingStatus': bookingStatus?.toMap,
-    };
-  }
 }
 
 class BookingStatus {

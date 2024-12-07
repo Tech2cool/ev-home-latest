@@ -7,6 +7,7 @@ import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/api_service.dart';
+import 'package:ev_homes/pages/admin_pages/admin_forms/add_postsale_lead.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -587,15 +588,35 @@ class _ClosingManagerLeadDetailsPageState
                           DropdownButton<String>(
                             value: selectedStatus,
                             underline: SizedBox.shrink(),
-                            onChanged: (value) {
+                            onChanged: (value) async {
+                              if (value == "Visited") {
+                                await ApiService()
+                                    .updateLeadStatus(widget.lead.id, {
+                                  "status": "visited",
+                                });
+                                Navigator.of(context).pop();
+                              } else if (value == "Revisited") {
+                                await ApiService()
+                                    .updateLeadStatus(widget.lead.id, {
+                                  "status": "revisited",
+                                });
+                                Navigator.of(context).pop();
+                              }
+
                               setState(() {
                                 selectedStatus = value;
-
                                 if (value == 'Booked') {
-                                  GoRouter.of(context).push(
-                                    "/post-sales-lead-details",
-                                    // extra: lead,
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) => AddPostsaleLead(
+                                        lead: widget.lead,
+                                      ),
+                                    ),
                                   );
+                                  // GoRouter.of(context).push(
+                                  //   "/post-sales-lead-details",
+                                  //   // extra: lead,
+                                  // );
                                 }
                               });
                             },

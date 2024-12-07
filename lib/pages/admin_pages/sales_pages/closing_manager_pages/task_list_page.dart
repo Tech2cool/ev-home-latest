@@ -170,7 +170,6 @@ class TaskListPageState extends State<TaskListPage> {
             ),
           ),
           // Client List
-          Text("${tasks.length}"),
           Expanded(
             child: ListView.builder(
               itemCount: tasks.length,
@@ -211,6 +210,9 @@ class TaskListPageState extends State<TaskListPage> {
                           ),
                           Text("Subject: ${client.name}"),
                           Text("Details: ${client.details}"),
+                          Text(
+                            "Asign To: ${client.assignTo?.firstName ?? ""}  ${client.assignTo?.lastName ?? ""}",
+                          ),
                           Text(
                             "Asign by: ${client.assignBy?.firstName ?? ""}  ${client.assignBy?.lastName ?? ""}",
                           ),

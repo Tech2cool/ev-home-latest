@@ -66,6 +66,12 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                             ),
                             const SizedBox(height: 8),
                             MyTextCard(
+                              heading: "Assign To: ",
+                              value:
+                                  "${widget.task.assignTo?.firstName ?? ""}  ${widget.task.assignTo?.lastName ?? ""}",
+                            ),
+                            const SizedBox(height: 8),
+                            MyTextCard(
                               heading: "Assign by: ",
                               value:
                                   "${widget.task.assignBy?.firstName ?? ""}  ${widget.task.assignBy?.lastName ?? ""}",

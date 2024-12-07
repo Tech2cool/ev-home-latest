@@ -82,6 +82,8 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
     final target = settingProvider.myTarget;
     final graphInfo = settingProvider.closingManagerGraph;
 
+    final tasks = settingProvider.tasks;
+
     return Stack(
       children: [
         const Positioned.fill(
@@ -385,43 +387,78 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 12.0,
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  //TODO: closing manager client List
-                                  _showTaskDialog(context);
-                                  // GoRouter.of(context).push(
-                                  //   "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
-                                  // );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'My Task',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
+                      Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 12.0,
                             ),
-                          ],
-                        ),
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      //TODO: closing manager client List
+                                      _showTaskDialog(context);
+                                      // GoRouter.of(context).push(
+                                      //   "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                                      // );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10.0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'My Task',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Positioned(
+                            right: 28,
+                            top: 20,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Bubble for pending count
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      tasks
+                                          .map((ele) => ele.completed == false)
+                                          .length
+                                          .toString(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -588,7 +625,14 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
     );
   }
 
-  void _showTaskDialog(BuildContext context) {
+  void _showTaskDialog(
+    BuildContext context,
+  ) {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+    final tasks = settingProvider.tasks;
     showDialog(
       context: context,
       builder: (context) {
@@ -631,8 +675,13 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                     color: Colors.red,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Text(
-                                    "11",
+                                  child: Text(
+                                    tasks
+                                        .map((ele) =>
+                                            ele.type == "first-call" &&
+                                            ele.completed == false)
+                                        .length
+                                        .toString(),
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 10,
@@ -670,8 +719,13 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                     color: Colors.red,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Text(
-                                    "10",
+                                  child: Text(
+                                    tasks
+                                        .map((ele) =>
+                                            ele.type == "follow-up" &&
+                                            ele.completed == false)
+                                        .length
+                                        .toString(),
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 10,
@@ -709,8 +763,13 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                     color: Colors.red,
                                     shape: BoxShape.circle,
                                   ),
-                                  child: const Text(
-                                    "4",
+                                  child: Text(
+                                    tasks
+                                        .map((ele) =>
+                                            ele.type == "schedule-meeting" &&
+                                            ele.completed == false)
+                                        .length
+                                        .toString(),
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 10,

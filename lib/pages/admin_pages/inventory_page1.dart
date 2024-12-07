@@ -94,12 +94,12 @@ class _InventoryPage1State extends State<InventoryPage1> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('EV 10 Marina Bay'),
+            Text(selectedTower?.name ?? ""),
             Text(
-              'Vashi',
+              selectedTower?.locationName ?? "",
               style: TextStyle(fontSize: 12, color: Colors.black),
             ),
           ],
@@ -128,7 +128,7 @@ class _InventoryPage1State extends State<InventoryPage1> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildLegend(Colors.redAccent, 'Sold'),
-              _buildLegend(Colors.green, 'Available'),
+              _buildLegend(Color(0XFF00CF9F), 'Available'),
             ],
           ),
           const SizedBox(height: 10),
@@ -270,11 +270,13 @@ class FloorContent extends StatelessWidget {
             .toList() ??
         []
       ..sort();
+    final reversedFloors =
+        floors.reversed.toList(); // Reverse to descending order
 
     return ListView.builder(
-      itemCount: floors.length,
+      itemCount: reversedFloors.length,
       itemBuilder: (context, index) {
-        int floor = floors[index]; // Get floor number
+        int floor = reversedFloors[index]; // Get floor number
         final flats = (selectedProject?.flatList ?? [])
             .where((flat) => flat.floor == floor)
             .toList()
@@ -317,7 +319,7 @@ class FloorContent extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: flat.occupied == true
                               ? Colors.redAccent
-                              : Colors.green,
+                              : Color(0XFF00CF9F),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: Text(

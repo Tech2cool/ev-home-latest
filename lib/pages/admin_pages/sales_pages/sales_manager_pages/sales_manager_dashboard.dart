@@ -2,6 +2,7 @@ import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/components/animated_pie_chart.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:ev_homes/pages/admin_pages/inventory_page1.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/task_list_page.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -427,7 +428,11 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                 Center(
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      print("Inventory button pressed");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  InventoryPage1(onButtonPressed: (view) {})));
                     },
                     icon: const Icon(
                       FluentIcons.box_24_regular,

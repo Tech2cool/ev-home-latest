@@ -192,7 +192,7 @@ class _PostsaleexecutiveDashboardState
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/post-sale-head-lead-list/Total",
+                              "/post-sales-executive-lead-list/Total/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                             );
                           },
                           child: SizedBox(
@@ -209,7 +209,7 @@ class _PostsaleexecutiveDashboardState
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/post-sale-head-lead-list/Registration Done",
+                              "/post-sales-executive-lead-list/Registration Done/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                             );
                           },
                           child: SizedBox(
@@ -227,7 +227,7 @@ class _PostsaleexecutiveDashboardState
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/post-sale-head-lead-list/EOI Received",
+                              "/post-sales-executive-lead-list/EOI Received/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                             );
                           },
                           child: SizedBox(
@@ -245,7 +245,7 @@ class _PostsaleexecutiveDashboardState
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/post-sale-head-lead-list/Cancelled",
+                              "/post-sales-executive-lead-list/Cancelled/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                             );
                           },
                           child: SizedBox(

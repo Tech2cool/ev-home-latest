@@ -179,11 +179,10 @@ class _ManageProjectsPageState extends State<ManageProjectsPage> {
             child: const Text('Cancel'),
           ),
           TextButton(
-            onPressed: () {
-              setState(() {
-                // projects.removeWhere((p) => p['id'] == project['id']);
-              });
+            onPressed: () async {
               Navigator.of(context).pop(); // Close the dialog
+              final settingProvider = context.read<SettingProvider>();
+              await settingProvider.deleteProject(project.id!);
             },
             child: const Text(
               'Delete',

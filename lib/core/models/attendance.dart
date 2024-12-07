@@ -108,17 +108,19 @@ class Attendance {
 }
 
 class AttendanceTimeline {
-  final String event;
-  final DateTime timestamp;
-  final int? durationSeconds;
-  final String? remark;
-  final String? photo;
-  final double? latitude;
-  final double? longitude;
+  String event;
+  DateTime? timestamp;
+  DateTime? timestampEnd;
+  int? durationSeconds;
+  String? remark;
+  String? photo;
+  double? latitude;
+  double? longitude;
 
   AttendanceTimeline({
     required this.event,
-    required this.timestamp,
+    this.timestamp,
+    this.timestampEnd,
     this.durationSeconds,
     this.remark,
     this.photo,
@@ -129,7 +131,11 @@ class AttendanceTimeline {
   factory AttendanceTimeline.fromJson(Map<String, dynamic> json) {
     return AttendanceTimeline(
       event: json['event'],
-      timestamp: DateTime.parse(json['timestamp']),
+      timestamp:
+          json['timestamp'] != null ? DateTime.parse(json['timestamp']) : null,
+      timestampEnd: json['timestampEnd'] != null
+          ? DateTime.parse(json['timestampEnd'])
+          : null,
       durationSeconds: json['durationSeconds'],
       remark: json['remark'],
       photo: json['photo'],
@@ -141,7 +147,8 @@ class AttendanceTimeline {
   Map<String, dynamic> toJson() {
     return {
       'event': event,
-      'timestamp': timestamp.toIso8601String(),
+      'timestamp': timestamp?.toIso8601String(),
+      'timestampEnd': timestampEnd?.toIso8601String(),
       'durationSeconds': durationSeconds,
       'remark': remark,
       'photo': photo,

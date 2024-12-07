@@ -122,7 +122,7 @@ class _AnlyticEmployeePageState extends State<AnlyticEmployeePage> {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) =>
-                                      PostsaleexcecutiveDashboard(
+                                      PostsaleexecutiveDashboard(
                                     id: emp.id,
                                   ),
                                 ),

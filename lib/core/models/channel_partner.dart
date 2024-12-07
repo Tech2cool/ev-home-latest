@@ -20,7 +20,7 @@ class ChannelPartner {
   final String? role;
 
   ChannelPartner({
-    required this.id,
+    this.id,
     required this.firstName,
     this.profilePic,
     required this.lastName,

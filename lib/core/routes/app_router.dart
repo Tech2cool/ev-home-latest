@@ -41,6 +41,11 @@ import 'package:ev_homes/wrappers/admin_home_wrapper.dart';
 import 'package:ev_homes/wrappers/auth_wrapper.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../pages/admin_pages/admin_forms/edit_channel_partner.dart';
+import '../../pages/admin_pages/admin_forms/edit_employee.dart';
+import '../models/channel_partner.dart';
+import '../models/employee.dart';
+
 class AppRoutes {
   static GoRouter router = GoRouter(
     initialLocation: "/",
@@ -142,11 +147,28 @@ class AppRoutes {
           return const ManageEmployee();
         },
       ),
+      GoRoute(
+        path: '/edit-employee',
+        builder: (context, state) {
+          final employee = state.extra as Employee;
+          return EditEmployee(
+            emp: employee,
+            employee: employee,
+          );
+        },
+      ),
       //channel partner routes
       GoRoute(
         path: '/manage-channel-partners',
         builder: (context, state) {
           return const ManageChannelPartners();
+        },
+      ),
+      GoRoute(
+        path: '/edit-channel-partner',
+        builder: (context, state) {
+          final channelpartner = state.extra as ChannelPartner;
+          return EditChannelPartner(cp: channelpartner);
         },
       ),
       GoRoute(

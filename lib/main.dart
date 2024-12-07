@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:ev_homes/core/providers/attendance_provider.dart';
 import 'package:ev_homes/core/providers/geolocation_provider.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/routes/app_router.dart';
@@ -33,6 +34,9 @@ void main() {
           ),
           ChangeNotifierProvider(
             create: (_) => GeolocationProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (_) => AttendanceProvider(),
           ),
         ],
         child: const MyApp(),

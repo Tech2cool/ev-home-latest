@@ -1015,7 +1015,7 @@ class _ClosingManagerLeadDetailsPageState
             value: Helper.formatDateOnly(
               widget.lead.cycle?.validTill.toString() ?? '',
             ),
-            valueColor: Colors.red,
+            valueColor: const Color.fromARGB(255, 255, 134, 126),
             headingColor: Colors.white,
           ),
           if (widget.lead.visitRef != null)

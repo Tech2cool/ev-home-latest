@@ -127,8 +127,8 @@ class _InventoryPage1State extends State<InventoryPage1> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildLegend(Colors.redAccent, 'Sold'),
-              _buildLegend(Colors.green, 'Available'),
+              _buildLegend(const Color.fromARGB(255, 253, 127, 127), 'Sold'),
+              _buildLegend(const Color(0xff03cf9e), 'Available'),
             ],
           ),
           const SizedBox(height: 10),
@@ -202,7 +202,7 @@ class DropdownSection extends StatelessWidget {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(30.0)),
           ),
-          labelText: 'Select Tower',
+          labelText: 'Select Project',
         ),
         items: [
           ...settingProvider.ourProject.map((ele) => DropdownMenuItem(
@@ -291,12 +291,15 @@ class FloorContent extends StatelessWidget {
                 child: Container(
                   width: 80,
                   alignment: Alignment.center,
-                  child: Text(
-                    'Floor $floor',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                  child: Container(
+                    color: Colors.grey,
+                    child: Text(
+                      'Floor $floor',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
@@ -317,7 +320,7 @@ class FloorContent extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: flat.occupied == true
                               ? Colors.redAccent
-                              : Colors.green,
+                              : const Color(0xff00cf9f),
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: Text(

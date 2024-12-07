@@ -259,54 +259,54 @@ class _PostsaleexecutiveDashboardState
                             ),
                           ),
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Center(
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      print("Inventory button pressed");
+                    },
+                    icon: const Icon(
+                      FluentIcons.box_24_regular,
+                      color: Colors.white,
+                    ),
+                    label: const Text(
+                      "Inventory",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blue,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 12),
+                      textStyle: const TextStyle(fontSize: 16),
                     ),
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Center(
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        print("Inventory button pressed");
-                      },
-                      icon: const Icon(
-                        FluentIcons.box_24_regular,
-                        color: Colors.white,
-                      ),
-                      label: const Text(
-                        "Inventory",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
-                        textStyle: const TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
 
-                  // Line Chart with Blurred Background
-                  LineChart(
-                    title: "Booking Over Month",
-                    chartData: leadsOverMonths,
-                  ),
-                  // Doughnut Charts
-                  DoughnutChart(
-                    title: "Booking Report",
-                    chartData: presalesData,
-                    onPressFilter: (filter) {},
-                  ),
+                // Line Chart with Blurred Background
+                LineChart(
+                  title: "Booking Over Month",
+                  chartData: leadsOverMonths,
+                ),
+                // Doughnut Charts
+                DoughnutChart(
+                  title: "Booking Report",
+                  chartData: presalesData,
+                  onPressFilter: (filter) {},
+                ),
 
-                  FunnelChart(
-                    title: "Booking Funnel",
-                    initialFunnelData: initialFunnelData,
-                    onPressFilter: (filter) {},
-                  ),
+                FunnelChart(
+                  title: "Booking Funnel",
+                  initialFunnelData: initialFunnelData,
+                  onPressFilter: (filter) {},
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -511,7 +511,7 @@ class _PostsaleexecutiveDashboardState
             ),
           ),
         ),
-        if (isLoading) const LoadingSquare()
+        // if (isLoading) const LoadingSquare()
       ],
     );
   }
@@ -582,7 +582,6 @@ class MyCard extends StatelessWidget {
     );
   }
 }
-
 
 // import 'package:ev_homes/components/animated_gradient_bg.dart';
 // import 'package:ev_homes/components/graph/doughnut_chart.dart';

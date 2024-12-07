@@ -1,4 +1,7 @@
+import 'package:ev_homes/core/models/our_project.dart';
+import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class InventoryPage1 extends StatefulWidget {
   final Function(String) onButtonPressed;
@@ -10,6 +13,44 @@ class InventoryPage1 extends StatefulWidget {
 
 class _InventoryPage1State extends State<InventoryPage1> {
   String selectedView = 'Flat No';
+  bool isLoading = false;
+  OurProject? selectedTower;
+
+  void onTower(OurProject? selectedValue) {
+    setState(() {
+      selectedTower = selectedValue;
+    });
+  }
+
+  Future<void> _onRefresh() async {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      // Execute all three futures concurrently
+      await Future.wait([
+        settingProvider.getOurProject(),
+      ]);
+    } catch (e) {
+      //
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _onRefresh();
+  }
 
   Widget _buildButton(String buttonName, IconData icon) {
     bool isSelected = selectedView == buttonName;
@@ -66,7 +107,9 @@ class _InventoryPage1State extends State<InventoryPage1> {
       ),
       body: Column(
         children: [
-          DropdownSection(),
+          DropdownSection(
+            onTower: onTower,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -76,14 +119,16 @@ class _InventoryPage1State extends State<InventoryPage1> {
             ],
           ),
           Expanded(
-            child: FloorContent(selectedView: selectedView),
+            child: FloorContent(
+              selectedView: selectedView,
+              selectedProject: selectedTower,
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _buildLegend(Colors.redAccent, 'Sold'),
-              _buildLegend(Colors.greenAccent, 'Available'),
-              _buildLegend(Colors.grey, 'Booked'),
+              _buildLegend(Colors.green, 'Available'),
             ],
           ),
           const SizedBox(height: 10),
@@ -141,30 +186,39 @@ Widget _buildLegend(Color color, String text) {
 }
 
 class DropdownSection extends StatelessWidget {
+  final Function(OurProject?) onTower;
+  const DropdownSection({
+    Key? key,
+    required this.onTower,
+  }) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    final settingProvider = Provider.of<SettingProvider>(context);
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: DropdownButtonFormField<String>(
+      child: DropdownButtonFormField<OurProject>(
         decoration: const InputDecoration(
           border: OutlineInputBorder(
             borderRadius: BorderRadius.all(Radius.circular(30.0)),
           ),
           labelText: 'Select Tower',
         ),
-        items: const [
-          DropdownMenuItem(
-            value: 'EV 10 Marina Bay',
-            child: Text('EV 10 Marina Bay'),
-          ),
-          DropdownMenuItem(
-            value: 'EV 9 Square',
-            child: Text('EV 9 Square'),
-          ),
+        items: [
+          ...settingProvider.ourProject.map((ele) => DropdownMenuItem(
+                value: ele,
+                child: Text(ele?.name ?? ""),
+              ))
+          // DropdownMenuItem(
+          //   value: 'EV 10 Marina Bay',
+          //   child: Text('EV 10 Marina Bay'),
+          // // ),
+          // DropdownMenuItem(
+          //   value: 'EV 9 Square',
+          //   child: Text('EV 9 Square'),
+          // ),``
         ],
-        onChanged: (value) {
-          // Handle dropdown change
-        },
+        onChanged: onTower,
       ),
     );
   }
@@ -202,18 +256,29 @@ class ButtonSection extends StatelessWidget {
 
 class FloorContent extends StatelessWidget {
   final String selectedView;
+  final OurProject? selectedProject;
 
-  FloorContent({required this.selectedView});
+  FloorContent({required this.selectedView, this.selectedProject});
 
   @override
   Widget build(BuildContext context) {
-    // Generate floors in reverse order: from 25 down to 5
-    final floors = List.generate(21, (index) => 25 - index);
+    final settingProvider = Provider.of<SettingProvider>(context);
+    final floors = selectedProject?.flatList
+            .map((flat) => flat.floor) // Get all floors
+            .whereType<int>() // Ensure non-null and int type
+            .toSet() // Remove duplicates
+            .toList() ??
+        []
+      ..sort();
 
     return ListView.builder(
       itemCount: floors.length,
       itemBuilder: (context, index) {
-        int floor = floors[index]; // Get floor number in reversed order
+        int floor = floors[index]; // Get floor number
+        final flats = (selectedProject?.flatList ?? [])
+            .where((flat) => flat.floor == floor)
+            .toList()
+          ..sort((a, b) => a.floor!.compareTo(b.floor!));
 
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 7.0),
@@ -241,15 +306,18 @@ class FloorContent extends StatelessWidget {
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
-                    children: List.generate(10, (itemIndex) {
-                      String content = _generateContent(floor, itemIndex);
+                    children: List.generate(flats.length, (itemIndex) {
+                      final flat = flats[itemIndex];
+                      String content = _generateContent(flat, itemIndex);
                       return Container(
                         width: 70, // Width of each flat
                         height: 40, // Height of each flat
                         alignment: Alignment.center,
                         margin: const EdgeInsets.all(4.0),
                         decoration: BoxDecoration(
-                          color: Colors.redAccent,
+                          color: flat.occupied == true
+                              ? Colors.redAccent
+                              : Colors.green,
                           borderRadius: BorderRadius.circular(8.0),
                         ),
                         child: Text(
@@ -271,19 +339,17 @@ class FloorContent extends StatelessWidget {
     );
   }
 
-  String _generateContent(int floor, int itemIndex) {
+  String _generateContent(Flat flat, int itemIndex) {
     switch (selectedView) {
       case 'Flat No':
-        // Add "0" for all elements except the last one (itemIndex 9)
-        if (itemIndex != 9) {
-          return '${floor}0${itemIndex + 1}';
-        } else {
-          return '${floor}${itemIndex + 1}';
-        }
+        // Return flat number
+        return '${flat.floor}0${itemIndex + 1}';
       case 'BHK':
+        // Return BHK type
         return itemIndex % 2 == 0 ? '2BHK' : '3BHK';
       case 'Area':
-        return '${971 + floor * 10} Sqft';
+        // Return carpet area
+        return '${flat.carpetArea} Sqft'; // Assuming carpetArea is a property of Flat
       default:
         return '';
     }

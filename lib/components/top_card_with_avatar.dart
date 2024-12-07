@@ -4,11 +4,16 @@ import 'package:ev_homes/core/constant/constant.dart';
 import 'package:ev_homes/core/providers/attendance_provider.dart';
 import 'package:ev_homes/core/providers/geolocation_provider.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:ev_homes/pages/admin_pages/attendance.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import '../pages/admin_pages/employees_list.dart';
+import '../pages/admin_pages/leave_employee.dart';
+import '../pages/admin_pages/today_attendance.dart';
 
 class TopcardWithAvatar extends StatefulWidget {
   final Function() takePhoto;
@@ -319,11 +324,11 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                       InkWell(
                         onTap: () {
                           //TODO:EMploye list
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => const EmployeesList()),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const EmployeesList()),
+                          );
                         },
                         child: const ActionTile(
                           icon: Icons.person_search_rounded,
@@ -336,11 +341,11 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                         onTap: () {
                           //TODO:Attendance
 
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => const Attendance()),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Attendance()),
+                          );
                         },
                         child: const ActionTile(
                             icon: Icons.event_available,
@@ -352,11 +357,11 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                         onTap: () {
                           //TODO: Leave application emp
 
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => LeaveEmplpoyee()),
-                          // );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LeaveEmplpoyee()),
+                          );
                         },
                         child: const ActionTile(
                             icon: Icons.exit_to_app_rounded,
@@ -432,16 +437,18 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                     const SizedBox(width: 16),
                     TextButton(
                       onPressed: () {
-                        // Your button logic here
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DailyAttendanceScreen()),
+                        );
                       },
                       style: TextButton.styleFrom(
                         elevation: 6,
                         shadowColor: Colors.green,
-                        backgroundColor: const Color.fromARGB(
-                            255, 248, 85, 4), // Background color
+                        backgroundColor: const Color.fromARGB(255, 248, 85, 4),
                         shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(10), // Rounded corners
+                          borderRadius: BorderRadius.circular(10),
                         ),
                       ),
                       child: const Text(

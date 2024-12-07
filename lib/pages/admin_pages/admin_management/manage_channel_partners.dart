@@ -15,6 +15,16 @@ class ManageChannelPartners extends StatefulWidget {
 class _ManageChannelPartnersState extends State<ManageChannelPartners> {
   String searchQuery = '';
   bool isLoading = false;
+  // List<List<T>> splitList<T>(List<T> list, int chunkSize) {
+  //   List<List<T>> chunks = [];
+  //   for (var i = 0; i < list.length; i += chunkSize) {
+  //     chunks.add(list.sublist(
+  //       i,
+  //       i + chunkSize > list.length ? list.length : i + chunkSize,
+  //     ));
+  //   }
+  //   return chunks;
+  // }
 
   Future<void> onRefresh() async {
     final settingProvider = Provider.of<SettingProvider>(
@@ -46,8 +56,15 @@ class _ManageChannelPartnersState extends State<ManageChannelPartners> {
     final settingProvider = Provider.of<SettingProvider>(context);
     final channelPartner = settingProvider.channelPartner;
     final filteredCp = channelPartner.where((cp) {
-      final nameLower = cp.firmName!.toLowerCase();
-      final searchLower = searchQuery.toLowerCase();
+      final nameLower =
+          (cp.firmName ?? '').toLowerCase(); // Safely handle null values
+      final searchLower =
+          searchQuery.toLowerCase(); // No need for null check here
+      // Include all channel partners if the search query is empty
+      if (searchQuery.isEmpty) {
+        return true; // Return all channel partners when search query is empty
+      }
+      // Otherwise, check if the firmName contains the search query
       return nameLower.contains(searchLower);
     }).toList();
 
@@ -75,7 +92,7 @@ class _ManageChannelPartnersState extends State<ManageChannelPartners> {
                     });
                   },
                   decoration: InputDecoration(
-                    labelText: 'Search Channer Partner',
+                    labelText: 'Search Channel Partner',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -84,7 +101,7 @@ class _ManageChannelPartnersState extends State<ManageChannelPartners> {
                 ),
 
                 const SizedBox(height: 16),
-                // List of employees
+                // List of channel partners
                 Expanded(
                   child: filteredCp.isEmpty
                       ? const Center(
@@ -96,7 +113,6 @@ class _ManageChannelPartnersState extends State<ManageChannelPartners> {
                             itemCount: filteredCp.length,
                             itemBuilder: (context, index) {
                               final cp = filteredCp[index];
-                              print(filteredCp.length);
 
                               return ListTile(
                                 contentPadding: const EdgeInsets.symmetric(
@@ -104,16 +120,22 @@ class _ManageChannelPartnersState extends State<ManageChannelPartners> {
                                 leading: CircleAvatar(
                                   backgroundColor: Colors.blue,
                                   child: Text(
-                                    cp.firstName![0].toUpperCase(),
+                                    cp.firstName?.isNotEmpty == true
+                                        ? cp.firstName![0].toUpperCase()
+                                        : '?', // Use '?' if firstName is empty
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
-                                title: Text("${cp.firstName} ${cp.lastName}"),
+                                title: Text(
+                                  "${cp.firstName ?? ''} ${cp.lastName ?? ''}"
+                                      .trim(),
+                                ),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                        "(${cp.firmName})"), // Firm name in parentheses
+                                      "(${cp.firmName ?? ''})", // Firm name in parentheses
+                                    ),
                                     const SizedBox(
                                         height:
                                             4), // Space between firmName and email

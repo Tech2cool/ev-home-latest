@@ -4,6 +4,7 @@ import 'package:ev_homes/components/graph/funnel_chart.dart';
 import 'package:ev_homes/components/graph/line_chart.dart';
 import 'package:ev_homes/core/models/chart_model.dart';
 import 'package:ev_homes/core/models/our_project.dart';
+import 'package:ev_homes/pages/admin_pages/inventory_page1.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_marina_bay.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_nine_square.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_letter.dart';
@@ -301,7 +302,11 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                 Center(
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      print("Inventory button pressed");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  InventoryPage1(onButtonPressed: (view) {})));
                     },
                     icon: const Icon(
                       FluentIcons.box_24_regular,

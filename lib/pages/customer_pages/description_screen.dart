@@ -34,10 +34,10 @@ IconData getIconData(String name) {
   } else if (name.toLowerCase().contains("gym") ||
       name.toLowerCase().contains("summit")) {
     icon = FluentIcons.dumbbell_24_regular;
-  } else if (name.toLowerCase().contains("hall") ||
-      name.toLowerCase().contains("banquet") ||
-      name.toLowerCase().contains("banquet")) {
-    icon = FluentIcons.sparkle_24_regular;
+  } else if (name.toLowerCase().contains("yoga") ||
+      name.toLowerCase().contains("yoga") ||
+      name.toLowerCase().contains("yoga")) {
+    icon = FluentIcons.flow_16_filled;
   } else if (name.toLowerCase().contains("sport") ||
       name.toLowerCase().contains("garden") ||
       name.toLowerCase().contains("ball")) {
@@ -71,8 +71,44 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
   String selectedAmenity = 'All';
 
   // Dummy project data
-  final String brochureLink = 'https://example.com/brochure.pdf';
+  final String brochureLink =
+      "https://cdn.evhomes.tech/a9e1f771-8e1c-4963-8ce2-1fddf29634ed-nine%20square%20s_compressed-compressed.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImE5ZTFmNzcxLThlMWMtNDk2My04Y2UyLTFmZGRmMjk2MzRlZC1uaW5lIHNxdWFyZSBzX2NvbXByZXNzZWQtY29tcHJlc3NlZC5wZGYiLCJpYXQiOjE3MzM1NjQwMjF9.MoPvglY_wCRkW28PiwtEo4mBgB_YNrJ3-KPxFi6BhHU";
   final String locationLink = 'https://www.google.com/maps';
+
+  Future<void> _downloadBrochure(BuildContext context) async {
+    print('Brochure link: $brochureLink');
+    try {
+      if (brochureLink.isEmpty) {
+        print('Brochure link is empty.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No Brochure available at the moment.'),
+          ),
+        );
+        return;
+      }
+      final Uri url = Uri.parse(brochureLink);
+      print('Parsed URL: $url');
+      if (await canLaunchUrl(url)) {
+        print('Launching URL...');
+        await launchUrl(url, mode: LaunchMode.externalApplication);
+      } else {
+        print('Cannot launch URL.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Failed to open the brochure link.'),
+          ),
+        );
+      }
+    } catch (e) {
+      print('Error occurred: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('An error occurred: $e'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -379,16 +415,17 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         ),
                         child: TextButton(
                           onPressed: () {
-                            if (brochureLink.isEmpty) {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    'No Brochure available at the moment.',
-                                  ),
-                                ),
-                              );
-                              return;
-                            }
+                            // if (brochureLink.isEmpty) {
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     const SnackBar(
+                            //       content: Text(
+                            //         'No Brochure available at the moment.',
+                            //       ),
+                            //     ),
+                            //   );
+                            //   return;
+                            // }
+                            _downloadBrochure(context);
                             // Navigator.of(context).push(
                             //   MaterialPageRoute(
                             //     builder: (context) =>
@@ -549,7 +586,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
   Future<void> _makePhoneCall(BuildContext context) async {
     final Uri launchUri = Uri(
       scheme: 'tel',
-      path: '554545487',
+      path: '8879342777',
     );
 
     try {

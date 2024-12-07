@@ -186,8 +186,8 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/post-sale-head-lead-list/Total",
-                            );
+                                // "/post-sale-head-lead-list/Total",
+                                "/post-sales-executive-lead-list/Total/${widget.id ?? settingProvider.loggedAdmin!.id!}");
                           },
                           child: SizedBox(
                             height: 80,
@@ -203,8 +203,8 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/post-sale-head-lead-list/Registration Done",
-                            );
+                                // "/post-sale-head-lead-list/Registration Done",
+                                "/post-sales-executive-lead-list/Registration Done/${widget.id ?? settingProvider.loggedAdmin!.id!}");
                           },
                           child: SizedBox(
                             height: 80,
@@ -221,8 +221,7 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/post-sale-head-lead-list/EOI Received",
-                            );
+                                "/post-sales-executive-lead-list/EOI Received/${widget.id ?? settingProvider.loggedAdmin!.id!}");
                           },
                           child: SizedBox(
                             height: 80,
@@ -239,8 +238,8 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/post-sale-head-lead-list/Cancelled",
-                            );
+                                // "/post-sale-head-lead-list/Cancelled",
+                                "/post-sales-executive-lead-list/Cancelled/${widget.id ?? settingProvider.loggedAdmin!.id!}");
                           },
                           child: SizedBox(
                             height: 80,
@@ -249,81 +248,6 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                               textColor: Colors.red.shade700,
                               label: "Cancelled",
                               value: leadsPostSale.cancelled,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(3.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            GoRouter.of(context)
-                                .push("/head-assign-lead/Booking Assigned");
-                          },
-                          child: SizedBox(
-                            height: 80,
-                            width: 100,
-                            child: MyCard(
-                              label: "Booking Assigned",
-                              value: leadsPostSale.assignedCount,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            GoRouter.of(context)
-                                .push("/head-assign-lead/Booking Contacted");
-                          },
-                          child: SizedBox(
-                            height: 80,
-                            width: 100,
-                            child: MyCard(
-                              textColor: Colors.green,
-                              label: "Booking Contacted",
-                              value: leadsPostSale.contactedCount,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            GoRouter.of(context)
-                                .push("/head-assign-lead/Refund Processed");
-                          },
-                          child: SizedBox(
-                            height: 80,
-                            width: 100,
-                            child: MyCard(
-                              textColor: Colors.red,
-                              label: "Refund Processed",
-                              value: leadsPostSale.contactedCount,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            GoRouter.of(context)
-                                .push("/head-assign-lead/Revenue");
-                          },
-                          child: SizedBox(
-                            height: 80,
-                            width: 100,
-                            child: MyCard(
-                              textColor: Colors.yellow.shade700,
-                              label: "Revenue",
-                              value: leadsPostSale.revenue,
                             ),
                           ),
                         ),

@@ -397,6 +397,15 @@ class SettingProvider extends ChangeNotifier {
     print("notified projects");
   }
 
+  Future<void> deleteProject(String id) async {
+    final resp = await _apiService.deleteProject(id);
+    if (resp != null) {
+      // Remove the project from the local list
+      _ourProject.removeWhere((project) => project.id == id);
+      notifyListeners();
+    }
+  }
+
   Future<void> getClosingManagers() async {
     final emps = await _apiService.getClosingManagers();
     if (emps.isNotEmpty) {

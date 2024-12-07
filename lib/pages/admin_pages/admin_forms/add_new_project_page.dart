@@ -249,7 +249,7 @@ class _AddNewProjectPageState extends State<AddNewProjectPage> {
       );
       await settingProvider.addNewProject(newProject);
     } catch (e) {
-      Helper.showCustomSnackBar("Unkown error adding new Project");
+      // Helper.showCustomSnackBar("Unkown error adding new Project");
     }
 
     setState(() {

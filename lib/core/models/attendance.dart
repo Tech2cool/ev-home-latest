@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class Attendance {
   final String? id;
   final String userId;

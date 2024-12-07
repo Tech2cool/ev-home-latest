@@ -1,6 +1,9 @@
+import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:ev_homes/pages/admin_pages/app_dev_pages/app_dev_dashboard.dart';
 import 'package:ev_homes/pages/admin_pages/upload_shorts.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class MoreOptionPage extends StatefulWidget {
   const MoreOptionPage({super.key});
@@ -25,6 +28,9 @@ class _MoreOptionPageState extends State<MoreOptionPage> {
 
   @override
   Widget build(BuildContext context) {
+    final settingProvider = Provider.of<SettingProvider>(context);
+    final loggedDesg = settingProvider.loggedAdmin?.designation;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("More Options"),
@@ -222,6 +228,36 @@ class _MoreOptionPageState extends State<MoreOptionPage> {
               ),
               title: const Text(
                 "Upload Files",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              trailing: const Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 16,
+              ),
+            ),
+            ListTile(
+              onTap: () {
+                //TODO:// manage Project
+                // GoRouter.of(context).push("/manage-projects");
+                if (loggedDesg!.id == "desg-post-sales-head" ||
+                    loggedDesg!.id == "desg-app-developer" ||
+                    loggedDesg!.id == "desg-site-head")
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const AppDevDashboard(),
+                    ),
+                  );
+              },
+              leading: Icon(
+                Icons.list_alt,
+                size: 30,
+                color: Theme.of(context).primaryColor,
+              ),
+              title: const Text(
+                "Super Admin Dashboard",
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,

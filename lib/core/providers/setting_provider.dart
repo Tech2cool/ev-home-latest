@@ -206,8 +206,8 @@ class SettingProvider extends ChangeNotifier {
     final emps = await _apiService.getReuirements();
     if (emps.isNotEmpty) {
       print("got reqs");
-
       _requirements = emps;
+      notifyListeners();
     }
     notifyListeners();
     print("notified reqs");
@@ -392,6 +392,7 @@ class SettingProvider extends ChangeNotifier {
     if (projects.isNotEmpty) {
       print("got projects");
       _ourProject = projects;
+      notifyListeners();
     }
     notifyListeners();
     print("notified projects");
@@ -946,11 +947,14 @@ class SettingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addPostSaleLead(Map<String, dynamic> data) async {
+  Future<PostSaleLead?> addPostSaleLead(Map<String, dynamic> data) async {
+    print("started adding");
     final resp = await _apiService.addPostSaleLead(data);
-    if (resp == null) return;
+    print("end adding");
+    // if (resp == null) return null;
     await getPostSaleLead();
     notifyListeners();
+    return resp;
   }
 
   Future<void> updatePostSaleLead(String id, Map<String, dynamic> data) async {

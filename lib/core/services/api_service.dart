@@ -2022,17 +2022,25 @@ class ApiService {
 
   Future<PostSaleLead?> addPostSaleLead(Map<String, dynamic> data) async {
     try {
+      print("started adding pLead");
+
       final Response response = await _dio.post(
         '/post-sale-lead-add',
         data: data,
       );
+      print("post request done");
+
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
         return null;
       }
+      print("post 200 code passed");
+
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
-      // return PostSaleLead.fromJson(response.data['data']);
-      return null;
+      final paresdData = PostSaleLead.fromJson(response.data['data']);
+      print("pLead parsed");
+
+      return paresdData;
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
 
@@ -2044,6 +2052,44 @@ class ApiService {
         errorMessage = e.message.toString();
       }
       Helper.showCustomSnackBar(errorMessage);
+      print(e);
+
+      return null;
+    }
+  }
+
+  Future<String?> updateLeadStatus(String id, Map<String, dynamic> data) async {
+    try {
+      print("started adding pLead");
+
+      final Response response = await _dio.post(
+        '/lead-update-status/$id',
+        data: data,
+      );
+      print("post request done");
+
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return null;
+      }
+      print("post 200 code passed");
+
+      Helper.showCustomSnackBar(response.data['message'], Colors.green);
+
+      return response.data['message'];
+      // return null;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+      Helper.showCustomSnackBar(errorMessage);
+      print(e);
 
       return null;
     }

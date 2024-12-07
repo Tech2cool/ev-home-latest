@@ -57,12 +57,18 @@ class _AdminHomeWrapperState extends State<AdminHomeWrapper>
 
   @override
   Widget build(BuildContext context) {
-    // final settingProvider = Provider.of<SettingProvider>(context);
-    // final loggedDesg = settingProvider.loggedAdmin?.designation;
+    final settingProvider = Provider.of<SettingProvider>(context);
+    final loggedDesg = settingProvider.loggedAdmin?.designation;
 
     List<Widget> myPages = [
       const AdminHomePage(),
       const DashboardPage(),
+      // if (loggedDesg!.id == "desg-post-sales-head" ||
+      //     loggedDesg!.id == "desg-app-developer" ||
+      //     loggedDesg!.id == "desg-site-head" ||
+      //     loggedDesg!.id == "desg-data-analyzer" ||
+      //     loggedDesg!.id == "desg-front-desk-executive" ||
+      //     loggedDesg!.id == "desg-floor-manager")
       const MoreOptionPage(),
     ];
 
@@ -87,6 +93,12 @@ class _AdminHomeWrapperState extends State<AdminHomeWrapper>
         ),
         label: "Dashboard",
       ),
+      // if (loggedDesg!.id == "desg-post-sales-head" ||
+      //     loggedDesg!.id == "desg-app-developer" ||
+      //     loggedDesg!.id == "desg-site-head" ||
+      //     loggedDesg!.id == "desg-data-analyzer" ||
+      //     loggedDesg!.id == "desg-front-desk-executive" ||
+      //     loggedDesg!.id == "desg-floor-manager")
       BottomNavigationBarItem(
         icon: Icon(
           Icons.settings,
@@ -146,111 +158,142 @@ class _AdminHomeWrapperState extends State<AdminHomeWrapper>
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (_showChips) ...[
-                  SlideTransition(
-                    position: _slideAnimation,
-                    child: MyChip(
-                      heading: "Add Client Tagging",
-                      onPress: () {
-                        GoRouter.of(context).push("/add-client-tagging-lead");
-                      },
+                  if (loggedDesg!.id == "desg-post-sales-head" ||
+                      loggedDesg!.id == "desg-app-developer" ||
+                      loggedDesg!.id == "desg-site-head" ||
+                      loggedDesg!.id == "desg-data-analyzer")
+                    SlideTransition(
+                      position: _slideAnimation,
+                      child: MyChip(
+                        heading: "Add Client Tagging",
+                        onPress: () {
+                          GoRouter.of(context).push("/add-client-tagging-lead");
+                        },
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 10),
-                  SlideTransition(
-                    position: _slideAnimation,
-                    child: MyChip(
-                      heading: "Add Site Visit Form",
-                      onPress: () {
-                        GoRouter.of(context).push("/add-site-visit");
-                      },
+                  if (loggedDesg!.id == "desg-post-sales-head" ||
+                      loggedDesg!.id == "desg-app-developer" ||
+                      loggedDesg!.id == "desg-site-head" ||
+                      loggedDesg!.id == "desg-data-analyzer" ||
+                      loggedDesg!.id == "desg-front-desk-executive" ||
+                      loggedDesg!.id == "desg-floor-manager")
+                    SlideTransition(
+                      position: _slideAnimation,
+                      child: MyChip(
+                        heading: "Add Site Visit Form",
+                        onPress: () {
+                          GoRouter.of(context).push("/add-site-visit");
+                        },
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 10),
-                  SlideTransition(
-                    position: _slideAnimation,
-                    child: MyChip(
-                      heading: "Add Channel Partner",
-                      onPress: () {
-                        GoRouter.of(context).push("/add-channel-partner");
-                      },
+                  if (loggedDesg!.id == "desg-post-sales-executive" ||
+                      loggedDesg!.id == "desg-post-sales-head" ||
+                      loggedDesg!.id == "desg-app-developer" ||
+                      loggedDesg!.id == "desg-site-head" ||
+                      loggedDesg!.id == "desg-data-analyzer")
+                    SlideTransition(
+                      position: _slideAnimation,
+                      child: MyChip(
+                        heading: "Add Channel Partner",
+                        onPress: () {
+                          GoRouter.of(context).push("/add-channel-partner");
+                        },
+                      ),
                     ),
-                  ),
                   const SizedBox(height: 10),
-                  SlideTransition(
-                    position: _slideAnimation,
-                    child: MyChip(
-                      heading: "Add New Booking",
-                      onPress: () {
-                        GoRouter.of(context).push("/add-booking");
-                      },
+                  if (loggedDesg!.id == "desg-post-sales-executive" ||
+                      loggedDesg!.id == "desg-post-sales-head" ||
+                      loggedDesg!.id == "desg-app-developer" ||
+                      loggedDesg!.id == "desg-site-head") ...[
+                    SlideTransition(
+                      position: _slideAnimation,
+                      child: MyChip(
+                        heading: "Add New Booking",
+                        onPress: () {
+                          GoRouter.of(context).push("/add-booking");
+                        },
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  SlideTransition(
-                    position: _slideAnimation,
-                    child: MyChip(
-                      heading: "Add & View Payment",
-                      onPress: () {
-                        // Show dialog on tap
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text("Do you want to?"),
-                              content: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  ListTile(
-                                    title: const Text("Add Payment"),
-                                    onTap: () {
-                                      //TODO: add payment route
-                                      GoRouter.of(context).push(
-                                        "/add-payment-info",
-                                      );
+                    const SizedBox(height: 10),
+                  ],
+                  if (loggedDesg!.id == "desg-post-sales-executive" ||
+                      loggedDesg!.id == "desg-post-sales-head" ||
+                      loggedDesg!.id == "desg-app-developer" ||
+                      loggedDesg!.id == "desg-site-head")
+                    SlideTransition(
+                      position: _slideAnimation,
+                      child: MyChip(
+                        heading: "Add & View Payment",
+                        onPress: () {
+                          // Show dialog on tap
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Text("Do you want to?"),
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    ListTile(
+                                      title: const Text("Add Payment"),
+                                      onTap: () {
+                                        //TODO: add payment route
+                                        GoRouter.of(context).push(
+                                          "/add-payment-info",
+                                        );
+                                      },
+                                    ),
+                                    ListTile(
+                                      title: const Text("View Payments"),
+                                      onTap: () {
+                                        //TODO: View payment route
+                                        GoRouter.of(context).push(
+                                          "/view-payment-info",
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context); // Close dialog
                                     },
-                                  ),
-                                  ListTile(
-                                    title: const Text("View Payments"),
-                                    onTap: () {
-                                      //TODO: View payment route
-                                      GoRouter.of(context).push(
-                                        "/view-payment-info",
-                                      );
-                                    },
+                                    child: const Text("Cancel"),
                                   ),
                                 ],
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context); // Close dialog
-                                  },
-                                  child: const Text("Cancel"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      },
+                              );
+                            },
+                          );
+                        },
+                      ),
                     ),
+                ],
+                if (loggedDesg!.id == "desg-post-sales-head" ||
+                    loggedDesg!.id == "desg-app-developer" ||
+                    loggedDesg!.id == "desg-site-head" ||
+                    loggedDesg!.id == "desg-data-analyzer" ||
+                    loggedDesg!.id == "desg-front-desk-executive" ||
+                    loggedDesg!.id == "desg-floor-manager") ...[
+                  const SizedBox(height: 10),
+                  FloatingActionButton(
+                    backgroundColor: Colors.purple.shade100.withAlpha(200),
+                    onPressed: () {
+                      setState(() {
+                        if (_showChips) {
+                          _animationController.reverse();
+                        } else {
+                          _animationController.forward();
+                        }
+                        _showChips = !_showChips;
+                      });
+                    },
+                    shape: const CircleBorder(),
+                    child: const Icon(Icons.add),
                   ),
                 ],
-                const SizedBox(height: 10),
-                FloatingActionButton(
-                  backgroundColor: Colors.purple.shade100.withAlpha(200),
-                  onPressed: () {
-                    setState(() {
-                      if (_showChips) {
-                        _animationController.reverse();
-                      } else {
-                        _animationController.forward();
-                      }
-                      _showChips = !_showChips;
-                    });
-                  },
-                  shape: const CircleBorder(),
-                  child: const Icon(Icons.add),
-                ),
               ],
             ),
           ),

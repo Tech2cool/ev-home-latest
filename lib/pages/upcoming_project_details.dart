@@ -1,7 +1,7 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/pages/customer_pages/featured_project_screen.dart';
 import 'package:flutter/material.dart';
-// Import the AnimatedGradient widget
+// import 'property_card_vertical.dart';
 
 class UpcomingProjectsList extends StatelessWidget {
   final List<Map<String, String>> properties = [
@@ -30,40 +30,66 @@ class UpcomingProjectsList extends StatelessWidget {
       'location': 'Koperkhairane',
     },
   ];
-
   final List<String> featuredProjectImages = [
-    'http://cdn.evhomes.tech/35f6aa26-96e5-479a-b417-bef7ddd1a7c5-IMG-20241204-WA0005.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6IjM1ZjZhYTI2LTk2ZTUtNDc5YS1iNDE3LWJlZjdkZGQxYTdjNS1JTUctMjAyNDEyMDQtV0EwMDA1LmpwZyIsImlhdCI6MTczMzMxMDQ2OH0.jNqZsVFjrL7MMmtQqE3UNdit4Q6iACLaBF2s2tSNg7U',
-    'http://cdn.evhomes.tech/2e04b32c-fc3d-4ae6-af96-81ab87537586-IMG-20241204-WA0012.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6IjJlMDRiMzJjLWZjM2QtNGFlNi1hZjk2LTgxYWI4NzUzNzU4Ni1JTUctMjAyNDEyMDQtV0EwMDEyLmpwZyIsImlhdCI6MTczMzMxMDU2MH0.WKBtN2NAhorF_SNSw86DlkY7PwTx0NTfeKw-NkmiDFY',
-    'http://cdn.evhomes.tech/b582784e-82b0-410d-ba8a-01639dcf9710-IMG-20241204-WA0004.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImI1ODI3ODRlLTgyYjAtNDEwZC1iYThhLTAxNjM5ZGNmOTcxMC1JTUctMjAyNDEyMDQtV0EwMDA0LmpwZyIsImlhdCI6MTczMzMxMDE3Mn0.gUznkJek1dqNhc_poPRiblVd-6VaQKdGLbcHsdZ9ZEs',
-    'http://cdn.evhomes.tech/d293473a-9ce0-4778-82c6-906afb01cf2d-IMG-20241204-WA0001.jpg?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImQyOTM0NzNhLTljZTAtNDc3OC04MmM2LTkwNmFmYjAxY2YyZC1JTUctMjAyNDEyMDQtV0EwMDAxLmpwZyIsImlhdCI6MTczMzMwOTc4Nn0.AkwLUKfeu3diSCi6mNHBl1szuXk8mJgTl3pBGRxwndI',
+    'http://cdn.evhomes.tech/b2fad3d2-fe68-4aa7-9aa1-b07f7c8ff633-1.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImIyZmFkM2QyLWZlNjgtNGFhNy05YWExLWIwN2Y3YzhmZjYzMy0xLnBuZyIsImlhdCI6MTczMzU3MzU4NX0.GikGyZBlNqJXlrHfuuEQPaYspxcxaTuzIqfFhBDDvXE',     
+    "http://cdn.evhomes.tech/ff1a991f-8ee8-4f6d-962f-4fcf8626d4fa-4.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImZmMWE5OTFmLThlZTgtNGY2ZC05NjJmLTRmY2Y4NjI2ZDRmYS00LnBuZyIsImlhdCI6MTczMzU3MzY0MX0.NX4RgWfkYtzgcqHgOBMFWQjUUjmXSEMP6DwOVeGO-FM",
+'http://cdn.evhomes.tech/87f30262-d0fc-41da-bc4a-75558764c7d6-3.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6Ijg3ZjMwMjYyLWQwZmMtNDFkYS1iYzRhLTc1NTU4NzY0YzdkNi0zLnBuZyIsImlhdCI6MTczMzU3MzYzNn0.1EZwUCBFLD4Lrbi0lQk9BuE5HfZksODh1XVuT_-AiN8', 
+   'http://cdn.evhomes.tech/9263da1e-5f99-4edb-8279-308c9047a9fd-2.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6IjkyNjNkYTFlLTVmOTktNGVkYi04Mjc5LTMwOGM5MDQ3YTlmZC0yLnBuZyIsImlhdCI6MTczMzU3MzYyMH0.LX31wFrhZ_YZGpjgwKxzyji-MXDdL4DS064BFeBtTzw',
   ];
 
-  UpcomingProjectsList({super.key});
+  UpcomingProjectsList({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        ...List.generate(properties.length, (index) {
-          return PropertyCardVertical(
-            property: properties[index],
-            featuredImage: featuredProjectImages[index],
-          );
-        }),
-      ],
+      children: List.generate(properties.length, (index) {
+        return PropertyCardVertical(
+          property: properties[index],
+          featuredImage: featuredProjectImages[index],
+        );      
+      }),
     );
   }
 }
 
-class PropertyCardVertical extends StatelessWidget {
+
+
+
+class PropertyCardVertical extends StatefulWidget {
   final Map<String, String> property;
   final String featuredImage;
 
   const PropertyCardVertical({
-    super.key,
+    Key? key,
     required this.property,
     required this.featuredImage,
-  });
+  }) : super(key: key);
+
+  @override
+  _PropertyCardVerticalState createState() => _PropertyCardVerticalState();
+}
+
+class _PropertyCardVerticalState extends State<PropertyCardVertical> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+    _animation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,120 +99,122 @@ class PropertyCardVertical extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => FeaturedProjectScreen(
-              logoImagePath: featuredImage,
-              title: property['title']!,
+              logoImagePath: widget.featuredImage,
+              title: widget.property['title']!,
             ),
           ),
         );
       },
-      child: Container(
-        margin: const EdgeInsets.all(10),
-        width: double.infinity,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromARGB(255, 133, 0, 0)
-                  .withOpacity(0.6), // Grey shadow color
-              offset: const Offset(3, 3), // Position the shadow
-              blurRadius: 8, // Blur effect
-              spreadRadius: 3, // Spread the shadow
-            ),
-          ],
-        ),
-        height: 120, // Set a fixed height for the card
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(15),
-          child: Stack(
-            children: [
-              const Positioned.fill(
-                child: AnimatedGradientBg(),
+      child: MouseRegion(
+        onEnter: (_) => _controller.forward(),
+        onExit: (_) => _controller.reverse(),
+        child: Container(
+          margin: const EdgeInsets.all(10),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: const Color.fromARGB(255, 133, 0, 0).withOpacity(0.6),
+                offset: const Offset(3, 3),
+                blurRadius: 8,
+                spreadRadius: 3,
               ),
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: const Color.fromARGB(255, 26, 25, 25)
-                  //         .withOpacity(0.4),
-                  //     offset: Offset(0, 6),
-                  //     blurRadius: 2,
-                  //     spreadRadius: 1,
-                  //   )
-                  // ],
+            ],
+          ),
+          height: 120,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: Stack(
+              children: [
+                const Positioned.fill(
+                  child: AnimatedGradientBg(),
                 ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(255, 26, 25, 25)
-                                  .withOpacity(0.6),
-                              offset: const Offset(0, 6),
-                              blurRadius: 7,
-                              spreadRadius: 1,
-                            ),
-                          ],
+                Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: AnimatedBuilder(
+                          animation: _animation,
+                          builder: (context, child) {
+                            return Transform.scale(
+                              scale: _animation.value,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: const Color.fromARGB(255, 26, 25, 25).withOpacity(0.6),
+                                      offset: const Offset(0, 6),
+                                      blurRadius: 7,
+                                      spreadRadius: 1,
+                                    ),
+                                  ],
+                                ),
+                                child: ClipOval(
+                                  child: Image.network(
+                                    widget.property['image']!,
+                                    height:200,
+                                    width: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
-                        child: ClipOval(
-                          child: Image.network(
-                            property['image']!,
-                            height: 100,
-                            width: 100,
-                            fit: BoxFit.cover,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                widget.property['title']!,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  const Icon(
+                                    Icons.location_on,
+                                    color: Color.fromARGB(255, 133, 0, 0),
+                                    size: 18,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    widget.property['location']!,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              property['title']!,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.location_on,
-                                  color: Color.fromARGB(255, 133, 0, 0),
-                                  size: 18,
-                                ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  property['location']!,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
+

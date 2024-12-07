@@ -968,7 +968,6 @@ class _DemandLetterState extends State<DemandLetter> {
         ],
       ),
     );
-
     try {
       final output = await getApplicationDocumentsDirectory();
       final file =
@@ -1047,12 +1046,12 @@ class _DemandLetterState extends State<DemandLetter> {
         currencyFormat.format(receivedAmount)
       ]),
       _buildPdfTableRow([
-        'Total Amount Payable on or before ${selectedDate != null ? DateFormat('dd-MM-yyyy').format(selectedDate!) : 'N/A'}',
-        currencyFormat.format(remainingBase),
-        currencyFormat.format(remainingGst),
-        currencyFormat.format(remainingTds),
-        currencyFormat.format(remainingTotal),
-      ]),
+  'Total Amount Payable on or before ${selectedDate != null ? DateFormat('dd-MM-yyyy').format(selectedDate!) : 'N/A'}',
+  currencyFormat.format(remainingBase),
+  currencyFormat.format(remainingGst),
+  remainingTds < 0 ? '-' : currencyFormat.format(remainingTds),  // Use a dash for negative TDS
+  currencyFormat.format(remainingTotal),
+]),
       _buildPdfTableRow([
         'Add - Late payment charges @ $reminderDays${reminderDays > 1 ? '%' : ''}  + GST @ 18%',
         currencyFormat.format(latePaymentCharge),
@@ -1074,21 +1073,22 @@ class _DemandLetterState extends State<DemandLetter> {
     );
   }
 
-  pw.TableRow _buildPdfTableRow(List<String> cells, {bool isHeader = false}) {
-    final style = pw.TextStyle(
-      fontSize: 10,
-      fontWeight: isHeader ? pw.FontWeight.bold : pw.FontWeight.normal,
-    );
-    return pw.TableRow(
-      children: cells
-          .map((cell) => pw.Padding(
-                padding: const pw.EdgeInsets.all(5),
-                child:
-                    pw.Text(cell, style: style, textAlign: pw.TextAlign.center),
-              ))
-          .toList(),
-    );
-  }
+ pw.TableRow _buildPdfTableRow(List<String> cells, {bool isHeader = false}) {
+  final style = pw.TextStyle(
+    fontSize: 10,
+    fontWeight: isHeader ? pw.FontWeight.bold : pw.FontWeight.normal,
+  );
+  return pw.TableRow(
+    children: cells.map((cell) => pw.Padding(
+      padding: const pw.EdgeInsets.all(5),
+      child: pw.Text(
+        cell.startsWith('-') ? '-' : cell,  // Replace negative values with a dash
+        style: style,
+        textAlign: pw.TextAlign.center
+      ),
+    )).toList(),
+  );
+}
 
   pw.Widget _buildPdfBankDetails(String title, String accountName,
       String accountNo, String ifscCode, String bankName, String branch) {
@@ -1162,7 +1162,6 @@ class _DemandLetterState extends State<DemandLetter> {
       );
     }
   }
-
   Widget _buildDropdown(
       {required String value,
       required List<String> items,
@@ -1185,7 +1184,6 @@ class _DemandLetterState extends State<DemandLetter> {
       ),
     );
   }
-
   String toRoman(int number) {
     if (number < 1 || number > 5) return number.toString();
     const List<String> romanNumerals = ['I', 'II', 'III', 'IV', 'V'];

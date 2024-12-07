@@ -45,7 +45,7 @@ class _DashboardPageState extends State<DashboardPage> {
         loggedDesg.toLowerCase() == "desg-desg-sales-executive") {
       return SalesManagerDashboard(id: widget.id);
     } else if (loggedDesg.toLowerCase() == "desg-post-sales-executive") {
-      return const PostsaleexcecutiveDashboard();
+      return PostsaleexecutiveDashboard(id: widget.id);
     }
 
     return const UnknownErrorPage();

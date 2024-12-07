@@ -123,12 +123,16 @@ class Lead {
           : null,
       cycle: json['cycle'] != null ? Cycle.fromMap(json['cycle']) : null,
       visitRef:
-          json['visitRef'] != null ? SiteVisit.fromMap(json['visitRef']) : null,
-      revisitRef: json['revisitRef'] != null
-          ? SiteVisit.fromMap(json['revisitRef'])
+          (json['visitRef'] != null && json['visitRef'] is Map<String, dynamic>)
+              ? SiteVisit.fromMap(json['visitRef'] as Map<String, dynamic>)
+              : null,
+      revisitRef: (json['revisitRef'] != null &&
+              json['revisitRef'] is Map<String, dynamic>)
+          ? SiteVisit.fromMap(json['revisitRef'] as Map<String, dynamic>)
           : null,
-      bookingRef: json['bookingRef'] != null
-          ? PostSaleLead.fromJson(json['bookingRef'])
+      bookingRef: (json['bookingRef'] != null &&
+              json['bookingRef'] is Map<String, dynamic>)
+          ? PostSaleLead.fromJson(json['bookingRef'] as Map<String, dynamic>)
           : null,
       status: json['status'],
       approvalStatus: json['approvalStatus'],

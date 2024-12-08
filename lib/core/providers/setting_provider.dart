@@ -238,9 +238,11 @@ class SettingProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> updateTaskStatus(String id, String status) async {
+  Future<void> updateTaskStatus(String id, String status,
+      [String remark = ""]) async {
     final emps = await _apiService.updateTask(id, {
       "status": status,
+      "remark": remark,
     });
     notifyListeners();
   }

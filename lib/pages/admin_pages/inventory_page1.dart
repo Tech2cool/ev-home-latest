@@ -1,3 +1,4 @@
+import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:provider/provider.dart';
 class InventoryPage1 extends StatefulWidget {
   final Function(String) onButtonPressed;
 
-  const InventoryPage1({required this.onButtonPressed});
+  const InventoryPage1({super.key, required this.onButtonPressed});
   @override
   _InventoryPage1State createState() => _InventoryPage1State();
 }
@@ -99,10 +100,10 @@ class _InventoryPage1State extends State<InventoryPage1> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(selectedTower?.name ?? ""),
-            // Text(
-            //   'Vashi',
-            //   style: TextStyle(fontSize: 12, color: Colors.black),
-            // ),
+            Text(
+              selectedTower?.locationName ?? "",
+              style: TextStyle(fontSize: 12, color: Colors.black),
+            ),
           ],
         ),
       ),
@@ -262,7 +263,8 @@ class FloorContent extends StatelessWidget {
   final String selectedView;
   final OurProject? selectedProject;
 
-  FloorContent({required this.selectedView, this.selectedProject});
+  const FloorContent(
+      {super.key, required this.selectedView, this.selectedProject});
 
   @override
   Widget build(BuildContext context) {

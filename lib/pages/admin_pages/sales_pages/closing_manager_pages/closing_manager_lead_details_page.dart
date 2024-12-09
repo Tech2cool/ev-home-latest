@@ -4,13 +4,11 @@ import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/lead.dart';
-import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_postsale_lead.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_details_page.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -432,8 +430,9 @@ class _ClosingManagerLeadDetailsPageState
                               "details": taskDetailsController.text,
                               "lead": widget.lead.id,
                               "type": selectedSubject,
-                              "deadline": _selectedDate,
+                              "deadline": _selectedDate?.toIso8601String(),
                             };
+
                             setState(() {
                               isLoading = true;
                             });
@@ -490,7 +489,11 @@ class _ClosingManagerLeadDetailsPageState
       await settingProvider.getReportingToEmps(
         widget.lead.teamLeader!.id!,
       );
+      await settingProvider.getTask(
+        settingProvider.loggedAdmin!.id!,
+      );
     } catch (e) {
+      //
     } finally {
       setState(() {
         isLoading = false;
@@ -506,7 +509,7 @@ class _ClosingManagerLeadDetailsPageState
       context: context,
       initialDate: initialDate,
       firstDate: DateTime(today.year - 100),
-      lastDate: today,
+      lastDate: today.add(const Duration(days: 30)),
     );
 
     if (picked != null && picked != _selectedDate) {

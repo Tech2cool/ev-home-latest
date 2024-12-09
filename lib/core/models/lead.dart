@@ -26,6 +26,7 @@ class Lead {
   final String? stage;
   final DateTime? startDate;
   final DateTime? validTill;
+  final DateTime? approvalDate;
   final DateTime? previousValidTill;
   final String? status;
 
@@ -63,6 +64,7 @@ class Lead {
     this.remark,
     this.stage,
     required this.startDate,
+    this.approvalDate,
     required this.validTill,
     this.previousValidTill,
     this.status,
@@ -115,6 +117,9 @@ class Lead {
       startDate: json['startDate'] != null
           ? DateTime.parse(json['startDate'])
           : json['startDate'],
+      approvalDate: json['approvalDate'] != null
+          ? DateTime.parse(json['approvalDate'])
+          : json['approvalDate'],
       validTill: json['validTill'] != null
           ? DateTime.parse(json['validTill'])
           : json['validTill'],

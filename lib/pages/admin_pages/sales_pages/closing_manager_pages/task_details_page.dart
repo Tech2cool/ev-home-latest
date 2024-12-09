@@ -335,7 +335,7 @@ class _TaskDialogState extends State<TaskDialog> {
           TextField(
             controller: remarkController,
             decoration: InputDecoration(
-              labelText: "Remark (e.g., Address)",
+              labelText: "Remark",
               border: OutlineInputBorder(),
             ),
           ),
@@ -368,6 +368,7 @@ class _TaskDialogState extends State<TaskDialog> {
                   await settingProvider.updateTaskStatus(
                     widget.id,
                     selectedTask!,
+                    remark,
                   );
                   Navigator.pop(context);
                 } else {

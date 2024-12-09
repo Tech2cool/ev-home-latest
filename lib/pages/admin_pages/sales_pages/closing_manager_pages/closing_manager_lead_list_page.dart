@@ -228,9 +228,10 @@ class _ClosingManagerLeadListPageState
                                         ),
                                         const SizedBox(height: 5),
                                         NamedCard(
-                                          heading: "Tagging Date",
+                                          heading: "Assign Date",
                                           value: Helper.formatDate(
-                                            lead.startDate.toString(),
+                                            lead.cycle?.startDate?.toString() ??
+                                                "NA",
                                           ),
                                         ),
                                         const SizedBox(width: 5),

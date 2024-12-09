@@ -29,27 +29,18 @@ class _ClosingManagerFollowUpListPageState
   int currentPage = 1;
   int totalPages = 1;
   Timer? _debounce;
+  String? _selectedStatus;
 
-  List<Lead> getFilteredLeads() {
-    // if (widget.status == "Approved") {
-    //   return leads
-    //       .where((lead) => lead.approvalStatus == "Approved")
-    //       .toList();
-    // } else if (widget.status == "Rejected") {
-    //   return leads
-    //       .where((lead) => lead.approvalStatus == "Rejected")
-    //       .toList();
-    // } else if (widget.status == "Pending") {
-    //   return leads
-    //       .where(
-    //         (lead) =>
-    //             lead.approvalStatus == "Pending" ||
-    //             lead.approvalStatus == "In Progress",
-    //       )
-    //       .toList();
-    // }
-    return leads;
-  }
+  final List<DropdownMenuItem<String>> listOfStatus = const [
+    DropdownMenuItem(
+      value: "active",
+      child: Text("Active"),
+    ),
+    DropdownMenuItem(
+      value: "inactive",
+      child: Text("In-active"),
+    ),
+  ];
 
   // Fetch initial leads or leads based on a new search
   Future<void> getLeads({bool resetPage = false}) async {
@@ -60,13 +51,13 @@ class _ClosingManagerFollowUpListPageState
 
     if (resetPage) {
       setState(() {
-        currentPage = 1; // Reset to first page
-        leads = []; // Clear current leads
+        currentPage = 1;
+        leads = [];
         isLoading = true;
       });
     } else {
       setState(() {
-        isFetchingMore = true; // Show loading more indicator
+        isFetchingMore = true;
       });
     }
 
@@ -75,7 +66,7 @@ class _ClosingManagerFollowUpListPageState
       searchQuery,
       currentPage,
       10,
-      widget.status.toLowerCase() == "total" ? null : widget.status,
+      _selectedStatus ?? widget.status.toString(),
     );
 
     if (mounted) {
@@ -92,6 +83,36 @@ class _ClosingManagerFollowUpListPageState
     }
   }
 
+  String? getStatus(Lead lead) {
+    if (lead.stage == "visit") {
+      return lead.visitStatus;
+    } else if (lead.stage == "revisit") {
+      return lead.revisitStatus;
+    } else if (lead.stage == "booking") {
+      return lead.bookingStatus;
+    }
+    return lead.status;
+  }
+
+  String getStatus1(Lead lead) {
+    if (lead.stage == "visit") {
+      return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
+    } else if (lead.stage == "revisit") {
+      return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.revisitStatus ?? '')}";
+    } else if (lead.stage == "booking") {
+      return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.bookingStatus ?? '')}";
+    }
+
+    return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
+  }
+
+  void onTapFilter(String status) {
+    setState(() {
+      _selectedStatus = status;
+    });
+    getLeads(resetPage: true);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -100,13 +121,43 @@ class _ClosingManagerFollowUpListPageState
 
   @override
   Widget build(BuildContext context) {
-    final filteredLeads = getFilteredLeads();
+    final filteredLeads = leads;
 
     return Stack(
       children: [
         Scaffold(
           appBar: AppBar(
-            title: Text("Tagging Report - ${widget.status}"),
+            title: Text(
+              "Tagging Report - ${_selectedStatus ?? widget.status}",
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            actions: [
+              IconButton(
+                padding: const EdgeInsets.all(15),
+                onPressed: () {
+                  showMenu(
+                    context: context,
+                    position: RelativeRect.fromLTRB(
+                      MediaQuery.of(context).size.width - 50,
+                      kToolbarHeight + 12,
+                      12,
+                      0,
+                    ),
+                    items: [
+                      PopupMenuItem(
+                        value: 'followup',
+                        child: const Text('FollowUp'),
+                        onTap: () => onTapFilter("followup"),
+                      ),
+                    ],
+                  );
+                },
+                icon: const Icon(Icons.filter_list),
+              )
+            ],
           ),
           body: Column(
             children: [
@@ -134,6 +185,16 @@ class _ClosingManagerFollowUpListPageState
                   ),
                 ),
               ),
+              if (!isLoading && filteredLeads.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Text(
+                    "No leads found",
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
               Expanded(
                 child: NotificationListener<ScrollNotification>(
                   onNotification: (ScrollNotification scrollInfo) {
@@ -163,13 +224,6 @@ class _ClosingManagerFollowUpListPageState
                             '/closing-manager-lead-details',
                             extra: lead,
                           );
-
-                          // Navigator.of(context).push(
-                          //   MaterialPageRoute(
-                          //     builder: (context) =>
-                          //         AnalyserInternalTaggingDetails(lead: lead),
-                          //   ),
-                          // );
                         },
                         child: Container(
                           padding: const EdgeInsets.all(10),
@@ -199,41 +253,13 @@ class _ClosingManagerFollowUpListPageState
                                     children: [
                                       Text(
                                         Helper.capitalize(
-                                          '${lead.approvalStatus ?? ""}',
+                                          getStatus1(lead),
                                         ),
                                         style: TextStyle(
                                           fontSize: 12,
                                           color: _getStatusColor(
-                                            lead.approvalStatus ?? "",
+                                            getStatus1(lead),
                                           ),
-                                        ),
-                                      ),
-                                      const Text(
-                                        "status",
-                                        style: TextStyle(
-                                          fontSize: 9,
-                                          color: Colors.grey,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Column(
-                                    children: [
-                                      Text(
-                                        Helper.capitalize(
-                                          lead.stage ?? "",
-                                        ),
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.orangeAccent,
-                                        ),
-                                      ),
-                                      const Text(
-                                        "stage",
-                                        style: TextStyle(
-                                          fontSize: 9,
-                                          color: Colors.grey,
                                         ),
                                       ),
                                     ],
@@ -261,17 +287,23 @@ class _ClosingManagerFollowUpListPageState
                                         ),
                                         const SizedBox(height: 5),
                                         NamedCard(
-                                          heading: "Tagging Date",
+                                          heading: "Assign Date",
                                           value: Helper.formatDate(
-                                            lead.startDate.toString(),
+                                            lead.cycle?.startDate?.toString() ??
+                                                "NA",
                                           ),
                                         ),
                                         const SizedBox(width: 5),
                                         NamedCard(
-                                          heading: "Valid Till",
-                                          value: Helper.formatDate(
-                                            lead.validTill.toString(),
+                                          heading: lead.cycle != null
+                                              ? "${Helper.capitalize(lead.cycle?.stage ?? "")} Deadline: "
+                                              : "Visit Deadline: ",
+                                          value: Helper.formatDateOnly(
+                                            lead.cycle?.validTill.toString() ??
+                                                '',
                                           ),
+                                          // valueColor: Colors.red,
+                                          // headingColor: Colors.white,
                                         ),
                                         const SizedBox(width: 5),
                                       ],
@@ -331,17 +363,15 @@ class _ClosingManagerFollowUpListPageState
 }
 
 Color _getStatusColor(String status) {
-  switch (status) {
-    case 'Approved':
-      return Colors.green;
-    case 'Rejected':
-      return Colors.red;
-    case 'In Progress':
-    case 'Pending':
-      return Colors.orange;
-    default:
-      return Colors.grey;
+  if (status.toLowerCase().contains("booked")) {
+    return Colors.green;
+  } else if (status.toLowerCase().contains("rejected")) {
+    return const Color.fromARGB(255, 255, 248, 248);
+  } else if (status.toLowerCase().contains("pending") ||
+      status.toLowerCase().contains("in progress")) {
+    return Colors.orange;
   }
+  return Colors.grey;
 }
 
 class NamedCard extends StatelessWidget {

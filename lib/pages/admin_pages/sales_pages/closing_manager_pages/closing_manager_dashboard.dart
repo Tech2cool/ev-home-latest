@@ -1,6 +1,7 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/components/animated_pie_chart.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
+import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/admin_pages/inventory_page1.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
@@ -296,7 +297,11 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                 ],
                               ).then((selectedmonth) {
                                 if (selectedmonth != null) {
-                                  print('Selected filter: $selectedmonth');
+                                  Helper.showCustomSnackBar(
+                                    "No Target info available for $selectedmonth",
+                                    Colors.green,
+                                  );
+                                  // print('Selected filter: $selectedmonth');
                                 }
                               });
                             },
@@ -328,16 +333,17 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                             const SizedBox(width: 8),
                             InkWell(
                               onTap: () {
-                                final selectedValue = showDialog<int>(
+                                showDialog<int>(
                                   context: context,
-                                  builder: (context) =>
-                                      AdminCarryForwardDialog(id: widget.id),
+                                  builder: (context) => AdminCarryForwardDialog(
+                                    id: widget.id,
+                                  ),
                                 );
 
-                                if (selectedValue != null) {
-                                  print(
-                                      "Selected Carry Forward Option: $selectedValue");
-                                }
+                                // if (selectedValue != null) {
+                                // print(
+                                //     "Selected Carry Forward Option: $selectedValue");
+                                // }
                               },
                               child: TargetCircle(
                                 number: target?.carryForward.toString() ?? "0",
@@ -444,7 +450,8 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                   child: Center(
                                     child: Text(
                                       tasks
-                                          .map((ele) => ele.completed == false)
+                                          .where(
+                                              (ele) => ele.completed == false)
                                           .length
                                           .toString(),
                                       style: const TextStyle(
@@ -694,7 +701,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                   ),
                                   child: Text(
                                     tasks
-                                        .map((ele) =>
+                                        .where((ele) =>
                                             ele.type == "first-call" &&
                                             ele.completed == false)
                                         .length
@@ -716,7 +723,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                               MaterialPageRoute(
                                 builder: (context) => TaskListPage(
                                   id: widget.id,
-                                  type: "First Call",
+                                  type: "first-call",
                                 ),
                               ),
                             );
@@ -738,7 +745,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                   ),
                                   child: Text(
                                     tasks
-                                        .map((ele) =>
+                                        .where((ele) =>
                                             ele.type == "follow-up" &&
                                             ele.completed == false)
                                         .length
@@ -760,7 +767,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                               MaterialPageRoute(
                                 builder: (context) => TaskListPage(
                                   id: widget.id,
-                                  type: "Follow-Up Call",
+                                  type: "follow-up",
                                 ),
                               ),
                             );
@@ -782,7 +789,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                   ),
                                   child: Text(
                                     tasks
-                                        .map((ele) =>
+                                        .where((ele) =>
                                             ele.type == "schedule-meeting" &&
                                             ele.completed == false)
                                         .length
@@ -804,7 +811,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                               MaterialPageRoute(
                                 builder: (context) => TaskListPage(
                                   id: widget.id,
-                                  type: "Schedule Meeting",
+                                  type: "schedule-meeting",
                                 ),
                               ),
                             );

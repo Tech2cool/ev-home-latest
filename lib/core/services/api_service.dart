@@ -100,13 +100,11 @@ class ApiService {
         return emptyPagination;
       }
       final items = data['data'] as List<dynamic>? ?? [];
-      print(items.length);
 
       List<Lead> leads = [];
       if (items.isNotEmpty) {
         leads = items.map((emp) => Lead.fromJson(emp)).toList();
       }
-      print("pass serialization");
       final newPagination = PaginationModel<Lead>(
         code: data['code'],
         message: data['message'],
@@ -120,7 +118,6 @@ class ApiService {
         // assignedCount: response.data["assignedCount"],
         data: leads,
       );
-      print("Pagiantion");
 
       return newPagination;
     } on DioException catch (e) {
@@ -142,7 +139,6 @@ class ApiService {
         totalItems: 0,
         data: [],
       );
-      print(e);
       return emptyPagination;
     }
   }
@@ -542,9 +538,7 @@ class ApiService {
         return null;
       }
       final data = response.data['data'];
-      print("got data");
       final parsedData = ClosingManagerGraph.fromMap(data);
-      print("paresed data");
       return parsedData;
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
@@ -556,7 +550,6 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
-      print(e);
       Helper.showCustomSnackBar(errorMessage);
 
       return null;
@@ -598,11 +591,9 @@ class ApiService {
       final items = data['data'] as List<dynamic>? ?? [];
 
       List<Payment>? payItems;
-      print(response.data);
       if (items.isNotEmpty) {
         payItems = items.map((cp) => Payment.fromMap(cp)).toList();
       }
-      print("pass 1");
       return payItems ?? [];
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
@@ -610,14 +601,12 @@ class ApiService {
       if (e.response != null) {
         // Backend response error message
         errorMessage = e.response?.data['message'] ?? errorMessage;
-        print("pass 2");
       } else {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
 
       Helper.showCustomSnackBar(errorMessage);
-      print("pass 3");
       return [];
     }
   }
@@ -663,7 +652,6 @@ class ApiService {
       final paresedLead = Lead.fromJson(response.data['data']);
       return paresedLead;
     } catch (e) {
-      print("$e");
       return null;
     }
   }
@@ -682,14 +670,12 @@ class ApiService {
       if (e.response != null) {
         // Backend response error message
         errorMessage = e.response?.data['message'] ?? errorMessage;
-        print("pass 2");
       } else {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
 
       Helper.showCustomSnackBar(errorMessage);
-      print("pass 3");
       return null;
     }
   }
@@ -708,14 +694,12 @@ class ApiService {
       if (e.response != null) {
         // Backend response error message
         errorMessage = e.response?.data['message'] ?? errorMessage;
-        print("pass 2");
       } else {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
 
       Helper.showCustomSnackBar(errorMessage);
-      print("pass 3");
       return null;
     }
   }
@@ -733,14 +717,12 @@ class ApiService {
       if (e.response != null) {
         // Backend response error message
         errorMessage = e.response?.data['message'] ?? errorMessage;
-        print("pass 2");
       } else {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
 
       Helper.showCustomSnackBar(errorMessage);
-      print("pass 3");
       return null;
     }
   }
@@ -809,15 +791,11 @@ class ApiService {
   Future<Employee?> getReportingTo(String id) async {
     try {
       final Response response = await _dio.get('/employee-reporting/$id');
-      print("pass1");
       final Map<String, dynamic> data = response.data["data"];
-      print(response.data);
       final Employee employee = Employee.fromMap(data);
-      print("pass2");
       return employee;
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
-      print("pass3");
       if (e.response != null) {
         // Backend response error message
         errorMessage = e.response?.data['message'] ?? errorMessage;
@@ -825,7 +803,6 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
-      print("pass4");
 
       Helper.showCustomSnackBar(errorMessage);
       return null;
@@ -1113,14 +1090,12 @@ class ApiService {
         },
         cancelToken: loginCancelToken,
       );
-      print(response.data['message']);
 
       if (response.data['code'] != 200 && response.data['data'] == null) {
         Helper.showCustomSnackBar(response.data['message']);
 
         return null;
       }
-      print("pass 1");
 
       await storage.write(
         key: "accessToken",
@@ -1134,10 +1109,8 @@ class ApiService {
         SharedPrefService.key,
         response.data['data'],
       );
-      print("pass 2");
 
       final user = Employee.fromMap(response.data['data']);
-      print("pass 3");
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
       return user;
     } on DioException catch (e) {
@@ -1150,7 +1123,6 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
-      print(e);
       Helper.showCustomSnackBar(errorMessage);
       return null;
     }
@@ -1459,33 +1431,26 @@ class ApiService {
         },
         cancelToken: loginCancelToken,
       );
-      print("pass1");
       if (response.data['code'] != 200 && response.data['data'] == null) {
         Helper.showCustomSnackBar(response.data['message']);
 
         return null;
       }
 
-      print("pass2");
       await storage.write(
           key: "accessToken", value: response.data['accessToken']);
       await storage.write(
           key: "refreshToken", value: response.data['refreshToken']);
       await SharedPrefService.storeUser(
           SharedPrefService.key, response.data['data']);
-      print("rup");
-      print(response.data['data']['choiceApt'] ?? "whatever");
       final user = Customer.fromMap(response.data['data']);
-      print(user);
 
-      print("pass3");
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
 
       return user;
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
 
-      print("pass4");
       if (e.response != null) {
         errorMessage = e.response?.data['message'] ?? errorMessage;
       } else {
@@ -1502,7 +1467,6 @@ class ApiService {
         '/lead-update/$id',
         data: data,
       );
-      // print(response.data["data"]);
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
         return response.data['message'];
@@ -1816,17 +1780,14 @@ class ApiService {
         '/payment-add',
         data: data,
       );
-      print(response.data);
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
         return null;
       }
-      print("pass1");
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
       return Payment.fromMap(response.data['data']);
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
-      print("pass2");
       if (e.response != null) {
         // Backend response error message
         errorMessage = e.response?.data['message'] ?? errorMessage;
@@ -1834,7 +1795,6 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
-      // print("pass3");
       Helper.showCustomSnackBar(errorMessage);
       return null;
     }
@@ -1922,11 +1882,9 @@ class ApiService {
   ]) async {
     try {
       var url = '/post-sale-leads?query=$query&page=$page&limit=$limit';
-      // print("pass 1");
 
       final Response response = await _dio.get(url);
 
-      // print("pass 2");
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
         final emptyPagination = PaginationModel<PostSaleLead>(
@@ -1938,17 +1896,14 @@ class ApiService {
           totalItems: 0,
           data: [],
         );
-        // print("pass empty");
 
         return emptyPagination;
       }
 
-      // print("pass 3");
       final List<dynamic> dataList = response.data["data"];
       final List<PostSaleLead> leads = dataList.map((data) {
         return PostSaleLead.fromJson(data as Map<String, dynamic>);
       }).toList();
-      // print("pass leads");
 
       return PaginationModel<PostSaleLead>(
         code: response.data['code'],
@@ -1973,7 +1928,6 @@ class ApiService {
         errorMessage = e.message.toString();
       }
       Helper.showCustomSnackBar(errorMessage);
-      // print(e);
       return PaginationModel<PostSaleLead>(
         code: 500,
         message: '',
@@ -1993,7 +1947,6 @@ class ApiService {
         Helper.showCustomSnackBar(response.data['message']);
         return [];
       }
-      print("pass1");
 
       final Map<String, dynamic> data = response.data;
       final items = data['data'] as List<dynamic>? ?? [];
@@ -2001,19 +1954,16 @@ class ApiService {
       if (items.isNotEmpty) {
         empItems = items.map((emp) => Employee.fromMap(emp)).toList();
       }
-      print("pass2");
 
       return empItems;
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
-      print("pass3");
 
       if (e.response != null) {
         errorMessage = e.response?.data['message'] ?? errorMessage;
       } else {
         errorMessage = e.message.toString();
       }
-      print("pass4");
 
       Helper.showCustomSnackBar(errorMessage);
       return [];
@@ -2022,23 +1972,18 @@ class ApiService {
 
   Future<PostSaleLead?> addPostSaleLead(Map<String, dynamic> data) async {
     try {
-      print("started adding pLead");
-
       final Response response = await _dio.post(
         '/post-sale-lead-add',
         data: data,
       );
-      print("post request done");
 
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
         return null;
       }
-      print("post 200 code passed");
 
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
       final paresdData = PostSaleLead.fromJson(response.data['data']);
-      print("pLead parsed");
 
       return paresdData;
     } on DioException catch (e) {
@@ -2052,7 +1997,6 @@ class ApiService {
         errorMessage = e.message.toString();
       }
       Helper.showCustomSnackBar(errorMessage);
-      print(e);
 
       return null;
     }
@@ -2060,19 +2004,15 @@ class ApiService {
 
   Future<String?> updateLeadStatus(String id, Map<String, dynamic> data) async {
     try {
-      print("started adding pLead");
-
       final Response response = await _dio.post(
         '/lead-update-status/$id',
         data: data,
       );
-      print("post request done");
 
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
         return null;
       }
-      print("post 200 code passed");
 
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
 
@@ -2089,7 +2029,6 @@ class ApiService {
         errorMessage = e.message.toString();
       }
       Helper.showCustomSnackBar(errorMessage);
-      print(e);
 
       return null;
     }
@@ -2100,20 +2039,15 @@ class ApiService {
     Map<String, dynamic> data,
   ) async {
     try {
-      // print('pass api 1');
-      // print(data);
       final Response response = await _dio.post(
         '/post-sale-lead-update/$id',
         data: data,
       );
-      // print('pass api resp');
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
         return null;
       }
-      // print('pass api resp 200');
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
-      // print('pass api resp 200');
       return PostSaleLead.fromJson(response.data['data']);
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
@@ -2125,7 +2059,6 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
-      // print(e);
       Helper.showCustomSnackBar(errorMessage);
 
       return null;
@@ -2137,20 +2070,15 @@ class ApiService {
     Map<String, dynamic> data,
   ) async {
     try {
-      // print('pass api 1');
-      // print(data);
       final Response response = await _dio.post(
         '/ourProjects-update/$id',
         data: data,
       );
-      // print('pass api resp');
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
         return null;
       }
-      // print('pass api resp 200');
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
-      // print('pass api resp 200');
       return OurProject.fromJson(response.data['data']);
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
@@ -2162,7 +2090,6 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
-      // print(e);
       Helper.showCustomSnackBar(errorMessage);
 
       return null;
@@ -2174,20 +2101,15 @@ class ApiService {
     Map<String, dynamic> data,
   ) async {
     try {
-      // print('pass api 1');
-      // print(data);
       final Response response = await _dio.post(
         '/use-carry-forward/$id',
         data: data,
       );
-      // print('pass api resp');
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
         return null;
       }
-      // print('pass api resp 200');
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
-      // print('pass api resp 200');
       return Target.fromMap(response.data['data']);
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
@@ -2199,7 +2121,6 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
-      // print(e);
       Helper.showCustomSnackBar(errorMessage);
 
       return null;
@@ -2236,17 +2157,12 @@ class ApiService {
         return emptyPagination;
       }
 
-      // print('pass 0');
       final List<dynamic> dataList = response.data["data"];
-      // print(dataList);
 
       final List<Lead> leads = dataList.map((data) {
         return Lead.fromJson(data as Map<String, dynamic>);
       }).toList();
 
-      // print('pass id $id');
-      print('leads ${leads.length}');
-      // print('leads data ${dataList.length}');
       return PaginationModel<Lead>(
         code: 404,
         message: response.data["message"],
@@ -2318,17 +2234,12 @@ class ApiService {
         return emptyPagination;
       }
 
-      // print('pass 0');
       final List<dynamic> dataList = response.data["data"];
-      // print(dataList);
 
       final List<Lead> leads = dataList.map((data) {
         return Lead.fromJson(data as Map<String, dynamic>);
       }).toList();
 
-      // print('pass id $id');
-      print('leads ${leads.length}');
-      // print('leads data ${dataList.length}');
       return PaginationModel<Lead>(
         code: 404,
         message: response.data["message"],
@@ -2384,9 +2295,7 @@ class ApiService {
       if (status != null) {
         url += '&status=$status';
       }
-      print(url);
       if (response.data['code'] != 200) {
-        print('pass 0.1');
         Helper.showCustomSnackBar(response.data['message']);
         final emptyPagination = PaginationModel<Lead>(
           code: 404,
@@ -2401,17 +2310,12 @@ class ApiService {
         return emptyPagination;
       }
 
-      print('pass 0');
       final List<dynamic> dataList = response.data["data"];
-      print(dataList);
 
       final List<Lead> leads = dataList.map((data) {
         return Lead.fromJson(data as Map<String, dynamic>);
       }).toList();
 
-      // print('pass id $id');
-      print('leads ${leads.length}');
-      print('leads data ${dataList.length}');
       return PaginationModel<Lead>(
         code: 404,
         message: response.data["message"],
@@ -2436,7 +2340,6 @@ class ApiService {
         errorMessage = e.message.toString();
       }
       Helper.showCustomSnackBar(errorMessage);
-      print(e);
       return PaginationModel<Lead>(
         code: 500,
         message: e.response?.data['message'] ?? errorMessage,
@@ -2464,9 +2367,7 @@ class ApiService {
       if (status != null) {
         url += '&status=$status';
       }
-      print(url);
       if (response.data['code'] != 200) {
-        print('pass 0.1');
         Helper.showCustomSnackBar(response.data['message']);
         final emptyPagination = PaginationModel<PostSaleLead>(
           code: 404,
@@ -2481,17 +2382,12 @@ class ApiService {
         return emptyPagination;
       }
 
-      print('pass 0');
       final List<dynamic> dataList = response.data["data"];
-      print(dataList);
 
       final List<PostSaleLead> leads = dataList.map((data) {
         return PostSaleLead.fromJson(data as Map<String, dynamic>);
       }).toList();
 
-      // print('pass id $id');
-      print('leads ${leads.length}');
-      print('leads data ${dataList.length}');
       return PaginationModel<PostSaleLead>(
         code: 404,
         message: response.data["message"],
@@ -2516,7 +2412,6 @@ class ApiService {
         errorMessage = e.message.toString();
       }
       Helper.showCustomSnackBar(errorMessage);
-      print(e);
       return PaginationModel<PostSaleLead>(
         code: 500,
         message: e.response?.data['message'] ?? errorMessage,
@@ -2535,19 +2430,15 @@ class ApiService {
         '/employee-pre-sale-executive?id=$tlId',
       );
 
-      // print("pass 0");
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
         return [];
       }
-      // print("pass 1");
       final List<dynamic> dataList = response.data["data"];
 
-      // print("pass 2");
       final List<Employee> employees = dataList.map((data) {
         return Employee.fromMap(data);
       }).toList();
-      // print("pass 3");
       return employees;
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
@@ -2560,7 +2451,6 @@ class ApiService {
         errorMessage = e.message.toString();
       }
       Helper.showCustomSnackBar(errorMessage);
-      // print(e);
       return [];
     }
   }
@@ -2830,24 +2720,20 @@ class ApiService {
         data: data,
         // cancelToken: loginCancelToken,
       );
-      // print(response.data);
       if (response.data['code'] == 200) {
         Helper.showCustomSnackBar(response.data['message'], Colors.green);
       }
-      // print("pass1");
       Helper.showCustomSnackBar(response.data['message']);
       final Response response2 = await _dio.post(
         '/siteVisits-add',
         data: data,
       );
 
-      // print("pass2");
       if (response2.data['code'] == 200) {
         Helper.showCustomSnackBar(response2.data['message'], Colors.green);
       }
       Helper.showCustomSnackBar(response2.data['message']);
 
-      // print("pass3");
       return null;
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
@@ -3041,9 +2927,7 @@ class ApiService {
         return [];
       }
       final Map<String, dynamic> data = response.data;
-      // print(response.data["data"]);
       final items = data['data'] as List<dynamic>? ?? [];
-      // print("passed data null");
 
       List<Employee> empItems = [];
       if (items.isNotEmpty) {
@@ -3052,7 +2936,6 @@ class ApiService {
 
       return empItems;
     } on DioException catch (e) {
-      // print("error $e");
       String errorMessage = 'Something went wrong';
 
       if (e.response != null) {
@@ -3068,7 +2951,6 @@ class ApiService {
 
   Future<List<Employee>> getReportingToEmps(String rId) async {
     try {
-      print(rId);
       final Response response = await _dio.get('/employee-reporting/$rId');
 
       if (response.data['code'] != 200) {
@@ -3076,19 +2958,15 @@ class ApiService {
         return [];
       }
       final Map<String, dynamic> data = response.data;
-      print(response.data["data"]);
       final items = data['data'] as List<dynamic>? ?? [];
-      print("passed data null");
 
       List<Employee> empItems = [];
       if (items.isNotEmpty) {
         empItems = items.map((emp) => Employee.fromMap(emp)).toList();
       }
-      print("passed data list emps");
 
       return empItems;
     } on DioException catch (e) {
-      // print("error $e");
       String errorMessage = 'Something went wrong';
 
       if (e.response != null) {
@@ -3096,7 +2974,6 @@ class ApiService {
       } else {
         errorMessage = e.message.toString();
       }
-      print("$e");
 
       Helper.showCustomSnackBar(errorMessage);
       return [];
@@ -3210,7 +3087,6 @@ class ApiService {
         errorMessage = e.message.toString();
       }
       Helper.showCustomSnackBar(errorMessage);
-      // print(e);
       return [];
     }
   }
@@ -3307,7 +3183,6 @@ class ApiService {
 
       //
     } on DioException catch (e) {
-      // print("error $e");
       String errorMessage = 'Something went wrong';
 
       if (e.response != null) {
@@ -3348,7 +3223,6 @@ class ApiService {
 
       //
     } on DioException catch (e) {
-      // print("error $e");
       String errorMessage = 'Something went wrong';
 
       if (e.response != null) {
@@ -3372,19 +3246,15 @@ class ApiService {
         return [];
       }
       final Map<String, dynamic> data = response.data;
-      // print(response.data["data"]);
       final items = data['data'] as List<dynamic>? ?? [];
-      print("passed data null");
 
       List<TeamSection> empItems = [];
       if (items.isNotEmpty) {
         empItems = items.map((emp) => TeamSection.fromMap(emp)).toList();
       }
-      print("passed seriolizaton");
 
       return empItems;
     } on DioException catch (e) {
-      // print("error $e");
       String errorMessage = 'Something went wrong';
 
       if (e.response != null) {
@@ -3392,7 +3262,6 @@ class ApiService {
       } else {
         errorMessage = e.message.toString();
       }
-      print(e);
       Helper.showCustomSnackBar(errorMessage);
       return [];
     }
@@ -3400,29 +3269,21 @@ class ApiService {
 
   Future<List<Employee>> getSeniorClosingManagers() async {
     try {
-      print("pass1");
       final Response response = await _dio.get('/employee-closing-manager-s');
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
         return [];
       }
-      print("pass2");
       final Map<String, dynamic> data = response.data;
-      // print(response.data["data"]);
       final items = data['data'] as List<dynamic>? ?? [];
-      // print("passed data null");
-      print("pass3");
       List<Employee> empItems = [];
       if (items.isNotEmpty) {
         empItems = items.map((emp) => Employee.fromMap(emp)).toList();
       }
 
-      print("pass4");
       return empItems;
     } on DioException catch (e) {
-      // print("error $e");
       String errorMessage = 'Something went wrong';
-      print("pass5");
       if (e.response != null) {
         errorMessage = e.response?.data['message'] ?? errorMessage;
       } else {
@@ -3451,7 +3312,6 @@ class ApiService {
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
       return Otp.fromMap(response.data['data']);
     } on DioException catch (e) {
-      // print("error $e");
       String errorMessage = 'Something went wrong';
 
       if (e.response != null) {
@@ -3492,7 +3352,6 @@ class ApiService {
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
       return true;
     } on DioException catch (e) {
-      // print("error $e");
       String errorMessage = 'Something went wrong';
 
       if (e.response != null) {
@@ -3517,7 +3376,6 @@ class ApiService {
         return null;
       }
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
-      print(response.data['message']);
 
       // return null;
       return Attendance.fromJson(response.data['data']);
@@ -3533,7 +3391,6 @@ class ApiService {
       }
 
       Helper.showCustomSnackBar(errorMessage);
-      print(e);
       return null;
     }
   }

@@ -1,4 +1,5 @@
 import 'package:ev_homes/core/helper/helper.dart';
+import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -8,9 +9,9 @@ import 'package:path/path.dart' as path;
 import 'package:provider/provider.dart';
 
 class FollowupPage extends StatefulWidget {
-  final String leadId;
+  final Lead lead;
 
-  const FollowupPage({Key? key, required this.leadId}) : super(key: key);
+  const FollowupPage({Key? key, required this.lead}) : super(key: key);
 
   @override
   _FollowupPageState createState() => _FollowupPageState();
@@ -395,7 +396,7 @@ class _FollowupPageState extends State<FollowupPage> {
                     final data = {
                       'leadStage': selectedLeadStage,
                       'leadStatus': selectedLeadStatus,
-                      'remark': feedback,
+                      'remark': selectedLeadStatus,
                       'feedback': feedback,
                       'document': "",
                       'recording': ""
@@ -406,7 +407,7 @@ class _FollowupPageState extends State<FollowupPage> {
                         context,
                         listen: false,
                       ).updateCallHistoryPreSales(
-                        widget.leadId,
+                        widget.lead.id,
                         data,
                       );
 

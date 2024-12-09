@@ -1,3 +1,4 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class LeaveEmplpoyee extends StatelessWidget {
@@ -209,12 +210,11 @@ class LeaveEmplpoyee extends StatelessWidget {
                 ),
 
                 // Leave Details Table Header
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 8.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
+                    children: [
                       Text(
                         'Name',
                         style: TextStyle(
@@ -239,38 +239,44 @@ class LeaveEmplpoyee extends StatelessWidget {
                     itemCount: teamLeaveData.length,
                     itemBuilder: (context, index) {
                       final leave = teamLeaveData[index];
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 4.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  leave['name']!,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(leave['appliedOn']!),
-                              ],
-                            ),
-                            const SizedBox(height: 4.0),
-                            Text("Duration: ${leave['duration']}"),
-                            Text("Leave Type: ${leave['type']}"),
-                            Text("Number of Days: ${leave['days']}"),
-                            Text("Reason: ${leave['reason']}"),
-                            Text(
-                              "Status: ${leave['status']}",
-                              style: TextStyle(
-                                color: leave['statusColor'] == 'green'
-                                    ? Colors.green
-                                    : Colors.orange,
+                      return GestureDetector(
+                        onTap: () {
+                          _showLeaveDetailsDialog(context, leave);
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 4.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    leave['name']!,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(leave['appliedOn']!),
+                                ],
                               ),
-                            ),
-                            const Divider(),
-                          ],
+                              const SizedBox(height: 4.0),
+                              Text("Duration: ${leave['duration']}"),
+                              Text("Leave Type: ${leave['type']}"),
+                              Text("Number of Days: ${leave['days']}"),
+                              Text("Reason: ${leave['reason']}"),
+                              Text(
+                                "Status: ${leave['status']}",
+                                style: TextStyle(
+                                  color: leave['statusColor'] == 'green'
+                                      ? Colors.green
+                                      : Colors.orange,
+                                ),
+                              ),
+                              const Divider(),
+                            ],
+                          ),
                         ),
                       );
                     },
@@ -285,47 +291,51 @@ class LeaveEmplpoyee extends StatelessWidget {
   }
 }
 
-void _showAddLeaveDialog(BuildContext context) {
-  TextEditingController startDateController = TextEditingController();
-  TextEditingController endDateController = TextEditingController();
-  TextEditingController numberOfDaysController = TextEditingController();
+void _showLeaveDetailsDialog(BuildContext context, Map<String, String> leave) {
   TextEditingController reasonController = TextEditingController();
-  String leaveType = "Compensatory Off"; // Default selected value
-
   showDialog(
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: const Text("Leave Request"),
+        title: Text("Leave Details for ${leave['name']}"),
         content: SingleChildScrollView(
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildDateField("Start Date", startDateController, context),
-              const SizedBox(height: 10),
-              _buildDateField("End Date", endDateController, context),
-              const SizedBox(height: 10),
-              _buildDropdownField("Leave Type", leaveType, (newValue) {
-                leaveType = newValue!;
-              }),
-              const SizedBox(height: 10),
-              _buildNumberField("Number of Days", numberOfDaysController),
+              Text("Applied On: ${leave['appliedOn']}"),
+              Text("Duration: ${leave['duration']}"),
+              Text("Leave Type: ${leave['type']}"),
+              Text("Number of Days: ${leave['days']}"),
+              Text("Reason: ${leave['reason']}"),
+              Text(
+                "Status: ${leave['status']}",
+                style: TextStyle(
+                  color: leave['statusColor'] == 'green'
+                      ? Colors.green
+                      : Colors.orange,
+                ),
+              ),
               const SizedBox(height: 10),
               _buildTextField("Reason", reasonController),
             ],
           ),
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text("Cancel"),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text(
+              "Reject",
+              style: TextStyle(color: Colors.red),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
-              // Handle form submission
               Navigator.of(context).pop();
             },
-            child: const Text("Submit"),
+            child: const Text("Approve", style: TextStyle(color: Colors.green)),
           ),
         ],
       );
@@ -333,8 +343,100 @@ void _showAddLeaveDialog(BuildContext context) {
   );
 }
 
+void _showAddLeaveDialog(BuildContext context) {
+  TextEditingController startDateController = TextEditingController();
+  TextEditingController endDateController = TextEditingController();
+  TextEditingController numberOfDaysController = TextEditingController();
+  TextEditingController reasonController = TextEditingController();
+  String leaveType = "Compensatory Off";
+  String? attachedFile;
+
+  showDialog(
+    context: context,
+    builder: (context) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return AlertDialog(
+            title: const Text("Leave Request"),
+            content: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDropdownField("Leave Type", leaveType, (newValue) {
+                    setState(() {
+                      leaveType = newValue!;
+                    });
+                  }),
+                  const SizedBox(height: 10),
+                  _buildDateField("Start Date", startDateController, context),
+                  const SizedBox(height: 10),
+                  _buildDateField("End Date", endDateController, context),
+                  const SizedBox(height: 10),
+                  _buildNumberField("Number of Days", numberOfDaysController),
+                  const SizedBox(height: 10),
+                  _buildTextField("Reason", reasonController),
+                  const SizedBox(height: 10),
+                  TextButton.icon(
+                    onPressed: () async {
+                      FilePickerResult? result =
+                          await FilePicker.platform.pickFiles();
+                      if (result != null) {
+                        setState(() {
+                          attachedFile = result.files.single.path!;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                'File selected: ${result.files.single.name}'),
+                          ),
+                        );
+                      }
+                    },
+                    icon: const Icon(Icons.attach_file),
+                    label: const Text("Attach File"),
+                  ),
+                  if (attachedFile != null)
+                    Flexible(
+                      child: Text(
+                        'Attached: ${attachedFile!.split('/').last}',
+                        style: const TextStyle(fontSize: 14),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  "Cancel",
+                  style: TextStyle(color: Colors.orange),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  print('File attached: $attachedFile');
+                  Navigator.of(context).pop();
+                },
+                child: const Text(
+                  "Submit",
+                  style: TextStyle(color: Colors.green),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+
 Widget _buildTextField(String label, TextEditingController controller) {
   return TextField(
+    maxLines: 4,
     controller: controller,
     decoration: InputDecoration(
       labelText: label,

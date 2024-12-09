@@ -1,3 +1,4 @@
+import 'package:ev_homes/core/models/meetingSummary.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +25,15 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _projectController = TextEditingController();
   OurProject? _selectedProject;
-
+  String? selectedPurpose;
+  String? selectedPlace;
   bool isLoading = true;
+
+  final purposes = ['Pricing', 'Booking', 'Negotiation', 'Payment'];
+  final places = {
+    'Nine Square Office': 'https://maps.app.goo.gl/T7q46CqTnUFwSHc28',
+    'Head Office': 'https://maps.app.goo.gl/bkMsGhfcYfcdk3Cm9'
+  };
 
   Future<void> _onRefresh() async {
     final settingProvider = Provider.of<SettingProvider>(
@@ -101,6 +109,28 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
     widget.onDateTimeChanged(_selectedDateTime);
   }
 
+  void _handleSubmit() async {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+
+    String dateString = _selectedDateTime!.toIso8601String();
+
+    final newMeeting = MeetingSummary(
+        date: dateString,
+        place: selectedPlace!,
+        purpose: selectedPurpose!,
+        customer: settingProvider.loggedCustomer);
+    Map<String, dynamic> meetingSummary = newMeeting.toMap();
+    if (newMeeting.customer != null) {
+      meetingSummary['customer'] = newMeeting.customer!.id;
+    }
+    try {
+      await settingProvider.addMeetingSummary(meetingSummary);
+    } catch (e) {
+      // print(e);
+    }
+  }
+
   void _showConfirmationDialog() {
     final settingProvider =
         Provider.of<SettingProvider>(context, listen: false);
@@ -134,6 +164,62 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
                     labelText: 'Name',
                     border: OutlineInputBorder(),
                   ),
+                ),
+                const SizedBox(height: 10),
+
+                DropdownButtonFormField<String>(
+                  value: selectedPurpose,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedPurpose = newValue;
+                    });
+                  },
+                  items: purposes.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  decoration: const InputDecoration(
+                    labelText: 'Purpose',
+                    border: OutlineInputBorder(),
+                    // prefixIcon: Icon(Icons.note),
+                  ),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a purpose';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 24),
+
+                // Place Dropdown
+                DropdownButtonFormField<String>(
+                  value: selectedPlace,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedPlace = newValue;
+                    });
+                  },
+                  items:
+                      places.keys.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  decoration: const InputDecoration(
+                    labelText: 'Select Place',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.location_on),
+                  ),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a place';
+                    }
+                    return null;
+                  },
                 ),
                 const SizedBox(height: 10),
                 DropdownButtonFormField<OurProject>(
@@ -196,6 +282,7 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
                   // name,
                   // project,
                 );
+                _handleSubmit();
                 Navigator.of(context).pop(); // Close the dialog
               },
               child: const Text('Confirm'),

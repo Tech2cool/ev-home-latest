@@ -1,5 +1,8 @@
+import 'package:ev_homes/core/models/our_project.dart';
+import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class DigitalDateTimePicker extends StatefulWidget {
   final DateTime initialDateTime;
@@ -18,11 +21,41 @@ class DigitalDateTimePicker extends StatefulWidget {
 class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
   late DateTime _selectedDateTime;
   bool _is24HourFormat = true;
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _projectController = TextEditingController();
+  OurProject? _selectedProject;
+
+  bool isLoading = true;
+
+  Future<void> _onRefresh() async {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+
+    try {
+      setState(() {
+        isLoading = true;
+      });
+
+      // Execute all three futures concurrently
+      await Future.wait([
+        settingProvider.getOurProject(),
+        // settingProvider.getPayment(),
+      ]);
+    } catch (e) {
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _selectedDateTime = widget.initialDateTime;
+    _onRefresh();
   }
 
   void _selectDate() async {
@@ -66,6 +99,117 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
           _selectedDateTime.add(Duration(hours: hours, minutes: minutes));
     });
     widget.onDateTimeChanged(_selectedDateTime);
+  }
+
+  void _showConfirmationDialog() {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    // print(projects);
+    String formattedDateTime =
+        DateFormat('dd-MM-yyyy HH:mm').format(_selectedDateTime);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: TextEditingController(
+                      text:
+                          formattedDateTime), // Display the formatted date and time
+                  readOnly: true, // Make it read-only
+                  decoration: const InputDecoration(
+                    labelText: 'Selected Date and Time',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                DropdownButtonFormField<OurProject>(
+                  value: projects.contains(_selectedProject)
+                      ? _selectedProject
+                      : null,
+                  decoration: InputDecoration(
+                    labelText: 'Select Project',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  items: projects.map((project) {
+                    return DropdownMenuItem<OurProject>(
+                      value: project,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              project.name ?? "",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedProject = newValue;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a Project';
+                    }
+                    return null;
+                  },
+                  isExpanded: true,
+                ),
+                // TextField(
+                //   controller: _projectController,
+                //   decoration: const InputDecoration(
+                //     labelText: 'Project',
+                //     border: OutlineInputBorder(),
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // String name = _nameController.text;
+                // String project = _projectController.text;
+                widget.onDateTimeChanged(
+                  _selectedDateTime,
+                  // name,
+                  // project,
+                );
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Confirm'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -198,7 +342,10 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
           ),
           const SizedBox(height: 24),
           ElevatedButton(
-            onPressed: () => widget.onDateTimeChanged(_selectedDateTime),
+            onPressed: () => {
+              widget.onDateTimeChanged(_selectedDateTime),
+              _showConfirmationDialog()
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.indigo,
               padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 13),

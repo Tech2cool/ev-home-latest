@@ -26,10 +26,12 @@ import 'package:ev_homes/sections/login_sections/admin_login_section.dart';
 import 'package:ev_homes/wrappers/cp_home_wrapper.dart';
 import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 final dio = Dio();
+const storage = FlutterSecureStorage();
 
 class SettingProvider extends ChangeNotifier {
   final ApiService _apiService = ApiService();
@@ -892,7 +894,11 @@ class SettingProvider extends ChangeNotifier {
   Future<void> logoutUser(BuildContext context) async {
     try {
       await SharedPrefService.deleteUser();
+      await storage.deleteAll();
+
       loggedCustomer = null;
+      loggedAdmin = null;
+      loggedChannelPartner = null;
     } catch (e) {
       // Optionally handle the error if needed
       // print("Error during logout: $e");

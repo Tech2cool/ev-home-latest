@@ -136,6 +136,13 @@ class SiteVisitInfoPage extends StatelessWidget {
               _buildPdfNamedItem('Closing manager', visit.closingManager != null ? "${visit.closingManager?.firstName ?? ''} ${visit.closingManager?.lastName}" : "NA"),
               _buildPdfNamedItem('Status', visit.verified ? "Verified" : "Not verified"),
               _buildPdfNamedItem('AttendedBy', visit.closingTeam.map((ele) => "${ele.firstName} ${ele.lastName}").join(", ")),
+             _buildPdfSection('Feedback:-'),
+              pw.Container(
+                height: 100,
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(color: PdfColors.black),
+                ),
+              )
             ],
           );
         },

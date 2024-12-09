@@ -20,9 +20,7 @@ import 'package:ev_homes/core/models/task.dart';
 import 'package:ev_homes/core/models/team_section.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/core/services/shared_pref_service.dart';
-import 'package:ev_homes/pages/admin_pages/admin_forms/add_channer_partner_page.dart';
 import 'package:ev_homes/pages/login_pages/customer_otp_verification_page.dart';
-import 'package:ev_homes/sections/login_sections/admin_login_section.dart';
 import 'package:ev_homes/wrappers/cp_home_wrapper.dart';
 import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
 import 'package:flutter/material.dart';
@@ -242,7 +240,7 @@ class SettingProvider extends ChangeNotifier {
 
   Future<void> updateTaskStatus(String id, String status,
       [String remark = ""]) async {
-    final emps = await _apiService.updateTask(id, {
+    await _apiService.updateTask(id, {
       "status": status,
       "remark": remark,
     });
@@ -925,7 +923,7 @@ class SettingProvider extends ChangeNotifier {
   }
 
   Future<void> updateLeadById(String id, Map<String, dynamic> data) async {
-    final resp = await _apiService.leadUpdateById(id, data);
+    await _apiService.leadUpdateById(id, data);
     // if (resp == null) return;
     // await leads();
     notifyListeners();
@@ -956,9 +954,7 @@ class SettingProvider extends ChangeNotifier {
   }
 
   Future<PostSaleLead?> addPostSaleLead(Map<String, dynamic> data) async {
-    print("started adding");
     final resp = await _apiService.addPostSaleLead(data);
-    print("end adding");
     // if (resp == null) return null;
     await getPostSaleLead();
     notifyListeners();

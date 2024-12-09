@@ -417,6 +417,7 @@ class _FollowupPageState extends State<FollowupPage> {
                         "Error: Logged admin or admin ID is null",
                       );
                     }
+                    Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.indigo, // Button background color

@@ -7,6 +7,7 @@ import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_postsale_lead.dart';
+import 'package:ev_homes/pages/admin_pages/followup_page.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -555,6 +556,8 @@ class _SalesManagerLeadDetailsPageState
                     case 'status':
                       // Handle status logic if needed
                       break;
+                    case 'follow_up':
+                      break;
                   }
                 },
                 itemBuilder: (BuildContext context) {
@@ -630,6 +633,19 @@ class _SalesManagerLeadDetailsPageState
                           ),
                         ],
                       ),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'follow_up',
+                      child: const Text('Follow-Up'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                FollowupPage(leadId: widget.lead.id),
+                          ),
+                        );
+                      },
                     ),
                   ];
                 },

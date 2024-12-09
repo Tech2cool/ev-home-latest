@@ -93,6 +93,7 @@ class _InventoryPage1State extends State<InventoryPage1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,89 +271,108 @@ class FloorContent extends StatelessWidget {
             .toList() ??
         []
       ..sort();
+    final reversedFloors = floors.reversed.toList();
 
-    return ListView.builder(
-      itemCount: floors.length,
-      itemBuilder: (context, index) {
-        int floor = floors[index]; // Get floor number
-        final flats = (selectedProject?.flatList ?? [])
-            .where((flat) => flat.floor == floor)
-            .toList()
-          ..sort((a, b) => a.floor!.compareTo(b.floor!));
-
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 7.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Floor Label
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                child: Container(
-                  width: 80,
-                  alignment: Alignment.center,
+    return SizedBox(
+      height: MediaQuery.sizeOf(context).height * 0.75, // Limit height
+      child: SingleChildScrollView(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Fixed Floor Labels
+            Column(
+              children: List.generate(reversedFloors.length, (i) {
+                int floor = reversedFloors[i];
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 11.0),
                   child: Container(
-                    color: Colors.grey,
-                    child: Text(
-                      'Floor $floor',
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    width: 80,
+                    height: 40,
+                    alignment: Alignment.center,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(18),
+                          bottomRight: Radius.circular(18),
+                        ),
+                      ),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'Floor $floor',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
+                );
+              }),
+            ),
+            // Scrollable Flats
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(reversedFloors.length, (i) {
+                    int floor = reversedFloors[i];
+                    final flats = (selectedProject?.flatList ?? [])
+                        .where((flat) => flat.floor == floor)
+                        .toList()
+                      ..sort((a, b) => a.floor!.compareTo(b.floor!));
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 7.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: List.generate(flats.length, (itemIndex) {
+                          final flat = flats[itemIndex];
+                          String content = _generateContent(flat, itemIndex);
+                          return Container(
+                            width: 70,
+                            height: 40,
+                            alignment: Alignment.center,
+                            margin: const EdgeInsets.all(4.0),
+                            decoration: BoxDecoration(
+                              color: flat.occupied == true
+                                  ? Colors.redAccent
+                                  : const Color(0xff00cf9f),
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                            child: Text(
+                              content,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    );
+                  }),
                 ),
               ),
-              // Flats - Horizontal Scroll
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: List.generate(flats.length, (itemIndex) {
-                      final flat = flats[itemIndex];
-                      String content = _generateContent(flat, itemIndex);
-                      return Container(
-                        width: 70, // Width of each flat
-                        height: 40, // Height of each flat
-                        alignment: Alignment.center,
-                        margin: const EdgeInsets.all(4.0),
-                        decoration: BoxDecoration(
-                          color: flat.occupied == true
-                              ? Colors.redAccent
-                              : const Color(0xff00cf9f),
-                          borderRadius: BorderRadius.circular(8.0),
-                        ),
-                        child: Text(
-                          content,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      );
-                    }),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
+            ),
+          ],
+        ),
+      ),
     );
   }
 
   String _generateContent(Flat flat, int itemIndex) {
     switch (selectedView) {
       case 'Flat No':
-        // Return flat number
         return '${flat.floor}0${itemIndex + 1}';
       case 'BHK':
-        // Return BHK type
         return itemIndex % 2 == 0 ? '2BHK' : '3BHK';
       case 'Area':
-        // Return carpet area
-        return '${flat.carpetArea} Sqft'; // Assuming carpetArea is a property of Flat
+        return '${flat.carpetArea} Sqft';
       default:
         return '';
     }

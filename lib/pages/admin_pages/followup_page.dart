@@ -98,7 +98,7 @@ class _FollowupPageState extends State<FollowupPage> {
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
-                  labelText: 'Lead Status',
+                  labelText: 'Lead Stage',
                   labelStyle:
                       const TextStyle(color: Colors.indigo), // Label text color
                   border: OutlineInputBorder(

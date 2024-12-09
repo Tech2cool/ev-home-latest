@@ -12,7 +12,7 @@ class LoadingSquare extends StatelessWidget {
         child: Lottie.asset(
           width: 200,
           height: 200,
-          "assets/animations/loading_square.json",
+          "assets/animations/loading_anim_4.json",
         ),
       ),
     );

@@ -95,12 +95,12 @@ class _InventoryPage1State extends State<InventoryPage1> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('EV 10 Marina Bay'),
+            Text(selectedTower?.name ?? ""),
             Text(
-              'Vashi',
+              selectedTower?.locationName ?? "",
               style: TextStyle(fontSize: 12, color: Colors.black),
             ),
           ],

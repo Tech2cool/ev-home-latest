@@ -66,6 +66,12 @@ class _TaskDetailsPageState extends State<TaskDetailsPage> {
                             ),
                             const SizedBox(height: 8),
                             MyTextCard(
+                              heading: "Assign To: ",
+                              value:
+                                  "${widget.task.assignTo?.firstName ?? ""}  ${widget.task.assignTo?.lastName ?? ""}",
+                            ),
+                            const SizedBox(height: 8),
+                            MyTextCard(
                               heading: "Assign by: ",
                               value:
                                   "${widget.task.assignBy?.firstName ?? ""}  ${widget.task.assignBy?.lastName ?? ""}",
@@ -329,7 +335,7 @@ class _TaskDialogState extends State<TaskDialog> {
           TextField(
             controller: remarkController,
             decoration: InputDecoration(
-              labelText: "Remark (e.g., Address)",
+              labelText: "Remark",
               border: OutlineInputBorder(),
             ),
           ),
@@ -362,6 +368,7 @@ class _TaskDialogState extends State<TaskDialog> {
                   await settingProvider.updateTaskStatus(
                     widget.id,
                     selectedTask!,
+                    remark,
                   );
                   Navigator.pop(context);
                 } else {

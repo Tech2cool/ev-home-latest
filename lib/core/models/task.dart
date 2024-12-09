@@ -11,6 +11,8 @@ class Task {
   final String? name;
   final String? details;
   final String? type;
+  final String? remark;
+
   final bool completed;
   final DateTime? completedDate;
   final DateTime? deadline;
@@ -22,6 +24,7 @@ class Task {
     this.lead,
     this.visit,
     this.booking,
+    this.remark,
     required this.name,
     required this.details,
     required this.type,
@@ -44,6 +47,7 @@ class Task {
       name: json['name'],
       details: json['details'],
       type: json['type'],
+      remark: json['remark'],
       completed: json['completed'] ?? false,
       completedDate: json['completedDate'] != null
           ? DateTime.parse(json['completedDate'])
@@ -56,14 +60,15 @@ class Task {
   // Method for converting a Task object to JSON
   Map<String, dynamic> toMap() {
     return {
-      'assignTo': assignTo,
-      'assignBy': assignBy,
+      'assignTo': assignTo?.id,
+      'assignBy': assignBy?.id,
       'lead': lead,
       'visit': visit,
       'booking': booking,
       'name': name,
       'details': details,
       'type': type,
+      'remark': remark,
       'completed': completed,
       'completedDate': completedDate?.toIso8601String(),
     };

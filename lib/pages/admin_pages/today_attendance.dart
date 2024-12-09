@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 class DailyAttendanceScreen extends StatelessWidget {
   final currentDate = DateFormat('dd MMMM yyyy').format(DateTime.now());
 
-  // Data for all categories
   final List<Map<String, String>> presentData = [
     {
       'name': 'Akash Gawande',

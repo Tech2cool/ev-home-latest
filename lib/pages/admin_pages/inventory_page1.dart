@@ -1,3 +1,4 @@
+import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:provider/provider.dart';
 class InventoryPage1 extends StatefulWidget {
   final Function(String) onButtonPressed;
 
-  const InventoryPage1({required this.onButtonPressed});
+  const InventoryPage1({super.key, required this.onButtonPressed});
   @override
   _InventoryPage1State createState() => _InventoryPage1State();
 }
@@ -92,73 +93,79 @@ class _InventoryPage1State extends State<InventoryPage1> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade100,
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(selectedTower?.name ?? ""),
-            Text(
-              selectedTower?.locationName ?? "",
-              style: TextStyle(fontSize: 12, color: Colors.black),
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Colors.grey.shade100,
+          appBar: AppBar(
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(selectedTower?.name ?? ""),
+                Text(
+                  selectedTower?.locationName ?? "",
+                  style: TextStyle(fontSize: 12, color: Colors.black),
+                ),
+              ],
             ),
-          ],
+          ),
+          body: Column(
+            children: [
+              DropdownSection(
+                onTower: onTower,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildButton('Area', Icons.square_foot),
+                  _buildButton('BHK', Icons.house),
+                  _buildButton('Flat No', Icons.location_city_outlined),
+                ],
+              ),
+              Expanded(
+                child: FloorContent(
+                  selectedView: selectedView,
+                  selectedProject: selectedTower,
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildLegend(
+                      const Color.fromARGB(255, 253, 127, 127), 'Sold'),
+                  _buildLegend(const Color(0xff03cf9e), 'Available'),
+                ],
+              ),
+              const SizedBox(height: 10),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //   children: [
+              //     ElevatedButton.icon(
+              //       onPressed: () {},
+              //       icon: Icon(Icons.phone_in_talk, color: Colors.redAccent),
+              //       label: const Text('Contact Us',
+              //           style: TextStyle(color: Colors.black)),
+              //       style: ElevatedButton.styleFrom(
+              //         foregroundColor: Colors.black,
+              //         backgroundColor: Colors.white,
+              //         side: BorderSide(color: Colors.redAccent, width: 1),
+              //       ),
+              //     ),
+              //     ElevatedButton(
+              //       onPressed: () {},
+              //       style: ElevatedButton.styleFrom(
+              //         backgroundColor: Colors.redAccent,
+              //       ),
+              //       child: const Text('Book Site Visit',
+              //           style: TextStyle(color: Colors.white)),
+              //     ),
+              //   ],
+              // ),
+            ],
+          ),
         ),
-      ),
-      body: Column(
-        children: [
-          DropdownSection(
-            onTower: onTower,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildButton('Area', Icons.square_foot),
-              _buildButton('BHK', Icons.house),
-              _buildButton('Flat No', Icons.location_city_outlined),
-            ],
-          ),
-          Expanded(
-            child: FloorContent(
-              selectedView: selectedView,
-              selectedProject: selectedTower,
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildLegend(const Color.fromARGB(255, 253, 127, 127), 'Sold'),
-              _buildLegend(const Color(0xff03cf9e), 'Available'),
-            ],
-          ),
-          const SizedBox(height: 10),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: [
-          //     ElevatedButton.icon(
-          //       onPressed: () {},
-          //       icon: Icon(Icons.phone_in_talk, color: Colors.redAccent),
-          //       label: const Text('Contact Us',
-          //           style: TextStyle(color: Colors.black)),
-          //       style: ElevatedButton.styleFrom(
-          //         foregroundColor: Colors.black,
-          //         backgroundColor: Colors.white,
-          //         side: BorderSide(color: Colors.redAccent, width: 1),
-          //       ),
-          //     ),
-          //     ElevatedButton(
-          //       onPressed: () {},
-          //       style: ElevatedButton.styleFrom(
-          //         backgroundColor: Colors.redAccent,
-          //       ),
-          //       child: const Text('Book Site Visit',
-          //           style: TextStyle(color: Colors.white)),
-          //     ),
-          //   ],
-          // ),
-        ],
-      ),
+        if (isLoading) const LoadingSquare(),
+      ],
     );
   }
 }
@@ -259,11 +266,11 @@ class FloorContent extends StatelessWidget {
   final String selectedView;
   final OurProject? selectedProject;
 
-  FloorContent({required this.selectedView, this.selectedProject});
+  const FloorContent(
+      {super.key, required this.selectedView, this.selectedProject});
 
   @override
   Widget build(BuildContext context) {
-    final settingProvider = Provider.of<SettingProvider>(context);
     final floors = selectedProject?.flatList
             .map((flat) => flat.floor) // Get all floors
             .whereType<int>() // Ensure non-null and int type

@@ -95,69 +95,72 @@ class _InventoryPage1State extends State<InventoryPage1> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        title: const Column(
+        title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('EV 10 Marina Bay'),
-            Text(
-              'Vashi',
-              style: TextStyle(fontSize: 12, color: Colors.black),
-            ),
+            Text(selectedTower?.name ?? ""),
+            // Text(
+            //   'Vashi',
+            //   style: TextStyle(fontSize: 12, color: Colors.black),
+            // ),
           ],
         ),
       ),
-      body: Column(
-        children: [
-          DropdownSection(
-            onTower: onTower,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildButton('Area', Icons.square_foot),
-              _buildButton('BHK', Icons.house),
-              _buildButton('Flat No', Icons.location_city_outlined),
-            ],
-          ),
-          Expanded(
-            child: FloorContent(
-              selectedView: selectedView,
-              selectedProject: selectedTower,
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: Column(
+          children: [
+            DropdownSection(
+              onTower: onTower,
             ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildLegend(const Color.fromARGB(255, 253, 127, 127), 'Sold'),
-              _buildLegend(const Color(0xff03cf9e), 'Available'),
-            ],
-          ),
-          const SizedBox(height: 10),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: [
-          //     ElevatedButton.icon(
-          //       onPressed: () {},
-          //       icon: Icon(Icons.phone_in_talk, color: Colors.redAccent),
-          //       label: const Text('Contact Us',
-          //           style: TextStyle(color: Colors.black)),
-          //       style: ElevatedButton.styleFrom(
-          //         foregroundColor: Colors.black,
-          //         backgroundColor: Colors.white,
-          //         side: BorderSide(color: Colors.redAccent, width: 1),
-          //       ),
-          //     ),
-          //     ElevatedButton(
-          //       onPressed: () {},
-          //       style: ElevatedButton.styleFrom(
-          //         backgroundColor: Colors.redAccent,
-          //       ),
-          //       child: const Text('Book Site Visit',
-          //           style: TextStyle(color: Colors.white)),
-          //     ),
-          //   ],
-          // ),
-        ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildButton('Area', Icons.square_foot),
+                _buildButton('BHK', Icons.house),
+                _buildButton('Flat No', Icons.location_city_outlined),
+              ],
+            ),
+            Expanded(
+              child: FloorContent(
+                selectedView: selectedView,
+                selectedProject: selectedTower,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildLegend(const Color.fromARGB(255, 253, 127, 127), 'Sold'),
+                _buildLegend(const Color(0xff03cf9e), 'Available'),
+              ],
+            ),
+            const SizedBox(height: 10),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            //   children: [
+            //     ElevatedButton.icon(
+            //       onPressed: () {},
+            //       icon: Icon(Icons.phone_in_talk, color: Colors.redAccent),
+            //       label: const Text('Contact Us',
+            //           style: TextStyle(color: Colors.black)),
+            //       style: ElevatedButton.styleFrom(
+            //         foregroundColor: Colors.black,
+            //         backgroundColor: Colors.white,
+            //         side: BorderSide(color: Colors.redAccent, width: 1),
+            //       ),
+            //     ),
+            //     ElevatedButton(
+            //       onPressed: () {},
+            //       style: ElevatedButton.styleFrom(
+            //         backgroundColor: Colors.redAccent,
+            //       ),
+            //       child: const Text('Book Site Visit',
+            //           style: TextStyle(color: Colors.white)),
+            //     ),
+            //   ],
+            // ),
+          ],
+        ),
       ),
     );
   }
@@ -263,7 +266,7 @@ class FloorContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final settingProvider = Provider.of<SettingProvider>(context);
+    // final settingProvider = Provider.of<SettingProvider>(context);
     final floors = selectedProject?.flatList
             .map((flat) => flat.floor) // Get all floors
             .whereType<int>() // Ensure non-null and int type

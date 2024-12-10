@@ -1390,53 +1390,53 @@ class _SalesManagerLeadDetailsPageState
                 ),
                 const SizedBox(height: 10),
 
-                DropdownButtonFormField<Division>(
-                  value:
-                      divisions.contains(selectedPlace) ? selectedPlace : null,
-                  decoration: InputDecoration(
-                    labelText: 'Select Division',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  items: divisions.map((ele) {
-                    return DropdownMenuItem<Division>(
-                      value: ele,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              ele.division ?? "",
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedPlace = newValue;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Please select a Project';
-                    }
-                    return null;
-                  },
-                  isExpanded: true,
-                ),
+                // DropdownButtonFormField<Division>(
+                //   value:
+                //       divisions.contains(selectedPlace) ? selectedPlace : null,
+                //   decoration: InputDecoration(
+                //     labelText: 'Select Division',
+                //     border: OutlineInputBorder(
+                //       borderRadius: BorderRadius.circular(5),
+                //     ),
+                //   ),
+                //   items: divisions.map((ele) {
+                //     return DropdownMenuItem<Division>(
+                //       value: ele,
+                //       child: Row(
+                //         children: [
+                //           Expanded(
+                //             child: Text(
+                //               ele.division ?? "",
+                //               overflow: TextOverflow.ellipsis,
+                //               maxLines: 1,
+                //             ),
+                //           ),
+                //           const SizedBox(width: 4),
+                //         ],
+                //       ),
+                //     );
+                //   }).toList(),
+                //   onChanged: (newValue) {
+                //     setState(() {
+                //       selectedPlace = newValue;
+                //     });
+                //   },
+                //   validator: (value) {
+                //     if (value == null) {
+                //       return 'Please select a Project';
+                //     }
+                //     return null;
+                //   },
+                //   isExpanded: true,
+                // ),
 
-                const SizedBox(height: 10),
+                // const SizedBox(height: 10),
                 DropdownButtonFormField<OurProject>(
                   value: projects.contains(_selectedProject)
                       ? _selectedProject
                       : null,
                   decoration: InputDecoration(
-                    labelText: 'Select Project',
+                    labelText: 'Select Location',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(5),
                     ),

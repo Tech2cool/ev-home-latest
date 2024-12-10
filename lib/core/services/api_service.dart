@@ -32,7 +32,9 @@ const storage = FlutterSecureStorage();
 
 // final dio = Dio();
 
+
 const baseUrl = "http://192.168.1.167:8082";
+
 // const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
@@ -1632,10 +1634,15 @@ class ApiService {
       '/meeting-add',
       data: data,
     );
+    // print(response);
+    print("pass1");
     if (response.data['code'] != 200) {
+      print(response.data['message']);
       Helper.showCustomSnackBar(response.data['message']);
       return null;
     }
+    print(response.data);
+    print("pass2");
     Helper.showCustomSnackBar(response.data['message'], Colors.green);
     // return null;
     return MeetingSummary.fromMap(response.data['data']);

@@ -7,6 +7,7 @@ import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_postsale_lead.dart';
+import 'package:ev_homes/pages/admin_pages/admin_forms/add_site_visit_form_page.dart';
 import 'package:ev_homes/pages/admin_pages/followup_page.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_details_page.dart';
 import 'package:flutter/material.dart';
@@ -110,148 +111,6 @@ class _ClosingManagerLeadDetailsPageState
       // );
     }
   }
-
-  // void _showNotificationPreview() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return Dialog(
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(12.0),
-  //         ),
-  //         child: SingleChildScrollView(
-  //           child: Padding(
-  //             padding: const EdgeInsets.all(16),
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Row(
-  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                   children: [
-  //                     Row(
-  //                       children: [
-  //                         Container(
-  //                           decoration: BoxDecoration(
-  //                             shape: BoxShape.circle,
-  //                             color: Colors.indigo[600],
-  //                           ),
-  //                           padding: const EdgeInsets.all(8),
-  //                           child: const Icon(
-  //                             Icons.notifications,
-  //                             color: Colors.white,
-  //                             size: 12,
-  //                           ),
-  //                         ),
-  //                         const SizedBox(width: 8),
-  //                         const Text(
-  //                           'EV Home',
-  //                           style: TextStyle(
-  //                             fontSize: 16,
-  //                             fontWeight: FontWeight.bold,
-  //                           ),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                     IconButton(
-  //                       icon: const Icon(Icons.arrow_drop_down),
-  //                       onPressed: () {
-  //                         Navigator.pop(context);
-  //                       },
-  //                     ),
-  //                   ],
-  //                 ),
-  //                 const SizedBox(height: 16),
-  //                 Padding(
-  //                   padding: const EdgeInsets.only(left: 32.0),
-  //                   child: Text(
-  //                     _titleController.text,
-  //                     style: const TextStyle(
-  //                       fontSize: 16,
-  //                       fontWeight: FontWeight.bold,
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 const SizedBox(height: 8),
-  //                 Padding(
-  //                   padding: const EdgeInsets.only(left: 32.0),
-  //                   child: Text(
-  //                     _notificationController.text,
-  //                     style: const TextStyle(fontSize: 16),
-  //                   ),
-  //                 ),
-  //                 const SizedBox(height: 8),
-  //                 if (_selectedImages.isNotEmpty)
-  //                   Padding(
-  //                     padding: const EdgeInsets.only(left: 32.0),
-  //                     child: SizedBox(
-  //                       height: 150,
-  //                       child: ListView.builder(
-  //                         scrollDirection: Axis.horizontal,
-  //                         itemCount: _selectedImages.length,
-  //                         itemBuilder: (context, index) {
-  //                           return Padding(
-  //                             padding: const EdgeInsets.only(right: 8),
-  //                             child: ClipRRect(
-  //                               borderRadius: BorderRadius.circular(12),
-  //                               child: Container(
-  //                                 decoration: BoxDecoration(
-  //                                   boxShadow: [
-  //                                     BoxShadow(
-  //                                       color: Colors.grey.withOpacity(0.6),
-  //                                       offset: const Offset(3, 3),
-  //                                       blurRadius: 8,
-  //                                       spreadRadius: 3,
-  //                                     ),
-  //                                   ],
-  //                                 ),
-  //                                 child: Image.file(
-  //                                   File(_selectedImages[index].path),
-  //                                   width: 250,
-  //                                   height: 400,
-  //                                   fit: BoxFit.fill,
-  //                                 ),
-  //                               ),
-  //                             ),
-  //                           );
-  //                         },
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 const SizedBox(height: 16),
-  //                 // Show preview section if _isPreviewVisible is true
-  //                 if (_isPreviewVisible)
-  //                   Padding(
-  //                     padding: const EdgeInsets.all(16),
-  //                     child: Column(
-  //                       children: [
-  //                         Text(
-  //                           'Preview Notification',
-  //                           style: TextStyle(
-  //                             fontSize: 18,
-  //                             fontWeight: FontWeight.bold,
-  //                           ),
-  //                         ),
-  //                         const SizedBox(height: 16),
-  //                         Text(
-  //                           'Title: ${_titleController.text}',
-  //                           style: const TextStyle(fontSize: 16),
-  //                         ),
-  //                         const SizedBox(height: 8),
-  //                         Text(
-  //                           'Notification: ${_notificationController.text}',
-  //                           style: const TextStyle(fontSize: 16),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
   void _showAssignTaskDialog(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(
@@ -556,11 +415,6 @@ class _ClosingManagerLeadDetailsPageState
                     case 'assign_tasks':
                       _showAssignTaskDialog(context);
                       break;
-                    case 'status':
-                      // Handle status logic if needed
-                      break;
-                    case 'follow_up':
-                      break;
                   }
                 },
                 itemBuilder: (BuildContext context) {
@@ -595,18 +449,50 @@ class _ClosingManagerLeadDetailsPageState
                             value: selectedStatus,
                             underline: SizedBox.shrink(),
                             onChanged: (value) async {
-                              if (value == "Visited") {
-                                await ApiService()
-                                    .updateLeadStatus(widget.lead.id, {
-                                  "status": "visited",
-                                });
-                                Navigator.of(context).pop();
-                              } else if (value == "Revisited") {
-                                await ApiService()
-                                    .updateLeadStatus(widget.lead.id, {
-                                  "status": "revisited",
-                                });
-                                Navigator.of(context).pop();
+                              if (value == "visited") {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => AddSiteVisitFormPage(
+                                      lead: widget.lead,
+                                      status: "visit",
+                                    ),
+                                  ),
+                                );
+                                // await ApiService()
+                                //     .updateLeadStatus(widget.lead.id, {
+                                //   "status": "visited",
+                                // });
+                                // Navigator.of(context).pop();
+                              } else if (value == "revisited") {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => AddSiteVisitFormPage(
+                                      lead: widget.lead,
+                                      status: "revisit",
+                                    ),
+                                  ),
+                                );
+
+                                // await ApiService()
+                                //     .updateLeadStatus(widget.lead.id, {
+                                //   "status": "revisited",
+                                // });
+                                // Navigator.of(context).pop();
+                              } else if (value == "virtual-meeting") {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => AddSiteVisitFormPage(
+                                      lead: widget.lead,
+                                      status: "virtual-meeting",
+                                    ),
+                                  ),
+                                );
+
+                                // await ApiService()
+                                //     .updateLeadStatus(widget.lead.id, {
+                                //   "status": "revisited",
+                                // });
+                                // Navigator.of(context).pop();
                               }
 
                               setState(() {
@@ -627,10 +513,11 @@ class _ClosingManagerLeadDetailsPageState
                               });
                             },
                             items: <String>[
-                              'Called',
-                              'Visited',
-                              'Revisited',
-                              'Booked'
+                              'called',
+                              'visited',
+                              'revisited',
+                              'virtual-meeting',
+                              'booked'
                             ].map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -798,12 +685,42 @@ class _ClosingManagerLeadDetailsPageState
                       const SizedBox(
                         height: 12,
                       ),
-                      if (widget.lead.callHistory.isNotEmpty) ...[
+                      const SizedBox(height: 24),
+                      if (widget.lead.cycleHistory.isNotEmpty) ...[
                         const Text(
                           'Follow-up History',
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        ...List.generate(
+                          widget.lead.cycleHistory.length,
+                          (i) {
+                            final appl = widget.lead.cycleHistory[i];
+                            return CustomTimelineTile(
+                              title: appl.teamLeader != null
+                                  ? "${appl.teamLeader?.firstName ?? ''} ${appl.teamLeader?.lastName ?? ''}"
+                                  : "NA",
+                              date:
+                                  "${Helper.formatDate(appl.startDate?.toString() ?? '')} to ${Helper.formatDate(appl.validTill?.toString() ?? '')}",
+                              description: appl.stage ?? "NA",
+                              color: Colors.red.withOpacity(0.8),
+                              isFirst: i == 0,
+                              isLast: i == widget.lead.callHistory.length - 1,
+                            );
+                          },
+                        ),
+                      ],
+                      if (widget.lead.callHistory.isNotEmpty) ...[
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                          child: Text(
+                            'Follow-up History',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -811,35 +728,19 @@ class _ClosingManagerLeadDetailsPageState
                           widget.lead.callHistory.length,
                           (i) {
                             final appl = widget.lead.callHistory[i];
-                            return Card(
-                              margin: const EdgeInsets.only(bottom: 8),
-                              child: ListTile(
-                                leading: const CircleAvatar(
-                                  child: Icon(Icons.calendar_today),
-                                ),
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      appl.caller != null
-                                          ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
-                                          : "NA",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      Helper.formatDate(
-                                          appl.callDate?.toString() ?? ''),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                                subtitle: Text(
-                                  appl.remark ?? "NA",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: CustomTimelineTile(
+                                title: appl.caller != null
+                                    ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
+                                    : "NA",
+                                date: Helper.formatDate(
+                                    appl.callDate?.toString() ?? ''),
+                                description: "${appl.remark}\n${appl.feedback}",
+                                color: Colors.red.withOpacity(0.8),
+                                isFirst: i == 0,
+                                isLast: i == widget.lead.callHistory.length - 1,
                               ),
                             );
                           },
@@ -1016,7 +917,7 @@ class _ClosingManagerLeadDetailsPageState
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
@@ -1026,12 +927,31 @@ class _ClosingManagerLeadDetailsPageState
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Send Notification',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => _onPressedSendNotification(),
+                        icon: const Icon(Icons.arrow_back),
+                      ),
+                      const Text(
+                        'Send Notification',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Text(
+                    'Send Notification',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               TextField(
@@ -1103,10 +1023,9 @@ class _ClosingManagerLeadDetailsPageState
                         }
                       }
 
-                      //TODO:Send Notification
                       Map<String, dynamic> data = {
                         "title": _titleController.text,
-                        "message": _notificationController,
+                        "message": _notificationController.text,
                         "image": imageUrl,
                         "leadRef": widget.lead.id,
                         "templateName": _templateController.text,

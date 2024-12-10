@@ -1,20 +1,26 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/employee.dart';
+import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/models/site_visit.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:multi_dropdown/multi_dropdown.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 import 'package:provider/provider.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 
 class AddSiteVisitFormPage extends StatefulWidget {
-  const AddSiteVisitFormPage({super.key});
+  final Lead? lead;
+  final String? status;
+  const AddSiteVisitFormPage({super.key, this.lead, this.status});
 
   @override
   State<AddSiteVisitFormPage> createState() => _AddSiteVisitFormPageState();
@@ -47,6 +53,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
       MultiSelectController<String>();
   MultiSelectController<Employee> multiselectController2 =
       MultiSelectController<Employee>();
+  final ImagePicker imagePicker = ImagePicker();
 
   Timer? _periodicTimer;
   int _counter = 10;
@@ -78,47 +85,38 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   ];
   bool resendPass = false;
   String? _selectedSource;
-  Employee? _selectedClosingManger;
   String? selectedVisit;
   Employee? _selectedSeniorClosingManager;
-  Employee? _selectedSalesManager;
   List<Employee> _selectedSalesManagers1 = [];
-  Employee? _selectedTeamLeader;
   final List myList = const ['Ev 9 Square', 'Ev heart city', 'Marina Bay'];
-  // List<String> selectedProject = [];
   List<String> selectedRequirement = [];
   List<String> listofSource = ['Walk-in', 'CP', 'Ref'];
-  List<String> listofType = ['visit', 'revisit'];
+  List<String> listofType = ['visit', 'revisit', "virtual-meeting"];
   Employee? _selectedDataEntryUser;
-  String? selectedProj;
+  OurProject? selectedProj;
+  File? selectedProof;
 
   List<OurProject> selectedProject = [];
-  // String? selectedProj;
-
-  // List of projects for the dropdown
-  final List<String> projects = [
-    '10 Marina Bay',
-    '9 Square',
-  ];
-  // final List<String> assignnames = [
-  //   'Jaspreet Arora',
-  //   'Harshal Kokate',
-  //   'Ricky Mane',
-  //   'Deepak Karki'
+  // final List<String> projects = [
+  //   '10 Marina Bay',
+  //   '9 Square',
   // ];
   String? selectedassignName;
-  // final Map<String, List<String>> subordinatesassignnames = {
-  //   'Jaspreet Arora': ['John Doe', 'Jane Smith', 'Sam Wilson', 'Alice Brown'],
-  //   'Harshal Kokate': ['Tom Hardy', 'Jerry Lin', 'Sarah Connor', 'Bruce Wayne'],
-  //   'Ricky Mane': ['Clark Kent', 'Diana Prince', 'Peter Parker', 'Tony Stark'],
-  //   'Deepak Karki': [
-  //     'Steve Rogers',
-  //     'Natasha Romanoff',
-  //     'Wanda Maximoff',
-  //     'Stephen Strange'
-  //   ],
-  // };
   List<String> selectedsubordinateassignNames = [];
+
+  void onSelectProof() async {
+    final XFile? returnedImage = await imagePicker.pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (returnedImage == null) {
+      return;
+    }
+
+    setState(() {
+      selectedProof = File(returnedImage.path);
+    });
+  }
 
   void startPeriodicTimer() {
     if (_periodicTimer?.isActive == true) {
@@ -216,7 +214,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
         isLoading = true;
       });
       final recievedOtp = await ApiService().sentOtpSiteVisit({
-        "project": selectedProj,
+        "project": selectedProj!.id!,
         "firstName": firstNameController.text,
         "lastName": lastNameController.text,
         "phoneNumber": phoneController.text,
@@ -481,8 +479,21 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
       if (newVisit.dataEntryBy != null) {
         visitMap['dataEntryBy'] = newVisit.dataEntryBy!.id!;
       }
+      if (widget.lead != null) {
+        visitMap['lead'] = widget.lead!.id;
+      }
+      if (selectedProj != null) {
+        visitMap['location'] = selectedProj!.id!;
+      }
 
       try {
+        if (selectedProof != null) {
+          final uShowcaseImage = await ApiService().uploadFile(selectedProof!);
+          if (uShowcaseImage != null) {
+            visitMap['virtualMeetingDoc'] = uShowcaseImage.downloadUrl;
+          }
+        }
+
         await settingProvider.addSiteVisit(visitMap);
       } catch (e) {
         // Helper.showCustomSnackBar("Error Adding Site Visit");
@@ -568,6 +579,15 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
       DateTime.now(),
     );
     _onRefresh();
+    selectedVisit = widget.status;
+    firstNameController.text = widget.lead?.firstName ?? "";
+    lastNameController.text = widget.lead?.lastName ?? "";
+    phoneController.text = widget.lead?.phoneNumber?.toString() ?? "";
+    emailController.text = widget.lead?.email ?? "";
+    addressController.text = widget.lead?.address ?? "";
+    selectedProject = widget.lead?.project ?? [];
+    selectedRequirement = widget.lead?.requirement ?? [];
+    _selectedSeniorClosingManager = widget.lead?.teamLeader;
   }
 
   @override
@@ -704,8 +724,137 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                 ),
                 child: Column(
                   children: [
+                    const SizedBox(
+                      height: 16,
+                    ),
+
+                    Row(
+                      children: [
+                        Expanded(
+                          child: DropdownButtonFormField<String>(
+                            value: selectedVisit,
+                            decoration: InputDecoration(
+                              labelText: 'Select Visit Type',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide:
+                                    const BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                            items: listofType.map((visit) {
+                              return DropdownMenuItem<String>(
+                                value: visit,
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        Helper.capitalize(visit),
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (newValue) {
+                              setState(() {
+                                selectedVisit = newValue;
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please select a Visit Type';
+                              }
+                              return null;
+                            },
+                            isExpanded: true,
+                          ),
+                        ),
+                      ],
+                    ),
+                    if (selectedVisit == "virtual-meeting") ...[
+                      const SizedBox(
+                        height: 16,
+                      ),
+                      Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: Colors.grey.withOpacity(0.4),
+                              ),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 6,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                const Text(
+                                  'Select Virtual meeting Image',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                MaterialButton(
+                                  color: Colors.blue,
+                                  onPressed: onSelectProof,
+                                  child: const Text(
+                                    "Browse",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          if (selectedProof != null) ...[
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 50,
+                                  height: 60,
+                                  child: Image.file(
+                                    selectedProof!,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                const SizedBox(width: 10),
+                                const Text("Selected Image"),
+                                const Spacer(),
+                                IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      selectedProof = null;
+                                    });
+                                  },
+                                  icon: const Icon(
+                                    Icons.cancel,
+                                    color: Colors.red,
+                                  ),
+                                )
+                              ],
+                            ),
+                            const SizedBox(width: 16),
+                          ],
+                        ],
+                      ),
+                    ],
                     const SizedBox(height: 16),
-                    DropdownButtonFormField<String>(
+                    DropdownButtonFormField<OurProject>(
                       decoration: InputDecoration(
                         label: RichText(
                           text: TextSpan(
@@ -739,13 +888,13 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         ),
                       ),
                       value: selectedProj,
-                      items: projects.map((String project) {
-                        return DropdownMenuItem<String>(
+                      items: ourProjects.map((OurProject project) {
+                        return DropdownMenuItem<OurProject>(
                           value: project,
-                          child: Text(project),
+                          child: Text(project.name ?? ""),
                         );
                       }).toList(),
-                      onChanged: (String? newValue) {
+                      onChanged: (OurProject? newValue) {
                         setState(() {
                           selectedProj = newValue;
                         });
@@ -969,15 +1118,15 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                   color: Colors.grey[700],
                                   fontSize: 16,
                                 ),
-                                children: const [
-                                  TextSpan(
-                                    text: '*',
-                                    style: TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ],
+                                // children: const [
+                                //   TextSpan(
+                                //     text: '*',
+                                //     style: TextStyle(
+                                //       color: Colors.red,
+                                //       fontSize: 20,
+                                //     ),
+                                //   ),
+                                // ],
                               ),
                             ),
                             prefixIcon: const Icon(Icons.email),
@@ -1055,61 +1204,6 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                             //     },
                             //   ),
                             // ),
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-
-                        Row(
-                          children: [
-                            Expanded(
-                              child: DropdownButtonFormField<String>(
-                                value: selectedVisit,
-                                decoration: InputDecoration(
-                                  labelText: 'Select Visit Type',
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide:
-                                        const BorderSide(color: Colors.grey),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: const BorderSide(
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                                items: listofType.map((visit) {
-                                  return DropdownMenuItem<String>(
-                                    value: visit,
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            Helper.capitalize(visit),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (newValue) {
-                                  setState(() {
-                                    selectedVisit = newValue;
-                                  });
-                                },
-                                validator: (value) {
-                                  if (value == null) {
-                                    return 'Please select a Visit Type';
-                                  }
-                                  return null;
-                                },
-                                isExpanded: true,
-                              ),
-                            ),
                           ],
                         ),
                         const SizedBox(
@@ -1377,12 +1471,36 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                             ),
                           ],
                         ),
+
                         const SizedBox(
                           height: 16,
                         ),
+
+                        //TODO: select manager
                         Padding(
                           padding: const EdgeInsets.all(5),
-                          child: MultiDropdown<Employee>(
+                          child: MultiSelectDialogField(
+                            searchable: true,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.black,
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            buttonText: Text(" Select Sales Manager"),
+                            searchHint: "Sales Manager",
+                            title: Text("Sales Manager"),
+                            items: salesManager
+                                .map((e) => MultiSelectItem(
+                                    e, "${e.firstName} ${e.lastName}"))
+                                .toList(),
+                            listType: MultiSelectListType.CHIP,
+                            onConfirm: (values) {
+                              _selectedSalesManagers1 = values;
+                            },
+                          ),
+
+                          /*MultiDropdown<Employee>(
                             items: [
                               ...salesManager.map(
                                 (ele) => DropdownItem(
@@ -1449,7 +1567,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                 _selectedSalesManagers1 = selectedItems;
                               });
                             },
-                          ),
+                          ),*/
                         ),
 
                         // Row(

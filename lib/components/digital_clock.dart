@@ -11,10 +11,10 @@ class DigitalDateTimePicker extends StatefulWidget {
   final Function(DateTime) onDateTimeChanged;
 
   const DigitalDateTimePicker({
-    Key? key,
+    super.key,
     required this.initialDateTime,
     required this.onDateTimeChanged,
-  }) : super(key: key);
+  });
 
   @override
   _DigitalDateTimePickerState createState() => _DigitalDateTimePickerState();
@@ -310,7 +310,7 @@ class _DigitalDateTimePickerState extends State<DigitalDateTimePicker> {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Colors.white!, Colors.white!],
+          colors: [Colors.white, Colors.white],
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [

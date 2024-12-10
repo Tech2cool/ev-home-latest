@@ -148,7 +148,8 @@ class _AnlyticEmployeePageState extends State<AnlyticEmployeePage> {
                                 ),
                               );
                             } else if (widget.designation.id ==
-                                "desg-senior-closing-manager") {
+                                    "desg-senior-closing-manager" ||
+                                widget.designation.id == "desg-site-head") {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => ClosingManagerDashboard(

@@ -263,34 +263,51 @@ class _PostsaleexecutiveDashboardState
                     ],
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 12.0,
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => InventoryPage1(
+                                        onButtonPressed: (view) {})));
+                          },
+                          icon: const Icon(
+                            FluentIcons.box_24_regular,
+                            color: Colors.white,
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                          ),
+                          label: const Text(
+                            'Inventory',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 const SizedBox(
                   height: 10,
                 ),
-                Center(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  InventoryPage1(onButtonPressed: (view) {})));
-                    },
-                    icon: const Icon(
-                      FluentIcons.box_24_regular,
-                      color: Colors.white,
-                    ),
-                    label: const Text(
-                      "Inventory",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      textStyle: const TextStyle(fontSize: 16),
-                    ),
-                  ),
-                ),
+
                 const SizedBox(
                   height: 10,
                 ),

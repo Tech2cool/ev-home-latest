@@ -14,65 +14,6 @@ class TaskListPage extends StatefulWidget {
 }
 
 class TaskListPageState extends State<TaskListPage> {
-  // Dummy data for cards
-  final List<Map<String, String>> clientDetails = [
-    // {
-    //   'Client Name': 'Rohan Sharma',
-    //   'Subject': "Call to Client",
-    //   'Task': "Fist Call",
-    //   'Task Details': "Call to Client",
-    //   'Client Phone': '9876543210',
-    //   'Requirement': "2BHK2BHK",
-    //   'Project': "EV 10 Marina Bay, EV 9 Square ",
-    //   'CP Name': "tantanatan",
-    //   'Status': "Pending",
-    // },
-    // {
-    //   'Client Name': 'Priya Gupta',
-    //   'Subject': "Call to Client",
-    //   'Task': "Fist Call",
-    //   'Task Details': "Call to Client",
-    //   'Client Phone': '9123456789',
-    //   'Requirement': "2BHK2BHK",
-    //   'Project': "EV 10 Marina Bay, EV 9 Square ",
-    //   'CP Name': "tantanatan",
-    //   'Status': "Pending",
-    // },
-    // {
-    //   'Client Name': 'Amit Verma',
-    //   'Subject': "Call to Client",
-    //   'Task': "Fist Call",
-    //   'Task Details': "Call to Client",
-    //   'Client Phone': '9988776655',
-    //   'Requirement': "2BHK2BHK",
-    //   'Project': "EV 10 Marina Bay, EV 9 Square ",
-    //   'CP Name': "tantanatan",
-    //   'Status': "Pending",
-    // },
-    // {
-    //   'Client Name': 'Neha Mehta',
-    //   'Subject': "Call to Client",
-    //   'Task': "Fist Call",
-    //   'Task Details': "Call to Client",
-    //   'Client Phone': '9876543211',
-    //   'Requirement': "2BHK2BHK",
-    //   'Project': "EV 10 Marina Bay, EV 9 Square ",
-    //   'CP Name': "tantanatan",
-    //   'Status': "Pending",
-    // },
-    // {
-    //   'Client Name': 'Karan Joshi',
-    //   'Subject': "Call to Client",
-    //   'Task': "Fist Call",
-    //   'Task Details': "Call to Client",
-    //   'Client Phone': '7896541230',
-    //   'Requirement': "2BHK2BHK",
-    //   'Project': "EV 10 Marina Bay, EV 9 Square ",
-    //   'CP Name': "tantanatan",
-    //   'Status': "Pending",
-    // },
-  ];
-
   String searchQuery = '';
   bool isLoading = false;
 
@@ -108,12 +49,6 @@ class TaskListPageState extends State<TaskListPage> {
     final settingProvider = Provider.of<SettingProvider>(context);
     final tasks = settingProvider.tasks;
     // Filtered client list based on search query
-    final filteredClients = clientDetails
-        .where((client) => client['Client Name']!
-            .toLowerCase()
-            .contains(searchQuery.toLowerCase()))
-        .toList();
-
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.type ?? 'First Call Task'),
@@ -142,24 +77,21 @@ class TaskListPageState extends State<TaskListPage> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: const BorderSide(
-                    color: Color.fromARGB(
-                        255, 133, 0, 0), // Set the border color here
-                    width: 2.0, // Set the border width
+                    color: Color.fromARGB(255, 133, 0, 0),
+                    width: 2.0,
                   ),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: const BorderSide(
-                    color: Color.fromARGB(
-                        199, 248, 85, 4), // Set the color when not focused
+                    color: Color.fromARGB(199, 248, 85, 4),
                     width: 2.0,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: const BorderSide(
-                    color: Color.fromARGB(
-                        255, 248, 85, 4), // Color when the field is focused
+                    color: Color.fromARGB(255, 248, 85, 4),
                     width: 2.0,
                   ),
                 ),

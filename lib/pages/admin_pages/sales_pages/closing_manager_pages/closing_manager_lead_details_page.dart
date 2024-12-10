@@ -10,6 +10,7 @@ import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_postsale_lead.dart';
+import 'package:ev_homes/pages/admin_pages/followup_page.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -600,6 +601,8 @@ class _ClosingManagerLeadDetailsPageState
                     case 'status':
                       // Handle status logic if needed
                       break;
+                    case 'follow_up':
+                      break;
                   }
                 },
                 itemBuilder: (BuildContext context) {
@@ -679,6 +682,19 @@ class _ClosingManagerLeadDetailsPageState
                           ),
                         ],
                       ),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'follow_up',
+                      child: const Text('Follow-Up'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                FollowupPage(lead: widget.lead),
+                          ),
+                        );
+                      },
                     ),
                   ];
                 },
@@ -908,87 +924,6 @@ class _ClosingManagerLeadDetailsPageState
                       const SizedBox(
                         height: 12,
                       ),
-                      if (widget.lead.callHistory.isNotEmpty) ...[
-                        const Text(
-                          'Contact History',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        ...List.generate(
-                          widget.lead.callHistory.length,
-                          (i) {
-                            final appl = widget.lead.callHistory[i];
-                            return Card(
-                              margin: const EdgeInsets.only(bottom: 8),
-                              child: ListTile(
-                                leading: const CircleAvatar(
-                                  child: Icon(Icons.calendar_today),
-                                ),
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      appl.caller != null
-                                          ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
-                                          : "NA",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      Helper.formatDate(
-                                          appl.callDate?.toString() ?? ''),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                                subtitle: Text(
-                                  appl.remark ?? "NA",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ] else ...[
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-                          child: Text(
-                            'Contact History',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.grey.shade400),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                              child: Text(
-                                'No Contact History Yet',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
                       const SizedBox(height: 24),
                     ],
                   ),

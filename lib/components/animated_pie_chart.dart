@@ -10,9 +10,8 @@ class AnimatedPieChart extends StatefulWidget {
   final String subtitle;
   final Color visitedColor;
   final Color notVisitedColor;
-
   const AnimatedPieChart({
-    Key? key,
+    super.key,
     required this.visited,
     required this.notVisited,
     required this.title,
@@ -21,17 +20,14 @@ class AnimatedPieChart extends StatefulWidget {
     required this.notSubtitle,
     this.visitedColor = Colors.green,
     this.notVisitedColor = Colors.pink,
-  }) : super(key: key);
-
+  });
   @override
   State<AnimatedPieChart> createState() => _AnimatedPieChartState();
 }
-
 class _AnimatedPieChartState extends State<AnimatedPieChart>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-
   @override
   void initState() {
     super.initState();
@@ -266,12 +262,12 @@ class PieChartPainter extends CustomPainter {
       Canvas canvas, Size size, double visitedAngle, double notVisitedAngle) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = min(size.width / 2, size.height / 2);
-    final particleRadius = 2.0;
+    const particleRadius = 2.0;
 
     final visitedParticlePaint = Paint()..color = visitedColor;
     final notVisitedParticlePaint = Paint()..color = notVisitedColor;
 
-    final particleCount = 50;
+    const particleCount = 50;
     for (var i = 0; i < particleCount; i++) {
       final t = i / particleCount;
       final baseAngle = t * 2 * pi;

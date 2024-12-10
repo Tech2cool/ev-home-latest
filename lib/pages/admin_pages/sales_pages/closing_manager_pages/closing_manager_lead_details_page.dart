@@ -2,8 +2,11 @@ import 'dart:io';
 import 'package:ev_homes/components/digital_clock.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/helper/helper.dart';
+import 'package:ev_homes/core/models/division.dart';
 import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/lead.dart';
+import 'package:ev_homes/core/models/meetingSummary.dart';
+import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_postsale_lead.dart';
@@ -39,6 +42,13 @@ class _ClosingManagerLeadDetailsPageState
   final TextEditingController _notificationController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _templateController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
+  final TextEditingController _projectController = TextEditingController();
+  OurProject? _selectedProject;
+  String? selectedPurpose;
+  Division? selectedPlace;
+  final purposes = ['Pricing', 'Booking', 'Negotiation', 'Payment'];
 
   Future<void> _pickImages() async {
     final List<XFile> images = await _picker.pickMultiImage();
@@ -492,12 +502,41 @@ class _ClosingManagerLeadDetailsPageState
       await settingProvider.getTask(
         settingProvider.loggedAdmin!.id!,
       );
+      await settingProvider.getDivision();
     } catch (e) {
       //
     } finally {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  void _handleSubmit() async {
+    print("yes");
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+
+    final newMeeting = MeetingSummary(
+        date: _selectedDateTime,
+        place: selectedPlace,
+        purpose: selectedPurpose!,
+        project: _selectedProject,
+        lead: widget.lead,
+        meetingWith: settingProvider.loggedAdmin,
+        customer: null);
+    print("yes1");
+    Map<String, dynamic> meetingSummary = newMeeting.toMap();
+    // if (newMeeting.customer != null) {
+    //   meetingSummary['customer'] = newMeeting.customer!.id;
+    // }
+    print(meetingSummary);
+    print("yes3");
+    try {
+      await settingProvider.addMeetingSummary(meetingSummary);
+      print("yes4");
+    } catch (e) {
+      // print(e);
     }
   }
 
@@ -524,6 +563,9 @@ class _ClosingManagerLeadDetailsPageState
   void initState() {
     super.initState();
     onRefresh();
+    _selectedDateTime = DateTime.now();
+    _nameController.text =
+        '${widget.lead?.firstName ?? ""} ${widget.lead?.lastName ?? ""}';
   }
 
   @override
@@ -1342,17 +1384,7 @@ class _ClosingManagerLeadDetailsPageState
 
   Widget _buildAppointmentSection() {
     return SingleChildScrollView(
-      child:
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          // children: [
-          // const Text(
-          //   'Schedule Appointment',
-          //   style: TextStyle(
-          //     fontSize: 20,
-          //     fontWeight: FontWeight.bold,
-          //   ),
-          // ),
-          Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           DigitalDateTimePicker(
@@ -1361,9 +1393,33 @@ class _ClosingManagerLeadDetailsPageState
               setState(() {
                 _selectedDateTime = newDateTime;
               });
-              print('Selected date time: $newDateTime');
             },
           ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed:
+                _showConfirmationDialog, // Call the dialog on button press
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.indigo, // Button background color
+              foregroundColor: Colors.white, // Text color
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 32, vertical: 13), // Padding
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30), // Rounded corners
+              ),
+              elevation: 5, // Shadow effect
+            ),
+            child: const Text(
+              'Confirm',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold, // Optional: Makes the text bold
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          )
           // const SizedBox(height: 16),
           // if (_selectedDateTime != null)
           //   Text(
@@ -1391,6 +1447,191 @@ class _ClosingManagerLeadDetailsPageState
         ],
       ),
       // ],
+    );
+  }
+
+  void _showConfirmationDialog() {
+    // bool _is24HourFormat = true;
+    // bool isLoading = true;
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    final divisions = settingProvider.divisions;
+    // print(divisions);
+
+    // print(projects);
+    // if (_selectedDateTime == null) {
+    //   Helper.showCustomSnackBar("Please select date");
+    //   return;
+    // }
+
+    String formattedDateTime =
+        DateFormat('dd-MM-yyyy HH:mm').format(_selectedDateTime!);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: TextEditingController(
+                      text:
+                          formattedDateTime), // Display the formatted date and time
+                  readOnly: true, // Make it read-only
+                  decoration: const InputDecoration(
+                    labelText: 'Selected Date and Time',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                DropdownButtonFormField<String>(
+                  value: selectedPurpose,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedPurpose = newValue;
+                    });
+                  },
+                  items: purposes.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  decoration: const InputDecoration(
+                    labelText: 'Purpose',
+                    border: OutlineInputBorder(),
+                    // prefixIcon: Icon(Icons.note),
+                  ),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a purpose';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+
+                DropdownButtonFormField<Division>(
+                  value:
+                      divisions.contains(selectedPlace) ? selectedPlace : null,
+                  decoration: InputDecoration(
+                    labelText: 'Select Division',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  items: divisions.map((ele) {
+                    return DropdownMenuItem<Division>(
+                      value: ele,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              ele.division ?? "",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedPlace = newValue;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a Project';
+                    }
+                    return null;
+                  },
+                  isExpanded: true,
+                ),
+
+                const SizedBox(height: 10),
+                DropdownButtonFormField<OurProject>(
+                  value: projects.contains(_selectedProject)
+                      ? _selectedProject
+                      : null,
+                  decoration: InputDecoration(
+                    labelText: 'Select Project',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  items: projects.map((project) {
+                    return DropdownMenuItem<OurProject>(
+                      value: project,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              project.name ?? "",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedProject = newValue;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a Project';
+                    }
+                    return null;
+                  },
+                  isExpanded: true,
+                ),
+                // TextField(
+                //   controller: _projectController,
+                //   decoration: const InputDecoration(
+                //     labelText: 'Project',
+                //     border: OutlineInputBorder(),
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                _handleSubmit();
+
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Confirm'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
     );
   }
 

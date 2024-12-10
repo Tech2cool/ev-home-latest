@@ -596,7 +596,7 @@ class _AddEmployeePageState extends State<AddEmployeePage> {
                                 ),
                               )
                               .toList(),
-                          hint: const Text("Select Devision"),
+                          hint: const Text("Select Division"),
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.8),
                             fontSize: 16,

@@ -520,22 +520,22 @@ class _ClosingManagerLeadDetailsPageState
 
     final newMeeting = MeetingSummary(
         date: _selectedDateTime,
-        place: selectedPlace,
+        // place: selectedPlace,
         purpose: selectedPurpose!,
         project: _selectedProject,
         lead: widget.lead,
         meetingWith: settingProvider.loggedAdmin,
         customer: null);
-    print("yes1");
+    // print("yes1");
     Map<String, dynamic> meetingSummary = newMeeting.toMap();
     // if (newMeeting.customer != null) {
     //   meetingSummary['customer'] = newMeeting.customer!.id;
     // }
-    print(meetingSummary);
-    print("yes3");
+    // print(meetingSummary);
+    // print("yes3");
     try {
       await settingProvider.addMeetingSummary(meetingSummary);
-      print("yes4");
+      // print("yes4");
     } catch (e) {
       // print(e);
     }
@@ -1458,47 +1458,45 @@ class _ClosingManagerLeadDetailsPageState
                 ),
                 const SizedBox(height: 10),
 
-                DropdownButtonFormField<Division>(
-                  value:
-                      divisions.contains(selectedPlace) ? selectedPlace : null,
-                  decoration: InputDecoration(
-                    labelText: 'Select Division',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
-                  items: divisions.map((ele) {
-                    return DropdownMenuItem<Division>(
-                      value: ele,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              ele.division ?? "",
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (newValue) {
-                    setState(() {
-                      selectedPlace = newValue;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null) {
-                      return 'Please select a Project';
-                    }
-                    return null;
-                  },
-                  isExpanded: true,
-                ),
-
-                const SizedBox(height: 10),
+                // DropdownButtonFormField<Division>(
+                //   value:
+                //       divisions.contains(selectedPlace) ? selectedPlace : null,
+                //   decoration: InputDecoration(
+                //     labelText: 'Select Division',
+                //     border(
+                //       borderRadius: BorderRadius.circular(5),
+                //     ),
+                //   ),
+                //   items: divisions.map((ele) {
+                //     return DropdownMenuItem<Division>(
+                //       value: ele,
+                //       child: Row(
+                //         children: [
+                //           Expanded(
+                //             child: Text(
+                //               ele.division ?? "",
+                //               overflow: TextOverflow.ellipsis,
+                //               maxLines: 1,
+                //             ),
+                //           ),
+                //           const SizedBox(width: 4),
+                //         ],
+                //       ),
+                //     );
+                //   }).toList(),
+                //   onChanged: (newValue) {
+                //     setState(() {
+                //       selectedPlace = newValue;
+                //     });
+                //   },
+                //   validator: (value) {
+                //     if (value == null) {
+                //       return 'Please select a Project';
+                //     }
+                //     return null;
+                //   },
+                //   isExpanded: true,
+                // ),
                 DropdownButtonFormField<OurProject>(
                   value: projects.contains(_selectedProject)
                       ? _selectedProject

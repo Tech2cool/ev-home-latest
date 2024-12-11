@@ -5,6 +5,10 @@ import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
+import 'package:csv/csv.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ClosingManagerLeadListPage extends StatefulWidget {
   final String status;
@@ -41,6 +45,53 @@ class _ClosingManagerLeadListPageState
       child: Text("In-active"),
     ),
   ];
+
+  Future<void> saveCSVToDownloads(List<Map<String, dynamic>> data) async {
+    try {
+      // Check and request storage permission
+      if (await Permission.storage.request().isGranted) {
+        // Define headers and rows
+        List<List<dynamic>> rows = [];
+        if (data.isNotEmpty) {
+          // Add headers
+          rows.add(data.first.keys.toList());
+
+          // Add data rows
+          for (var row in data) {
+            rows.add(row.values.toList());
+          }
+        }
+
+        // Convert to CSV format
+        String csv = const ListToCsvConverter().convert(rows);
+
+        // Get the Downloads directory
+        Directory? downloadsDirectory =
+            Directory('/storage/emulated/0/Download');
+        if (!downloadsDirectory.existsSync()) {
+          downloadsDirectory = await getExternalStorageDirectory();
+        }
+
+        final path =
+            "${downloadsDirectory!.path}/data_${DateTime.now().millisecondsSinceEpoch}.csv";
+
+        // Write CSV to file
+        final file = File(path);
+        await file.writeAsString(csv);
+
+        // Notify the user
+        print("File saved at: $path");
+        // For download manager notification
+        if (Platform.isAndroid) {
+          print("You can integrate DownloadManager notification if needed.");
+        }
+      } else {
+        print("Permission not granted to write to storage.");
+      }
+    } catch (e) {
+      print("Error saving CSV to Downloads: $e");
+    }
+  }
 
   // Fetch initial leads or leads based on a new search
   Future<void> getLeads({bool resetPage = false}) async {
@@ -220,6 +271,11 @@ class _ClosingManagerLeadListPageState
                   ),
                 ),
               ),
+              ElevatedButton(
+                  onPressed: () => saveCSVToDownloads(
+                        filteredLeads.map((ele) => ele.toExportJson()).toList(),
+                      ),
+                  child: Text("export csv")),
               if (!isLoading && filteredLeads.isEmpty)
                 const Padding(
                   padding: EdgeInsets.all(15),

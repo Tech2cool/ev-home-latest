@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:ev_homes/core/constant/constant.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/attendance.dart';
 import 'package:ev_homes/core/models/channel_partner.dart';
@@ -33,9 +34,9 @@ const storage = FlutterSecureStorage();
 // final dio = Dio();
 
 
-// const baseUrl = "http://192.168.1.180:8082";
+const baseUrl = "http://192.168.1.168:8082";
 
-const baseUrl = "https://api.evhomes.tech";
+// const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -2660,10 +2661,10 @@ class ApiService {
   }
 
   Future<PaginationModel<SiteVisit>> searchSiteVisits(
-      [String query = '', int page = 1, int limit = 10]) async {
+      [String query = '', int page = 1, int limit = 10, String status="all"]) async {
     try {
       final Response response = await _dio.get(
-        '/siteVisits-search?query=$query&page=$page&limit=$limit',
+        '/siteVisits-search?query=$query&page=$page&limit=$limit&status=$status',
       );
       final Map<String, dynamic> data = response.data;
       if (response.data["code"] != 200) {

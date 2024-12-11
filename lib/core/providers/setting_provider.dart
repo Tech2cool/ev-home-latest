@@ -125,6 +125,7 @@ class SettingProvider extends ChangeNotifier {
     totalPages: 1,
     totalItems: 0,
     data: [],
+
   );
   PaginationModel<Lead> _searchLeads = PaginationModel<Lead>(
     code: 404,
@@ -513,8 +514,9 @@ class SettingProvider extends ChangeNotifier {
     String query = '',
     int page = 1,
     int limit = 10,
+    String status='all',
   ]) async {
-    final visits = await _apiService.searchSiteVisits(query, page, limit);
+    final visits = await _apiService.searchSiteVisits(query, page, limit,status);
     // if (visits) {
     _searchSiteVisit = visits;
     notifyListeners();

@@ -115,14 +115,14 @@ class AttendanceProvider with ChangeNotifier {
   }
 
   Future<void> checkIn(Map<String, dynamic> data) async {
-    print('pass 0');
+    // print('pass 0');
     final resp = await _apiService.checkInAttendance(data);
-    print('pass 1');
+    // print('pass 1');
     if (resp == null) {
       notifyListeners();
       return;
     }
-    print('pass 2');
+    // print('pass 2');
     _attendance = resp;
     // status = resp.status;
     startTimer(
@@ -131,7 +131,48 @@ class AttendanceProvider with ChangeNotifier {
       longitude: data['checkInLongitude'],
       photo: data['checkInPhoto'],
     );
-    print('pass timer');
+    // print('pass timer');
+    notifyListeners();
+  }
+
+  Future<void> getCheckIn(String id) async {
+    // print('pass 0');
+    final resp = await _apiService.getCheckInAttendance(id);
+    // print('pass 1');
+    if (resp == null) {
+      notifyListeners();
+      return;
+    }
+    // print('pass 2');
+    _attendance = resp;
+    // status = resp.status;
+    if (resp.status != "completed") {
+      startTimer(
+        event: 'check-in',
+      );
+    }
+    // print('pass timer');
+    notifyListeners();
+  }
+
+  Future<void> checkOut(Map<String, dynamic> data) async {
+    // print('pass 0');
+    final resp = await _apiService.checkOutAttendance(data);
+    // print('pass 1');
+    if (resp == null) {
+      notifyListeners();
+      return;
+    }
+    // print('pass 2');
+    _attendance = resp;
+    // status = resp.status;
+    stopTimer(
+      event: 'check-out',
+      latitude: data['checkoutLatitude'],
+      longitude: data['checkOutLongitude'],
+      photo: data['checkOutPhoto'],
+    );
+    // print('pass timer');
     notifyListeners();
   }
 

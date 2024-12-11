@@ -33,10 +33,9 @@ const storage = FlutterSecureStorage();
 
 // final dio = Dio();
 
+// const baseUrl = "http://192.168.1.168:8082";
 
-const baseUrl = "http://192.168.1.168:8082";
-
-// const baseUrl = "https://api.evhomes.tech";
+const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -2661,7 +2660,10 @@ class ApiService {
   }
 
   Future<PaginationModel<SiteVisit>> searchSiteVisits(
-      [String query = '', int page = 1, int limit = 10, String status="all"]) async {
+      [String query = '',
+      int page = 1,
+      int limit = 10,
+      String status = "all"]) async {
     try {
       final Response response = await _dio.get(
         '/siteVisits-search?query=$query&page=$page&limit=$limit&status=$status',
@@ -3386,6 +3388,61 @@ class ApiService {
   Future<Attendance?> checkInAttendance(Map<String, dynamic> data) async {
     try {
       final Response response = await _dio.post('/check-in', data: data);
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return null;
+      }
+      Helper.showCustomSnackBar(response.data['message'], Colors.green);
+
+      // return null;
+      return Attendance.fromJson(response.data['data']);
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
+      return null;
+    }
+  }
+
+  Future<Attendance?> getCheckInAttendance(String id) async {
+    try {
+      final Response response = await _dio.get('/get-check-in/$id');
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return null;
+      }
+      // Helper.showCustomSnackBar(response.data['message'], Colors.green);
+
+      // return null;
+      return Attendance.fromJson(response.data['data']);
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
+      return null;
+    }
+  }
+
+  //Attendance
+  Future<Attendance?> checkOutAttendance(Map<String, dynamic> data) async {
+    try {
+      final Response response = await _dio.post('/check-out', data: data);
       if (response.data['code'] != 200) {
         Helper.showCustomSnackBar(response.data['message']);
         return null;

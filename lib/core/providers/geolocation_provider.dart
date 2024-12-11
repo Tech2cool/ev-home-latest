@@ -56,9 +56,10 @@ class GeolocationProvider extends ChangeNotifier {
   late LocationSettings locationSettings;
 
   // Define multiple places with their radii
-  final List<Place> _places = [
+  List<Place> _places = [
     Place(latitude: 19.0777475, longitude: 72.9974897, radius: 100),
-    Place(latitude: 19.0877475, longitude: 72.9874897, radius: 100),
+    // Place(latitude: 19.0877475, longitude: 72.9874897, radius: 100),
+    Place(latitude: 19.083409, longitude: 72.998977, radius: 100),
     // Add more places as needed
   ];
 
@@ -140,6 +141,10 @@ class GeolocationProvider extends ChangeNotifier {
     address = prefs.getString('address') ?? 'Fetching address...';
     _checkRadius(latitude ?? 0, longitude ?? 0);
     notifyListeners();
+  }
+
+  void updatePlaces(Place place) {
+    // _places = [place];
   }
 
   // Initialize WorkManager

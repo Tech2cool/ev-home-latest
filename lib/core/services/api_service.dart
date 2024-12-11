@@ -32,9 +32,9 @@ const storage = FlutterSecureStorage();
 
 // final dio = Dio();
 
-const baseUrl = "http://192.168.1.168:8082";
+// const baseUrl = "http://192.168.1.168:8082";
 
-// const baseUrl = "https://api.evhomes.tech";
+const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();

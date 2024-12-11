@@ -285,61 +285,6 @@ class _DataAnalyzerLeadDetailsPageState
                   ),
                 ),
               ),
-              // SizedBox(
-              //   width: double.infinity,
-              //   height: 400, // Constrained height for the stepper
-              //   child: Padding(
-              //     padding: const EdgeInsets.all(5.0),
-              //     child: ListView(
-              //       children: const [
-              //         CustomTimelineTile(
-              //           title: "Approved",
-              //           date: "10/10/2024",
-              //           description: "welcome to ev home",
-              //           color: Colors.orange,
-              //           isFirst: true,
-              //         ),
-              //         CustomTimelineTile(
-              //           title: "Contacted",
-              //           date: "10/10/2024",
-              //           description: "welcome to ev home",
-              //           color: Colors.orange,
-              //         ),
-              //         CustomTimelineTile(
-              //           title: "Follow Up",
-              //           date: "10/10/2024",
-              //           description: "welcome to ev home",
-              //           color: Colors.orange,
-              //         ),
-              //         CustomTimelineTile(
-              //           title: "Site Visit",
-              //           date: "10/10/2024",
-              //           description: "welcome to ev home",
-              //           color: Colors.orange,
-              //         ),
-              //         CustomTimelineTile(
-              //           title: "Revisit",
-              //           date: "10/10/2024",
-              //           description: "welcome to ev home",
-              //           color: Colors.orange,
-              //         ),
-              //         CustomTimelineTile(
-              //           title: "Booking",
-              //           date: "10/10/2024",
-              //           description: "welcome to ev home",
-              //           color: Colors.orange,
-              //         ),
-              //         CustomTimelineTile(
-              //           title: "Registration",
-              //           date: "10/10/2024",
-              //           description: "welcome to ev home",
-              //           color: Color.fromARGB(255, 255, 223, 174),
-              //           isLast: true,
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
               const SizedBox(height: 24),
               const Text(
                 'Additional Information',
@@ -517,7 +462,6 @@ class _DataAnalyzerLeadDetailsPageState
                   },
                 ),
               ],
-
               if (widget.lead.approvalStatus?.toLowerCase() != "approved")
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -687,14 +631,14 @@ class CustomTimelineTile extends StatelessWidget {
   final bool isLast;
 
   const CustomTimelineTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.date,
     required this.description,
     required this.color,
     this.isFirst = false,
     this.isLast = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

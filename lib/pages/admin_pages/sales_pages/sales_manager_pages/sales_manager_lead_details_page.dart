@@ -594,21 +594,6 @@ class _SalesManagerLeadDetailsPageState
             actionsIconTheme: const IconThemeData(color: Colors.white),
             actions: [
               PopupMenuButton<String>(
-                onSelected: (value) {
-                  switch (value) {
-                    case 'send_notification':
-                      _buildNotificationSection();
-                      break;
-                    case 'schedule_meeting':
-                      _submitAppointment();
-                      break;
-                    case 'status':
-                      // Handle status logic if needed
-                      break;
-                    case 'follow_up':
-                      break;
-                  }
-                },
                 itemBuilder: (BuildContext context) {
                   return [
                     PopupMenuItem<String>(
@@ -837,15 +822,16 @@ class _SalesManagerLeadDetailsPageState
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 12,
-                      ),
+                      const SizedBox(height: 24),
                       if (widget.lead.callHistory.isNotEmpty) ...[
-                        const Text(
-                          'Follow-up History',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                          child: Text(
+                            'Follow-up History',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -853,35 +839,19 @@ class _SalesManagerLeadDetailsPageState
                           widget.lead.callHistory.length,
                           (i) {
                             final appl = widget.lead.callHistory[i];
-                            return Card(
-                              margin: const EdgeInsets.only(bottom: 8),
-                              child: ListTile(
-                                leading: const CircleAvatar(
-                                  child: Icon(Icons.calendar_today),
-                                ),
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      appl.caller != null
-                                          ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
-                                          : "NA",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      Helper.formatDate(
-                                          appl.callDate?.toString() ?? ''),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                                subtitle: Text(
-                                  appl.remark ?? "NA",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: CustomTimelineTile(
+                                title: appl.caller != null
+                                    ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
+                                    : "NA",
+                                date: Helper.formatDate(
+                                    appl.callDate?.toString() ?? ''),
+                                description: "${appl.remark}\n${appl.feedback}",
+                                color: Colors.red.withOpacity(0.8),
+                                isFirst: i == 0,
+                                isLast: i == widget.lead.callHistory.length - 1,
                               ),
                             );
                           },
@@ -1068,12 +1038,20 @@ class _SalesManagerLeadDetailsPageState
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Send Notification',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                children: [
+                  IconButton(
+                    onPressed: () => _onPressedSendNotification(),
+                    icon: const Icon(Icons.arrow_back),
+                  ),
+                  const Text(
+                    'Send Notification',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               TextField(
@@ -1145,10 +1123,9 @@ class _SalesManagerLeadDetailsPageState
                         }
                       }
 
-                      //TODO:Send Notification
                       Map<String, dynamic> data = {
                         "title": _titleController.text,
-                        "message": _notificationController,
+                        "message": _notificationController.text,
                         "image": imageUrl,
                         "leadRef": widget.lead.id,
                         "templateName": _templateController.text,

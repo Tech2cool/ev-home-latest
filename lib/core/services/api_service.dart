@@ -32,7 +32,8 @@ const storage = FlutterSecureStorage();
 
 // final dio = Dio();
 
-// const baseUrl = "http://192.168.1.168:8082";
+
+// const baseUrl = "http://192.168.1.180:8082";
 
 const baseUrl = "https://api.evhomes.tech";
 
@@ -3016,12 +3017,16 @@ class ApiService {
 
   Future<String?> sendCustomNotification(Map<String, dynamic> data) async {
     try {
+      print("req start");
       final response = await _dio.post('/send-notification', data: data);
+      print("req done");
 
       if (response.data['code'] != 200) {
+        print(" 200 code error");
         Helper.showCustomSnackBar(response.data['message']);
         return null;
       }
+      print("req done");
 
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
 
@@ -3036,6 +3041,8 @@ class ApiService {
       } else {
         errorMessage = e.message.toString();
       }
+      print(e);
+
       Helper.showCustomSnackBar(errorMessage);
       return null;
     }
@@ -3327,6 +3334,7 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
+      print(e);
 
       Helper.showCustomSnackBar(errorMessage);
       return null;

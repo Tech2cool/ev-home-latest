@@ -24,7 +24,7 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
   bool isFetchingMore = false;
   int currentPage = 1;
   Timer? _debounce; // Declare a Timer
-
+  String? selectedSiteVisit;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -59,6 +59,7 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
       searchQuery,
       page,
       10,
+      selectedSiteVisit ?? "all",
     );
     final tes2 = visitsResp.data;
     setState(() {
@@ -79,8 +80,8 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
         isFetchingMore = true;
         currentPage++;
       });
-      final visitsResp =
-          await settingProvider.searchSiteVisits(searchQuery, currentPage, 10);
+      final visitsResp = await settingProvider.searchSiteVisits(
+          searchQuery, currentPage, 10, selectedSiteVisit ?? "all");
       final tes2 = visitsResp.data;
 
       setState(() {
@@ -95,6 +96,8 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
     final settingProvider = Provider.of<SettingProvider>(context);
     // final visits = settingProvider.searchSiteVisit.data;
     final filteredLocalSiteVisits = visits;
+    String visitType = 'All';
+
     // final filteredLocalSiteVisits = visits.where((visit) {
     //   final nameLower = visit.firstName?.toLowerCase() ?? '';
     //   final searchLower = searchQuery.toLowerCase();
@@ -109,6 +112,45 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             title: const Text('Manage Site Visit'),
+            actions: [
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  setState(() {
+                    selectedSiteVisit =
+                        value; // Update the visit type based on selection
+                  });
+                  getVisits(1); // Fetch visits again when the filter changes
+                },
+                itemBuilder: (BuildContext context) {
+                  return [
+                    PopupMenuItem<String>(
+                      value: 'Visit',
+                      child: const Text('Visit'),
+                      // onTap: () {
+                      //   setState(() {
+                      //     selectedSiteVisit = visitType;
+                      //   });
+
+                      //   // fetchMoreVisits();
+                      // }
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'Revisit',
+                      child: Text('Revisit'),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'virtual-meeting',
+                      child: Text('Virtual Meeting'),
+                    ),
+                    const PopupMenuItem<String>(
+                      value: 'All',
+                      child: Text('All Visits'),
+                    ),
+                  ];
+                },
+                icon: const Icon(Icons.filter_list), // Filter icon
+              ),
+            ],
           ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),

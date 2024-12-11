@@ -1632,10 +1632,15 @@ class ApiService {
       '/meeting-add',
       data: data,
     );
+    // print(response);
+    print("pass1");
     if (response.data['code'] != 200) {
+      print(response.data['message']);
       Helper.showCustomSnackBar(response.data['message']);
       return null;
     }
+    print(response.data);
+    print("pass2");
     Helper.showCustomSnackBar(response.data['message'], Colors.green);
     // return null;
     return MeetingSummary.fromMap(response.data['data']);

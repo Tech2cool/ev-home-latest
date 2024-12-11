@@ -2531,7 +2531,7 @@ class ApiService {
   // Leads
   Future<String?> leadRejectByDataAnalyzer(
     String id, [
-    String remark = "Rejected",
+    String remark = "rejected",
   ]) async {
     try {
       final Response response = await _dio.post(
@@ -2567,7 +2567,7 @@ class ApiService {
   Future<String?> leadAssignToPreSaleExecutive(
     String id,
     String assignTo, [
-    String remark = "Assigned",
+    String remark = "assigned",
   ]) async {
     try {
       final Response response = await _dio.post(

@@ -16,6 +16,7 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 
 import 'package:provider/provider.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class AddSiteVisitFormPage extends StatefulWidget {
   final Lead? lead;
@@ -643,9 +644,10 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
     final requirements = settingProvider.requirements.isNotEmpty
         ? settingProvider.requirements
         : fallbackRequirements;
-    final ourProjects = settingProvider.ourProject.isNotEmpty
+    final ourProjects = settingProvider
+        .ourProject; /* settingProvider.ourProject.isNotEmpty
         ? settingProvider.ourProject
-        : fallbackProjects;
+        : fallbackProjects;*/
 
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -779,6 +781,8 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 16),
+
                     if (selectedVisit == "virtual-meeting") ...[
                       const SizedBox(
                         height: 16,
@@ -853,6 +857,80 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                         ],
                       ),
                     ],
+                    // const SizedBox(height: 16),
+
+                    DropdownSearch<OurProject>.multiSelection(
+                      mode: Mode.form,
+                      items: (f, cs) => ourProjects,
+                      suffixProps: DropdownSuffixProps(
+                          dropdownButtonProps: DropdownButtonProps()),
+                      compareFn: (item1, item2) {
+                        return item1.id == item2.id;
+                      },
+                      itemAsString: (item) {
+                        return item.name ?? "";
+                      },
+                      onSaved: (newValue) {
+                        setState(() {
+                          selectedProject = newValue ?? [];
+                        });
+                      },
+                      selectedItems: selectedProject,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedProject = value;
+                        });
+                      },
+                      popupProps: PopupPropsMultiSelection.menu(
+                        fit: FlexFit.loose,
+                        showSelectedItems: true,
+                        itemBuilder: (context, item, isDisabled, isSelected) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              item.name ?? "",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          );
+                        },
+                        // showSearchBox: true,
+                        // searchFieldProps: TextFieldProps()
+                      ),
+                      dropdownBuilder: (ctx, selectedItem) {
+                        return ListTile(
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 8,
+                          ),
+                          leading: Icon(
+                            CupertinoIcons.building_2_fill,
+                            size: 20,
+                          ),
+                          title: selectedItem?.isEmpty ?? true
+                              ? Text("Select Projects")
+                              : Text(
+                                  selectedItem!
+                                      .map((item) => item.name ?? "")
+                                      .join(", "),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                        );
+                      },
+                      decoratorProps: DropDownDecoratorProps(
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(0),
+                          // hintText: "Select Projects",
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.grey.shade300,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 16),
                     DropdownButtonFormField<OurProject>(
                       decoration: InputDecoration(

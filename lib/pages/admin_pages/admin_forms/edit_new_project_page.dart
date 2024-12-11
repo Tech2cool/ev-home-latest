@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:ev_homes/components/form_holder.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/amenity.dart';
@@ -34,6 +35,10 @@ class _EditNewProjectPageState extends State<EditNewProjectPage> {
   final TextEditingController _locationLinkController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _contactController = TextEditingController();
+  final List<TextEditingController> _flatNoController = [];
+  final List<TextEditingController> _carpetAreaController = [];
+  final List<TextEditingController> _sellableCarpetAreaController = [];
+  List<bool> selectedOccupied = [];
   final ImagePicker imagePicker = ImagePicker();
 
   File? _showCaseImage;
@@ -42,10 +47,14 @@ class _EditNewProjectPageState extends State<EditNewProjectPage> {
   List<LocalAmenity> _amenites = [];
   List<LocalConfig> _configuration = [];
   bool isLoading = false;
+  bool showflatList = false;
+  bool showParkingList = false;
   List<String> carouselImg = [];
   String? showcaseImg;
   List<Amenity> amenity = [];
   List<Configuration> config = [];
+  List<Flat> flats = [];
+  List<Parking> parkings = [];
   String? brochure;
 
   void showcaseImages(File? showcaseImage) {
@@ -102,6 +111,17 @@ class _EditNewProjectPageState extends State<EditNewProjectPage> {
     carouselImg = widget.ourProj.carouselImages;
     amenity = widget.ourProj.amenities;
     config = widget.ourProj.configurations;
+    flats = widget.ourProj.flatList;
+    parkings = widget.ourProj.parkingList;
+// Add controllers for each flat
+    for (var ele in flats) {
+      _flatNoController.add(TextEditingController(text: ele.flatNo ?? ""));
+      _carpetAreaController
+          .add(TextEditingController(text: ele.carpetArea?.toString() ?? ""));
+      _sellableCarpetAreaController.add(TextEditingController(
+          text: ele.sellableCarpetArea?.toString() ?? ""));
+      selectedOccupied.add(ele.occupied ?? false);
+    }
   }
 
   void onSelectAmenities() {
@@ -1034,6 +1054,67 @@ class _EditNewProjectPageState extends State<EditNewProjectPage> {
                               controller: _locationLinkController,
                               hintText: "Select Location",
                             ),
+                            SizedBox(height: 10),
+                            FormHolder(
+                                selected: showflatList,
+                                title: "Flat List",
+                                onTap: () {
+                                  setState(() {
+                                    showflatList = !showflatList;
+                                  });
+                                },
+                                childrens: showflatList == true
+                                    ? [
+                                        ...List.generate(
+                                            widget.ourProj.flatList.length,
+                                            (i) {
+                                          // return ListTile(
+
+                                          // );
+                                          return Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 80,
+                                                height: 60,
+                                                child: MyTextField(
+                                                  controller:
+                                                      _flatNoController[i],
+                                                  hintText: "Flat No",
+                                                  keyboardType:
+                                                      TextInputType.number,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              // Text(
+                                              //     "${_flatNoController[i].text} "),
+                                              DropdownButton(
+                                                value: selectedOccupied[i],
+                                                hint: Text("Occupied"),
+                                                items: [
+                                                  DropdownMenuItem(
+                                                    value: true,
+                                                    child: Text("Occupied"),
+                                                  ),
+                                                  DropdownMenuItem(
+                                                    value: false,
+                                                    child: Text("Not Occupied"),
+                                                  ),
+                                                ],
+                                                onChanged: (val) {
+                                                  // setState((){
+                                                  setState(() {
+                                                    selectedOccupied[i] = val!;
+                                                  });
+                                                  // })
+                                                },
+                                              ),
+                                            ],
+                                          );
+                                        })
+                                      ]
+                                    : []),
                             const SizedBox(height: 16),
                             const SizedBox(height: 30),
                             ElevatedButton(
@@ -1123,7 +1204,7 @@ class MyTextField extends StatelessWidget {
       maxLines: maxLines,
       decoration: InputDecoration(
         labelText: hintText,
-        prefixIcon: Icon(prefixIcon ?? Icons.title),
+        prefixIcon: prefixIcon != null ? Icon(prefixIcon ?? Icons.title) : null,
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide(

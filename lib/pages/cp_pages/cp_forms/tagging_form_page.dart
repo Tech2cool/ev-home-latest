@@ -169,6 +169,7 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
       firstName: _firstNameController.text,
       lastName: _lastNameController.text,
       countryCode: "+91",
+      altPhoneNumber: int.parse(_altPhoneController.text),
       phoneNumber: int.parse(_phoneController.text),
       startDate: startDate,
       address: _addressController.text,

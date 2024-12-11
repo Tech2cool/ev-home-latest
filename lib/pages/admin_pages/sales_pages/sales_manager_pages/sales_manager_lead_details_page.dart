@@ -526,13 +526,14 @@ class _SalesManagerLeadDetailsPageState
         Provider.of<SettingProvider>(context, listen: false);
 
     final newMeeting = MeetingSummary(
-        date: _selectedDateTime,
-        place: selectedPlace,
-        purpose: selectedPurpose!,
-        project: _selectedProject,
-        lead: widget.lead,
-        meetingWith: settingProvider.loggedAdmin,
-        customer: null);
+      date: _selectedDateTime,
+      place: selectedPlace,
+      purpose: selectedPurpose!,
+      project: _selectedProject,
+      lead: widget.lead,
+      meetingWith: settingProvider.loggedAdmin,
+      customer: null,
+    );
     print("yes1");
     Map<String, dynamic> meetingSummary = newMeeting.toMap();
     // if (newMeeting.customer != null) {

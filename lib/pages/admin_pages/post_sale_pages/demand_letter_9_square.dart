@@ -1018,7 +1018,7 @@ class _DemandLetterState extends State<DemandLetter> {
     remainingBase = baseAmount - receivedBase;
     remainingGst = gstAmount - receivedGst;
     remainingTds = tdsAmount;
-    double remainingTotal = (remainingBase - remainingTds) + remainingGst;
+    double remainingTotal = remainingBase + remainingGst;
 
     double latePaymentCharge = remainingBase * (reminderDays / 100.0);
     double latePaymentGST = latePaymentCharge * 0.18;
@@ -1028,7 +1028,7 @@ class _DemandLetterState extends State<DemandLetter> {
     double finalBase = remainingBase;
     double finalGst = remainingGst;
     double finaltds = remainingTds;
-    double finalTotal = (finalBase - finaltds) + finalGst;
+    double finalTotal = finalBase + finalGst;
 
     List<pw.TableRow> rows = [
       _buildPdfTableRow(

@@ -32,7 +32,6 @@ import '../models/employee.dart';
 const storage = FlutterSecureStorage();
 
 // final dio = Dio();
-
 // const baseUrl = "http://192.168.1.168:8082";
 
 const baseUrl = "https://api.evhomes.tech";
@@ -2420,6 +2419,88 @@ class ApiService {
       }
       Helper.showCustomSnackBar(errorMessage);
       return PaginationModel<PostSaleLead>(
+        code: 500,
+        message: e.response?.data['message'] ?? errorMessage,
+        page: page,
+        limit: limit,
+        totalPages: 1,
+        totalItems: 0,
+        data: [],
+      );
+    }
+  }
+
+  Future<PaginationModel<SiteVisit>> getClosingManagerSiteVisitById(
+    String id, [
+    String query = '',
+    int page = 1,
+    int limit = 10,
+    String? status,
+  ]) async {
+    try {
+      // print("pass 0");
+      var url =
+          '/site-visit-closing-manager/$id?query=$query&page=$page&limit=$limit';
+      if (status != null) {
+        url += '&status=$status';
+      }
+
+      // print("pass 1");
+
+      final Response response = await _dio.get(url);
+      // print("pass 2");
+      // print(response.data);
+
+      final Map<String, dynamic> data = response.data;
+      // print("pass 3");
+
+      if (response.data["code"] != 200) {
+        final emptyPagination = PaginationModel<SiteVisit>(
+          code: 404,
+          message: '',
+          page: page,
+          limit: limit,
+          totalPages: 1,
+          totalItems: 0,
+          data: [],
+        );
+
+        return emptyPagination;
+      }
+      // print("pass 4");
+
+      final items = data['data'] as List<dynamic>? ?? [];
+      // print("pass 5");
+
+      List<SiteVisit> siteVisitsList = [];
+      if (items.isNotEmpty) {
+        siteVisitsList = items.map((emp) => SiteVisit.fromMap(emp)).toList();
+      }
+      // print("pass 6");
+
+      final newPagination = PaginationModel<SiteVisit>(
+        code: data['code'],
+        message: data['message'],
+        page: data['page'],
+        limit: data['limit'],
+        totalPages: data['totalPages'],
+        totalItems: data['totalItems'],
+        data: siteVisitsList,
+      );
+
+      return newPagination;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+      Helper.showCustomSnackBar(errorMessage);
+      return PaginationModel<SiteVisit>(
         code: 500,
         message: e.response?.data['message'] ?? errorMessage,
         page: page,

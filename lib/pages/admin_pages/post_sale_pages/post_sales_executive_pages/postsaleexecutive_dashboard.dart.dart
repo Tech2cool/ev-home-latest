@@ -97,10 +97,10 @@ class _PostsaleexecutiveDashboardState
     _onRefresh();
   }
 
-  List<PostSaleLead> getFilteredLeads(List<PostSaleLead> leads, String status) {
-    if (status == "Total") return leads;
-    return leads.where((lead) => lead.bookingStatus?.type == status).toList();
-  }
+  // List<PostSaleLead> getFilteredLeads(List<PostSaleLead> leads, String status) {
+  //   if (status == "Total") return leads;
+  //   return leads.where((lead) => lead.bookingStatus?.type == status).toList();
+  // }
 
   @override
   Widget build(BuildContext context) {

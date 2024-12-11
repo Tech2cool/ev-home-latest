@@ -125,7 +125,6 @@ class SettingProvider extends ChangeNotifier {
     totalPages: 1,
     totalItems: 0,
     data: [],
-
   );
   PaginationModel<Lead> _searchLeads = PaginationModel<Lead>(
     code: 404,
@@ -486,6 +485,26 @@ class SettingProvider extends ChangeNotifier {
     return leads;
   }
 
+  Future<PaginationModel<SiteVisit>> getClosingManagerSiteVisitById(
+    String id, [
+    String query = '',
+    int page = 1,
+    int limit = 10,
+    String status="all"
+  ]) async {
+    final leads = await _apiService.getClosingManagerSiteVisitById(
+      id,
+      query,
+      page,
+      limit,
+      status,
+    );
+
+    _searchSiteVisit = leads;
+    notifyListeners();
+    return leads;
+  }
+
   Future<void> getMyTarget(String id) async {
     final targetResp = await _apiService.getMyTarget(id);
     if (targetResp != null) {
@@ -514,9 +533,10 @@ class SettingProvider extends ChangeNotifier {
     String query = '',
     int page = 1,
     int limit = 10,
-    String status='all',
+    String status = 'all',
   ]) async {
-    final visits = await _apiService.searchSiteVisits(query, page, limit,status);
+    final visits =
+        await _apiService.searchSiteVisits(query, page, limit, status);
     // if (visits) {
     _searchSiteVisit = visits;
     notifyListeners();

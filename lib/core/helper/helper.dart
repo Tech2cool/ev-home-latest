@@ -13,7 +13,6 @@ class Helper {
       'dd/MM/yyyy',
       // Include ISO 8601 format
       'yyyy-MM-ddTHH:mm:ss.SSSZ', // ISO format with timezone
-      'yyyy-MM-ddTHH:mm:ss.SSSZ', // ISO format with Z
     ];
 
     for (String format in formats) {
@@ -23,15 +22,17 @@ class Helper {
 
         // Check for ISO 8601 format separately
         DateTime dateTime;
-        if (format == 'yyyy-MM-ddTHH:mm:ss.SSSZ' ||
-            format == 'yyyy-MM-ddTHH:mm:ss.SSSZ') {
+        if (format == 'yyyy-MM-ddTHH:mm:ss.SSSZ') {
           dateTime = DateTime.parse(dateString); // Parse ISO format
         } else {
           dateTime = dateFormat.parseStrict(dateString);
         }
 
+        // Convert to local timezone
+        dateTime = dateTime.toLocal();
+
         // Define the desired output format
-        final DateFormat outputFormatter = DateFormat('dd MMM yy hh:mm');
+        final DateFormat outputFormatter = DateFormat('dd MMM yy HH:mm');
 
         // Format the DateTime object into the desired string format
         return outputFormatter.format(dateTime);

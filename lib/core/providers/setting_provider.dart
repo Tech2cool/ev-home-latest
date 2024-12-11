@@ -1123,9 +1123,8 @@ class SettingProvider extends ChangeNotifier {
   }
 
   Future<void> leadRejectDataAnalyzer(
-    String id,
-    String teamLeaderId, [
-    String remark = "Approved",
+    String id, [
+    String remark = "rejected",
   ]) async {
     await _apiService.leadRejectByDataAnalyzer(id, remark);
     notifyListeners();
@@ -1134,7 +1133,7 @@ class SettingProvider extends ChangeNotifier {
   Future<void> leadAssignToPresaleExcutive(
     String id,
     String assignTo, [
-    String remark = "Assigned",
+    String remark = "assigned",
   ]) async {
     final resp = await _apiService.leadAssignToPreSaleExecutive(
       id,

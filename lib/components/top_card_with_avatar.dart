@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:ev_homes/components/spinning_icon_btn.dart';
 import 'package:ev_homes/core/constant/constant.dart';
+import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/providers/attendance_provider.dart';
 import 'package:ev_homes/core/providers/geolocation_provider.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
@@ -30,7 +31,6 @@ class TopcardWithAvatar extends StatefulWidget {
 class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
   DateTime selectedDay = DateTime.now();
   DateTime focusedDay = DateTime.now();
-  bool isCheckedIn = false;
   Timer? _timer;
   int _elapsedSeconds = 0;
 
@@ -61,6 +61,7 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
 
     final loggedAdmin = settingProvider.loggedAdmin;
     final bool isInRadius = geolocationProvider.isWithinRadius;
+    bool isCheckedIn = attendanceProvider.status == "present";
 
     String formatTime(int seconds) {
       final hours = seconds ~/ 3600;
@@ -195,6 +196,16 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                         const SizedBox(height: 5),
                         ElevatedButton(
                           onPressed: () {
+                            if (!isInRadius) {
+                              Helper.showCustomSnackBar(
+                                "Your Outsite of Geofence",
+                              );
+                              return;
+                            }
+                            if (attendanceProvider.attendance?.status ==
+                                "completed") {
+                              return;
+                            }
                             GoRouter.of(context).push("/check-in-out");
                             // setState(() {
                             //   if (!isCheckedIn) {
@@ -211,16 +222,24 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
-                            backgroundColor: isCheckedIn
-                                ? Colors.red
-                                : Colors.orange.shade600,
+                            backgroundColor:
+                                attendanceProvider.attendance?.status ==
+                                        "completed"
+                                    ? Colors.grey
+                                    : isCheckedIn
+                                        ? Colors.red
+                                        : Colors.orange.shade600,
                             padding: const EdgeInsets.symmetric(
                               horizontal: 25,
                               vertical: 5,
                             ),
                           ),
                           child: Text(
-                            isCheckedIn ? "Check Out" : "Check In",
+                            attendanceProvider.attendance?.status == "completed"
+                                ? "Checked-out"
+                                : isCheckedIn
+                                    ? "Check Out"
+                                    : "Check In",
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,

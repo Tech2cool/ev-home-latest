@@ -173,6 +173,7 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
       requirement: selectedRequirement,
       firstName: _firstNameController.text,
       lastName: _lastNameController.text,
+      altPhoneNumber: int.parse(_altPhoneController.text),
       countryCode: "+91",
       phoneNumber: int.parse(_phoneController.text),
       startDate: startDate,

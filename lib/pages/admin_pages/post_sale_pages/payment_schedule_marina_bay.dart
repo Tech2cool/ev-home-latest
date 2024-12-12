@@ -1,3 +1,4 @@
+import 'package:ev_homes/core/models/lead.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -8,7 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PaymentScheduleGenerator extends StatefulWidget {
-  const PaymentScheduleGenerator({super.key});
+  final Lead? lead;
+  const PaymentScheduleGenerator({super.key, this.lead});
 
   @override
   _PaymentScheduleGeneratorState createState() =>
@@ -318,6 +320,13 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
         ),
       );
     }
+  }
+
+  @override
+  void initstate() {
+    super.initState();
+    clientNameController.text = widget.lead?.firstName ?? "";
+    phoneController.text = widget.lead?.phoneNumber?.toString() ?? '0';
   }
 
   @override

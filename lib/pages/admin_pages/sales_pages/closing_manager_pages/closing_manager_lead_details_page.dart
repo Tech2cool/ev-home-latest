@@ -12,6 +12,12 @@ import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_postsale_lead.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_site_visit_form_page.dart';
 import 'package:ev_homes/pages/admin_pages/followup_page.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_marina_bay.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_nine_square.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_letter.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_letter_9_square.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule%20_nine_square.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule_marina_bay.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -38,6 +44,7 @@ class _ClosingManagerLeadDetailsPageState
   bool _isPreviewVisible = false;
   DateTime? _selectedDate;
   String? selectedStatus;
+  String? selectedGenerate;
 
   final TextEditingController _dateController = TextEditingController();
 
@@ -372,6 +379,264 @@ class _ClosingManagerLeadDetailsPageState
     }
   }
 
+  Future<void> _showProjectDialogForCostSheet() async {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    OurProject? selectedProject;
+    // print(settingProvider.ourProject);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Project'),
+          content: DropdownButtonFormField<OurProject>(
+            value: projects.contains(selectedProject) ? selectedProject : null,
+            decoration: InputDecoration(
+              labelText: 'Select Project',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            items: projects.map((project) {
+              return DropdownMenuItem<OurProject>(
+                value: project,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.name ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedProject = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a Project';
+              }
+              return null;
+            },
+            isExpanded: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (selectedProject!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CostGenerators(lead: widget.lead),
+                    ),
+                  );
+                }
+                if (selectedProject!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CostGenerator(lead: widget.lead),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Proceed'),
+            ),
+          ],
+        );
+      },
+    );
+    // print(selectedProject);
+  }
+
+  Future<void> _showProjectDialogForPaymentSchedule() async {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    OurProject? selectedProject;
+    // print(settingProvider.ourProject);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Project'),
+          content: DropdownButtonFormField<OurProject>(
+            value: projects.contains(selectedProject) ? selectedProject : null,
+            decoration: InputDecoration(
+              labelText: 'Select Project',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            items: projects.map((project) {
+              return DropdownMenuItem<OurProject>(
+                value: project,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.name ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedProject = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a Project';
+              }
+              return null;
+            },
+            isExpanded: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (selectedProject!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PaymentScheduleGenerators(
+                        lead: widget.lead,
+                      ),
+                    ),
+                  );
+                }
+                if (selectedProject!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PaymentScheduleGenerator(lead: widget.lead),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Proceed'),
+            ),
+          ],
+        );
+      },
+    );
+    // print(selectedProject);
+  }
+
+  Future<void> _showProjectDialogForDemand() async {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    OurProject? selectedProject;
+    // print(settingProvider.ourProject);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Project'),
+          content: DropdownButtonFormField<OurProject>(
+            value: projects.contains(selectedProject) ? selectedProject : null,
+            decoration: InputDecoration(
+              labelText: 'Select Project',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            items: projects.map((project) {
+              return DropdownMenuItem<OurProject>(
+                value: project,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.name ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedProject = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a Project';
+              }
+              return null;
+            },
+            isExpanded: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (selectedProject!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DemandLetter(lead: widget.lead),
+                    ),
+                  );
+                }
+                if (selectedProject!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DemandLetter10(lead: widget.lead),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Proceed'),
+            ),
+          ],
+        );
+      },
+    );
+    // print(selectedProject);
+  }
+
   void _handleSubmit() async {
     print("yes");
     final settingProvider =
@@ -582,6 +847,60 @@ class _ClosingManagerLeadDetailsPageState
                           ),
                         );
                       },
+                    ),
+                    PopupMenuItem<String>(
+                      enabled: false,
+                      child: Row(
+                        children: [
+                          const Text(
+                            'Generate',
+                            style: TextStyle(
+                              color: Colors.black, // Black color for the text
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          DropdownButton<String>(
+                            value: selectedGenerate,
+                            underline: SizedBox.shrink(),
+                            onChanged: (value) async {
+                              if (value == "Cost Sheet Generator") {
+                                _showProjectDialogForCostSheet();
+                              } else if (value == "Payment Schedule") {
+                                _showProjectDialogForPaymentSchedule();
+                              } else if (value == "Demand Letter") {
+                                _showProjectDialogForDemand();
+                              }
+
+                              setState(() {
+                                selectedGenerate = value;
+                                if (value == 'Cost Sheet Generator') {
+                                  // Navigator.of(context).push(
+                                  //   MaterialPageRoute(
+                                  //     builder: (context) => AddPostsaleLead(
+                                  //       lead: widget.lead,
+                                  //     ),
+                                  //   ),
+                                  // );
+                                  // GoRouter.of(context).push(
+                                  //   "/post-sales-lead-details",
+                                  //   // extra: lead,
+                                  // );
+                                }
+                              });
+                            },
+                            items: <String>[
+                              'Cost Sheet Generator',
+                              'Payment Schedule',
+                              'Demand Letter',
+                            ].map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                          ),
+                        ],
+                      ),
                     ),
                   ];
                 },

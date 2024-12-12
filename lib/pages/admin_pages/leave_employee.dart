@@ -113,7 +113,6 @@ class LeaveEmplpoyee extends StatelessWidget {
         ),
         body: TabBarView(
           children: [
-            // Self Tab
             Stack(
               children: [
                 ListView.builder(
@@ -167,7 +166,6 @@ class LeaveEmplpoyee extends StatelessWidget {
             // Team Tab
             Column(
               children: [
-                // Month Selector
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(
@@ -193,8 +191,6 @@ class LeaveEmplpoyee extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                // Search Bar
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: TextField(
@@ -208,8 +204,6 @@ class LeaveEmplpoyee extends StatelessWidget {
                     ),
                   ),
                 ),
-
-                // Leave Details Table Header
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                   child: Row(
@@ -232,8 +226,6 @@ class LeaveEmplpoyee extends StatelessWidget {
                     ],
                   ),
                 ),
-
-                // Leave Details List
                 Expanded(
                   child: ListView.builder(
                     itemCount: teamLeaveData.length,
@@ -351,6 +343,21 @@ void _showAddLeaveDialog(BuildContext context) {
   String leaveType = "Compensatory Off";
   String? attachedFile;
 
+  Future<void> _selectDate(
+      BuildContext context, TextEditingController controller) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (picked != null) {
+      controller.text =
+          "${picked.toLocal()}".split(' ')[0]; // Format the date as needed
+    }
+  }
+
   showDialog(
     context: context,
     builder: (context) {
@@ -362,19 +369,196 @@ void _showAddLeaveDialog(BuildContext context) {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDropdownField("Leave Type", leaveType, (newValue) {
-                    setState(() {
+                  DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      label: RichText(
+                        text: TextSpan(
+                          text: 'Select Leave Type',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: 16,
+                          ),
+                          children: const [
+                            TextSpan(
+                              text: '*',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        borderSide: BorderSide(
+                          color: Colors.grey.withOpacity(0.7),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        borderSide: BorderSide(
+                          color: Colors.grey.withOpacity(0.4),
+                        ),
+                      ),
+                    ),
+                    items: [
+                      "Compensatory Off",
+                      "Paid Leave",
+                      "Unpaid Leave",
+                      "Sick Leave",
+                      "Casual Leave",
+                    ].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      // Handle the new selected value
                       leaveType = newValue!;
-                    });
-                  }),
+                    },
+                  ),
                   const SizedBox(height: 10),
-                  _buildDateField("Start Date", startDateController, context),
+                  TextFormField(
+                    controller: startDateController,
+                    decoration: InputDecoration(
+                      label: RichText(
+                        text: TextSpan(
+                          text: 'Start Date',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: 16,
+                          ),
+                          children: const [
+                            TextSpan(
+                              text: '*',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      prefixIcon: const Icon(Icons.calendar_today),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        borderSide: BorderSide(
+                          color: Colors.grey.withOpacity(0.7),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        borderSide: BorderSide(
+                          color: Colors.grey.withOpacity(0.4),
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 15,
+                        horizontal: 10,
+                      ),
+                    ),
+                    onTap: () => _selectDate(context, startDateController),
+                    readOnly: true, // Makes the text field read-only
+                  ),
                   const SizedBox(height: 10),
-                  _buildDateField("End Date", endDateController, context),
+                  TextFormField(
+                    controller: endDateController,
+                    decoration: InputDecoration(
+                      label: RichText(
+                        text: TextSpan(
+                          text: 'End Date',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: 16,
+                          ),
+                          children: const [
+                            TextSpan(
+                              text: '*',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      prefixIcon: const Icon(Icons.calendar_today),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        borderSide: BorderSide(
+                          color: Colors.grey.withOpacity(0.7),
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        borderSide: BorderSide(
+                          color: Colors.grey.withOpacity(0.4),
+                        ),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 15,
+                        horizontal: 10,
+                      ),
+                    ),
+                    onTap: () => _selectDate(context, endDateController),
+                    readOnly: true, // Makes the text field read-only
+                  ),
                   const SizedBox(height: 10),
-                  _buildNumberField("Number of Days", numberOfDaysController),
+                  TextFormField(
+                    keyboardType: TextInputType.number,
+                    controller: numberOfDaysController,
+                    decoration: InputDecoration(
+                      label: RichText(
+                        text: TextSpan(
+                          text: 'Number Of Days',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: 16,
+                          ),
+                          children: const [
+                            TextSpan(
+                              text: '*',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25)),
+                    ),
+                  ),
                   const SizedBox(height: 10),
-                  _buildTextField("Reason", reasonController),
+                  TextFormField(
+                    maxLines: 4,
+                    controller: reasonController,
+                    decoration: InputDecoration(
+                      label: RichText(
+                        text: TextSpan(
+                          text: 'Reason',
+                          style: TextStyle(
+                            color: Colors.grey[700],
+                            fontSize: 16,
+                          ),
+                          children: const [
+                            TextSpan(
+                              text: '*',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 20,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25)),
+                    ),
+                  ),
                   const SizedBox(height: 10),
                   TextButton.icon(
                     onPressed: () async {
@@ -393,7 +577,15 @@ void _showAddLeaveDialog(BuildContext context) {
                       }
                     },
                     icon: const Icon(Icons.attach_file),
-                    label: const Text("Attach File"),
+                    label: const Row(
+                      children: [
+                        Text("Attach File "),
+                        Text(
+                          "*",
+                          style: TextStyle(color: Colors.red),
+                        )
+                      ],
+                    ),
                   ),
                   if (attachedFile != null)
                     Flexible(
@@ -440,6 +632,16 @@ Widget _buildTextField(String label, TextEditingController controller) {
     controller: controller,
     decoration: InputDecoration(
       labelText: label,
+      suffixIcon: const Text(
+        '*',
+        style: TextStyle(
+          color: Colors.red,
+        ),
+      ),
+      labelStyle: TextStyle(
+        color: Colors.black,
+      ),
+      floatingLabelBehavior: FloatingLabelBehavior.auto,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
     ),
   );
@@ -451,7 +653,8 @@ Widget _buildDateField(
     controller: controller,
     readOnly: true,
     decoration: InputDecoration(
-      labelText: label,
+      labelText: '$label *',
+      floatingLabelBehavior: FloatingLabelBehavior.auto,
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
     ),
     onTap: () async {
@@ -465,40 +668,5 @@ Widget _buildDateField(
         controller.text = "${selectedDate.toLocal()}".split(' ')[0];
       }
     },
-  );
-}
-
-Widget _buildNumberField(String label, TextEditingController controller) {
-  return TextField(
-    controller: controller,
-    keyboardType: TextInputType.number,
-    decoration: InputDecoration(
-      labelText: label,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
-    ),
-  );
-}
-
-Widget _buildDropdownField(
-    String label, String selectedValue, ValueChanged<String?> onChanged) {
-  return DropdownButtonFormField<String>(
-    value: selectedValue,
-    decoration: InputDecoration(
-      labelText: label,
-      border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
-    ),
-    items: [
-      "Compensatory Off",
-      "Paid Leave",
-      "Unpaid Leave",
-      "Sick Leave",
-      "Casual Leave",
-    ]
-        .map((type) => DropdownMenuItem<String>(
-              value: type,
-              child: Text(type),
-            ))
-        .toList(),
-    onChanged: onChanged,
   );
 }

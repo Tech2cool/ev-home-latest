@@ -10,7 +10,9 @@ class SiteVisitInfoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Site Visit Info"),
+        title: const Text(
+          "Site Visit Info",
+        ),
         backgroundColor: Colors.orange,
       ),
       body: SingleChildScrollView(

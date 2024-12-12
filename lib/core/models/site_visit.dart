@@ -73,7 +73,7 @@ class SiteVisit {
 
   factory SiteVisit.fromMap(Map<String, dynamic> map) {
     return SiteVisit(
-      date: map['createdAt'] != null
+      date: map['date'] != null
           ? DateTime.parse(map['date'])
           : DateTime.parse(map['createdAt']),
       firstName: map['firstName'],
@@ -87,7 +87,7 @@ class SiteVisit {
       feedback: map['feedback'],
       namePrefix: map['namePrefix'],
       source: map['source'],
-      visitType: (map['visitType']),
+      visitType: map['visitType'],
       projects: map['projects'] != null
           ? List<OurProject>.from(
               (map['projects'] as List).map((e) => OurProject.fromJson(e)))

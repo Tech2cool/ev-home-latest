@@ -70,6 +70,12 @@ class _SiteVisitInfoPageState extends State<SiteVisitInfoPage> {
                 const Divider(thickness: 1, height: 20),
                 _buildSectionTitle("Visit Details"),
                 NamedCard(
+                  icon: Icons.type_specimen_rounded,
+                  heading: "Visit Type",
+                  value: widget.visit.visitType ?? "",
+                ),
+                const SizedBox(height: 5),
+                NamedCard(
                   icon: Icons.calendar_today,
                   heading: "Date",
                   value: Helper.formatDate(

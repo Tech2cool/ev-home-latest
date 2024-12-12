@@ -5,6 +5,10 @@ import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'dart:io';
+import 'package:csv/csv.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ClosingManagerLeadListPage extends StatefulWidget {
   final String status;
@@ -29,6 +33,65 @@ class _ClosingManagerLeadListPageState
   int currentPage = 1;
   int totalPages = 1;
   Timer? _debounce;
+  String? _selectedStatus;
+
+  final List<DropdownMenuItem<String>> listOfStatus = const [
+    DropdownMenuItem(
+      value: "active",
+      child: Text("Active"),
+    ),
+    DropdownMenuItem(
+      value: "inactive",
+      child: Text("In-active"),
+    ),
+  ];
+
+  Future<void> saveCSVToDownloads(List<Map<String, dynamic>> data) async {
+    try {
+      // Check and request storage permission
+      if (await Permission.storage.request().isGranted) {
+        // Define headers and rows
+        List<List<dynamic>> rows = [];
+        if (data.isNotEmpty) {
+          // Add headers
+          rows.add(data.first.keys.toList());
+
+          // Add data rows
+          for (var row in data) {
+            rows.add(row.values.toList());
+          }
+        }
+
+        // Convert to CSV format
+        String csv = const ListToCsvConverter().convert(rows);
+
+        // Get the Downloads directory
+        Directory? downloadsDirectory =
+            Directory('/storage/emulated/0/Download');
+        if (!downloadsDirectory.existsSync()) {
+          downloadsDirectory = await getExternalStorageDirectory();
+        }
+
+        final path =
+            "${downloadsDirectory!.path}/data_${DateTime.now().millisecondsSinceEpoch}.csv";
+
+        // Write CSV to file
+        final file = File(path);
+        await file.writeAsString(csv);
+
+        // Notify the user
+        print("File saved at: $path");
+        // For download manager notification
+        if (Platform.isAndroid) {
+          print("You can integrate DownloadManager notification if needed.");
+        }
+      } else {
+        print("Permission not granted to write to storage.");
+      }
+    } catch (e) {
+      print("Error saving CSV to Downloads: $e");
+    }
+  }
 
   // Fetch initial leads or leads based on a new search
   Future<void> getLeads({bool resetPage = false}) async {
@@ -54,7 +117,7 @@ class _ClosingManagerLeadListPageState
       searchQuery,
       currentPage,
       10,
-      widget.status.toLowerCase() == "total" ? null : widget.status.toString(),
+      _selectedStatus ?? widget.status.toString(),
     );
 
     if (mounted) {
@@ -94,6 +157,13 @@ class _ClosingManagerLeadListPageState
     return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
   }
 
+  void onTapFilter(String status) {
+    setState(() {
+      _selectedStatus = status;
+    });
+    getLeads(resetPage: true);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -108,7 +178,72 @@ class _ClosingManagerLeadListPageState
       children: [
         Scaffold(
           appBar: AppBar(
-            title: Text("Tagging Report - ${widget.status}"),
+            title: Text(
+              "Tagging Report - ${_selectedStatus ?? widget.status}",
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            actions: [
+              IconButton(
+                padding: const EdgeInsets.all(15),
+                onPressed: () {
+                  showMenu(
+                    context: context,
+                    position: RelativeRect.fromLTRB(
+                      MediaQuery.of(context).size.width - 50,
+                      kToolbarHeight + 12,
+                      12,
+                      0,
+                    ),
+                    items: [
+                      PopupMenuItem(
+                        value: 'total',
+                        child: const Text('All'),
+                        onTap: () => onTapFilter("total"),
+                      ),
+                      PopupMenuItem(
+                        value: 'visit-done',
+                        child: const Text('Visit Done'),
+                        onTap: () => onTapFilter("visit-done"),
+                      ),
+                      PopupMenuItem(
+                        value: 'revisit-done',
+                        child: const Text('Revisit Done'),
+                        onTap: () => onTapFilter("revisit-done"),
+                      ),
+                      PopupMenuItem(
+                        value: 'booking-done',
+                        child: const Text('Booking Done'),
+                        onTap: () => onTapFilter("booking-done"),
+                      ),
+                      PopupMenuItem(
+                        value: 'visit-pending',
+                        child: const Text('Visit Pending'),
+                        onTap: () => onTapFilter("visit-pending"),
+                      ),
+                      PopupMenuItem(
+                        value: 'revisit-pending',
+                        child: const Text('Revisit Pending'),
+                        onTap: () => onTapFilter("revisit-pending"),
+                      ),
+                      PopupMenuItem(
+                        value: 'pending',
+                        child: const Text('Both Pending'),
+                        onTap: () => onTapFilter("pending"),
+                      ),
+                      PopupMenuItem(
+                        value: 'tagging-over',
+                        child: const Text('Tagging Over'),
+                        onTap: () => onTapFilter("tagging-over"),
+                      ),
+                    ],
+                  );
+                },
+                icon: const Icon(Icons.filter_list),
+              )
+            ],
           ),
           body: Column(
             children: [
@@ -136,6 +271,21 @@ class _ClosingManagerLeadListPageState
                   ),
                 ),
               ),
+              // ElevatedButton(
+              //     onPressed: () => saveCSVToDownloads(
+              //           filteredLeads.map((ele) => ele.toExportJson()).toList(),
+              //         ),
+              //     child: Text("export csv")),
+              if (!isLoading && filteredLeads.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Text(
+                    "No leads found",
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
               Expanded(
                 child: NotificationListener<ScrollNotification>(
                   onNotification: (ScrollNotification scrollInfo) {
@@ -228,9 +378,10 @@ class _ClosingManagerLeadListPageState
                                         ),
                                         const SizedBox(height: 5),
                                         NamedCard(
-                                          heading: "Tagging Date",
+                                          heading: "Assign Date",
                                           value: Helper.formatDate(
-                                            lead.startDate.toString(),
+                                            lead.cycle?.startDate?.toString() ??
+                                                "NA",
                                           ),
                                         ),
                                         const SizedBox(width: 5),

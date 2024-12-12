@@ -134,6 +134,10 @@ class _DemandLetterState extends State<DemandLetter> {
   bool showAdditionalNameInput = false;
 
   final NumberFormat currencyFormat = NumberFormat('#,##,##,##0', 'en_IN');
+  String formatCurrencyWithMinus(double value) {
+    String formattedValue = currencyFormat.format(value.abs());
+    return value < 0 ? '- ' : '₹$formattedValue';
+  }
 
   @override
   void initState() {
@@ -537,7 +541,7 @@ class _DemandLetterState extends State<DemandLetter> {
             Text(
                 'Net Amount: ${currencyFormat.format(calculatedValues!['baseAmount'])}'),
             Text(
-                'TDS +GST/SGST ${currencyFormat.format(calculatedValues!['gstAmount']! + calculatedValues!['tdsAmount']!)}'),
+                'TDS +GST/SGST ${currencyFormat.format(calculatedValues!['gstAmount']!)}'),
             Text(
                 'Total Due: ${currencyFormat.format(calculatedValues!['totalDue'])}'),
           ],
@@ -1003,7 +1007,7 @@ class _DemandLetterState extends State<DemandLetter> {
     double baseAmount = (totalDue / 1.05);
     double gstAmount = totalDue - baseAmount;
     double tdsAmount = baseAmount * 0.01;
-    double netAmount = baseAmount - tdsAmount;
+    double netAmount = baseAmount;
 
     double receivedBase =
         double.parse(netAmountController.text.replaceAll(',', ''));
@@ -1013,18 +1017,18 @@ class _DemandLetterState extends State<DemandLetter> {
 
     remainingBase = baseAmount - receivedBase;
     remainingGst = gstAmount - receivedGst;
-    remainingTds = tdsAmount - receivedTds;
-    double remainingTotal = (remainingBase - remainingTds) + remainingGst;
+    remainingTds = tdsAmount;
+    double remainingTotal = remainingBase + remainingGst;
 
     double latePaymentCharge = remainingBase * (reminderDays / 100.0);
     double latePaymentGST = latePaymentCharge * 0.18;
     double latetdspayment = 0.0;
     double totalLatePayment = latePaymentCharge + latePaymentGST;
 
-    double finalBase = remainingBase + latePaymentCharge;
-    double finalGst = remainingGst + latePaymentGST;
+    double finalBase = remainingBase;
+    double finalGst = remainingGst;
     double finaltds = remainingTds;
-    double finalTotal = (finalBase - finaltds) + finalGst;
+    double finalTotal = finalBase + finalGst;
 
     List<pw.TableRow> rows = [
       _buildPdfTableRow(
@@ -1048,21 +1052,27 @@ class _DemandLetterState extends State<DemandLetter> {
         'Total Amount Payable on or before ${selectedDate != null ? DateFormat('dd-MM-yyyy').format(selectedDate!) : 'N/A'}',
         currencyFormat.format(remainingBase),
         currencyFormat.format(remainingGst),
-        currencyFormat.format(remainingTds),
+        // currencyFormat.format(remainingTds),
+        "-",
+
         currencyFormat.format(remainingTotal),
       ]),
       _buildPdfTableRow([
         'Add - Late payment charges @ $reminderDays${reminderDays > 1 ? '%' : ''}  + GST @ 18%',
         currencyFormat.format(latePaymentCharge),
         currencyFormat.format(latePaymentGST),
-        currencyFormat.format(latetdspayment),
+        // currencyFormat.format(latetdspayment),
+        "-",
+
         currencyFormat.format(totalLatePayment)
       ]),
       _buildPdfTableRow([
         'Total Amount Payable after ${selectedDate != null ? DateFormat('dd-MM-yyyy').format(selectedDate!) : 'N/A'}',
         currencyFormat.format(finalBase),
         currencyFormat.format(finalGst),
-        currencyFormat.format(finaltds),
+        // currencyFormat.format(finaltds),
+        "-",
+
         currencyFormat.format(finalTotal)
       ]),
     ];

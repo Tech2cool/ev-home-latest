@@ -171,15 +171,27 @@ class _TimeInOutScreenState extends State<TimeInOutScreen> {
             return;
           }
 
-          Map<String, dynamic> data = {
-            "userId": settingProvider.loggedAdmin!.id!,
-            "checkInLatitude": geolocationProvider.latitude,
-            "checkInLongitude": geolocationProvider.longitude,
-            "checkInPhoto": uploadedResp.downloadUrl,
-          };
-          print("opcm 0");
-          final resp = await attendanceProvider.checkIn(data);
-          print("opcm 1");
+          if (attendanceProvider.status != "present") {
+            Map<String, dynamic> data = {
+              "userId": settingProvider.loggedAdmin!.id!,
+              "checkInLatitude": geolocationProvider.latitude,
+              "checkInLongitude": geolocationProvider.longitude,
+              "checkInPhoto": uploadedResp.downloadUrl,
+            };
+
+            print("opcm 0");
+            final resp = await attendanceProvider.checkIn(data);
+            print("opcm 1");
+          } else {
+            Map<String, dynamic> data2 = {
+              "userId": settingProvider.loggedAdmin!.id!,
+              "checkOutLatitude": geolocationProvider.latitude,
+              "checkOutLongitude": geolocationProvider.longitude,
+              "checkOutPhoto": uploadedResp.downloadUrl,
+            };
+
+            final resp = await attendanceProvider.checkOut(data2);
+          }
 
           // final bool checkIn = todayAttendance == null ||
           //     (todayAttendance != null &&

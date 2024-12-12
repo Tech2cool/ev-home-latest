@@ -2,11 +2,16 @@ import 'dart:io';
 import 'package:ev_homes/components/digital_clock.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/helper/helper.dart';
+import 'package:ev_homes/core/models/division.dart';
 import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/lead.dart';
+import 'package:ev_homes/core/models/meetingSummary.dart';
+import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_postsale_lead.dart';
+import 'package:ev_homes/pages/admin_pages/admin_forms/add_site_visit_form_page.dart';
+import 'package:ev_homes/pages/admin_pages/followup_page.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -39,6 +44,13 @@ class _ClosingManagerLeadDetailsPageState
   final TextEditingController _notificationController = TextEditingController();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _templateController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
+  final TextEditingController _projectController = TextEditingController();
+  OurProject? _selectedProject;
+  String? selectedPurpose;
+  Division? selectedPlace;
+  final purposes = ['Pricing', 'Booking', 'Negotiation', 'Payment'];
 
   Future<void> _pickImages() async {
     final List<XFile> images = await _picker.pickMultiImage();
@@ -109,148 +121,6 @@ class _ClosingManagerLeadDetailsPageState
       // );
     }
   }
-
-  // void _showNotificationPreview() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return Dialog(
-  //         shape: RoundedRectangleBorder(
-  //           borderRadius: BorderRadius.circular(12.0),
-  //         ),
-  //         child: SingleChildScrollView(
-  //           child: Padding(
-  //             padding: const EdgeInsets.all(16),
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 Row(
-  //                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                   children: [
-  //                     Row(
-  //                       children: [
-  //                         Container(
-  //                           decoration: BoxDecoration(
-  //                             shape: BoxShape.circle,
-  //                             color: Colors.indigo[600],
-  //                           ),
-  //                           padding: const EdgeInsets.all(8),
-  //                           child: const Icon(
-  //                             Icons.notifications,
-  //                             color: Colors.white,
-  //                             size: 12,
-  //                           ),
-  //                         ),
-  //                         const SizedBox(width: 8),
-  //                         const Text(
-  //                           'EV Home',
-  //                           style: TextStyle(
-  //                             fontSize: 16,
-  //                             fontWeight: FontWeight.bold,
-  //                           ),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                     IconButton(
-  //                       icon: const Icon(Icons.arrow_drop_down),
-  //                       onPressed: () {
-  //                         Navigator.pop(context);
-  //                       },
-  //                     ),
-  //                   ],
-  //                 ),
-  //                 const SizedBox(height: 16),
-  //                 Padding(
-  //                   padding: const EdgeInsets.only(left: 32.0),
-  //                   child: Text(
-  //                     _titleController.text,
-  //                     style: const TextStyle(
-  //                       fontSize: 16,
-  //                       fontWeight: FontWeight.bold,
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 const SizedBox(height: 8),
-  //                 Padding(
-  //                   padding: const EdgeInsets.only(left: 32.0),
-  //                   child: Text(
-  //                     _notificationController.text,
-  //                     style: const TextStyle(fontSize: 16),
-  //                   ),
-  //                 ),
-  //                 const SizedBox(height: 8),
-  //                 if (_selectedImages.isNotEmpty)
-  //                   Padding(
-  //                     padding: const EdgeInsets.only(left: 32.0),
-  //                     child: SizedBox(
-  //                       height: 150,
-  //                       child: ListView.builder(
-  //                         scrollDirection: Axis.horizontal,
-  //                         itemCount: _selectedImages.length,
-  //                         itemBuilder: (context, index) {
-  //                           return Padding(
-  //                             padding: const EdgeInsets.only(right: 8),
-  //                             child: ClipRRect(
-  //                               borderRadius: BorderRadius.circular(12),
-  //                               child: Container(
-  //                                 decoration: BoxDecoration(
-  //                                   boxShadow: [
-  //                                     BoxShadow(
-  //                                       color: Colors.grey.withOpacity(0.6),
-  //                                       offset: const Offset(3, 3),
-  //                                       blurRadius: 8,
-  //                                       spreadRadius: 3,
-  //                                     ),
-  //                                   ],
-  //                                 ),
-  //                                 child: Image.file(
-  //                                   File(_selectedImages[index].path),
-  //                                   width: 250,
-  //                                   height: 400,
-  //                                   fit: BoxFit.fill,
-  //                                 ),
-  //                               ),
-  //                             ),
-  //                           );
-  //                         },
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 const SizedBox(height: 16),
-  //                 // Show preview section if _isPreviewVisible is true
-  //                 if (_isPreviewVisible)
-  //                   Padding(
-  //                     padding: const EdgeInsets.all(16),
-  //                     child: Column(
-  //                       children: [
-  //                         Text(
-  //                           'Preview Notification',
-  //                           style: TextStyle(
-  //                             fontSize: 18,
-  //                             fontWeight: FontWeight.bold,
-  //                           ),
-  //                         ),
-  //                         const SizedBox(height: 16),
-  //                         Text(
-  //                           'Title: ${_titleController.text}',
-  //                           style: const TextStyle(fontSize: 16),
-  //                         ),
-  //                         const SizedBox(height: 8),
-  //                         Text(
-  //                           'Notification: ${_notificationController.text}',
-  //                           style: const TextStyle(fontSize: 16),
-  //                         ),
-  //                       ],
-  //                     ),
-  //                   ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
 
   void _showAssignTaskDialog(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(
@@ -492,12 +362,41 @@ class _ClosingManagerLeadDetailsPageState
       await settingProvider.getTask(
         settingProvider.loggedAdmin!.id!,
       );
+      await settingProvider.getDivision();
     } catch (e) {
       //
     } finally {
       setState(() {
         isLoading = false;
       });
+    }
+  }
+
+  void _handleSubmit() async {
+    print("yes");
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+
+    final newMeeting = MeetingSummary(
+        date: _selectedDateTime,
+        // place: selectedPlace,
+        purpose: selectedPurpose!,
+        project: _selectedProject,
+        lead: widget.lead,
+        meetingWith: settingProvider.loggedAdmin,
+        customer: null);
+    // print("yes1");
+    Map<String, dynamic> meetingSummary = newMeeting.toMap();
+    // if (newMeeting.customer != null) {
+    //   meetingSummary['customer'] = newMeeting.customer!.id;
+    // }
+    // print(meetingSummary);
+    // print("yes3");
+    try {
+      await settingProvider.addMeetingSummary(meetingSummary);
+      // print("yes4");
+    } catch (e) {
+      // print(e);
     }
   }
 
@@ -524,6 +423,9 @@ class _ClosingManagerLeadDetailsPageState
   void initState() {
     super.initState();
     onRefresh();
+    _selectedDateTime = DateTime.now();
+    _nameController.text =
+        '${widget.lead?.firstName ?? ""} ${widget.lead?.lastName ?? ""}';
   }
 
   @override
@@ -554,9 +456,6 @@ class _ClosingManagerLeadDetailsPageState
                       break;
                     case 'assign_tasks':
                       _showAssignTaskDialog(context);
-                      break;
-                    case 'status':
-                      // Handle status logic if needed
                       break;
                   }
                 },
@@ -592,18 +491,50 @@ class _ClosingManagerLeadDetailsPageState
                             value: selectedStatus,
                             underline: SizedBox.shrink(),
                             onChanged: (value) async {
-                              if (value == "Visited") {
-                                await ApiService()
-                                    .updateLeadStatus(widget.lead.id, {
-                                  "status": "visited",
-                                });
-                                Navigator.of(context).pop();
-                              } else if (value == "Revisited") {
-                                await ApiService()
-                                    .updateLeadStatus(widget.lead.id, {
-                                  "status": "revisited",
-                                });
-                                Navigator.of(context).pop();
+                              if (value == "visited") {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => AddSiteVisitFormPage(
+                                      lead: widget.lead,
+                                      status: "visit",
+                                    ),
+                                  ),
+                                );
+                                // await ApiService()
+                                //     .updateLeadStatus(widget.lead.id, {
+                                //   "status": "visited",
+                                // });
+                                // Navigator.of(context).pop();
+                              } else if (value == "revisited") {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => AddSiteVisitFormPage(
+                                      lead: widget.lead,
+                                      status: "revisit",
+                                    ),
+                                  ),
+                                );
+
+                                // await ApiService()
+                                //     .updateLeadStatus(widget.lead.id, {
+                                //   "status": "revisited",
+                                // });
+                                // Navigator.of(context).pop();
+                              } else if (value == "virtual-meeting") {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => AddSiteVisitFormPage(
+                                      lead: widget.lead,
+                                      status: "virtual-meeting",
+                                    ),
+                                  ),
+                                );
+
+                                // await ApiService()
+                                //     .updateLeadStatus(widget.lead.id, {
+                                //   "status": "revisited",
+                                // });
+                                // Navigator.of(context).pop();
                               }
 
                               setState(() {
@@ -624,10 +555,11 @@ class _ClosingManagerLeadDetailsPageState
                               });
                             },
                             items: <String>[
-                              'Called',
-                              'Visited',
-                              'Revisited',
-                              'Booked'
+                              'called',
+                              'visited',
+                              'revisited',
+                              'virtual-meeting',
+                              'booked'
                             ].map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -637,6 +569,19 @@ class _ClosingManagerLeadDetailsPageState
                           ),
                         ],
                       ),
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'follow_up',
+                      child: const Text('Follow-Up'),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                FollowupPage(lead: widget.lead),
+                          ),
+                        );
+                      },
                     ),
                   ];
                 },
@@ -782,12 +727,42 @@ class _ClosingManagerLeadDetailsPageState
                       const SizedBox(
                         height: 12,
                       ),
-                      if (widget.lead.callHistory.isNotEmpty) ...[
+                      const SizedBox(height: 24),
+                      if (widget.lead.cycleHistory.isNotEmpty) ...[
                         const Text(
                           'Follow-up History',
                           style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        ...List.generate(
+                          widget.lead.cycleHistory.length,
+                          (i) {
+                            final appl = widget.lead.cycleHistory[i];
+                            return CustomTimelineTile(
+                              title: appl.teamLeader != null
+                                  ? "${appl.teamLeader?.firstName ?? ''} ${appl.teamLeader?.lastName ?? ''}"
+                                  : "NA",
+                              date:
+                                  "${Helper.formatDate(appl.startDate?.toString() ?? '')} to ${Helper.formatDate(appl.validTill?.toString() ?? '')}",
+                              description: appl.stage ?? "NA",
+                              color: Colors.red.withOpacity(0.8),
+                              isFirst: i == 0,
+                              isLast: i == widget.lead.callHistory.length - 1,
+                            );
+                          },
+                        ),
+                      ],
+                      if (widget.lead.callHistory.isNotEmpty) ...[
+                        const Padding(
+                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
+                          child: Text(
+                            'Follow-up History',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 8),
@@ -795,35 +770,19 @@ class _ClosingManagerLeadDetailsPageState
                           widget.lead.callHistory.length,
                           (i) {
                             final appl = widget.lead.callHistory[i];
-                            return Card(
-                              margin: const EdgeInsets.only(bottom: 8),
-                              child: ListTile(
-                                leading: const CircleAvatar(
-                                  child: Icon(Icons.calendar_today),
-                                ),
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      appl.caller != null
-                                          ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
-                                          : "NA",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      Helper.formatDate(
-                                          appl.callDate?.toString() ?? ''),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                                subtitle: Text(
-                                  appl.remark ?? "NA",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
+                            return Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              child: CustomTimelineTile(
+                                title: appl.caller != null
+                                    ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
+                                    : "NA",
+                                date: Helper.formatDate(
+                                    appl.callDate?.toString() ?? ''),
+                                description: "${appl.remark}\n${appl.feedback}",
+                                color: Colors.red.withOpacity(0.8),
+                                isFirst: i == 0,
+                                isLast: i == widget.lead.callHistory.length - 1,
                               ),
                             );
                           },
@@ -866,87 +825,6 @@ class _ClosingManagerLeadDetailsPageState
                       const SizedBox(
                         height: 12,
                       ),
-                      if (widget.lead.callHistory.isNotEmpty) ...[
-                        const Text(
-                          'Contact History',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        ...List.generate(
-                          widget.lead.callHistory.length,
-                          (i) {
-                            final appl = widget.lead.callHistory[i];
-                            return Card(
-                              margin: const EdgeInsets.only(bottom: 8),
-                              child: ListTile(
-                                leading: const CircleAvatar(
-                                  child: Icon(Icons.calendar_today),
-                                ),
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      appl.caller != null
-                                          ? "${appl.caller?.firstName ?? ''} ${appl.caller?.lastName ?? ''}"
-                                          : "NA",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    Text(
-                                      Helper.formatDate(
-                                          appl.callDate?.toString() ?? ''),
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                                subtitle: Text(
-                                  appl.remark ?? "NA",
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ] else ...[
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(16, 0, 0, 0),
-                          child: Text(
-                            'Contact History',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                          child: Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.grey.shade400),
-                            ),
-                            child: const Padding(
-                              padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                              child: Text(
-                                'No Contact History Yet',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
                       const SizedBox(height: 24),
                     ],
                   ),
@@ -1081,7 +959,7 @@ class _ClosingManagerLeadDetailsPageState
     return Padding(
       padding: const EdgeInsets.all(12),
       child: Container(
-        padding: EdgeInsets.all(12),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
@@ -1091,12 +969,31 @@ class _ClosingManagerLeadDetailsPageState
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Send Notification',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                children: [
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => _onPressedSendNotification(),
+                        icon: const Icon(Icons.arrow_back),
+                      ),
+                      const Text(
+                        'Send Notification',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Text(
+                    'Send Notification',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               TextField(
@@ -1168,10 +1065,9 @@ class _ClosingManagerLeadDetailsPageState
                         }
                       }
 
-                      //TODO:Send Notification
                       Map<String, dynamic> data = {
                         "title": _titleController.text,
-                        "message": _notificationController,
+                        "message": _notificationController.text,
                         "image": imageUrl,
                         "leadRef": widget.lead.id,
                         "templateName": _templateController.text,
@@ -1342,17 +1238,7 @@ class _ClosingManagerLeadDetailsPageState
 
   Widget _buildAppointmentSection() {
     return SingleChildScrollView(
-      child:
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          // children: [
-          // const Text(
-          //   'Schedule Appointment',
-          //   style: TextStyle(
-          //     fontSize: 20,
-          //     fontWeight: FontWeight.bold,
-          //   ),
-          // ),
-          Column(
+      child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           DigitalDateTimePicker(
@@ -1361,9 +1247,33 @@ class _ClosingManagerLeadDetailsPageState
               setState(() {
                 _selectedDateTime = newDateTime;
               });
-              print('Selected date time: $newDateTime');
             },
           ),
+          const SizedBox(height: 10),
+          ElevatedButton(
+            onPressed:
+                _showConfirmationDialog, // Call the dialog on button press
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.indigo, // Button background color
+              foregroundColor: Colors.white, // Text color
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 32, vertical: 13), // Padding
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30), // Rounded corners
+              ),
+              elevation: 5, // Shadow effect
+            ),
+            child: const Text(
+              'Confirm',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold, // Optional: Makes the text bold
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          )
           // const SizedBox(height: 16),
           // if (_selectedDateTime != null)
           //   Text(
@@ -1391,6 +1301,189 @@ class _ClosingManagerLeadDetailsPageState
         ],
       ),
       // ],
+    );
+  }
+
+  void _showConfirmationDialog() {
+    // bool _is24HourFormat = true;
+    // bool isLoading = true;
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    final divisions = settingProvider.divisions;
+    // print(divisions);
+
+    // print(projects);
+    // if (_selectedDateTime == null) {
+    //   Helper.showCustomSnackBar("Please select date");
+    //   return;
+    // }
+
+    String formattedDateTime =
+        DateFormat('dd-MM-yyyy HH:mm').format(_selectedDateTime!);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: TextEditingController(
+                      text:
+                          formattedDateTime), // Display the formatted date and time
+                  readOnly: true, // Make it read-only
+                  decoration: const InputDecoration(
+                    labelText: 'Selected Date and Time',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: _nameController,
+                  decoration: const InputDecoration(
+                    labelText: 'Name',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 10),
+
+                DropdownButtonFormField<String>(
+                  value: selectedPurpose,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedPurpose = newValue;
+                    });
+                  },
+                  items: purposes.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  decoration: const InputDecoration(
+                    labelText: 'Purpose',
+                    border: OutlineInputBorder(),
+                    // prefixIcon: Icon(Icons.note),
+                  ),
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a purpose';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 10),
+
+                // DropdownButtonFormField<Division>(
+                //   value:
+                //       divisions.contains(selectedPlace) ? selectedPlace : null,
+                //   decoration: InputDecoration(
+                //     labelText: 'Select Division',
+                //     border(
+                //       borderRadius: BorderRadius.circular(5),
+                //     ),
+                //   ),
+                //   items: divisions.map((ele) {
+                //     return DropdownMenuItem<Division>(
+                //       value: ele,
+                //       child: Row(
+                //         children: [
+                //           Expanded(
+                //             child: Text(
+                //               ele.division ?? "",
+                //               overflow: TextOverflow.ellipsis,
+                //               maxLines: 1,
+                //             ),
+                //           ),
+                //           const SizedBox(width: 4),
+                //         ],
+                //       ),
+                //     );
+                //   }).toList(),
+                //   onChanged: (newValue) {
+                //     setState(() {
+                //       selectedPlace = newValue;
+                //     });
+                //   },
+                //   validator: (value) {
+                //     if (value == null) {
+                //       return 'Please select a Project';
+                //     }
+                //     return null;
+                //   },
+                //   isExpanded: true,
+                // ),
+                DropdownButtonFormField<OurProject>(
+                  value: projects.contains(_selectedProject)
+                      ? _selectedProject
+                      : null,
+                  decoration: InputDecoration(
+                    labelText: 'Select Project',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                  items: projects.map((project) {
+                    return DropdownMenuItem<OurProject>(
+                      value: project,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              project.name ?? "",
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                  onChanged: (newValue) {
+                    setState(() {
+                      _selectedProject = newValue;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return 'Please select a Project';
+                    }
+                    return null;
+                  },
+                  isExpanded: true,
+                ),
+                // TextField(
+                //   controller: _projectController,
+                //   decoration: const InputDecoration(
+                //     labelText: 'Project',
+                //     border: OutlineInputBorder(),
+                //   ),
+                // ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                _handleSubmit();
+
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Confirm'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
     );
   }
 

@@ -28,6 +28,7 @@ class _SalesManagerLeadListPageState extends State<SalesManagerLeadListPage> {
   int currentPage = 1;
   int totalPages = 1;
   Timer? _debounce;
+  String? _selectedStatus;
 
   // Fetch initial leads or leads based on a new search
   Future<void> getLeads({bool resetPage = false}) async {
@@ -53,7 +54,7 @@ class _SalesManagerLeadListPageState extends State<SalesManagerLeadListPage> {
       searchQuery,
       currentPage,
       10,
-      widget.status.toLowerCase() == "total" ? null : widget.status.toString(),
+      _selectedStatus ?? widget.status.toString(),
     );
 
     if (mounted) {
@@ -68,6 +69,13 @@ class _SalesManagerLeadListPageState extends State<SalesManagerLeadListPage> {
         isFetchingMore = false;
       });
     }
+  }
+
+  void onTapFilter(String status) {
+    setState(() {
+      _selectedStatus = status;
+    });
+    getLeads(resetPage: true);
   }
 
   String? getStatus(Lead lead) {
@@ -107,7 +115,72 @@ class _SalesManagerLeadListPageState extends State<SalesManagerLeadListPage> {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: Text("Tagging Report - ${widget.status}"),
+            title: Text(
+              "Tagging Report - ${_selectedStatus ?? widget.status}",
+              style: const TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            actions: [
+              IconButton(
+                padding: const EdgeInsets.all(15),
+                onPressed: () {
+                  showMenu(
+                    context: context,
+                    position: RelativeRect.fromLTRB(
+                      MediaQuery.of(context).size.width - 50,
+                      kToolbarHeight + 12,
+                      12,
+                      0,
+                    ),
+                    items: [
+                      PopupMenuItem(
+                        value: 'total',
+                        child: const Text('All'),
+                        onTap: () => onTapFilter("total"),
+                      ),
+                      PopupMenuItem(
+                        value: 'visit-done',
+                        child: const Text('Visit Done'),
+                        onTap: () => onTapFilter("visit-done"),
+                      ),
+                      PopupMenuItem(
+                        value: 'revisit-done',
+                        child: const Text('Revisit Done'),
+                        onTap: () => onTapFilter("revisit-done"),
+                      ),
+                      PopupMenuItem(
+                        value: 'booking-done',
+                        child: const Text('Booking Done'),
+                        onTap: () => onTapFilter("booking-done"),
+                      ),
+                      PopupMenuItem(
+                        value: 'visit-pending',
+                        child: const Text('Visit Pending'),
+                        onTap: () => onTapFilter("visit-pending"),
+                      ),
+                      PopupMenuItem(
+                        value: 'revisit-pending',
+                        child: const Text('Revisit Pending'),
+                        onTap: () => onTapFilter("revisit-pending"),
+                      ),
+                      PopupMenuItem(
+                        value: 'pending',
+                        child: const Text('Both Pending'),
+                        onTap: () => onTapFilter("pending"),
+                      ),
+                      PopupMenuItem(
+                        value: 'tagging-over',
+                        child: const Text('Tagging Over'),
+                        onTap: () => onTapFilter("tagging-over"),
+                      ),
+                    ],
+                  );
+                },
+                icon: const Icon(Icons.filter_list),
+              )
+            ],
           ),
           body: Column(
             children: [
@@ -135,6 +208,16 @@ class _SalesManagerLeadListPageState extends State<SalesManagerLeadListPage> {
                   ),
                 ),
               ),
+              if (!isLoading && filteredLeads.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Text(
+                    "No leads found",
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
               Expanded(
                 child: NotificationListener<ScrollNotification>(
                   onNotification: (ScrollNotification scrollInfo) {
@@ -227,9 +310,10 @@ class _SalesManagerLeadListPageState extends State<SalesManagerLeadListPage> {
                                         ),
                                         const SizedBox(height: 5),
                                         NamedCard(
-                                          heading: "Tagging Date",
+                                          heading: "Assign Date",
                                           value: Helper.formatDate(
-                                            lead.startDate.toString(),
+                                            lead.cycle?.startDate?.toString() ??
+                                                "NA",
                                           ),
                                         ),
                                         const SizedBox(width: 5),

@@ -1,8 +1,16 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/components/animated_pie_chart.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
+import 'package:ev_homes/core/helper/helper.dart';
+import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/admin_pages/inventory_page1.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_marina_bay.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_nine_square.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_letter.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_letter_9_square.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule%20_nine_square.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule_marina_bay.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/task_list_page.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
@@ -53,6 +61,8 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
       await settingProvider.getTask(
         widget.id ?? settingProvider.loggedAdmin!.id!,
       );
+      await settingProvider.ourProject;
+      await settingProvider.getOurProject();
     } catch (e) {
       // Helper
     } finally {
@@ -60,6 +70,261 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
         isLoading = false;
       });
     }
+  }
+
+  Future<void> _showProjectDialogForCostSheet() async {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    OurProject? selectedProject;
+    // print(settingProvider.ourProject);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Project'),
+          content: DropdownButtonFormField<OurProject>(
+            value: projects.contains(selectedProject) ? selectedProject : null,
+            decoration: InputDecoration(
+              labelText: 'Select Project',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            items: projects.map((project) {
+              return DropdownMenuItem<OurProject>(
+                value: project,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.name ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedProject = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a Project';
+              }
+              return null;
+            },
+            isExpanded: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (selectedProject!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CostGenerators(),
+                    ),
+                  );
+                }
+                if (selectedProject!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CostGenerator(),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Proceed'),
+            ),
+          ],
+        );
+      },
+    );
+    // print(selectedProject);
+  }
+
+  Future<void> _showProjectDialogForPaymentSchedule() async {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    OurProject? selectedProject;
+    // print(settingProvider.ourProject);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Project'),
+          content: DropdownButtonFormField<OurProject>(
+            value: projects.contains(selectedProject) ? selectedProject : null,
+            decoration: InputDecoration(
+              labelText: 'Select Project',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            items: projects.map((project) {
+              return DropdownMenuItem<OurProject>(
+                value: project,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.name ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedProject = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a Project';
+              }
+              return null;
+            },
+            isExpanded: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (selectedProject!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PaymentScheduleGenerators(),
+                    ),
+                  );
+                }
+                if (selectedProject!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PaymentScheduleGenerator(),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Proceed'),
+            ),
+          ],
+        );
+      },
+    );
+    // print(selectedProject);
+  }
+
+  Future<void> _showProjectDialogForDemand() async {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    OurProject? selectedProject;
+    // print(settingProvider.ourProject);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Project'),
+          content: DropdownButtonFormField<OurProject>(
+            value: projects.contains(selectedProject) ? selectedProject : null,
+            decoration: InputDecoration(
+              labelText: 'Select Project',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            items: projects.map((project) {
+              return DropdownMenuItem<OurProject>(
+                value: project,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.name ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedProject = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a Project';
+              }
+              return null;
+            },
+            isExpanded: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (selectedProject!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DemandLetter(),
+                    ),
+                  );
+                }
+                if (selectedProject!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DemandLetter10(),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Proceed'),
+            ),
+          ],
+        );
+      },
+    );
+    // print(selectedProject);
   }
 
   @override
@@ -296,7 +561,11 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                 ],
                               ).then((selectedmonth) {
                                 if (selectedmonth != null) {
-                                  print('Selected filter: $selectedmonth');
+                                  Helper.showCustomSnackBar(
+                                    "No Target info available for $selectedmonth",
+                                    Colors.green,
+                                  );
+                                  // print('Selected filter: $selectedmonth');
                                 }
                               });
                             },
@@ -328,16 +597,17 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                             const SizedBox(width: 8),
                             InkWell(
                               onTap: () {
-                                final selectedValue = showDialog<int>(
+                                showDialog<int>(
                                   context: context,
-                                  builder: (context) =>
-                                      AdminCarryForwardDialog(id: widget.id),
+                                  builder: (context) => AdminCarryForwardDialog(
+                                    id: widget.id,
+                                  ),
                                 );
 
-                                if (selectedValue != null) {
-                                  print(
-                                      "Selected Carry Forward Option: $selectedValue");
-                                }
+                                // if (selectedValue != null) {
+                                // print(
+                                //     "Selected Carry Forward Option: $selectedValue");
+                                // }
                               },
                               child: TargetCircle(
                                 number: target?.carryForward.toString() ?? "0",
@@ -444,7 +714,8 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                   child: Center(
                                     child: Text(
                                       tasks
-                                          .map((ele) => ele.completed == false)
+                                          .where(
+                                              (ele) => ele.completed == false)
                                           .length
                                           .toString(),
                                       style: const TextStyle(
@@ -460,35 +731,157 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           ),
                         ],
                       ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 12.0,
+                        ),
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => InventoryPage1(
+                                              onButtonPressed: (view) {})));
+                                },
+                                icon: const Icon(
+                                  FluentIcons.box_24_regular,
+                                  color: Colors.white,
+                                ),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                ),
+                                label: const Text(
+                                  'Inventory',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 12.0,
+                        ),
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  _showProjectDialogForCostSheet();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                ),
+                                label: const Text(
+                                  'Cost Sheet Generator',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 12.0,
+                        ),
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  _showProjectDialogForPaymentSchedule();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                ),
+                                label: const Text(
+                                  'Payment Schedule',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 12.0,
+                        ),
+                        child: Row(
+                          children: [
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: ElevatedButton.icon(
+                                onPressed: () {
+                                  _showProjectDialogForDemand();
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 10.0),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                ),
+                                label: const Text(
+                                  'Demand Letter',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ],
-                  ),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                Center(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  InventoryPage1(onButtonPressed: (view) {})));
-                    },
-                    icon: const Icon(
-                      FluentIcons.box_24_regular,
-                      color: Colors.white,
-                    ),
-                    label: const Text(
-                      "Inventory",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      textStyle: const TextStyle(fontSize: 16),
-                    ),
                   ),
                 ),
                 const SizedBox(
@@ -677,7 +1070,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                   ),
                                   child: Text(
                                     tasks
-                                        .map((ele) =>
+                                        .where((ele) =>
                                             ele.type == "first-call" &&
                                             ele.completed == false)
                                         .length
@@ -699,7 +1092,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                               MaterialPageRoute(
                                 builder: (context) => TaskListPage(
                                   id: widget.id,
-                                  type: "First Call",
+                                  type: "first-call",
                                 ),
                               ),
                             );
@@ -721,7 +1114,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                   ),
                                   child: Text(
                                     tasks
-                                        .map((ele) =>
+                                        .where((ele) =>
                                             ele.type == "follow-up" &&
                                             ele.completed == false)
                                         .length
@@ -743,7 +1136,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                               MaterialPageRoute(
                                 builder: (context) => TaskListPage(
                                   id: widget.id,
-                                  type: "Follow-Up Call",
+                                  type: "follow-up",
                                 ),
                               ),
                             );
@@ -765,7 +1158,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                   ),
                                   child: Text(
                                     tasks
-                                        .map((ele) =>
+                                        .where((ele) =>
                                             ele.type == "schedule-meeting" &&
                                             ele.completed == false)
                                         .length
@@ -787,7 +1180,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                               MaterialPageRoute(
                                 builder: (context) => TaskListPage(
                                   id: widget.id,
-                                  type: "Schedule Meeting",
+                                  type: "schedule-meeting",
                                 ),
                               ),
                             );

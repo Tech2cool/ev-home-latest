@@ -1,6 +1,7 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/channel_partner.dart';
 import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/our_project.dart';
@@ -26,6 +27,7 @@ class Lead {
   final String? stage;
   final DateTime? startDate;
   final DateTime? validTill;
+  final DateTime? approvalDate;
   final DateTime? previousValidTill;
   final String? status;
 
@@ -63,6 +65,7 @@ class Lead {
     this.remark,
     this.stage,
     required this.startDate,
+    this.approvalDate,
     required this.validTill,
     this.previousValidTill,
     this.status,
@@ -115,6 +118,9 @@ class Lead {
       startDate: json['startDate'] != null
           ? DateTime.parse(json['startDate'])
           : json['startDate'],
+      approvalDate: json['approvalDate'] != null
+          ? DateTime.parse(json['approvalDate'])
+          : json['approvalDate'],
       validTill: json['validTill'] != null
           ? DateTime.parse(json['validTill'])
           : json['validTill'],
@@ -192,6 +198,47 @@ class Lead {
       'cycleHistory': cycleHistory.map((item) => item.toMap()).toList(),
     };
   }
+
+  Map<String, dynamic> toExportJson() {
+    return {
+      'id': id,
+      'email': email ?? "",
+      'project': project.map((pro) => pro.name ?? "").toList(),
+      'requirement': requirement,
+      'firstName': firstName ?? "",
+      'lastName': lastName ?? "",
+      'address': address ?? "",
+      'channelPartner': channelPartner?.firmName ?? '',
+      'dataAnalyzer':
+          "${dataAnalyzer?.firstName ?? ""} ${dataAnalyzer?.lastName ?? ''}",
+      'teamLeader':
+          "${teamLeader?.firstName ?? ''} ${teamLeader?.lastName ?? ''}",
+      'preSalesExecutive':
+          "${preSalesExecutive?.firstName ?? ""} ${preSalesExecutive?.lastName ?? ''}",
+      'countryCode': countryCode ?? "",
+      'phoneNumber': "${countryCode} ${phoneNumber}" ?? "",
+      'altPhoneNumber': altPhoneNumber ?? "",
+      'remark': remark ?? "",
+      'stage': stage ?? "",
+      'startDate': Helper.formatDate(startDate?.toIso8601String() ?? ""),
+      'validTill': Helper.formatDate(validTill?.toIso8601String() ?? ""),
+      'previousValidTill':
+          Helper.formatDate(previousValidTill?.toIso8601String() ?? ""),
+      'status': status ?? "",
+      'approvalStatus': approvalStatus ?? "",
+      'visitStatus': visitStatus ?? "",
+      'revisitStatus': revisitStatus ?? "",
+      'bookingStatus': bookingStatus ?? "",
+      'interestedStatus': interestedStatus ?? "",
+      'callHistory': callHistory.map((item) => item.toExportJson()).toList(),
+      'followupHistory':
+          followupHistory.map((item) => item.toExportJson()).toList(),
+      'approvalHistory':
+          approvalHistory.map((item) => item.toExportJson()).toList(),
+      'updateHistory': updateHistory.map((item) => item.toJson()).toList(),
+      'cycleHistory': cycleHistory.map((item) => item.toExportMap()).toList(),
+    };
+  }
 }
 
 class CallHistory {
@@ -243,6 +290,20 @@ class CallHistory {
       'stage': stage,
       'status': status,
       'siteVisit': siteVisit,
+    };
+  }
+
+  Map<String, dynamic> toExportJson() {
+    return {
+      'caller': "${caller?.firstName ?? ""} ${caller?.lastName ?? ''}",
+      'callDate': callDate?.toIso8601String(),
+      'remark': remark ?? "",
+      'feedback': feedback ?? "",
+      'document': document ?? "",
+      'recording': recording ?? "",
+      'stage': stage ?? "",
+      'status': status ?? "",
+      'siteVisit': siteVisit ?? "",
     };
   }
 }
@@ -302,6 +363,14 @@ class ApprovalHistory {
       'remark': remark,
     };
   }
+
+  Map<String, dynamic> toExportJson() {
+    return {
+      'employee': "${employee?.firstName ?? ""} ${employee?.lastName ?? ''}",
+      'approvedAt': approvedAt?.toIso8601String() ?? "",
+      'remark': remark ?? "",
+    };
+  }
 }
 
 class UpdateHistory {
@@ -330,6 +399,14 @@ class UpdateHistory {
       'employee': employee?.toMap(),
       'updatedAt': updatedAt,
       'changes': changes,
+    };
+  }
+
+  Map<String, dynamic> toExportJson() {
+    return {
+      'employee': "${employee?.firstName ?? ""} ${employee?.lastName ?? ''}",
+      'updatedAt': updatedAt?.toIso8601String() ?? "",
+      'changes': changes ?? "",
     };
   }
 }
@@ -390,6 +467,17 @@ class Cycle {
       'teamLeader': teamLeader?.toMap(),
       'startDate': startDate?.toIso8601String(),
       'validTill': validTill?.toIso8601String(),
+    };
+  }
+
+  Map<String, dynamic> toExportMap() {
+    return <String, dynamic>{
+      'stage': stage ?? "",
+      'currentOrder': currentOrder ?? 0,
+      'teamLeader':
+          "${teamLeader?.firstName ?? ""} ${teamLeader?.lastName ?? ''}",
+      'startDate': startDate?.toIso8601String() ?? "",
+      'validTill': validTill?.toIso8601String() ?? "",
     };
   }
 

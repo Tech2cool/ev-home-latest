@@ -1,7 +1,5 @@
 import 'package:ev_homes/core/providers/setting_provider.dart';
-import 'package:ev_homes/pages/admin_pages/app_dev_pages/analytic_post_sales_page.dart';
 import 'package:ev_homes/pages/admin_pages/app_dev_pages/analytic_pre_sales_page.dart';
-import 'package:ev_homes/pages/admin_pages/app_dev_pages/analytic_sales_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -49,7 +47,7 @@ class _AnalyticDevCardsState extends State<AnalyticDevCards> {
         children: [
           // Translucent gradient background
           Container(
-            decoration: const BoxDecoration( 
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
                   Color.fromRGBO(255, 165, 0, 0.2),
@@ -58,7 +56,7 @@ class _AnalyticDevCardsState extends State<AnalyticDevCards> {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-            ), 
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
@@ -85,7 +83,7 @@ class _AnalyticDevCardsState extends State<AnalyticDevCards> {
                         Icons.analytics,
                         () {
                           Navigator.of(context).push(
-                            MaterialPageRoute(           
+                            MaterialPageRoute(
                               builder: (context) => AnalyticDesignationsPage(
                                 designations: team.designations,
                                 section: team.section,
@@ -190,5 +188,4 @@ class _AnalyticDevCardsState extends State<AnalyticDevCards> {
       ),
     );
   }
-
 }

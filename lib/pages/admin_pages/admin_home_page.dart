@@ -1,5 +1,6 @@
 import 'package:ev_homes/components/top_card_with_avatar.dart';
 import 'package:ev_homes/core/constant/constant.dart';
+import 'package:ev_homes/core/providers/attendance_provider.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/shared_pref_service.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,9 @@ class _AdminHomePage2State extends State<AdminHomePage>
   @override
   void initState() {
     super.initState();
-    getSiteVisit();
-    getLeads();
+    // getSiteVisit();
+    // getLeads();
+    onRefresh();
     _controller = AnimationController(
       duration: const Duration(milliseconds: 500), // Adjust to control speed
       vsync: this,
@@ -44,6 +46,21 @@ class _AdminHomePage2State extends State<AdminHomePage>
   void dispose() {
     _controller.dispose(); // Dispose of the controller when done
     super.dispose();
+  }
+
+  Future<void> onRefresh() async {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+    final attProvider = Provider.of<AttendanceProvider>(
+      context,
+      listen: false,
+    );
+
+    try {
+      await attProvider.getCheckIn(settingProvider.loggedAdmin!.id!);
+    } catch (e) {}
   }
 
   Future<void> getSiteVisit() async {

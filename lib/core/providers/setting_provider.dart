@@ -20,16 +20,16 @@ import 'package:ev_homes/core/models/task.dart';
 import 'package:ev_homes/core/models/team_section.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/core/services/shared_pref_service.dart';
-import 'package:ev_homes/pages/admin_pages/admin_forms/add_channer_partner_page.dart';
 import 'package:ev_homes/pages/login_pages/customer_otp_verification_page.dart';
-import 'package:ev_homes/sections/login_sections/admin_login_section.dart';
 import 'package:ev_homes/wrappers/cp_home_wrapper.dart';
 import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 final dio = Dio();
+const storage = FlutterSecureStorage();
 
 class SettingProvider extends ChangeNotifier {
   final ApiService _apiService = ApiService();
@@ -238,9 +238,11 @@ class SettingProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> updateTaskStatus(String id, String status) async {
-    final emps = await _apiService.updateTask(id, {
+  Future<void> updateTaskStatus(String id, String status,
+      [String remark = ""]) async {
+    await _apiService.updateTask(id, {
       "status": status,
+      "remark": remark,
     });
     notifyListeners();
   }
@@ -483,6 +485,26 @@ class SettingProvider extends ChangeNotifier {
     return leads;
   }
 
+  Future<PaginationModel<SiteVisit>> getClosingManagerSiteVisitById(
+    String id, [
+    String query = '',
+    int page = 1,
+    int limit = 10,
+    String status="all"
+  ]) async {
+    final leads = await _apiService.getClosingManagerSiteVisitById(
+      id,
+      query,
+      page,
+      limit,
+      status,
+    );
+
+    _searchSiteVisit = leads;
+    notifyListeners();
+    return leads;
+  }
+
   Future<void> getMyTarget(String id) async {
     final targetResp = await _apiService.getMyTarget(id);
     if (targetResp != null) {
@@ -511,8 +533,10 @@ class SettingProvider extends ChangeNotifier {
     String query = '',
     int page = 1,
     int limit = 10,
+    String status = 'all',
   ]) async {
-    final visits = await _apiService.searchSiteVisits(query, page, limit);
+    final visits =
+        await _apiService.searchSiteVisits(query, page, limit, status);
     // if (visits) {
     _searchSiteVisit = visits;
     notifyListeners();
@@ -890,7 +914,11 @@ class SettingProvider extends ChangeNotifier {
   Future<void> logoutUser(BuildContext context) async {
     try {
       await SharedPrefService.deleteUser();
+      await storage.deleteAll();
+
       loggedCustomer = null;
+      loggedAdmin = null;
+      loggedChannelPartner = null;
     } catch (e) {
       // Optionally handle the error if needed
       // print("Error during logout: $e");
@@ -917,7 +945,7 @@ class SettingProvider extends ChangeNotifier {
   }
 
   Future<void> updateLeadById(String id, Map<String, dynamic> data) async {
-    final resp = await _apiService.leadUpdateById(id, data);
+    await _apiService.leadUpdateById(id, data);
     // if (resp == null) return;
     // await leads();
     notifyListeners();
@@ -948,9 +976,7 @@ class SettingProvider extends ChangeNotifier {
   }
 
   Future<PostSaleLead?> addPostSaleLead(Map<String, dynamic> data) async {
-    print("started adding");
     final resp = await _apiService.addPostSaleLead(data);
-    print("end adding");
     // if (resp == null) return null;
     await getPostSaleLead();
     notifyListeners();
@@ -1097,9 +1123,8 @@ class SettingProvider extends ChangeNotifier {
   }
 
   Future<void> leadRejectDataAnalyzer(
-    String id,
-    String teamLeaderId, [
-    String remark = "Approved",
+    String id, [
+    String remark = "rejected",
   ]) async {
     await _apiService.leadRejectByDataAnalyzer(id, remark);
     notifyListeners();
@@ -1108,7 +1133,7 @@ class SettingProvider extends ChangeNotifier {
   Future<void> leadAssignToPresaleExcutive(
     String id,
     String assignTo, [
-    String remark = "Assigned",
+    String remark = "assigned",
   ]) async {
     final resp = await _apiService.leadAssignToPreSaleExecutive(
       id,

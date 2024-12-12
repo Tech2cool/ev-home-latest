@@ -36,27 +36,27 @@ class _ScheduleMeetingState extends State<ScheduleMeeting> {
     }
   }
 
-  void _handleSubmit() async {
-    final settingProvider =
-        Provider.of<SettingProvider>(context, listen: false);
+  // void _handleSubmit() async {
+  //   final settingProvider =
+  //       Provider.of<SettingProvider>(context, listen: false);
 
-    String dateString = selectedDateTime!.toIso8601String();
+  //   String dateString = selectedDateTime!.toIso8601String();
 
-    final newMeeting = MeetingSummary(
-        date: dateString,
-        place: selectedPlace!,
-        purpose: selectedPurpose!,
-        customer: settingProvider.loggedCustomer);
-    Map<String, dynamic> meetingSummary = newMeeting.toMap();
-    if (newMeeting.customer != null) {
-      meetingSummary['customer'] = newMeeting.customer!.id;
-    }
-    try {
-      await settingProvider.addMeetingSummary(meetingSummary);
-    } catch (e) {
-      // print(e);
-    }
-  }
+  //   final newMeeting = MeetingSummary(
+  //       date: dateString,
+  //       place: selectedPlace!,
+  //       purpose: selectedPurpose!,
+  //       customer: settingProvider.loggedCustomer);
+  //   Map<String, dynamic> meetingSummary = newMeeting.toMap();
+  //   if (newMeeting.customer != null) {
+  //     meetingSummary['customer'] = newMeeting.customer!.id;
+  //   }
+  //   try {
+  //     await settingProvider.addMeetingSummary(meetingSummary);
+  //   } catch (e) {
+  //     // print(e);
+  //   }
+  // }
 
   // Function to select both date and time
   Future<void> _selectDateTime(BuildContext context) async {
@@ -214,7 +214,7 @@ class _ScheduleMeetingState extends State<ScheduleMeeting> {
                   ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        _handleSubmit(); // Save to the backend
+                        //  _handleSubmit(); // Save to the backend
                         // ScaffoldMessenger.of(context).showSnackBar(
                         //   const SnackBar(content: Text('Request Sent')),
                         // );

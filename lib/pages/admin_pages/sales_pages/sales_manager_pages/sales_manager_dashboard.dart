@@ -77,6 +77,7 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
     final teamLeaderLeads = settingProvider.leadsTeamLeaderReportingTo;
     final target = settingProvider.myTarget;
     final graphInfo = settingProvider.closingManagerGraph;
+    final tasks = settingProvider.tasks;
 
     return Stack(
       children: [
@@ -381,6 +382,79 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                           ],
                         ),
                       ),
+                      Stack(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0,
+                              vertical: 12.0,
+                            ),
+                            child: Row(
+                              children: [
+                                const SizedBox(width: 16),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      //TODO: closing manager client List
+                                      _showTaskDialog(context);
+                                      // GoRouter.of(context).push(
+                                      //   "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                                      // );
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.blue,
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 10.0),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(12.0),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'My Task',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Positioned(
+                            right: 28,
+                            top: 20,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Bubble for pending count
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      tasks
+                                          .map((ele) => ele.completed == false)
+                                          .length
+                                          .toString(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16.0,
@@ -390,14 +464,18 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                           children: [
                             const SizedBox(width: 16),
                             Expanded(
-                              child: ElevatedButton(
+                              child: ElevatedButton.icon(
                                 onPressed: () {
-                                  //TODO: closing manager client List
-                                  _showTaskDialog(context);
-                                  // GoRouter.of(context).push(
-                                  //   "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
-                                  // );
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => InventoryPage1(
+                                              onButtonPressed: (view) {})));
                                 },
+                                icon: const Icon(
+                                  FluentIcons.box_24_regular,
+                                  color: Colors.white,
+                                ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.blue,
                                   padding: const EdgeInsets.symmetric(
@@ -406,8 +484,8 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                 ),
-                                child: const Text(
-                                  'My Task',
+                                label: const Text(
+                                  'Inventory',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
@@ -424,31 +502,6 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                 ),
                 const SizedBox(
                   height: 20,
-                ),
-                Center(
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  InventoryPage1(onButtonPressed: (view) {})));
-                    },
-                    icon: const Icon(
-                      FluentIcons.box_24_regular,
-                      color: Colors.white,
-                    ),
-                    label: const Text(
-                      "Inventory",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 12),
-                      textStyle: const TextStyle(fontSize: 16),
-                    ),
-                  ),
                 ),
                 const SizedBox(
                   height: 30,

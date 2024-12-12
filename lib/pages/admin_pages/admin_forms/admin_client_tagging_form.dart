@@ -1,5 +1,7 @@
 import 'package:ev_homes/components/searchable_dropdown.dart';
+import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/channel_partner.dart';
+import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
@@ -35,10 +37,12 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
   List<String> selectedRequirement = [];
   bool _showClientInfo = false;
   bool _showCPDetails = false;
+  bool _showTLDetails = false;
   String selectedStatus = "pending";
   String selectedIntrestedStatus = "cold";
   DateTime startDate = DateTime.now();
   DateTime validTill = DateTime.now().add(const Duration(days: 60));
+  Employee? _selectedTeamLeader;
 
   ChannelPartner? selectedChannelPartner;
   // Employee? selectedAnalyser;
@@ -157,7 +161,9 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
       );
       return;
     }
-
+    // if (_selectedTeamLeader != null && selectedStatus != "approved") {
+    //   Helper.showCustomSnackBar("Only applicable if Approved");
+    // }
     setState(() {
       isLoading = true;
     });
@@ -165,33 +171,38 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
       context,
       listen: false,
     );
-
-    Lead newLead = Lead(
-      id: "",
-      email: _emailController.text.trim(),
-      project: selectedProject,
-      requirement: selectedRequirement,
-      firstName: _firstNameController.text,
-      lastName: _lastNameController.text,
-      altPhoneNumber: int.parse(_altPhoneController.text),
-      countryCode: "+91",
-      phoneNumber: int.parse(_phoneController.text),
-      startDate: startDate,
-      address: _addressController.text,
-      validTill: validTill,
-      status: selectedStatus,
-      approvalStatus: selectedStatus,
-      interestedStatus: selectedIntrestedStatus,
-      channelPartner: selectedChannelPartner,
-    );
-    Map<String, dynamic> leadJson = newLead.toJson();
-
-    if (newLead.channelPartner != null) {
-      leadJson["channelPartner"] = newLead.channelPartner!.id;
-    }
     try {
+      Lead newLead = Lead(
+        id: "",
+        email: _emailController.text.trim(),
+        project: selectedProject,
+        requirement: selectedRequirement,
+        firstName: _firstNameController.text,
+        lastName: _lastNameController.text,
+        altPhoneNumber: int.tryParse(_altPhoneController.text),
+        countryCode: "+91",
+        phoneNumber: int.tryParse(_phoneController.text),
+        startDate: startDate,
+        address: _addressController.text,
+        validTill: validTill,
+        status: selectedStatus,
+        approvalStatus: selectedStatus,
+        // approvalDate: selectedStatus == "approved" ? DateTime.now() : null,
+        // dataAnalyzer: settingProvider.loggedAdmin,
+        interestedStatus: selectedIntrestedStatus,
+        channelPartner: selectedChannelPartner,
+        remark: _cpRemarkController.text,
+      );
+
+      Map<String, dynamic> leadJson = newLead.toJson();
+
+      // if (newLead.channelPartner != null) {
+      //   leadJson["channelPartner"] = newLead.channelPartner!.id;
+      // }
       await settingProvider.addLead(leadJson);
-    } catch (e) {}
+    } catch (e) {
+      //
+    }
     // Simulate form submission
     // await Future.delayed(const Duration(seconds: 2));
 
@@ -606,7 +617,79 @@ class _AdminClientTaggingFormState extends State<AdminClientTaggingForm> {
                       ]
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 16),
+                  // FormHolder(
+                  //   title: "Team Leader Details",
+                  //   selected: _showTLDetails,
+                  //   onTap: () {
+                  //     setState(() {
+                  //       _showTLDetails = !_showTLDetails;
+                  //     });
+                  //   },
+                  //   childrens: [
+                  //     if (_showTLDetails != null) ...[
+                  //       const SizedBox(height: 16),
+                  //       DropdownButtonFormField<Employee>(
+                  //         value: _selectedTeamLeader,
+                  //         decoration: InputDecoration(
+                  //           labelText: 'Team Leader',
+                  //           enabledBorder: OutlineInputBorder(
+                  //             borderSide: BorderSide(
+                  //               color: Colors.grey.withOpacity(0.3),
+                  //             ),
+                  //             borderRadius: BorderRadius.circular(15),
+                  //           ),
+                  //           border: OutlineInputBorder(
+                  //             borderSide: BorderSide(
+                  //               color: Colors.grey.withOpacity(0.3),
+                  //             ),
+                  //             borderRadius: BorderRadius.circular(15),
+                  //           ),
+                  //         ),
+                  //         items:
+                  //             settingProvider.closingManagers.map((teamleader) {
+                  //           return DropdownMenuItem<Employee>(
+                  //             value: teamleader,
+                  //             child: Row(
+                  //               children: [
+                  //                 Expanded(
+                  //                   child: Text(
+                  //                     "${teamleader.firstName} ${teamleader.lastName}",
+                  //                     overflow: TextOverflow.ellipsis,
+                  //                     maxLines: 1,
+                  //                   ),
+                  //                 ),
+                  //                 const SizedBox(width: 4),
+                  //                 Flexible(
+                  //                   child: Text(
+                  //                     "(${teamleader.designation?.designation ?? "NA"})",
+                  //                     overflow: TextOverflow.ellipsis,
+                  //                     maxLines: 1,
+                  //                     style: const TextStyle(fontSize: 12),
+                  //                   ),
+                  //                 ),
+                  //               ],
+                  //             ),
+                  //           );
+                  //         }).toList(),
+                  //         onChanged: (newValue) {
+                  //           setState(() {
+                  //             _selectedTeamLeader = newValue;
+                  //           });
+                  //         },
+                  //         validator: (value) {
+                  //           if (value == null) {
+                  //             return 'Please select a Team Leader';
+                  //           }
+                  //           return null;
+                  //         },
+                  //         isExpanded: true,
+                  //       ),
+                  //       const SizedBox(height: 10),
+                  //     ],
+                  //   ],
+                  // ),
+                  // const SizedBox(height: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [

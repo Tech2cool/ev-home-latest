@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:ev_homes/components/date_filter_screen_leads.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
@@ -28,6 +29,7 @@ class _ClosingManagerLeadListPageState
     extends State<ClosingManagerLeadListPage> {
   bool isLoading = false;
   bool isFetchingMore = false;
+  bool showExport = false;
   String searchQuery = '';
   List<Lead> leads = [];
   int currentPage = 1;
@@ -173,6 +175,8 @@ class _ClosingManagerLeadListPageState
   @override
   Widget build(BuildContext context) {
     final filteredLeads = leads;
+    final settingProvider = Provider.of<SettingProvider>(context);
+    final loggedDesg = settingProvider.loggedAdmin?.designation;
 
     return Stack(
       children: [
@@ -186,6 +190,95 @@ class _ClosingManagerLeadListPageState
               ),
             ),
             actions: [
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'generatePdf') {
+                    // _generatePdf(context);
+                  }
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: 'filter',
+                    child: const Text('Filter'),
+                    onTap: () {
+                      showMenu(
+                        context: context,
+                        position: RelativeRect.fromLTRB(
+                          MediaQuery.of(context).size.width - 50,
+                          kToolbarHeight + 12,
+                          12,
+                          0,
+                        ),
+                        items: [
+                          PopupMenuItem(
+                            value: 'total',
+                            child: const Text('All'),
+                            onTap: () => onTapFilter("total"),
+                          ),
+                          PopupMenuItem(
+                            value: 'visit-done',
+                            child: const Text('Visit Done'),
+                            onTap: () => onTapFilter("visit-done"),
+                          ),
+                          PopupMenuItem(
+                            value: 'revisit-done',
+                            child: const Text('Revisit Done'),
+                            onTap: () => onTapFilter("revisit-done"),
+                          ),
+                          PopupMenuItem(
+                            value: 'booking-done',
+                            child: const Text('Booking Done'),
+                            onTap: () => onTapFilter("booking-done"),
+                          ),
+                          PopupMenuItem(
+                            value: 'visit-pending',
+                            child: const Text('Visit Pending'),
+                            onTap: () => onTapFilter("visit-pending"),
+                          ),
+                          PopupMenuItem(
+                            value: 'revisit-pending',
+                            child: const Text('Revisit Pending'),
+                            onTap: () => onTapFilter("revisit-pending"),
+                          ),
+                          PopupMenuItem(
+                            value: 'pending',
+                            child: const Text('Both Pending'),
+                            onTap: () => onTapFilter("pending"),
+                          ),
+                          PopupMenuItem(
+                            value: 'tagging-over',
+                            child: const Text('Tagging Over'),
+                            onTap: () => onTapFilter("tagging-over"),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  if (loggedDesg!.id == "desg-post-sales-head" ||
+                      loggedDesg!.id == "desg-app-developer" ||
+                      loggedDesg!.id == "desg-site-head")
+                    PopupMenuItem<String>(
+                      value: 'export',
+                      child: const Text('Export'),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => DateFilterScreenLeads(
+                              onSelect: (start, end) {},
+                              onSubmit: () {},
+                            ),
+                          ),
+                        );
+                        // setState(() {
+                        //   showExport = !showExport;
+                        // });
+                      },
+                    ),
+                ],
+              ),
+
+              /*
+              
               IconButton(
                 padding: const EdgeInsets.all(15),
                 onPressed: () {
@@ -243,6 +336,9 @@ class _ClosingManagerLeadListPageState
                 },
                 icon: const Icon(Icons.filter_list),
               )
+
+
+               */
             ],
           ),
           body: Column(
@@ -441,6 +537,11 @@ class _ClosingManagerLeadListPageState
             ],
           ),
         ),
+        // if (showExport)
+        //   DateFilterScreenLeads(
+        //     onSelect: (start, end) {},
+        //     onSubmit: () {},
+        //   ),
         if (isLoading)
           Container(
             color: Colors.black.withOpacity(0.2),

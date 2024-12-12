@@ -113,7 +113,8 @@ class Lead {
       countryCode: json['countryCode'],
       phoneNumber:
           json['phoneNumber'] != null ? json['phoneNumber']?.floor() : 0,
-      altPhoneNumber: json['altPhoneNumber']?.floor() ?? 0,
+      altPhoneNumber:
+          json['altPhoneNumber'] != null ? json['altPhoneNumber']?.floor() : 0,
       remark: json['remark'],
       startDate: json['startDate'] != null
           ? DateTime.parse(json['startDate'])
@@ -173,10 +174,10 @@ class Lead {
       'firstName': firstName,
       'lastName': lastName,
       'address': address,
-      'channelPartner': channelPartner,
-      'dataAnalyzer': dataAnalyzer,
-      'teamLeader': teamLeader,
-      'preSalesExecutive': preSalesExecutive,
+      'channelPartner': channelPartner?.id,
+      'dataAnalyzer': dataAnalyzer?.id,
+      'teamLeader': teamLeader?.id,
+      'preSalesExecutive': preSalesExecutive?.id,
       'countryCode': countryCode,
       'phoneNumber': phoneNumber,
       'altPhoneNumber': altPhoneNumber,

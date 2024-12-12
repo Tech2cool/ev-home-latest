@@ -112,13 +112,11 @@ class _EmployeesListState extends State<EmployeesList> {
                                           ),
                                         ),
                                 ),
-                                // Display name and employee ID in the title
                                 title: Text(
                                   "${employee.firstName} ${employee.lastName} (${employee.employeeId})",
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 ),
-                                // Display designation and email in the subtitle
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -127,9 +125,7 @@ class _EmployeesListState extends State<EmployeesList> {
                                           "Designation: NA",
                                       style: TextStyle(color: Colors.grey[700]),
                                     ),
-                                    const SizedBox(
-                                        height:
-                                            4), // Space between designation and email
+                                    const SizedBox(height: 4),
                                     Text(
                                       employee.email ?? "",
                                       style: TextStyle(color: Colors.grey[600]),

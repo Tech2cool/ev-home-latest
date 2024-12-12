@@ -121,7 +121,7 @@ class DailyAttendanceScreen extends StatelessWidget {
     ];
 
     return DefaultTabController(
-      length: 6, // Number of tabs
+      length: 6,
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.green,
@@ -129,7 +129,6 @@ class DailyAttendanceScreen extends StatelessWidget {
         ),
         body: Column(
           children: [
-            // Date Section
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
@@ -144,9 +143,9 @@ class DailyAttendanceScreen extends StatelessWidget {
               ),
             ),
             SizedBox(
-              height: 60, // Adjust height as needed
+              height: 60,
               child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal, // Scroll horizontally
+                scrollDirection: Axis.horizontal,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: legendData.map((item) {
@@ -189,7 +188,7 @@ class DailyAttendanceScreen extends StatelessWidget {
             // Scrollable Legend Section
 
             // Tab Bar Section
-            TabBar(
+            const TabBar(
               isScrollable: true,
               labelColor: Colors.black,
               tabs: [
@@ -207,7 +206,7 @@ class DailyAttendanceScreen extends StatelessWidget {
                   buildListView(presentData),
                   buildListView(absentData),
                   buildListView(weekOffData),
-                  buildListView(weekOffData), // You can modify Leave tab data
+                  buildListView(weekOffData),
                   buildListView(lateComersData),
                   buildListView(earlyLeaversData),
                 ],
@@ -219,7 +218,6 @@ class DailyAttendanceScreen extends StatelessWidget {
     );
   }
 
-  // Reusable ListView Builder for Tabs
   Widget buildListView(List<Map<String, String>> data) {
     return ListView.builder(
       itemCount: data.length,

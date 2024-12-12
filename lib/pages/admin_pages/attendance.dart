@@ -50,7 +50,6 @@ class _AttendanceState extends State<Attendance>
       body: TabBarView(
         controller: _tabController,
         children: [
-          // Self Attendance Log with headline only
           const Column(
             children: [
               Padding(
@@ -66,49 +65,58 @@ class _AttendanceState extends State<Attendance>
               Expanded(child: AttendanceList(isSelf: true)),
             ],
           ),
-          // Team Attendance Log with calendar and search
           Column(
             children: [
-              // Date Selector and Search for Team Tab
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(16.0),
                 child: Row(
                   children: [
                     Expanded(
-                      child: InkWell(
-                        onTap: () => _selectDate(context),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 16),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey),
-                            borderRadius: BorderRadius.circular(8),
+                      child: TextField(
+                        onChanged: (query) {
+                          setState(() {});
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Search Employee',
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 10.0),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "${selectedDate.toLocal()}".split(' ')[0],
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              const Icon(Icons.calendar_today,
-                                  color: Colors.orange),
-                            ],
+                          prefixIcon: const Icon(
+                            Icons.search,
+                            color: Colors.orange,
                           ),
                         ),
                       ),
                     ),
-                    IconButton(
-                      icon: const Icon(
-                        Icons.search,
-                        color: Colors.orange,
+                    const SizedBox(width: 2),
+                    InkWell(
+                      onTap: () => _selectDate(context),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10, horizontal: 16),
+                        child: Row(
+                          children: [
+                            Text(
+                              "${selectedDate.toLocal()}".split(' ')[0],
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.black),
+                            ),
+                            const SizedBox(width: 5),
+                            const Icon(
+                              Icons.calendar_today,
+                              color: Colors.orange,
+                            ),
+                          ],
+                        ),
                       ),
-                      onPressed: () {
-                        // Perform search action if needed
-                      },
                     ),
                   ],
                 ),
+              ),
+              SizedBox(
+                height: 10,
               ),
               const Expanded(child: AttendanceList(isSelf: false)),
             ],
@@ -119,7 +127,6 @@ class _AttendanceState extends State<Attendance>
   }
 }
 
-// AttendanceList Widget to show attendance entries
 class AttendanceList extends StatelessWidget {
   final bool isSelf;
 
@@ -127,28 +134,31 @@ class AttendanceList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Example data
     final List<AttendanceRecord> attendanceRecords = isSelf
         ? [
             AttendanceRecord(
+                name: "Mahek",
                 date: "2024-11-01",
                 timeIn: "09:00",
                 timeOut: "17:00",
                 location: "Your Location",
                 status: "Present"),
             AttendanceRecord(
+                name: "Mahek",
                 date: "2024-11-02",
                 timeIn: "09:15",
                 timeOut: "17:10",
                 location: "Your Location",
                 status: "Present"),
             AttendanceRecord(
+                name: "Mahek",
                 date: "2024-11-03",
                 timeIn: "09:05",
                 timeOut: "17:05",
                 location: "Your Location",
                 status: "Present"),
             AttendanceRecord(
+                name: "Mahek",
                 date: "2024-11-04",
                 timeIn: "09:10",
                 timeOut: "17:00",
@@ -157,24 +167,28 @@ class AttendanceList extends StatelessWidget {
           ]
         : [
             AttendanceRecord(
+                name: "Mahek",
                 date: "2024-11-01",
                 timeIn: "12:12",
                 timeOut: "-",
                 location: "JN2-57/A Vashi, Navi Mumbai",
                 status: "Present"),
             AttendanceRecord(
+                name: "sheya",
                 date: "2024-11-02",
                 timeIn: "12:11",
                 timeOut: "-",
                 location: "6, Karegaonkar Marg, Vashi, Navi Mumbai",
                 status: "Present"),
             AttendanceRecord(
+                name: "Mayur",
                 date: "2024-11-03",
                 timeIn: "11:25",
                 timeOut: "-",
                 location: "JN2-55/B, Vashi, Navi Mumbai",
                 status: "Present"),
             AttendanceRecord(
+                name: "aktar",
                 date: "2024-11-04",
                 timeIn: "11:29",
                 timeOut: "-",
@@ -187,6 +201,7 @@ class AttendanceList extends StatelessWidget {
       itemBuilder: (context, index) {
         final record = attendanceRecords[index];
         return AttendanceTile(
+          name: record.name,
           date: record.date,
           timeIn: record.timeIn,
           timeOut: record.timeOut,
@@ -199,8 +214,8 @@ class AttendanceList extends StatelessWidget {
   }
 }
 
-// AttendanceTile Widget for each entry
 class AttendanceTile extends StatelessWidget {
+  final String name;
   final String date;
   final String timeIn;
   final String timeOut;
@@ -216,27 +231,71 @@ class AttendanceTile extends StatelessWidget {
     required this.location,
     required this.status,
     required this.imageUrl,
+    required this.name,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      title: Text(date),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Time In: $timeIn"),
-          Text("Time Out: $timeOut"),
-          Text("Location: $location"),
-          Text("Status: $status", style: const TextStyle(color: Colors.green)),
-        ],
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      elevation: 5,
+      shadowColor: Colors.grey.withOpacity(0.5),
+      color: const Color.fromARGB(219, 255, 255, 255),
+      child: ListTile(
+        title: Row(
+          children: [
+            Text(
+              "Name: $name",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            Spacer(),
+            Text(
+              date,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+                color: Colors.orange,
+              ),
+            ),
+          ],
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 4),
+            Text(
+              "Time In: $timeIn",
+              style: TextStyle(color: Colors.black54),
+            ),
+            Text(
+              "Time Out: $timeOut",
+              style: TextStyle(color: Colors.black54),
+            ),
+            Text(
+              "Location: $location",
+              style: TextStyle(color: Colors.black54),
+            ),
+            Text(
+              "Status: $status",
+              style: const TextStyle(
+                color: Colors.green,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-// Model for Attendance Record
 class AttendanceRecord {
+  final String name;
   final String date;
   final String timeIn;
   final String timeOut;
@@ -244,6 +303,7 @@ class AttendanceRecord {
   final String status;
 
   AttendanceRecord({
+    required this.name,
     required this.date,
     required this.timeIn,
     required this.timeOut,

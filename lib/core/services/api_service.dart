@@ -32,9 +32,9 @@ import '../models/employee.dart';
 const storage = FlutterSecureStorage();
 
 // final dio = Dio();
-const baseUrl = "http://192.168.1.180:8082";
+// const baseUrl = "http://192.168.1.180:8082";
 
-// const baseUrl = "https://api.evhomes.tech";
+const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -141,6 +141,38 @@ class ApiService {
         data: [],
       );
       return emptyPagination;
+    }
+  }
+
+  Future<List<Lead>> getLeadsForExport(Map<String, dynamic> datas) async {
+    try {
+      final Response response = await _dio.post(
+        '/lead-by-start-end-date',
+        data: datas,
+      );
+      final Map<String, dynamic> data = response.data;
+      if (response.data["code"] != 200) {
+        return [];
+      }
+      final items = data['data'] as List<dynamic>? ?? [];
+
+      List<Lead> leads = [];
+      if (items.isNotEmpty) {
+        leads = items.map((emp) => Lead.fromJson(emp)).toList();
+      }
+
+      return leads;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        errorMessage = e.message.toString();
+      }
+      print(e);
+      Helper.showCustomSnackBar(errorMessage);
+      return [];
     }
   }
 

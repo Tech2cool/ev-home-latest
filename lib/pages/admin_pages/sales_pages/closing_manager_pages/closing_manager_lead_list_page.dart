@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:ev_homes/components/date_filter_screen.dart';
+import 'package:ev_homes/components/date_filter_screen_leads.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
@@ -175,6 +175,8 @@ class _ClosingManagerLeadListPageState
   @override
   Widget build(BuildContext context) {
     final filteredLeads = leads;
+    final settingProvider = Provider.of<SettingProvider>(context);
+    final loggedDesg = settingProvider.loggedAdmin?.designation;
 
     return Stack(
       children: [
@@ -252,15 +254,26 @@ class _ClosingManagerLeadListPageState
                       );
                     },
                   ),
-                  PopupMenuItem<String>(
-                    value: 'export',
-                    child: const Text('Export'),
-                    onTap: () {
-                      setState(() {
-                        showExport = !showExport;
-                      });
-                    },
-                  ),
+                  if (loggedDesg!.id == "desg-post-sales-head" ||
+                      loggedDesg!.id == "desg-app-developer" ||
+                      loggedDesg!.id == "desg-site-head")
+                    PopupMenuItem<String>(
+                      value: 'export',
+                      child: const Text('Export'),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => DateFilterScreenLeads(
+                              onSelect: (start, end) {},
+                              onSubmit: () {},
+                            ),
+                          ),
+                        );
+                        // setState(() {
+                        //   showExport = !showExport;
+                        // });
+                      },
+                    ),
                 ],
               ),
 
@@ -524,11 +537,11 @@ class _ClosingManagerLeadListPageState
             ],
           ),
         ),
-        if (showExport)
-          DateFilterScreen(
-            onSelect: (start, end) {},
-            onSubmit: () {},
-          ),
+        // if (showExport)
+        //   DateFilterScreenLeads(
+        //     onSelect: (start, end) {},
+        //     onSubmit: () {},
+        //   ),
         if (isLoading)
           Container(
             color: Colors.black.withOpacity(0.2),

@@ -422,7 +422,7 @@ class _CostGeneratorState extends State<CostGenerators> {
     super.initState();
     if (widget.lead != null) {
       clientNameController.text =
-          '${widget.lead?.firstName ?? ""} ${widget.lead?.firstName ?? ""}';
+          '${widget.lead?.firstName ?? ""} ${widget.lead?.lastName ?? ""}';
       additionalNameController.text = widget.lead?.address ?? "";
     }
   }

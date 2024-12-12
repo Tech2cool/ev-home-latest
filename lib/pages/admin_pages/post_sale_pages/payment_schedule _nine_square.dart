@@ -506,9 +506,10 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
   }
 
   @override
-  void initstate() {
+  void initState() {
     super.initState();
-    clientNameController.text = widget.lead?.firstName ?? "";
+    clientNameController.text =
+        '${widget.lead?.firstName ?? ""} ${widget.lead?.lastName ?? ""}';
     phoneController.text = widget.lead?.phoneNumber?.toString() ?? '0';
   }
 

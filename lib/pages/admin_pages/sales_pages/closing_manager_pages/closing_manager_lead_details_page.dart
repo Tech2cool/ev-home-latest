@@ -752,85 +752,71 @@ class _ClosingManagerLeadDetailsPageState
                             ),
                           ),
                           const SizedBox(width: 10),
-                          DropdownButton<String>(
-                            value: selectedStatus,
-                            underline: SizedBox.shrink(),
-                            onChanged: (value) async {
-                              if (value == "visited") {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => AddSiteVisitFormPage(
-                                      lead: widget.lead,
-                                      status: "visit",
-                                    ),
-                                  ),
-                                );
-                                // await ApiService()
-                                //     .updateLeadStatus(widget.lead.id, {
-                                //   "status": "visited",
-                                // });
-                                // Navigator.of(context).pop();
-                              } else if (value == "revisited") {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => AddSiteVisitFormPage(
-                                      lead: widget.lead,
-                                      status: "revisit",
-                                    ),
-                                  ),
-                                );
-
-                                // await ApiService()
-                                //     .updateLeadStatus(widget.lead.id, {
-                                //   "status": "revisited",
-                                // });
-                                // Navigator.of(context).pop();
-                              } else if (value == "virtual-meeting") {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => AddSiteVisitFormPage(
-                                      lead: widget.lead,
-                                      status: "virtual-meeting",
-                                    ),
-                                  ),
-                                );
-
-                                // await ApiService()
-                                //     .updateLeadStatus(widget.lead.id, {
-                                //   "status": "revisited",
-                                // });
-                                // Navigator.of(context).pop();
-                              }
-
-                              setState(() {
-                                selectedStatus = value;
-                                if (value == 'Booked') {
+                          Expanded(
+                            child: DropdownButton<String>(
+                              value: selectedStatus,
+                              underline: const SizedBox.shrink(),
+                              isExpanded:
+                                  true, // Ensure it uses the available space
+                              onChanged: (value) async {
+                                if (value == "visited") {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) => AddPostsaleLead(
+                                      builder: (context) =>
+                                          AddSiteVisitFormPage(
                                         lead: widget.lead,
+                                        status: "visit",
                                       ),
                                     ),
                                   );
-                                  // GoRouter.of(context).push(
-                                  //   "/post-sales-lead-details",
-                                  //   // extra: lead,
-                                  // );
+                                } else if (value == "revisited") {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AddSiteVisitFormPage(
+                                        lead: widget.lead,
+                                        status: "revisit",
+                                      ),
+                                    ),
+                                  );
+                                } else if (value == "virtual-meeting") {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AddSiteVisitFormPage(
+                                        lead: widget.lead,
+                                        status: "virtual-meeting",
+                                      ),
+                                    ),
+                                  );
                                 }
-                              });
-                            },
-                            items: <String>[
-                              'called',
-                              'visited',
-                              'revisited',
-                              'virtual-meeting',
-                              'booked'
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
+
+                                setState(() {
+                                  selectedStatus = value;
+                                  if (value == 'Booked') {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => AddPostsaleLead(
+                                          lead: widget.lead,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                });
+                              },
+                              items: <String>[
+                                'called',
+                                'visited',
+                                'revisited',
+                                'virtual-meeting',
+                                'booked'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ],
                       ),
@@ -859,45 +845,36 @@ class _ClosingManagerLeadDetailsPageState
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          DropdownButton<String>(
-                            value: selectedGenerate,
-                            underline: SizedBox.shrink(),
-                            onChanged: (value) async {
-                              if (value == "Cost Sheet Generator") {
-                                _showProjectDialogForCostSheet();
-                              } else if (value == "Payment Schedule") {
-                                _showProjectDialogForPaymentSchedule();
-                              } else if (value == "Demand Letter") {
-                                _showProjectDialogForDemand();
-                              }
-
-                              setState(() {
-                                selectedGenerate = value;
-                                if (value == 'Cost Sheet Generator') {
-                                  // Navigator.of(context).push(
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => AddPostsaleLead(
-                                  //       lead: widget.lead,
-                                  //     ),
-                                  //   ),
-                                  // );
-                                  // GoRouter.of(context).push(
-                                  //   "/post-sales-lead-details",
-                                  //   // extra: lead,
-                                  // );
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: DropdownButton<String>(
+                              // value: selectedGenerate,
+                              underline: const SizedBox.shrink(),
+                              isExpanded: true,
+                              onChanged: (value) async {
+                                if (value == "Cost Sheet Generator") {
+                                  _showProjectDialogForCostSheet();
+                                } else if (value == "Payment Schedule") {
+                                  _showProjectDialogForPaymentSchedule();
+                                } else if (value == "Demand Letter") {
+                                  _showProjectDialogForDemand();
                                 }
-                              });
-                            },
-                            items: <String>[
-                              'Cost Sheet Generator',
-                              'Payment Schedule',
-                              'Demand Letter',
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
+
+                                setState(() {
+                                  selectedGenerate = value;
+                                });
+                              },
+                              items: <String>[
+                                'Cost Sheet Generator',
+                                'Payment Schedule',
+                                'Demand Letter',
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ],
                       ),

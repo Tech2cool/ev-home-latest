@@ -32,10 +32,9 @@ import '../models/employee.dart';
 const storage = FlutterSecureStorage();
 
 // final dio = Dio();
-// const baseUrl = "http://192.168.1.167:8082";
+const baseUrl = "http://192.168.1.168:8082";
 
-const baseUrl = "https://api.evhomes.tech";
-
+// const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -69,6 +68,25 @@ class ApiService {
       return null;
     }
   }
+
+  // Future<MeetingSummary?> getClientMeetingById(String id) async {
+  //   try {
+  //     final Response response = await _dio.get('/meeting-client-id/$id');
+  //     final Map<String, dynamic> data = response.data["data"];
+  //     final MeetingSummary meeting = MeetingSummary.fromMap(data);
+  //     return meeting;
+  //   } on DioException catch (e) {
+  //     String errorMessage = 'Something went wrong';
+  //     print("pass1");
+  //     if (e.response != null) {
+  //       errorMessage = e.response?.data['message'] ?? errorMessage;
+  //     } else {
+  //       errorMessage = e.message.toString();
+  //     }print("pass2");
+  //     Helper.showCustomSnackBar(errorMessage);
+  //     return null;
+  //   }
+  // }
 
   Future<PaginationModel<Lead>> searchLeads([
     String query = '',

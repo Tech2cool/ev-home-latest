@@ -16,6 +16,7 @@ import 'package:ev_homes/pages/admin_pages/admin_management/manage_division.dart
 import 'package:ev_homes/pages/admin_pages/admin_management/manage_employee.dart';
 import 'package:ev_homes/pages/admin_pages/admin_management/manage_projects_page.dart';
 import 'package:ev_homes/pages/admin_pages/admin_management/manage_site_visit_page.dart';
+import 'package:ev_homes/pages/admin_pages/admin_management/my_site_visit_page.dart';
 import 'package:ev_homes/pages/admin_pages/admin_profile_page.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/post_sale_head_pages/post_sale_head__tagging_list_page.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/post_sale_head_pages/post_sale_head_assigned.dart';
@@ -223,6 +224,13 @@ class AppRoutes {
         path: '/manage-site-visit',
         builder: (context, state) {
           return const ManageSiteVisitPage();
+        },
+      ),
+
+        GoRoute(
+        path: '/my-site-visit',
+        builder: (context, state) {
+          return const MySiteVisitPage();
         },
       ),
       GoRoute(

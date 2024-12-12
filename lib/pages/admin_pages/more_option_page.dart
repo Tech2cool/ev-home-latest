@@ -39,33 +39,37 @@ class _MoreOptionPageState extends State<MoreOptionPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ListTile(
-              onTap: () {
-                GoRouter.of(context).push("/manage-employee");
-              },
-              leading: const Icon(
-                Icons.account_circle_outlined,
-                size: 30,
-                color: Colors.deepPurple,
-              ),
-              title: const Text(
-                "Employees",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
+            if (loggedDesg!.id == "desg-post-sales-head" ||
+                loggedDesg!.id == "desg-app-developer" ||
+                loggedDesg!.id == "desg-site-head") ...[
+              ListTile(
+                onTap: () {
+                  GoRouter.of(context).push("/manage-employee");
+                },
+                leading: const Icon(
+                  Icons.account_circle_outlined,
+                  size: 30,
+                  color: Colors.deepPurple,
+                ),
+                title: const Text(
+                  "Employees",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                subtitle: const Text(
+                  "Manage Employee",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 16,
                 ),
               ),
-              subtitle: const Text(
-                "Manage Employee",
-                style: TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-              trailing: const Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 16,
-              ),
-            ),
+            ],
             if (loggedDesg!.id == "desg-post-sales-head" ||
                 loggedDesg!.id == "desg-app-developer" ||
                 loggedDesg!.id == "desg-site-head")
@@ -255,6 +259,37 @@ class _MoreOptionPageState extends State<MoreOptionPage> {
                 size: 16,
               ),
             ),
+            if (loggedDesg!.id == "desg-post-sales-head" ||
+                loggedDesg!.id == "desg-app-developer" ||
+                loggedDesg!.id == "desg-site-head" ||
+                loggedDesg!.id == "desg-senior-closing-manager")
+              ListTile(
+                onTap: () {
+                  GoRouter.of(context).push("/my-site-visit");
+                },
+                leading: const Icon(
+                  Icons.account_circle_outlined,
+                  size: 30,
+                  color: Colors.deepPurple,
+                ),
+                title: const Text(
+                  "My Site Visits",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+                subtitle: const Text(
+                  "My Site Visit",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 16,
+                ),
+              ),
             if (loggedDesg!.id == "desg-post-sales-head" ||
                 loggedDesg!.id == "desg-app-developer" ||
                 loggedDesg!.id == "desg-site-head")

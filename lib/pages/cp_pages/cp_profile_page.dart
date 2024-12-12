@@ -118,7 +118,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   AppBar _buildAppBar(String userName, String profilePic) {
     return AppBar(
-      backgroundColor: Colors.grey[200], // similar to secondaryBackground
       title: Text(
         userName,
         style: const TextStyle(
@@ -130,8 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       actions: [
         CircleAvatar(
           radius: 40,
-          backgroundColor:
-              Colors.grey[300], // You can set a default background color
+          backgroundColor: Colors.grey[300],
           child: profilePic.isNotEmpty
               ? ClipOval(
                   child: CachedNetworkImage(

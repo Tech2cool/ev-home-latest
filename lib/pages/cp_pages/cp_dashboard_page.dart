@@ -15,32 +15,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        title: const Text(
-          'Dashboard',
-          style: TextStyle(
-            color: Color.fromARGB(255, 133, 0, 0),
+      backgroundColor: Color(0xFFFEE8B0),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(50),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
+          ),
+          child: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.orange,
+            title: const Text(
+              'Dashboard',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
       ),
       body: Stack(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFFFFDE4D),
-                  Color(0xFFFFB22C),
-                  Color.fromARGB(199, 248, 85, 4),
-                ],
-              ),
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.all(15),
             child: SingleChildScrollView(
@@ -59,8 +55,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             );
                           },
-                          child: _buildLabelBox(
-                              '100', 'Leads'), // Dummy data for "Leads"
+                          child: _buildLabelBox('100', 'Leads'),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -75,8 +70,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             );
                           },
-                          child: _buildLabelBox(
-                              '50', 'Approved'), // Dummy data for "Approved"
+                          child: _buildLabelBox('50', 'Approved'),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -91,8 +85,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             );
                           },
-                          child: _buildLabelBox(
-                              '20', 'Rejected'), // Dummy data for "Rejected"
+                          child: _buildLabelBox('20', 'Rejected'),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -108,19 +101,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             );
                           },
                           child: FittedBox(
-                            child: _buildLabelBox('30',
-                                'In Progress'), // Dummy data for "In Progress"
+                            child: _buildLabelBox('30', 'In Progress'),
                           ),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const LineChartDemo(list: []), // Dummy data for charts
+                  const LineChartDemo(list: []),
                   const SizedBox(height: 20),
-                  const PieChartDemo(leads: []), // Dummy data for charts
+                  const PieChartDemo(leads: []),
                   const SizedBox(height: 20),
-                  const FunnelChartDemo(leads: []), // Dummy data for charts
+                  const FunnelChartDemo(leads: []),
                   const SizedBox(height: 180),
                 ],
               ),
@@ -135,16 +127,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1),
+        color: Color(0xFF9CA777),
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.white.withOpacity(0.2),
-            offset: const Offset(0, 5),
-            blurRadius: 10,
-            spreadRadius: 1,
-          ),
-        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -153,7 +137,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             quantity,
             style: const TextStyle(
               fontSize: 20.0,
-              color: Color.fromARGB(255, 16, 18, 19),
+              color: Colors.white,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -161,7 +145,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             label,
             style: const TextStyle(
               fontSize: 10.0,
-              color: Colors.black,
+              color: Color(0xFFFEE8B0),
             ),
           ),
         ],
@@ -292,7 +276,6 @@ class _LineChartDemoState extends State<LineChartDemo> {
 
   @override
   Widget build(BuildContext context) {
-    // Generate chart data based on hard-coded values
     List<FlSpot> chartData = _generateChartData();
 
     final xLabels = _getXAxisLabels();
@@ -301,18 +284,9 @@ class _LineChartDemoState extends State<LineChartDemo> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white.withAlpha(40),
+        color: Colors.orange.withAlpha(2),
         borderRadius: BorderRadius.circular(16),
-        // border: Border.all(width: 0.5, color: Colors.black26),
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: Color.fromARGB(255, 133, 0, 0)
-        //         .withOpacity(0.8), // Grey shadow color
-        //     offset: Offset(3, 3), // Position the shadow
-        //     blurRadius: 8, // Blur effect
-        //     spreadRadius: 3, // Spread the shadow
-        //   ),
-        // ],
+        border: Border.all(width: 0.5, color: Colors.black26),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +297,7 @@ class _LineChartDemoState extends State<LineChartDemo> {
               const Text(
                 'Total Leads',
                 style: TextStyle(
-                  color: Colors.black87,
+                  color: Color(0xFF7C9070),
                   fontFamily: 'Manrope',
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -331,6 +305,10 @@ class _LineChartDemoState extends State<LineChartDemo> {
               ),
               DropdownButton<String>(
                 value: _selectedFilter,
+                style: const TextStyle(
+                  color: Colors.orange,
+                  fontSize: 16,
+                ),
                 items: <String>['Weekly', 'Monthly', 'Yearly']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
@@ -392,7 +370,7 @@ class _LineChartDemoState extends State<LineChartDemo> {
                     minX: 0,
                     maxX: xMax.toDouble(),
                     minY: 0,
-                    maxY: 100, // Adjust this value based on your y-values
+                    maxY: 100,
                     lineBarsData: [
                       LineChartBarData(
                         spots: chartData,
@@ -505,17 +483,15 @@ class PieChartDemo extends StatefulWidget {
 class _PieChartDemoState extends State<PieChartDemo> {
   @override
   Widget build(BuildContext context) {
-    // Dummy data for the lead counts
     final leadCounts = {
       'Approved': 50,
       'In Progress': 30,
       'Rejected': 20,
     };
 
-    // Prepare the chart data with dummy values
     final chartData = [
       PieChartSectionData(
-        color: Colors.green, // Approved color
+        color: Color(0xFF62760C),
         value: leadCounts['Approved']!.toDouble(),
         title: '${leadCounts['Approved']}',
         radius: 60,
@@ -526,7 +502,7 @@ class _PieChartDemoState extends State<PieChartDemo> {
         ),
       ),
       PieChartSectionData(
-        color: Colors.orange, // In Progress color
+        color: Color(0xFFFB6D48),
         value: leadCounts['In Progress']!.toDouble(),
         title: '${leadCounts['In Progress']}',
         radius: 60,
@@ -537,7 +513,7 @@ class _PieChartDemoState extends State<PieChartDemo> {
         ),
       ),
       PieChartSectionData(
-        color: Colors.red, // Rejected color
+        color: Color(0xFFD24545),
         value: leadCounts['Rejected']!.toDouble(),
         title: '${leadCounts['Rejected']}',
         radius: 60,
@@ -552,16 +528,9 @@ class _PieChartDemoState extends State<PieChartDemo> {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.1), // Semi-transparent container
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.white.withOpacity(0.2),
-            offset: const Offset(0, 5),
-            blurRadius: 10,
-            spreadRadius: 1,
-          ),
-        ],
+        color: Colors.orange.withAlpha(2),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(width: 0.5, color: Colors.black26),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -573,7 +542,7 @@ class _PieChartDemoState extends State<PieChartDemo> {
               Text(
                 'Tagging Status',
                 style: TextStyle(
-                  color: Colors.black87,
+                  color: Color(0xFF7C9070),
                   fontFamily: 'Manrope',
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -586,13 +555,13 @@ class _PieChartDemoState extends State<PieChartDemo> {
             alignment: Alignment.center,
             children: [
               SizedBox(
-                height: 150,
+                height: 200,
                 child: PieChart(
                   PieChartData(
                     sections: chartData,
-                    startDegreeOffset: 20,
-                    centerSpaceRadius: 40,
-                    sectionsSpace: 0,
+                    startDegreeOffset: 10,
+                    centerSpaceRadius: 45,
+                    sectionsSpace: 2,
                   ),
                 ),
               ),
@@ -603,15 +572,15 @@ class _PieChartDemoState extends State<PieChartDemo> {
                     'Total Leads',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.black,
+                      color: Color(0xFF173B45),
                     ),
                   ),
                   Text(
                     '${leadCounts['Approved']! + leadCounts['In Progress']! + leadCounts['Rejected']!}', // Total leads count (dummy data)
                     style: const TextStyle(
-                      fontSize: 14,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
+                      color: Colors.black,
                     ),
                   ),
                 ],
@@ -622,9 +591,9 @@ class _PieChartDemoState extends State<PieChartDemo> {
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              LegendItem(color: Colors.green, text: 'Approved'),
-              LegendItem(color: Colors.orange, text: 'In Progress'),
-              LegendItem(color: Colors.red, text: 'Rejected'),
+              LegendItem(color: Color(0xFF62760C), text: 'Approved'),
+              LegendItem(color: Color(0xFFFB6D48), text: 'In Progress'),
+              LegendItem(color: Color(0xFFD24545), text: 'Rejected'),
             ],
           ),
         ],
@@ -741,16 +710,9 @@ class _FunnelChartDemoState extends State<FunnelChartDemo> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.1), // Semi-transparent container
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.white.withOpacity(0.2),
-                offset: const Offset(0, 5),
-                blurRadius: 10,
-                spreadRadius: 1,
-              ),
-            ],
+            color: Colors.orange.withAlpha(2),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(width: 0.5, color: Colors.black26),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -761,7 +723,7 @@ class _FunnelChartDemoState extends State<FunnelChartDemo> {
                   const Text(
                     'Leads Statistics',
                     style: TextStyle(
-                      color: Colors.black87,
+                      color: Color(0xFF7C9070),
                       fontFamily: 'Manrope',
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -769,6 +731,10 @@ class _FunnelChartDemoState extends State<FunnelChartDemo> {
                   ),
                   DropdownButton<String>(
                     value: _selectedFilter,
+                    style: const TextStyle(
+                      color: Colors.orange,
+                      fontSize: 16,
+                    ),
                     icon: const Icon(Icons.arrow_drop_down),
                     items: _funnelData.keys
                         .map<DropdownMenuItem<String>>((String value) {
@@ -782,7 +748,6 @@ class _FunnelChartDemoState extends State<FunnelChartDemo> {
                 ],
               ),
               const SizedBox(height: 5),
-              // Wrap the Row in a SingleChildScrollView for horizontal scrolling
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -855,34 +820,36 @@ class FunnelStage extends StatelessWidget {
 }
 
 class FunnelSegment extends StatelessWidget {
-  final double value; // Changed from percentage to value
+  final double value;
 
   const FunnelSegment({super.key, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0), // Add left padding here
+      padding: const EdgeInsets.only(left: 8.0),
       child: Container(
-        width: 60, // Fixed width for all segments
-        height: value, // Adjust height based on value
-        margin: const EdgeInsets.only(top: 4.0), // Optional: margin on top
+        width: 60,
+        height: value,
+        margin: const EdgeInsets.only(top: 4.0),
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color.fromARGB(199, 248, 85, 4),
-              Color(0xFFFFB22C),
+              Color(0xFF453F78),
+              Color(0xFF795458),
+              Color(0xFFC08B5C),
+              Color(0xFFFFC94A),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
           borderRadius: BorderRadius.vertical(
-            top: Radius.circular(15.0), // Set top radius here
+            top: Radius.circular(15.0),
           ),
         ),
         alignment: Alignment.center,
         child: Text(
-          value.toString(), // Display the value
+          value.toString(),
           style: const TextStyle(
             fontSize: 12,
             color: Colors.white,

@@ -36,7 +36,6 @@ class _ClientReportState extends State<ClientReport> {
       'validTillDate': '2023-10-20',
       'taggingStatus': 'In Progress'
     },
-    // Add more dummy data as needed
   ];
 
   @override
@@ -47,7 +46,6 @@ class _ClientReportState extends State<ClientReport> {
 
   @override
   Widget build(BuildContext context) {
-    // Filter clients based on selected filter
     List<Map<String, String>> filteredClients = dummyClients.where((client) {
       if (selectedFilter == 'All') {
         return true;
@@ -56,8 +54,25 @@ class _ClientReportState extends State<ClientReport> {
     }).toList();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Client Report'),
+      backgroundColor: Color.fromARGB(255, 246, 238, 218),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(55),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
+          ),
+          child: AppBar(
+            automaticallyImplyLeading: true,
+            backgroundColor: Colors.orange,
+            title: const Text(
+              'Client Report',
+              style: TextStyle(
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ),
       ),
       body: Column(
         children: [
@@ -69,7 +84,7 @@ class _ClientReportState extends State<ClientReport> {
                 DropdownButton<String>(
                   value: selectedFilter,
                   icon: const Icon(Icons.filter_list,
-                      color: Colors.grey), // Filter icon
+                      color: Colors.orange), // Filter icon
                   underline: const SizedBox.shrink(),
                   onChanged: (String? newValue) {
                     setState(() {
@@ -108,7 +123,7 @@ class _ClientReportState extends State<ClientReport> {
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     child: Card(
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(25),
                       ),
                       elevation: 4,
                       child: Padding(
@@ -130,7 +145,7 @@ class _ClientReportState extends State<ClientReport> {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 16),
                                   decoration: BoxDecoration(
-                                    color: Colors.teal[200],
+                                    color: Color(0xFF9CA777),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(

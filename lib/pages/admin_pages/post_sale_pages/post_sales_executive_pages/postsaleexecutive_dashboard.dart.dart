@@ -395,88 +395,93 @@ class _PostsaleexecutiveDashboardState
                     children: [
                       Row(
                         children: [
-                          ElevatedButton(
-                            onPressed: () {
-                              if (selectedProject == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text('Please select a project first'),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
-                              } else if (selectedProject!.name!
-                                  .toLowerCase()
-                                  .contains("marina")) {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const CostGenerator(),
-                                ));
-                              } else if (selectedProject!.name!
-                                  .toLowerCase()
-                                  .contains("square")) {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const CostGenerators(),
-                                ));
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (selectedProject == null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text('Please select a project first'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                } else if (selectedProject!.name!
+                                    .toLowerCase()
+                                    .contains("marina")) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => const CostGenerator(),
+                                  ));
+                                } else if (selectedProject!.name!
+                                    .toLowerCase()
+                                    .contains("square")) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CostGenerators(),
+                                  ));
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
                               ),
-                            ),
-                            child: const Text(
-                              'Cost Sheet Generator',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                              child: const Text(
+                                'Cost Sheet Generator',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
                           const SizedBox(width: 16),
-                          ElevatedButton(
-                            onPressed: () {
-                              if (selectedProject == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text('Please select a project first'),
-                                    backgroundColor: Colors.red,
-                                  ),
-                                );
-                              } else if (selectedProject!.name!
-                                  .toLowerCase()
-                                  .contains("marina")) {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      PaymentScheduleGenerator(),
-                                ));
-                              } else if (selectedProject!.name!
-                                  .toLowerCase()
-                                  .contains("square")) {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      const PaymentScheduleGenerators(),
-                                ));
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.amberAccent,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () {
+                                if (selectedProject == null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content:
+                                          Text('Please select a project first'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                } else if (selectedProject!.name!
+                                    .toLowerCase()
+                                    .contains("marina")) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        PaymentScheduleGenerator(),
+                                  ));
+                                } else if (selectedProject!.name!
+                                    .toLowerCase()
+                                    .contains("square")) {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) =>
+                                        const PaymentScheduleGenerators(),
+                                  ));
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.amberAccent,
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                ),
                               ),
-                            ),
-                            child: const Text(
-                              'Payment Schedule',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                              child: const Text(
+                                'Payment Schedule',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),

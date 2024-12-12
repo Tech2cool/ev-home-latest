@@ -210,7 +210,7 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
       animation: _animationController,
       builder: (context, child) {
         _sheetHeight = _animationController.value *
-            0.5; // Adjust the max height during the animation
+            0.6; // Adjust the max height during the animation
         return DraggableScrollableSheet(
           initialChildSize: _sheetHeight,
           minChildSize: 0,

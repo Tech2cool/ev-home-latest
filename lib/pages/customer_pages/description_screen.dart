@@ -73,7 +73,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
   // Dummy project data
   final String brochureLink =
       "https://cdn.evhomes.tech/a9e1f771-8e1c-4963-8ce2-1fddf29634ed-nine%20square%20s_compressed-compressed.pdf?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6ImE5ZTFmNzcxLThlMWMtNDk2My04Y2UyLTFmZGRmMjk2MzRlZC1uaW5lIHNxdWFyZSBzX2NvbXByZXNzZWQtY29tcHJlc3NlZC5wZGYiLCJpYXQiOjE3MzM1NjQwMjF9.MoPvglY_wCRkW28PiwtEo4mBgB_YNrJ3-KPxFi6BhHU";
-  final String locationLink = 'https://www.google.com/maps';
+  // final String locationLink = 'https://maps.app.goo.gl/DqUfxcX63SAxCWMK8';
 
   Future<void> _downloadBrochure(BuildContext context) async {
     print('Brochure link: $brochureLink');
@@ -169,7 +169,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       widget.project.description ?? "",
                       style: const TextStyle(
                         fontFamily: 'Manrope',
-                        fontSize: 13,
+                        fontSize: 16,
                         color: Color(0xff424d51),
                       ),
                     ),
@@ -213,19 +213,17 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ...widget.project.configurations
-                              .map((ele) => ele
-                                  .configuration) // Extract configuration names
-                              .toSet() // Remove duplicates
+                              .map((ele) => ele.configuration)
+                              .toSet()
                               .map(
                             (uniqueConfig) {
+                              final isSelected =
+                                  selectedConfiguration == uniqueConfig;
                               return GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    if (selectedConfiguration == uniqueConfig) {
-                                      selectedConfiguration = "All";
-                                    } else {
-                                      selectedConfiguration = uniqueConfig;
-                                    }
+                                    selectedConfiguration =
+                                        isSelected ? "All" : uniqueConfig;
                                   });
                                 },
                                 child: Container(
@@ -236,7 +234,9 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                     vertical: 10,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xfff4e9e0),
+                                    color: isSelected
+                                        ? const Color.fromARGB(199, 248, 85, 4)
+                                        : Colors.orangeAccent,
                                     borderRadius: BorderRadius.circular(15),
                                     boxShadow: [
                                       BoxShadow(
@@ -248,17 +248,21 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                   ),
                                   child: Row(
                                     children: [
-                                      const Icon(
+                                      Icon(
                                         FluentIcons
                                             .subtract_circle_arrow_back_16_filled,
-                                        color: Color(0xff80b4ab),
+                                        color: isSelected
+                                            ? Colors.black
+                                            : Colors.black, // Icon color
                                         size: 16.0,
                                       ),
                                       const SizedBox(width: 4.0),
                                       Text(
                                         uniqueConfig,
-                                        style: const TextStyle(
-                                          color: Color(0xff80b4ab),
+                                        style: TextStyle(
+                                          color: isSelected
+                                              ? Colors.black
+                                              : Colors.black, // Text color
                                         ),
                                       ),
                                     ],
@@ -271,6 +275,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                       ),
                     ),
                   ),
+
                   //TODO: hero fix
                   SizedBox(
                     width: double.infinity,
@@ -288,7 +293,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                             height: 80,
                             margin: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
-                              color: const Color(0xfff4e9e0),
+                              color: Colors.orangeAccent,
                               borderRadius: BorderRadius.circular(15),
                               boxShadow: [
                                 BoxShadow(
@@ -349,25 +354,25 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                         Text(
                                           'RERA ID: ${filteredBhkList[i].reraId}',
                                           style: const TextStyle(
-                                              color: Color(0xff80b4ab)),
+                                              color: Colors.black),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           'Carpet Area: ${filteredBhkList[i].carpetArea}',
                                           style: const TextStyle(
-                                              color: Color(0xff80b4ab)),
+                                              color: Colors.black),
                                         ),
                                         const SizedBox(height: 4),
                                         Text(
                                           'Price: ${Helper.formatIndianNumber(filteredBhkList[i].price)}',
                                           style: const TextStyle(
-                                            color: Color(0xff80b4ab),
+                                            color: Colors.black,
                                           ),
                                         ),
                                         Text(
                                           filteredBhkList[i].configuration,
                                           style: const TextStyle(
-                                            color: Color(0xff80b4ab),
+                                            color: Colors.black,
                                           ),
                                         ),
                                       ],
@@ -393,7 +398,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              color: const Color(0xfff4e9e0),
+              color: Colors.orangeAccent,
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -436,13 +441,13 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 10),
-                            backgroundColor: const Color(
-                                0xfff4e9e0), // Matches the background
+                            // backgroundColor: const Color(
+                            //     0xfff4e9e0),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            side: const BorderSide(
-                                color: Color(0xfff4e9e0), width: 1.0),
+                            // side: const BorderSide(
+                            //     color: Color(0xfff4e9e0), width: 1.0),
                           ),
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -450,14 +455,14 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                               Icon(
                                 FluentIcons.arrow_download_24_regular,
                                 size: 12,
-                                color: Color(0xff80b4ab),
+                                color: Colors.orangeAccent,
                               ),
                               SizedBox(width: 5), // Space between icon and text
                               Text(
                                 'Brochure',
                                 style: TextStyle(
                                   fontFamily: 'Manrope',
-                                  color: Color(0xff80b4ab),
+                                  color: Colors.black,
                                   letterSpacing: 0.0,
                                 ),
                               ),
@@ -487,7 +492,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                 horizontal: 10, vertical: 10),
                             backgroundColor: Colors.transparent,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(20),
                             ),
                           ),
                           child: const Row(
@@ -496,14 +501,14 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                               Icon(
                                 FluentIcons.call_24_regular,
                                 size: 12,
-                                color: Color(0xff80b4ab),
+                                color: Colors.orangeAccent,
                               ),
                               SizedBox(width: 5), // Space between icon and text
                               Text(
                                 'Contact Us',
                                 style: TextStyle(
                                   fontFamily: 'Manrope',
-                                  color: Color(0xff80b4ab),
+                                  color: Colors.black,
                                 ),
                               ),
                             ],
@@ -522,7 +527,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
             right: 10,
             child: Container(
               decoration: BoxDecoration(
-                  color: const Color(0xff80b4ab),
+                  color: Colors.orangeAccent,
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
@@ -536,8 +541,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                 focusElevation: 4,
                 foregroundColor: const Color(0xff424d51),
                 backgroundColor: const Color(0xfff4e9e0),
-                onPressed: () async {
-                  _openMap(locationLink);
+                onPressed: () {
+                  _openMap(widget.project.locationLink!);
                 },
                 child: const Icon(
                   FluentIcons.compass_northwest_20_regular,
@@ -551,7 +556,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
             right: 10,
             child: Container(
               decoration: BoxDecoration(
-                  color: const Color(0xff80b4ab),
+                  color: Colors.orangeAccent,
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
@@ -576,10 +581,24 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
   }
 
   void _openMap(String locationUrl) async {
-    if (await canLaunchUrl(Uri.parse(locationUrl))) {
-      await launchUrl(Uri.parse(locationUrl));
-    } else {
-      Helper.showCustomSnackBar('Could not open the map');
+    try {
+      final Uri parsedUri = Uri.parse(locationUrl);
+
+      // Debug log for parsed URL
+      print('Parsed URI: $parsedUri');
+
+      if (await canLaunchUrl(parsedUri)) {
+        await launchUrl(parsedUri, mode: LaunchMode.externalApplication);
+        print('Map opened successfully.');
+      } else {
+        // Debug log for failure to open URL
+        print('Cannot launch URL: $parsedUri');
+        Helper.showCustomSnackBar('Could not open the map');
+      }
+    } catch (e) {
+      // Log exception details
+      print('Error occurred while opening the map: $e');
+      Helper.showCustomSnackBar('An error occurred: $e');
     }
   }
 
@@ -793,7 +812,7 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                     padding:
                         const EdgeInsetsDirectional.fromSTEB(15, 10, 15, 10),
                     decoration: BoxDecoration(
-                        color: const Color(0xfff4e9e0),
+                        color: Colors.orangeAccent,
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
@@ -806,13 +825,13 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                       children: [
                         Icon(
                           FluentIcons.people_24_regular,
-                          color: Color(0xff80b4ab),
+                          color: Colors.black,
                           size: 16.0,
                         ),
                         SizedBox(width: 4.0),
                         Text(
                           "All",
-                          style: TextStyle(color: Color(0xff80b4ab)),
+                          style: TextStyle(color: Colors.black),
                         ),
                       ],
                     ),
@@ -829,7 +848,7 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                       padding:
                           const EdgeInsetsDirectional.fromSTEB(15, 10, 15, 10),
                       decoration: BoxDecoration(
-                          color: const Color(0xfff4e9e0),
+                          color: Colors.orangeAccent,
                           borderRadius: BorderRadius.circular(15),
                           boxShadow: [
                             BoxShadow(
@@ -842,13 +861,13 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                         children: [
                           Icon(
                             getIconData(filteredAmenities[index].name),
-                            color: const Color(0xff80b4ab),
+                            color: Colors.black,
                             size: 16.0,
                           ),
                           const SizedBox(width: 4.0),
                           Text(
                             filteredAmenities[index].name,
-                            style: const TextStyle(color: Color(0xff80b4ab)),
+                            style: const TextStyle(color: Colors.black),
                           ),
                         ],
                       ),
@@ -910,7 +929,7 @@ class HorizontalStaggeredGallery extends StatelessWidget {
                         child: InteractiveViewer(
                           maxScale: 2.2,
                           child: Container(
-                            height: MediaQuery.sizeOf(context).height / 2,
+                            height: MediaQuery.sizeOf(context).height / 3,
                             color: Colors.transparent,
                             child: AspectRatio(
                               aspectRatio: 16 / 9,

@@ -32,7 +32,7 @@ import '../models/employee.dart';
 const storage = FlutterSecureStorage();
 
 // final dio = Dio();
-// const baseUrl = "http://192.168.1.168:8082";
+// const baseUrl = "http://192.168.1.167:8082";
 
 const baseUrl = "https://api.evhomes.tech";
 
@@ -1609,10 +1609,14 @@ class ApiService {
         Helper.showCustomSnackBar(response.data['message']);
         return [];
       }
+
+      print("pass 1");
       final List<dynamic> dataList = response.data["data"];
-      final List<MeetingSummary> meeting = dataList.map((data) {
-        return MeetingSummary.fromMap(data as Map<String, dynamic>);
+      print(response.data);
+      final meeting = dataList.map((data) {
+        return MeetingSummary.fromMap(data);
       }).toList();
+      print("pass 3");
       return meeting;
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
@@ -1624,6 +1628,7 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
+      print("pass 2");
       Helper.showCustomSnackBar(errorMessage);
       return [];
     }

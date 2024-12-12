@@ -33,10 +33,12 @@ class MeetingSummary {
 
   factory MeetingSummary.fromMap(Map<String, dynamic> map) {
     return MeetingSummary(
-      date: map["date"],
+      date: map["date"] != null ? DateTime.tryParse(map["date"]) : null,
       purpose: map['purpose'],
       summary: map['summary'],
-      meetingEnd: map['meetingEnd'],
+      meetingEnd: map["meetingEnd"] != null
+          ? DateTime.tryParse(map["meetingEnd"])
+          : null,
       place: map['place'] != null ? Division.fromMap(map['place']) : null,
       customer:
           map['customer'] != null ? Customer.fromMap(map['customer']) : null,

@@ -203,7 +203,8 @@ class _MoreOptionPageState extends State<MoreOptionPage> {
               ),
             if (loggedDesg!.id == "desg-post-sales-head" ||
                 loggedDesg!.id == "desg-app-developer" ||
-                loggedDesg!.id == "desg-site-head")
+                loggedDesg!.id == "desg-site-head" ||
+                loggedDesg!.id == "desg-floor-manager")
               ListTile(
                 onTap: () {
                   GoRouter.of(context).push("/manage-site-visit");

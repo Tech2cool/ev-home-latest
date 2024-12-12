@@ -1,4 +1,5 @@
 import 'package:ev_homes/core/models/customer_payment.dart';
+import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
@@ -10,7 +11,9 @@ import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class DemandLetter10 extends StatefulWidget {
-  const DemandLetter10({super.key});
+  final Lead? lead;
+
+  const DemandLetter10({super.key, this.lead});
 
   @override
   _PaymentScheduleAndDemandLetterState createState() =>
@@ -122,8 +125,12 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
   @override
   void initState() {
     super.initState();
+    clientNameController.text ='${widget.lead?.firstName ?? ""} ${widget.lead?.lastName??""}';
+    phoneController.text = widget.lead?.phoneNumber?.toString() ?? '0';
+    addressLine1Controller.text = widget.lead?.address ?? "";
     netAmountController.addListener(_updateTotalAmount);
     cgstSgstController.addListener(_updateTotalAmount);
+
   }
 
   @override

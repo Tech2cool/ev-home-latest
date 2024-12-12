@@ -623,7 +623,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16.0,
-                          vertical: 12.0,
+                          vertical: 1.0,
                         ),
                         child: Row(
                           children: [
@@ -662,7 +662,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 16.0,
-                              vertical: 12.0,
+                              vertical: 1.0,
                             ),
                             child: Row(
                               children: [
@@ -700,7 +700,8 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           ),
                           Positioned(
                             right: 28,
-                            top: 20,
+                            top: 10
+                            ,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -731,13 +732,13 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
+                      // const SizedBox(
+                      //   height: 5,
+                      // ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16.0,
-                          vertical: 12.0,
+                          vertical: 1.0,
                         ),
                         child: Row(
                           children: [
@@ -776,13 +777,13 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 10,
-                      ),
+                      // const SizedBox(
+                      //   height: 5,
+                      // ),
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16.0,
-                          vertical: 12.0,
+                          vertical: 1.0,
                         ),
                         child: Row(
                           children: [
@@ -816,7 +817,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16.0,
-                          vertical: 12.0,
+                          vertical: 1.0,
                         ),
                         child: Row(
                           children: [
@@ -850,7 +851,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                       Padding(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 16.0,
-                          vertical: 12.0,
+                          vertical: 1.0,
                         ),
                         child: Row(
                           children: [

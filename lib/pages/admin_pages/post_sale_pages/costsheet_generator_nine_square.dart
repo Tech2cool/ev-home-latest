@@ -1,3 +1,4 @@
+import 'package:ev_homes/core/models/lead.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -9,7 +10,8 @@ import 'package:intl/intl.dart';
 import 'dart:io';
 
 class CostGenerators extends StatefulWidget {
-  const CostGenerators({super.key});
+  final Lead? lead;
+  const CostGenerators({super.key, this.lead});
 
   @override
   State<CostGenerators> createState() => _CostGeneratorState();
@@ -412,6 +414,16 @@ class _CostGeneratorState extends State<CostGenerators> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Permission denied to access storage')),
       );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.lead != null) {
+      clientNameController.text =
+          '${widget.lead?.firstName ?? ""} ${widget.lead?.lastName ?? ""}';
+      additionalNameController.text = widget.lead?.address ?? "";
     }
   }
 

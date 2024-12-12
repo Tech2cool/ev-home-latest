@@ -59,7 +59,7 @@ dependencies:
   chewie: ^1.8.5
   flutter_swiper_view: ^1.1.8
   share_plus: ^10.1.1
-
+  animation_search_bar: ^0.0.10
   printing: ^5.6.0
 
   # sending push notifications

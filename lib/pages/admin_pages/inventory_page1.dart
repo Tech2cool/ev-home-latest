@@ -21,7 +21,7 @@ class _InventoryPage1State extends State<InventoryPage1> {
   void onTower(OurProject? selectedValue) {
     setState(() {
       selectedTower = selectedValue;
-    });
+    });  
   }
 
   Future<void> _onRefresh() async {

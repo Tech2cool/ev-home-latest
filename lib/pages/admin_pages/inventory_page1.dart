@@ -1,6 +1,7 @@
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:ev_homes/pages/admin_pages/flat_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -343,22 +344,40 @@ class FloorContent extends StatelessWidget {
                         children: List.generate(flats.length, (itemIndex) {
                           final flat = flats[itemIndex];
                           String content = _generateContent(flat, itemIndex);
-                          return Container(
-                            width: 70,
-                            height: 40,
-                            alignment: Alignment.center,
-                            margin: const EdgeInsets.all(4.0),
-                            decoration: BoxDecoration(
-                              color: flat.occupied == true
-                                  ? Colors.redAccent
-                                  : const Color(0xff00cf9f),
-                              borderRadius: BorderRadius.circular(8.0),
-                            ),
-                            child: Text(
-                              content,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FlatDetailPage(
+                                    flatNumber:
+                                        '${flat.floor}0${itemIndex + 1}', // Example flat number
+                                    bhk: itemIndex % 2 == 0
+                                        ? '2BHK'
+                                        : '3BHK', // Example BHK
+                                    area:
+                                        '${flat.carpetArea} Sqft', // Example area
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Container(
+                              width: 70,
+                              height: 40,
+                              alignment: Alignment.center,
+                              margin: const EdgeInsets.all(4.0),
+                              decoration: BoxDecoration(
+                                color: flat.occupied == true
+                                    ? Colors.redAccent
+                                    : const Color(0xff00cf9f),
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Text(
+                                content,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           );

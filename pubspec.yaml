@@ -61,6 +61,8 @@ dependencies:
   share_plus: ^10.1.1
   animation_search_bar: ^0.0.10
   printing: ^5.6.0
+  http: ^1.2.2
+
 
   # sending push notifications
   # firebase_core: ^3.6.0

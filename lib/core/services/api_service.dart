@@ -32,10 +32,8 @@ import '../models/employee.dart';
 const storage = FlutterSecureStorage();
 
 // final dio = Dio();
-// const baseUrl = "http://192.168.1.168:8082";
-
+// const baseUrl = "http://192.168.1.180:8082"
 const baseUrl = "https://api.evhomes.tech";
-
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -142,6 +140,38 @@ class ApiService {
         data: [],
       );
       return emptyPagination;
+    }
+  }
+
+  Future<List<Lead>> getLeadsForExport(Map<String, dynamic> datas) async {
+    try {
+      final Response response = await _dio.post(
+        '/lead-by-start-end-date',
+        data: datas,
+      );
+      final Map<String, dynamic> data = response.data;
+      if (response.data["code"] != 200) {
+        return [];
+      }
+      final items = data['data'] as List<dynamic>? ?? [];
+
+      List<Lead> leads = [];
+      if (items.isNotEmpty) {
+        leads = items.map((emp) => Lead.fromJson(emp)).toList();
+      }
+
+      return leads;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        errorMessage = e.message.toString();
+      }
+      print(e);
+      Helper.showCustomSnackBar(errorMessage);
+      return [];
     }
   }
 
@@ -642,18 +672,35 @@ class ApiService {
 
   Future<Lead?> addLead(Map<String, dynamic> data) async {
     try {
+      print('pass 1');
       final Response response = await _dio.post(
         '/leads-add',
         data: data,
       );
+      print('pass 2');
       if (response.data['code'] != 200) {
+        print(response.data['message']);
         Helper.showCustomSnackBar(response.data['message']);
         return null;
       }
+      print('pass 3');
       Helper.showCustomSnackBar(response.data['message'], Colors.green);
       final paresedLead = Lead.fromJson(response.data['data']);
+      print('pass 4');
       return paresedLead;
-    } catch (e) {
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+      print(e);
+
+      Helper.showCustomSnackBar(errorMessage);
       return null;
     }
   }
@@ -676,6 +723,7 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
+      print(e);
 
       Helper.showCustomSnackBar(errorMessage);
       return null;
@@ -1609,10 +1657,14 @@ class ApiService {
         Helper.showCustomSnackBar(response.data['message']);
         return [];
       }
+
+      print("pass 1");
       final List<dynamic> dataList = response.data["data"];
-      final List<MeetingSummary> meeting = dataList.map((data) {
-        return MeetingSummary.fromMap(data as Map<String, dynamic>);
+      print(response.data);
+      final meeting = dataList.map((data) {
+        return MeetingSummary.fromMap(data);
       }).toList();
+      print("pass 3");
       return meeting;
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
@@ -1624,6 +1676,7 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
+      print("pass 2");
       Helper.showCustomSnackBar(errorMessage);
       return [];
     }

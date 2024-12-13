@@ -1,65 +1,83 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
+import 'package:ev_homes/core/models/meetingSummary.dart';
+import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/customer_pages/customer_forms/meeting_summary_page.dart';
 import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 // import '../../customer wrappers/home_wrapper.dart';
 
-class MyMeetings extends StatelessWidget {
-  final List<Map<String, String>> completedMeetings = [
-    {
-      'title': 'Booking',
-      'description': 'Discuss about flat booking',
-      'time': '10:00 AM - 12:00 PM',
-      'date': '2023-10-15',
-    },
-    {
-      'title': 'Registration',
-      'description': 'Registration of flat.',
-      'time': '9:00 AM - 12:00 PM',
-      'date': '2023-10-20',
-    },
-  ];
-
+class MyMeetings extends StatefulWidget {
   MyMeetings({super.key});
 
   @override
+  State<MyMeetings> createState() => _MyMeetingsState();
+}
+
+class _MyMeetingsState extends State<MyMeetings> {
+  bool isLoading = false;
+  final List<Map<String, String>> completedMeetings = [];
+
+  Future<void> _onRefresh() async {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+    print("pass 1");
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      print("pass 2");
+      // Execute all three futures concurrently
+      await Future.wait([
+        settingProvider.getMeeetingSummary(),
+        // settingProvider.getPayment(),
+      ]);
+      print("pass 3");
+    } catch (e) {
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+      print("pass 4");
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const CustomerHomeWrapper()),
-        );
-        return false;
-      },
-      child: Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const CustomerHomeWrapper()),
-              );
-            },
-          ),
-          title: const Text(
-            'My Meetings',
-            style: TextStyle(
-              fontFamily: 'Poppins',
-              fontSize: 24,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+    final settingProvider = Provider.of<SettingProvider>(context);
+    final meetingSummary = settingProvider.meeting;
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const CustomerHomeWrapper()),
+            );
+          },
         ),
-        body: Stack(
+        title: const Text(
+          'My Meetings',
+          style: TextStyle(
+            fontFamily: 'Poppins',
+            fontSize: 24,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: Stack(
           children: [
             const Positioned.fill(
               child: AnimatedGradientBg(),
@@ -71,9 +89,9 @@ class MyMeetings extends StatelessWidget {
                   Expanded(
                     child: ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      itemCount: completedMeetings.length,
+                      itemCount: meetingSummary.length,
                       itemBuilder: (context, index) {
-                        final meeting = completedMeetings[index];
+                        final meeting = meetingSummary[index];
                         return Padding(
                           padding: const EdgeInsets.only(bottom: 16.0),
                           child: _buildMeetingCard(context, meeting),
@@ -90,15 +108,15 @@ class MyMeetings extends StatelessWidget {
     );
   }
 
-  Widget _buildMeetingCard(BuildContext context, Map<String, String> meeting) {
+  Widget _buildMeetingCard(BuildContext context, MeetingSummary meeting) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => MeetingSummaryPage(
-              title: meeting['title']!,
-              description: meeting['description']!,
-              date: meeting['time']!,
+              title: meeting.purpose ?? "",
+              description: meeting.summary ?? "",
+              date: meeting.date.toString(),
             ),
           ),
         );
@@ -130,7 +148,7 @@ class MyMeetings extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        meeting['title']!,
+                        meeting.purpose ?? "",
                         style: const TextStyle(
                           fontFamily: 'Poppins',
                           fontWeight: FontWeight.bold,
@@ -139,12 +157,12 @@ class MyMeetings extends StatelessWidget {
                         ),
                       ),
                     ),
-                    _buildDateChip(meeting['date']!),
+                    _buildDateChip(meeting.date.toString()),
                   ],
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  meeting['description']!,
+                  meeting.summary ?? "",
                   style: TextStyle(
                     fontFamily: 'Roboto',
                     color: Colors.grey[700],
@@ -161,7 +179,7 @@ class MyMeetings extends StatelessWidget {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      meeting['time']!,
+                      meeting.date.toString(),
                       style: TextStyle(
                         fontFamily: 'Roboto',
                         color: Colors.grey[800],

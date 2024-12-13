@@ -1,7 +1,4 @@
-import 'package:ev_homes/core/constant/constant.dart';
-// import 'package:ev_homes_customer/core/constant.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class Lottiepage extends StatefulWidget {
   const Lottiepage({super.key});
@@ -15,10 +12,21 @@ class _LottiepageState extends State<Lottiepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: Constant.bgColor, // Deep purple background
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          // gradient: LinearGradient(
+          //   colors: [
+          //     Color(0xFFFFDE4D),
+          //     Color(0xFFFFB22C),
+          //     Color.fromARGB(199, 248, 85, 4),
+          //   ],
+          //   begin: Alignment.topLeft,
+          //   end: Alignment.bottomRight,
+          // ),
+        ),
         child: Center(
-          child: Lottie.asset(
-            'assets/animations/building.json',
+          child: Image.asset(
+            'assets/images/logo9square.png',
             width: 200,
             height: 300,
           ),

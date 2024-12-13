@@ -1,3 +1,4 @@
+import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:flutter/material.dart';
 import 'package:ev_homes/core/models/customer_payment.dart';
@@ -11,7 +12,11 @@ import 'package:open_file/open_file.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class DemandLetter extends StatefulWidget {
-  const DemandLetter({Key? key}) : super(key: key);
+  final Lead? lead;
+  const DemandLetter({
+    Key? key,
+    this.lead, // Initialize the lead parameter here
+  }) : super(key: key);
 
   @override
   _DemandLetterState createState() => _DemandLetterState();
@@ -142,6 +147,10 @@ class _DemandLetterState extends State<DemandLetter> {
   @override
   void initState() {
     super.initState();
+    clientNameController.text =
+        '${widget.lead?.firstName ?? ""} ${widget.lead?.lastName ?? ""}';
+    phoneController.text = widget.lead?.phoneNumber?.toString() ?? '0';
+    addressLine1Controller.text = widget.lead?.address ?? "";
     netAmountController.addListener(_updateTotalAmount);
     cgstSgstController.addListener(_updateTotalAmount);
     allInclusiveController.addListener(_calculateTotalUpToSelectedSlab);

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CpTaggingDeatils extends StatefulWidget {
-  final Map<String, String> client; // Accept client details
+  final Map<String, String> client;
 
   const CpTaggingDeatils({super.key, required this.client});
 

@@ -84,17 +84,8 @@ class PropertyCardVertical extends StatelessWidget {
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromARGB(255, 133, 0, 0)
-                  .withOpacity(0.6), // Grey shadow color
-              offset: const Offset(3, 3), // Position the shadow
-              blurRadius: 8, // Blur effect
-              spreadRadius: 3, // Spread the shadow
-            ),
-          ],
         ),
-        height: 120, // Set a fixed height for the card
+        height: 120,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(15),
           child: Stack(
@@ -156,6 +147,13 @@ class PropertyCardVertical extends StatelessWidget {
                                 color: Colors.black,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16,
+                                shadows: [
+                                  Shadow(
+                                    offset: Offset(1.5, 1.5),
+                                    blurRadius: 2,
+                                    color: Colors.black38,
+                                  ),
+                                ],
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -163,14 +161,14 @@ class PropertyCardVertical extends StatelessWidget {
                               children: [
                                 const Icon(
                                   Icons.location_on,
-                                  color: Color.fromARGB(255, 133, 0, 0),
+                                  color: Color(0xFF4B5945),
                                   size: 18,
                                 ),
                                 const SizedBox(width: 5),
                                 Text(
                                   property['location']!,
                                   style: const TextStyle(
-                                    color: Colors.black,
+                                    color: Color(0xFF4B5945),
                                     fontSize: 14,
                                   ),
                                 ),

@@ -129,19 +129,32 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        iconTheme: const IconThemeData(color: Color(0xff424d51)),
-        title: Text(
-          widget.project.name ?? "",
-          style: const TextStyle(color: Color(0xff424d51)),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(55),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
+          ),
+          child: AppBar(
+            automaticallyImplyLeading: true,
+            backgroundColor: Colors.orange,
+            title: Text(
+              widget.project.name ?? "",
+              style: const TextStyle(color: Color(0xFF4B5945)),
+            ),
+            iconTheme: const IconThemeData(color: Color(0xFF4B5945)),
+          ),
         ),
-        backgroundColor: Colors.white,
       ),
       body: Stack(
         children: [
           ListView(
             children: [
               // Updated to pass a list instead of multiple string arguments
+              SizedBox(
+                height: 20,
+              ),
               MyCarousel(
                 imageUrls: [
                   ...widget.project.carouselImages,
@@ -236,7 +249,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                     vertical: 10,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: const Color(0xfff4e9e0),
+                                    color: Color(0xFF9CA777),
                                     borderRadius: BorderRadius.circular(15),
                                     boxShadow: [
                                       BoxShadow(
@@ -251,14 +264,14 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                       const Icon(
                                         FluentIcons
                                             .subtract_circle_arrow_back_16_filled,
-                                        color: Color(0xff80b4ab),
+                                        color: Color(0xFF4B5945),
                                         size: 16.0,
                                       ),
                                       const SizedBox(width: 4.0),
                                       Text(
                                         uniqueConfig,
                                         style: const TextStyle(
-                                          color: Color(0xff80b4ab),
+                                          color: Colors.white,
                                         ),
                                       ),
                                     ],

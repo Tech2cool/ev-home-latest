@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
+import '../../components/animated_gradient_bg.dart';
 import '../customer_pages/carousel_page.dart';
 
 class CpHomeScreen extends StatefulWidget {
@@ -42,15 +43,15 @@ class _HomeScreenState extends State<CpHomeScreen> {
     return Stack(
       children: [
         // AnimatedGradient(),
-        // AnimatedShapesPage(),
+
         Scaffold(
           // backgroundColor: Constant.bgColor,
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+          backgroundColor: Color.fromARGB(255, 255, 251, 240),
           appBar: PreferredSize(
-            preferredSize: const Size.fromHeight(80),
+            preferredSize: const Size.fromHeight(60),
             child: AppBar(
               automaticallyImplyLeading: false,
-              backgroundColor: Colors.white.withOpacity(0.3),
+              backgroundColor: Colors.transparent,
               elevation: 0,
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -60,9 +61,8 @@ class _HomeScreenState extends State<CpHomeScreen> {
                     children: [
                       const Text(
                         "Welcome!",
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 133, 0, 0),
-                            fontSize: 18),
+                        style:
+                            TextStyle(color: Color(0xFF4B5945), fontSize: 18),
                       ),
                       const SizedBox(
                         height: 4,
@@ -70,7 +70,7 @@ class _HomeScreenState extends State<CpHomeScreen> {
                       Text(
                         loggedChannelPartner?.firstName ?? "",
                         style: const TextStyle(
-                            color: Color.fromARGB(255, 133, 0, 0),
+                            color: Color(0xFF4B5945),
                             fontWeight: FontWeight.bold,
                             fontSize: 20),
                       ),
@@ -94,12 +94,15 @@ class _HomeScreenState extends State<CpHomeScreen> {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 10,
+                  height: 2,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Row(
                     children: [
+                      SizedBox(
+                        width: 10,
+                      ),
                       Expanded(
                         child: SizedBox(
                           height: 40,
@@ -107,33 +110,30 @@ class _HomeScreenState extends State<CpHomeScreen> {
                             decoration: InputDecoration(
                               hintText: "Search...",
                               hintStyle: const TextStyle(
-                                color: Color.fromARGB(255, 133, 0, 0),
+                                color: Color(0xFF4B5945),
                               ),
                               prefixIcon: const Icon(
                                 Icons.search,
-                                color: Color.fromARGB(255, 133, 0, 0),
+                                color: Color(0xFF4B5945),
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: const BorderSide(
-                                  color: Color.fromARGB(255, 133, 0,
-                                      0), // Set the border color here
-                                  width: 2.0, // Set the border width
+                                  color: Colors.orange,
+                                  width: 2.0,
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: const BorderSide(
-                                  color: Color.fromARGB(199, 248, 85,
-                                      4), // Set the color when not focused
+                                  color: Colors.orange,
                                   width: 2.0,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: const BorderSide(
-                                  color: Color.fromARGB(255, 248, 85,
-                                      4), // Color when the field is focused
+                                  color: Colors.orange,
                                   width: 2.0,
                                 ),
                               ),
@@ -168,17 +168,18 @@ class _HomeScreenState extends State<CpHomeScreen> {
                           child: Text(
                             "Our Projects",
                             style: TextStyle(
-                                color: Color.fromARGB(255, 133, 0, 0),
+                                color: Color(0xFF4B5945),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 10),
+                    SizedBox(height: 5),
                     OurProjectList(),
                   ],
                 ),
+                SizedBox(height: 10),
                 Column(
                   children: [
                     const Row(
@@ -189,38 +190,18 @@ class _HomeScreenState extends State<CpHomeScreen> {
                           child: Text(
                             "Upcoming Projects",
                             style: TextStyle(
-                                color: Color.fromARGB(255, 133, 0, 0),
+                                color: Color(0xFF4B5945),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     UpcomingProjectsList(),
                   ],
                 ),
-                Column(
-                  children: [
-                    const Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text(
-                            "Re-Sale Property",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 133, 0, 0),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 10),
-                    ResalePropertyList(),
-                  ],
-                ),
+                const SizedBox(height: 5),
                 const Column(
                   children: [
                     Row(
@@ -231,7 +212,7 @@ class _HomeScreenState extends State<CpHomeScreen> {
                           child: Text(
                             "What's New",
                             style: TextStyle(
-                                color: Color.fromARGB(255, 133, 0, 0),
+                                color: Color(0xFF4B5945),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
@@ -244,7 +225,7 @@ class _HomeScreenState extends State<CpHomeScreen> {
                 ),
                 const SizedBox(
                   height: 120,
-                )
+                ),
               ],
             ),
           ),

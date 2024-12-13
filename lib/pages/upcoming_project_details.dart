@@ -103,6 +103,7 @@ class _PropertyCardVerticalState extends State<PropertyCardVertical>
           ),
         );
       },
+
       child: MouseRegion(
         onEnter: (_) => _controller.forward(),
         onExit: (_) => _controller.reverse(),

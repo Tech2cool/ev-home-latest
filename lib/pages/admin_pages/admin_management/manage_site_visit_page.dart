@@ -116,10 +116,9 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
               PopupMenuButton<String>(
                 onSelected: (value) {
                   setState(() {
-                    selectedSiteVisit =
-                        value; // Update the visit type based on selection
+                    selectedSiteVisit = value;
                   });
-                  getVisits(1); // Fetch visits again when the filter changes
+                  getVisits(1);
                 },
                 itemBuilder: (BuildContext context) {
                   return [

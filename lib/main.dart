@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:ev_homes/core/providers/attendance_provider.dart';
 import 'package:ev_homes/core/providers/geolocation_provider.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
@@ -7,10 +8,32 @@ import 'package:ev_homes/core/services/api_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:open_file/open_file.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
     GlobalKey<ScaffoldMessengerState>();
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> initializeNotifications() async {
+  const AndroidInitializationSettings androidInitializationSettings =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  const InitializationSettings initializationSettings =
+      InitializationSettings(android: androidInitializationSettings);
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse: onSelectNotification,
+  );
+}
+
+void onSelectNotification(NotificationResponse response) {
+  if (response.payload != null) {
+    final filePath = response.payload!;
+    OpenFile.open(filePath); // Use open_file to open the file
+  }
+}
 
 void main() {
   FlutterError.onError = (FlutterErrorDetails details) {
@@ -25,6 +48,7 @@ void main() {
     WidgetsFlutterBinding.ensureInitialized();
 
     OneSignal.initialize("d4ba7e76-e911-4cbd-a99a-592df2da7984");
+    await initializeNotifications();
     await ApiService().initServer();
     runApp(
       MultiProvider(

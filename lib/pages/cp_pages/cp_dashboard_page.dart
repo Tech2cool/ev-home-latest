@@ -15,7 +15,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFFEE8B0),
+      backgroundColor: Color.fromARGB(255, 255, 242, 206),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50),
         child: ClipRRect(

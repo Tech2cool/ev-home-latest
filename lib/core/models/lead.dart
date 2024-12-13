@@ -113,7 +113,8 @@ class Lead {
       countryCode: json['countryCode'],
       phoneNumber:
           json['phoneNumber'] != null ? json['phoneNumber']?.floor() : 0,
-      altPhoneNumber: json['altPhoneNumber']?.floor() ?? 0,
+      altPhoneNumber:
+          json['altPhoneNumber'] != null ? json['altPhoneNumber']?.floor() : 0,
       remark: json['remark'],
       startDate: json['startDate'] != null
           ? DateTime.parse(json['startDate'])
@@ -173,10 +174,10 @@ class Lead {
       'firstName': firstName,
       'lastName': lastName,
       'address': address,
-      'channelPartner': channelPartner,
-      'dataAnalyzer': dataAnalyzer,
-      'teamLeader': teamLeader,
-      'preSalesExecutive': preSalesExecutive,
+      'channelPartner': channelPartner?.id,
+      'dataAnalyzer': dataAnalyzer?.id,
+      'teamLeader': teamLeader?.id,
+      'preSalesExecutive': preSalesExecutive?.id,
       'countryCode': countryCode,
       'phoneNumber': phoneNumber,
       'altPhoneNumber': altPhoneNumber,
@@ -203,8 +204,8 @@ class Lead {
     return {
       'id': id,
       'email': email ?? "",
-      'project': project.map((pro) => pro.name ?? "").toList(),
-      'requirement': requirement,
+      'project': project.map((pro) => pro.name ?? "").join(","),
+      'requirement': requirement.join(","),
       'firstName': firstName ?? "",
       'lastName': lastName ?? "",
       'address': address ?? "",
@@ -213,29 +214,29 @@ class Lead {
           "${dataAnalyzer?.firstName ?? ""} ${dataAnalyzer?.lastName ?? ''}",
       'teamLeader':
           "${teamLeader?.firstName ?? ''} ${teamLeader?.lastName ?? ''}",
-      'preSalesExecutive':
-          "${preSalesExecutive?.firstName ?? ""} ${preSalesExecutive?.lastName ?? ''}",
-      'countryCode': countryCode ?? "",
-      'phoneNumber': "${countryCode} ${phoneNumber}" ?? "",
-      'altPhoneNumber': altPhoneNumber ?? "",
+      'phoneNumber': "$countryCode $phoneNumber",
+      'altPhoneNumber': "$countryCode $altPhoneNumber",
       'remark': remark ?? "",
-      'stage': stage ?? "",
       'startDate': Helper.formatDate(startDate?.toIso8601String() ?? ""),
       'validTill': Helper.formatDate(validTill?.toIso8601String() ?? ""),
-      'previousValidTill':
-          Helper.formatDate(previousValidTill?.toIso8601String() ?? ""),
-      'status': status ?? "",
       'approvalStatus': approvalStatus ?? "",
       'visitStatus': visitStatus ?? "",
       'revisitStatus': revisitStatus ?? "",
       'bookingStatus': bookingStatus ?? "",
       'interestedStatus': interestedStatus ?? "",
+      "cycle": cycle?.stage ?? '',
+      "cycleNumber": cycle?.currentOrder ?? '',
+      "cycleTeamLeader":
+          "${cycle?.teamLeader?.firstName ?? ""} ${cycle?.teamLeader?.lastName ?? ""}",
+      "cycleAssigned":
+          Helper.formatDate(cycle?.startDate?.toIso8601String() ?? ''),
+      "cycleDeadline":
+          Helper.formatDate(cycle?.validTill?.toIso8601String() ?? ''),
       'callHistory': callHistory.map((item) => item.toExportJson()).toList(),
       'followupHistory':
           followupHistory.map((item) => item.toExportJson()).toList(),
       'approvalHistory':
           approvalHistory.map((item) => item.toExportJson()).toList(),
-      'updateHistory': updateHistory.map((item) => item.toJson()).toList(),
       'cycleHistory': cycleHistory.map((item) => item.toExportMap()).toList(),
     };
   }
@@ -367,7 +368,7 @@ class ApprovalHistory {
   Map<String, dynamic> toExportJson() {
     return {
       'employee': "${employee?.firstName ?? ""} ${employee?.lastName ?? ''}",
-      'approvedAt': approvedAt?.toIso8601String() ?? "",
+      'approvedAt': Helper.formatDate(approvedAt?.toIso8601String() ?? ""),
       'remark': remark ?? "",
     };
   }
@@ -476,8 +477,8 @@ class Cycle {
       'currentOrder': currentOrder ?? 0,
       'teamLeader':
           "${teamLeader?.firstName ?? ""} ${teamLeader?.lastName ?? ''}",
-      'startDate': startDate?.toIso8601String() ?? "",
-      'validTill': validTill?.toIso8601String() ?? "",
+      'startDate': Helper.formatDate(startDate?.toIso8601String() ?? ""),
+      'validTill': Helper.formatDate(validTill?.toIso8601String() ?? ""),
     };
   }
 

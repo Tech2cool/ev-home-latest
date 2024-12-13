@@ -1,7 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ev_homes/core/constant/constant.dart';
-// import 'package:ev_homes_customer/core/constant.dart';
-// import 'package:ev_homes_crm_v7/core/constant/constant.dart';
+
 import 'package:flutter/material.dart';
 
 class CarouselPage extends StatelessWidget {
@@ -12,7 +11,7 @@ class CarouselPage extends StatelessWidget {
     return Center(
       child: CarouselSlider(
         options: CarouselOptions(
-          height: 120, // Adjust height as needed
+          height: 220, // Adjust height as needed
           autoPlay: true,
           enlargeCenterPage: true,
           aspectRatio: 2.0,

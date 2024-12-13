@@ -32,8 +32,10 @@ import '../models/employee.dart';
 const storage = FlutterSecureStorage();
 
 // final dio = Dio();
+
 // const baseUrl = "http://192.168.1.180:8082"
 const baseUrl = "https://api.evhomes.tech";
+
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -65,6 +67,57 @@ class ApiService {
       }
       Helper.showCustomSnackBar(errorMessage);
       return null;
+    }
+  }
+
+  // Future<List<MeetingSummary>> getClientMeetingById(String id) async {
+  //   try {
+  //     final Response response = await _dio.get('/meeting-client-id/$id');
+  //     final Map<String, dynamic> data = response.data["data"];
+  //     final MeetingSummary meeting = MeetingSummary.fromMap(data);
+  //     return meeting[];
+  //   } on DioException catch (e) {
+  //     String errorMessage = 'Something went wrong';
+  //     print("pass1");
+  //     if (e.response != null) {
+  //       errorMessage = e.response?.data['message'] ?? errorMessage;
+  //     } else {
+  //       errorMessage = e.message.toString();
+  //     }print("pass2");
+  //     Helper.showCustomSnackBar(errorMessage);
+  //     return null;
+  //   }
+  // }
+
+  Future<List<MeetingSummary>> getClientMeetingById(String id) async {
+    try {
+      final Response response = await _dio.get(
+        '/meeting-client-id/$id',
+      );
+      // print("yes 1");
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return [];
+      }
+
+      // print("yes 2");
+      final List<dynamic> dataList = response.data["data"];
+
+      // print("yes 3");
+      final List<MeetingSummary> meeting = dataList.map((data) {
+        return MeetingSummary.fromMap(data);
+      }).toList();
+      return meeting;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        errorMessage = e.message.toString();
+      }
+      Helper.showCustomSnackBar(errorMessage);
+      return [];
     }
   }
 
@@ -2222,7 +2275,7 @@ class ApiService {
       final List<Lead> leads = dataList.map((data) {
         return Lead.fromJson(data as Map<String, dynamic>);
       }).toList();
-
+      print(response.data["visit2Count"]);
       return PaginationModel<Lead>(
         code: 404,
         message: response.data["message"],
@@ -2232,6 +2285,7 @@ class ApiService {
         totalItems: response.data["totalItems"],
         pendingCount: response.data["pendingCount"],
         visitCount: response.data["visitCount"],
+        visit2Count: response.data["visit2Count"],
         revisitCount: response.data["revisitCount"],
         bookingCount: response.data["bookingCount"],
         assignedCount: response.data["assignedCount"],

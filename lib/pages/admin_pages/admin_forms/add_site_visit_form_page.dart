@@ -193,6 +193,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
       Helper.showCustomSnackBar("All Fields Required");
       return;
     }
+    // await onVerfiredOrSkipOtp();
     await generateOtp();
   }
 
@@ -217,7 +218,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
         "firstName": firstNameController.text,
         "lastName": lastNameController.text,
         "phoneNumber": phoneController.text,
-        "email": emailController.text.isEmpty ? null :emailController.text ,
+        "email": emailController.text.isEmpty ? null : emailController.text,
         "closingManager": _selectedSeniorClosingManager!.id,
       });
       if (recievedOtp != null) {
@@ -456,13 +457,14 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
         closingManager: _selectedSeniorClosingManager,
         closingTeam: _selectedSalesManagers1,
         date: _selectedDate,
-        phoneNumber: int.parse(phoneController.text),
+        phoneNumber: int.tryParse(phoneController.text),
         email: emailController.text.trim(),
         residence: addressController.text,
         dataEntryBy: _selectedDataEntryUser,
         namePrefix: selectedPrefix,
         countryCode: "+91",
         verified: verified,
+        source: _selectedSource,
         gender: selectedPrefix?.toLowerCase() == 'mr' ? 'male' : 'female',
       );
 

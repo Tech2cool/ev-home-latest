@@ -439,18 +439,18 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    ClosingManagerVisit2ListPage(
-                                  id: widget.id,
-                                  status: "Walk-in",
-                                ),
-                              ),
-                            );
-                            // GoRouter.of(context).push(
-                            //   "/closing-manager-lead-list/revisit/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                            // Navigator.of(context).push(
+                            //   MaterialPageRoute(
+                            //     builder: (context) =>
+                            //         ClosingManagerVisit2ListPage(
+                            //       id: widget.id,
+                            //       status: "Walk-in",
+                            //     ),
+                            //   ),
                             // );
+                            GoRouter.of(context).push(
+                              "/closing-manager-lead-list/visit2/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                            );
                           },
                           child: MyCard(
                             textColor: Colors.red,

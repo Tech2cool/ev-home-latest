@@ -1211,33 +1211,22 @@ class _ClosingManagerLeadDetailsPageState
                 ? "${Helper.capitalize(widget.lead.cycle?.stage ?? "")} Deadline: "
                 : "Visit Deadline: ",
             value: Helper.formatDateOnly(
-              widget.lead.cycle?.validTill.toString() ?? '',
+              widget.lead.cycle?.validTill?.toIso8601String() ?? '',
             ),
             valueColor: const Color.fromARGB(255, 255, 134, 126),
             headingColor: Colors.white,
           ),
-          if (widget.lead.visitRef != null)
-            MyTextCard(
-              heading: widget.lead.cycle != null
-                  ? "${Helper.capitalize(widget.lead.cycle?.stage ?? "")} Date: "
-                  : "Visit Date: ",
-              value: Helper.formatDateOnly(
-                widget.lead.visitRef?.date?.toString() ?? "NA",
-              ),
-              valueColor: Colors.white,
-              headingColor: Colors.white,
-            ),
-          if (widget.lead.visitRef != null)
-            MyTextCard(
-              heading: widget.lead.cycle != null
-                  ? "${Helper.capitalize(widget.lead.cycle?.stage ?? "")} Date: "
-                  : "Visit Date: ",
-              value: Helper.formatDateOnly(
-                widget.lead.visitRef?.date?.toString() ?? "NA",
-              ),
-              valueColor: Colors.white,
-              headingColor: Colors.white,
-            ),
+          // if (widget.lead.visitRef != null)
+          //   MyTextCard(
+          //     heading: widget.lead.cycle != null
+          //         ? "${Helper.capitalize(widget.lead.cycle?.stage ?? "")} Date: "
+          //         : "Visit Date: ",
+          //     value: Helper.formatDateOnly(
+          //       widget.lead.visitRef?.date?.toString() ?? "NA",
+          //     ),
+          //     valueColor: Colors.white,
+          //     headingColor: Colors.white,
+          //   ),
 
           const SizedBox(height: 8),
           MyTextCard(

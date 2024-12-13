@@ -178,7 +178,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
               ),
               AmenitiesSection(
                 amenities: widget.project.amenities,
-                selectedAme: selectedAmenity,
+                selectedAmenity: selectedAmenity,
                 onAmenitySelected: (amenity) {
                   setState(() {
                     selectedAmenity = amenity;
@@ -745,13 +745,13 @@ class _MyCarouselState extends State<MyCarousel> {
 
 class AmenitiesSection extends StatefulWidget {
   final List<Amenity> amenities;
-  final String selectedAme;
+  final String selectedAmenity;
   final Function(String) onAmenitySelected;
 
   const AmenitiesSection({
     super.key,
     required this.amenities,
-    required this.selectedAme,
+    required this.selectedAmenity,
     required this.onAmenitySelected,
   });
 
@@ -812,26 +812,35 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                     padding:
                         const EdgeInsetsDirectional.fromSTEB(15, 10, 15, 10),
                     decoration: BoxDecoration(
-                        color: Colors.orangeAccent,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.4),
-                            blurRadius: 2,
-                            spreadRadius: 1,
-                          )
-                        ]),
-                    child: const Row(
+                      color: widget.selectedAmenity == "All"
+                          ? const Color.fromARGB(199, 248, 85, 4)
+                          : Colors.orangeAccent,
+                      borderRadius: BorderRadius.circular(15),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.4),
+                          blurRadius: 2,
+                          spreadRadius: 1,
+                        )
+                      ],
+                    ),
+                    child: Row(
                       children: [
                         Icon(
                           FluentIcons.people_24_regular,
-                          color: Colors.black,
+                          color: widget.selectedAmenity == "All"
+                              ? Colors.black
+                              : Colors.black,
                           size: 16.0,
                         ),
-                        SizedBox(width: 4.0),
+                        const SizedBox(width: 4.0),
                         Text(
                           "All",
-                          style: TextStyle(color: Colors.black),
+                          style: TextStyle(
+                            color: widget.selectedAmenity == "All"
+                                ? Colors.black
+                                : Colors.black,
+                          ),
                         ),
                       ],
                     ),
@@ -839,35 +848,43 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                 ),
                 // Dynamic Amenity Buttons
                 ...List.generate(filteredAmenities.length, (index) {
+                  final amenity = filteredAmenities[index];
+                  final isSelected = widget.selectedAmenity == amenity.name;
+
                   return GestureDetector(
                     onTap: () {
-                      widget.onAmenitySelected(filteredAmenities[index].name);
+                      widget.onAmenitySelected(amenity.name);
                     },
                     child: Container(
                       margin: const EdgeInsets.only(right: 8.0),
                       padding:
                           const EdgeInsetsDirectional.fromSTEB(15, 10, 15, 10),
                       decoration: BoxDecoration(
-                          color: Colors.orangeAccent,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.4),
-                              blurRadius: 2,
-                              spreadRadius: 1,
-                            )
-                          ]),
+                        color: isSelected
+                            ? const Color.fromARGB(199, 248, 85, 4)
+                            : Colors.orangeAccent,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.4),
+                            blurRadius: 2,
+                            spreadRadius: 1,
+                          )
+                        ],
+                      ),
                       child: Row(
                         children: [
                           Icon(
-                            getIconData(filteredAmenities[index].name),
-                            color: Colors.black,
+                            getIconData(amenity.name),
+                            color: isSelected ? Colors.black : Colors.black,
                             size: 16.0,
                           ),
                           const SizedBox(width: 4.0),
                           Text(
-                            filteredAmenities[index].name,
-                            style: const TextStyle(color: Colors.black),
+                            amenity.name,
+                            style: TextStyle(
+                              color: isSelected ? Colors.black : Colors.black,
+                            ),
                           ),
                         ],
                       ),
@@ -879,12 +896,12 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
           ),
         ),
         HorizontalStaggeredGallery(
-          selectedAmenity: widget.selectedAme,
+          selectedAmenity: widget.selectedAmenity,
           amenities: widget.amenities,
         ),
         const SizedBox(
           height: 10,
-        )
+        ),
       ],
     );
   }

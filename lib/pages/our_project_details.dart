@@ -1,4 +1,5 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
+import 'package:ev_homes/components/lottie/lottie1_page.dart';
 import 'package:ev_homes/components/lottie/lottie_page.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
@@ -46,7 +47,7 @@ class PropertyCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DescriptionScreen(
+     builder: (context) => DescriptionScreen(
               project: project,
             ),
           ),

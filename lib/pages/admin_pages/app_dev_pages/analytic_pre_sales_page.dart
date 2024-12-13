@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 class AnalyticDesignationsPage extends StatelessWidget {
   final List<Designation> designations;
   final String section;
-  const AnalyticDesignationsPage(
-      {super.key, required this.designations, required this.section});
+  const AnalyticDesignationsPage({
+    super.key,
+    required this.designations,
+    required this.section,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,6 +62,7 @@ class AnalyticDesignationsPage extends StatelessWidget {
                             MaterialPageRoute(
                               builder: (context) => AnlyticEmployeePage(
                                 designation: desg,
+                                section: section,
                               ),
                             ),
                           );

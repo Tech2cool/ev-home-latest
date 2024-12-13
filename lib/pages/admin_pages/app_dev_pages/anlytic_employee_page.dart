@@ -12,9 +12,12 @@ import 'package:provider/provider.dart';
 
 class AnlyticEmployeePage extends StatefulWidget {
   final Designation designation;
+  final String section;
+
   const AnlyticEmployeePage({
     super.key,
     required this.designation,
+    required this.section,
   });
 
   @override
@@ -129,13 +132,24 @@ class _AnlyticEmployeePageState extends State<AnlyticEmployeePage> {
                               );
                             } else if (widget.designation.id ==
                                 "desg-post-sales-head") {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) => PostSaleHeadDashboard(
-                                    id: emp.id,
+                              if (widget?.section?.toLowerCase() == "sales") {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        ClosingManagerDashboard(
+                                      id: emp.id,
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                              } else {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => PostSaleHeadDashboard(
+                                      id: emp.id,
+                                    ),
+                                  ),
+                                );
+                              }
                             } else if (widget.designation.id ==
                                     "desg-sales-manager" ||
                                 widget.designation.id ==

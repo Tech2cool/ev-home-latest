@@ -54,7 +54,11 @@ class _SalesManagerLeadListPageState extends State<SalesManagerLeadListPage> {
       searchQuery,
       currentPage,
       10,
-      _selectedStatus ?? widget.status.toString(),
+      widget.status == "visit2"
+          ? (_selectedStatus != null
+              ? "visit2-$_selectedStatus"
+              : widget.status.toString())
+          : _selectedStatus ?? widget.status.toString(),
     );
 
     if (mounted) {

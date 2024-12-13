@@ -86,6 +86,7 @@ class Lead {
   });
 
   factory Lead.fromJson(Map<String, dynamic> json) {
+    print(json['cycleHistory']);
     return Lead(
       id: json['_id'],
       email: json['email'],
@@ -159,9 +160,11 @@ class Lead {
       updateHistory: (json['updateHistory'] as List)
           .map((item) => UpdateHistory.fromJson(item))
           .toList(),
-      cycleHistory: (json['cycleHistory'] as List)
-          .map((item) => Cycle.fromMap(item))
-          .toList(),
+      cycleHistory: json['cycleHistory'] != null
+          ? (json['cycleHistory'] as List)
+              .map((item) => Cycle.fromMap(item))
+              .toList()
+          : [],
     );
   }
 
@@ -487,7 +490,7 @@ class Cycle {
       stage: map['stage'],
       currentOrder: map['currentOrder'],
       teamLeader: map['teamLeader'] != null
-          ? Employee.fromMap(map['teamLeader'] as Map<String, dynamic>)
+          ? Employee.fromMap(map['teamLeader'])
           : null,
       startDate:
           map['startDate'] != null ? DateTime.parse(map['startDate']) : null,

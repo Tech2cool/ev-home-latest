@@ -118,35 +118,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   AppBar _buildAppBar(String userName, String profilePic) {
     return AppBar(
+      backgroundColor: Colors.orange, // Set a background color for the AppBar
       title: Text(
         userName,
         style: const TextStyle(
           fontSize: 24,
           fontWeight: FontWeight.bold,
-          color: Colors.black, // similar to primaryText
+          color: Colors.black,
         ),
       ),
       actions: [
-        CircleAvatar(
-          radius: 40,
-          backgroundColor: Colors.grey[300],
-          child: profilePic.isNotEmpty
-              ? ClipOval(
-                  child: CachedNetworkImage(
-                    imageUrl: profilePic,
-                    fit: BoxFit.cover,
-                    errorWidget: (context, url, error) => const Icon(
+        Padding(
+          padding:
+              const EdgeInsets.only(right: 16.0), // Add spacing on the right
+          child: CircleAvatar(
+            radius: 50,
+            backgroundColor: Color(0xFF4B5945), // Border color
+            child: CircleAvatar(
+              radius: 45, // Inner radius for the image
+              backgroundColor: Colors.grey[300],
+              child: profilePic.isNotEmpty
+                  ? ClipOval(
+                      child: CachedNetworkImage(
+                        imageUrl: profilePic,
+                        fit: BoxFit.cover,
+                        width: 80, // Ensure image fits properly
+                        height: 80,
+                        errorWidget: (context, url, error) => const Icon(
+                          Icons.person,
+                          size: 40.0,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    )
+                  : const Icon(
                       Icons.person,
                       size: 40.0,
                       color: Colors.grey,
-                    ),
-                  ),
-                )
-              : const Icon(
-                  Icons.person,
-                  size: 40.0,
-                  color: Colors.grey,
-                ), // Display an icon when no profile picture is provided
+                    ), // Display an icon when no profile picture is provided
+            ),
+          ),
         ),
       ],
       centerTitle: false,

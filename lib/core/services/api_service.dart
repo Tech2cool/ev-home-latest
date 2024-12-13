@@ -69,12 +69,12 @@ class ApiService {
     }
   }
 
-  // Future<MeetingSummary?> getClientMeetingById(String id) async {
+  // Future<List<MeetingSummary>> getClientMeetingById(String id) async {
   //   try {
   //     final Response response = await _dio.get('/meeting-client-id/$id');
   //     final Map<String, dynamic> data = response.data["data"];
   //     final MeetingSummary meeting = MeetingSummary.fromMap(data);
-  //     return meeting;
+  //     return meeting[];
   //   } on DioException catch (e) {
   //     String errorMessage = 'Something went wrong';
   //     print("pass1");
@@ -87,6 +87,38 @@ class ApiService {
   //     return null;
   //   }
   // }
+
+  Future<List<MeetingSummary>> getClientMeetingById(String id) async {
+    try {
+      final Response response = await _dio.get(
+        '/meeting-client-id/$id',
+      );
+      // print("yes 1");
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return [];
+      }
+
+      // print("yes 2");
+      final List<dynamic> dataList = response.data["data"];
+
+      // print("yes 3");
+      final List<MeetingSummary> meeting = dataList.map((data) {
+        return MeetingSummary.fromMap(data);
+      }).toList();
+      return meeting;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        errorMessage = e.message.toString();
+      }
+      Helper.showCustomSnackBar(errorMessage);
+      return [];
+    }
+  }
 
   Future<PaginationModel<Lead>> searchLeads([
     String query = '',

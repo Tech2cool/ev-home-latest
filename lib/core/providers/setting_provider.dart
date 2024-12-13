@@ -280,15 +280,15 @@ class SettingProvider extends ChangeNotifier {
     }
     _closingManagerGraph = emps;
     notifyListeners();
-  } 
+  }
 
-  // Future<SiteVisit?> getClientMeetingById(
-  //     String id) async {
-  //   final meet = await _apiService.getClientMeetingById(id);
-  //   _meeting = meet;
-  //   notifyListeners();
-  //   return meet;
-  // }
+  Future<void> getClientMeetingById(String id) async {
+    final emps = await _apiService.getClientMeetingById(id);
+    if (emps.isNotEmpty) {
+      _meeting = emps;
+      notifyListeners();
+    }
+  }
 
   Future<void> addSiteVisit(Map<String, dynamic> data) async {
     final resp = await _apiService.addSiteVisit(data);

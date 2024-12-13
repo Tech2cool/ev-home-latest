@@ -2275,7 +2275,7 @@ class ApiService {
       final List<Lead> leads = dataList.map((data) {
         return Lead.fromJson(data as Map<String, dynamic>);
       }).toList();
-
+      print(response.data["visit2Count"]);
       return PaginationModel<Lead>(
         code: 404,
         message: response.data["message"],
@@ -2285,6 +2285,7 @@ class ApiService {
         totalItems: response.data["totalItems"],
         pendingCount: response.data["pendingCount"],
         visitCount: response.data["visitCount"],
+        visit2Count: response.data["visit2Count"],
         revisitCount: response.data["revisitCount"],
         bookingCount: response.data["bookingCount"],
         assignedCount: response.data["assignedCount"],

@@ -16,6 +16,7 @@ class PaginationModel<T> {
   final int approvedCount;
   final int rejectedCount;
   final int visitCount;
+  final int visit2Count;
   final int revisitCount;
   final int bookingCount;
   final List<T> data;
@@ -39,6 +40,7 @@ class PaginationModel<T> {
     this.approvedCount = 0,
     this.rejectedCount = 0,
     this.visitCount = 0,
+    this.visit2Count = 0,
     this.revisitCount = 0,
     this.bookingCount = 0,
   });

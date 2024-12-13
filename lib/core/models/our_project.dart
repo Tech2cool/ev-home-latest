@@ -112,6 +112,10 @@ class Flat {
   final double? allInclusiveValue;
   final bool? occupied;
   final String? occupiedBy;
+  final String? configuration;
+  final double? msp1;
+  final double? msp2;
+  final double? msp3;
 
   Flat({
     required this.type,
@@ -123,6 +127,10 @@ class Flat {
     required this.allInclusiveValue,
     required this.occupied,
     required this.occupiedBy,
+    required this.configuration,
+    required this.msp1,
+    required this.msp2,
+    required this.msp3,
   });
 
   Map<String, dynamic> toMap() {
@@ -136,6 +144,10 @@ class Flat {
       'allInclusiveValue': allInclusiveValue,
       'occupied': occupied,
       'occupiedBy': occupiedBy,
+      'configuration': configuration,
+      'msp1': msp1,
+      'msp2': msp2,
+      'msp3': msp3,
     };
   }
 
@@ -151,7 +163,17 @@ class Flat {
           ? double.parse(map['allInclusiveValue'].toString())
           : map['allInclusiveValue'],
       occupied: map['occupied'],
+      configuration: map['configuration'],
       occupiedBy: map['occupiedBy'],
+      msp1: map['msp1'] != null
+          ? double.parse(map['msp1'].toString())
+          : map['msp1'],
+      msp2: map['msp2'] != null
+          ? double.parse(map['msp2'].toString())
+          : map['msp2'],
+      msp3: map['msp3'] != null
+          ? double.parse(map['msp3'].toString())
+          : map['msp3'],
     );
   }
 

@@ -12,6 +12,7 @@ import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_letter_9_squar
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule%20_nine_square.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule_marina_bay.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
+import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/closing_manager_visit2_list_page.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/task_list_page.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
@@ -438,14 +439,23 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            GoRouter.of(context).push(
-                              "/closing-manager-lead-list/revisit/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    ClosingManagerVisit2ListPage(
+                                  id: widget.id,
+                                  status: "Walk-in",
+                                ),
+                              ),
                             );
+                            // GoRouter.of(context).push(
+                            //   "/closing-manager-lead-list/revisit/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                            // );
                           },
                           child: MyCard(
                             textColor: Colors.red,
                             label: "Visit 2",
-                            value: teamLeaderLeads.revisitCount,
+                            value: teamLeaderLeads.visit2Count,
                           ),
                         ),
                       ),
@@ -700,8 +710,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           ),
                           Positioned(
                             right: 28,
-                            top: 10
-                            ,
+                            top: 10,
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [

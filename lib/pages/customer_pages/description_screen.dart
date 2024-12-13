@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:dio/dio.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/amenity.dart';
 import 'package:ev_homes/core/models/our_project.dart';
@@ -13,7 +12,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:open_file/open_file.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
@@ -86,48 +84,58 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
 
   Future<void> _downloadBrochure(BuildContext context) async {
     try {
-      final req = await Permission.storage.request();
-      if (req.isGranted) {
-        Directory? downloadsDirectory =
-            Directory('/storage/emulated/0/Download');
+      if (brochureLink.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('No Brochure available at the moment.'),
+          ),
+        );
+        return;
+      }
 
-        if (downloadsDirectory.existsSync()) {
-          final filePath = "${downloadsDirectory.path}/brochure.pdf";
+      // Show a loading message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Downloading brochure...'),
+          duration: Duration(seconds: 2),
+        ),
+      );
 
-          Dio dio = Dio();
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Downloading brochure...')),
-          );
+      // Fetch the brochure file
+      final Uri url = Uri.parse(brochureLink);
+      final response = await http.get(url);
 
-          await dio.download(brochureLink, filePath);
+      if (response.statusCode == 200) {
+        // Get the Downloads directory
+        final Directory downloadsDir = await getExternalStorageDirectory() ??
+            await getApplicationDocumentsDirectory();
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text('Download complete. Opening brochure...')),
-          );
+        final File file = File('${downloadsDir.path}/brochure.pdf');
 
-          OpenResult result = await OpenFile.open(filePath);
+        // Save the downloaded file
+        await file.writeAsBytes(response.bodyBytes);
 
-          if (result.type != ResultType.done) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                  content: Text('Failed to open brochure: ${result.message}')),
-            );
-          }
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Downloads folder not found.')),
-          );
-        }
+        // Notify the user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Brochure downloaded successfully to: ${file.path}'),
+          ),
+        );
+
+        // Optionally, open the file
+        await OpenFile.open(file.path);
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Storage permission denied.')),
+          const SnackBar(
+            content: Text('Failed to download the brochure.'),
+          ),
         );
       }
     } catch (e) {
-      print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: $e')),
+        SnackBar(
+          content: Text('An error occurred: $e'),
+        ),
       );
     }
   }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/amenity.dart';
@@ -7,7 +9,12 @@ import 'package:flutter/material.dart';
 
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:open_file/open_file.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 // Icon mapping remains unchanged
 final Map<String, IconData> fluentIconMap = {
@@ -76,10 +83,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
   // final String locationLink = 'https://maps.app.goo.gl/DqUfxcX63SAxCWMK8';
 
   Future<void> _downloadBrochure(BuildContext context) async {
-    print('Brochure link: $brochureLink');
     try {
       if (brochureLink.isEmpty) {
-        print('Brochure link is empty.');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('No Brochure available at the moment.'),
@@ -87,21 +92,46 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
         );
         return;
       }
+
+      // Show a loading message
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Downloading brochure...'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+
+      // Fetch the brochure file
       final Uri url = Uri.parse(brochureLink);
-      print('Parsed URL: $url');
-      if (await canLaunchUrl(url)) {
-        print('Launching URL...');
-        await launchUrl(url, mode: LaunchMode.externalApplication);
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        // Get the Downloads directory
+        final Directory downloadsDir = await getExternalStorageDirectory() ??
+            await getApplicationDocumentsDirectory();
+
+        final File file = File('${downloadsDir.path}/brochure.pdf');
+
+        // Save the downloaded file
+        await file.writeAsBytes(response.bodyBytes);
+
+        // Notify the user
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Brochure downloaded successfully to: ${file.path}'),
+          ),
+        );
+
+        // Optionally, open the file
+        await OpenFile.open(file.path);
       } else {
-        print('Cannot launch URL.');
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Failed to open the brochure link.'),
+            content: Text('Failed to download the brochure.'),
           ),
         );
       }
     } catch (e) {
-      print('Error occurred: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('An error occurred: $e'),
@@ -454,7 +484,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                             children: [
                               Icon(
                                 FluentIcons.arrow_download_24_regular,
-                                size: 12,
+                                size: 18,
                                 color: Colors.orangeAccent,
                               ),
                               SizedBox(width: 5), // Space between icon and text
@@ -500,7 +530,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                             children: [
                               Icon(
                                 FluentIcons.call_24_regular,
-                                size: 12,
+                                size: 18,
                                 color: Colors.orangeAccent,
                               ),
                               SizedBox(width: 5), // Space between icon and text
@@ -568,8 +598,10 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
               child: FloatingActionButton.small(
                 foregroundColor: const Color(0xff424d51),
                 backgroundColor: const Color(0xfff4e9e0),
-                onPressed: () {
-                  _showShareDialog(context);
+                onPressed: () async {
+                  const appLink =
+                      'https://evgroup.in/ev-marina-bay-apartments-mumbai.html';
+                  await Share.share('Check out this amazing project: $appLink');
                 },
                 child: const Icon(FluentIcons.share_20_regular, size: 20),
               ),
@@ -623,18 +655,37 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
   Future<void> _shareViaWhatsApp(BuildContext context) async {
     const String appLink =
         'https://evgroup.in/ev-marina-bay-apartments-mumbai.html';
+    final String message = 'Check out this amazing project: $appLink';
 
-    final Uri whatsappUri = Uri.parse(appLink);
-
-    if (await canLaunchUrl(whatsappUri)) {
-      await launchUrl(whatsappUri);
-    } else {
+    try {
+      // Try to launch WhatsApp directly
+      final whatsappUrl =
+          "whatsapp://send?text=${Uri.encodeComponent(message)}";
+      if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
+        await launchUrl(Uri.parse(whatsappUrl));
+      } else {
+        // If direct launch fails, try web version
+        final webWhatsappUrl =
+            "https://api.whatsapp.com/send?text=${Uri.encodeComponent(message)}";
+        if (await canLaunchUrl(Uri.parse(webWhatsappUrl))) {
+          await launchUrl(
+            Uri.parse(webWhatsappUrl),
+            mode: LaunchMode.externalApplication,
+          );
+        } else {
+          throw 'Could not launch WhatsApp';
+        }
+      }
+    } catch (e) {
       if (!context.mounted) return;
-
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text("WhatsApp is not installed on this device")),
+        SnackBar(
+          content: Text(
+              "Error: $e. Please make sure WhatsApp is installed and try again."),
+          duration: Duration(seconds: 5),
+        ),
       );
+      print("Error launching WhatsApp: $e");
     }
   }
 
@@ -649,14 +700,14 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: const Text("Cancel"),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                _shareViaWhatsApp(context); // Proceed to share
+                Navigator.of(context).pop();
+                _shareViaWhatsApp(context);
               },
               child: const Text("Share"),
             ),

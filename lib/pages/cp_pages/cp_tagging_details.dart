@@ -15,7 +15,7 @@ class _CpTaggingDeatilsState extends State<CpTaggingDeatils> {
     final client = widget.client;
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 246, 238, 218),
+      backgroundColor: Color.fromARGB(255, 218, 240, 246),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(55),
         child: ClipRRect(
@@ -24,12 +24,13 @@ class _CpTaggingDeatilsState extends State<CpTaggingDeatils> {
             bottomRight: Radius.circular(25),
           ),
           child: AppBar(
+            iconTheme: IconThemeData(color: Colors.white),
             automaticallyImplyLeading: true,
-            backgroundColor: Colors.orange,
+            backgroundColor: Color(0xFF042630),
             title: const Text(
               'Tagging Details',
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
           ),
@@ -46,7 +47,7 @@ class _CpTaggingDeatilsState extends State<CpTaggingDeatils> {
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.orange,
+                  color: Color(0xFF042630),
                 ),
               ),
               const SizedBox(height: 8),
@@ -97,7 +98,7 @@ class _CpTaggingDeatilsState extends State<CpTaggingDeatils> {
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: Colors.orange,
+                  color: Color(0xFF042630),
                 ),
               ),
               const SizedBox(height: 8),
@@ -169,7 +170,11 @@ class NamedCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 24, color: Color(0xFF9CA777)),
+          Icon(
+            icon,
+            size: 24,
+            color: Color(0xFF005254),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

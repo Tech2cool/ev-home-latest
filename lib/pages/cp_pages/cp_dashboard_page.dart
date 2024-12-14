@@ -1,8 +1,10 @@
+import 'package:ev_homes/components/cp_videoplayer.dart';
 import 'package:ev_homes/core/constant/constant.dart';
 import 'package:ev_homes/core/models/tagging_form_model.dart';
 import 'package:ev_homes/pages/cp_pages/client_report.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:video_player/video_player.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -13,30 +15,41 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 255, 242, 206),
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(25),
-            bottomRight: Radius.circular(25),
-          ),
-          child: AppBar(
-            automaticallyImplyLeading: false,
-            backgroundColor: Colors.orange,
-            title: const Text(
-              'Dashboard',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        title: const Text(
+          'Dashboard',
+          style: TextStyle(
+            color: Color(0xFF042630),
           ),
         ),
       ),
       body: Stack(
         children: [
+          CpVideoplayer(),
+          // Container(
+          //   decoration: const BoxDecoration(
+          //     gradient: LinearGradient(
+          //       begin: Alignment.topCenter,
+          //       end: Alignment.bottomCenter,
+          //       colors: [
+          //         Color.fromARGB(44, 134, 185, 176), // Start color
+          //         Color.fromARGB(44, 76, 114, 115),
+          //         // Color.fromARGB(199, 248, 85, 4),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.all(15),
             child: SingleChildScrollView(
@@ -55,7 +68,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             );
                           },
-                          child: _buildLabelBox('100', 'Leads'),
+                          child: _buildLabelBox(
+                              '100', 'Leads'), // Dummy data for "Leads"
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -70,7 +84,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             );
                           },
-                          child: _buildLabelBox('50', 'Approved'),
+                          child: _buildLabelBox(
+                              '50', 'Approved'), // Dummy data for "Approved"
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -85,7 +100,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             );
                           },
-                          child: _buildLabelBox('20', 'Rejected'),
+                          child: _buildLabelBox(
+                              '20', 'Rejected'), // Dummy data for "Rejected"
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -101,18 +117,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             );
                           },
                           child: FittedBox(
-                            child: _buildLabelBox('30', 'In Progress'),
+                            child: _buildLabelBox('30',
+                                'In Progress'), // Dummy data for "In Progress"
                           ),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const LineChartDemo(list: []),
+                  const LineChartDemo(list: []), // Dummy data for charts
                   const SizedBox(height: 20),
-                  const PieChartDemo(leads: []),
+                  const PieChartDemo(leads: []), // Dummy data for charts
                   const SizedBox(height: 20),
-                  const FunnelChartDemo(leads: []),
+                  const FunnelChartDemo(leads: []), // Dummy data for charts
                   const SizedBox(height: 180),
                 ],
               ),
@@ -127,8 +144,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Color(0xFF9CA777),
+        color: Colors.white.withOpacity(0.4),
         borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.white.withOpacity(0.2),
+            offset: const Offset(0, 5),
+            blurRadius: 10,
+            spreadRadius: 1,
+          ),
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -137,7 +162,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             quantity,
             style: const TextStyle(
               fontSize: 20.0,
-              color: Colors.white,
+              color: Color.fromARGB(255, 16, 18, 19),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -145,7 +170,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             label,
             style: const TextStyle(
               fontSize: 10.0,
-              color: Color(0xFFFEE8B0),
+              color: Color(0xFF042630),
             ),
           ),
         ],
@@ -253,7 +278,7 @@ class LabelsDemo extends StatelessWidget {
                 subtitle,
                 style: const TextStyle(
                   fontSize: 14,
-                  color: Colors.black87,
+                  color: Color(0xFF042630),
                 ),
               ),
             ),
@@ -276,6 +301,7 @@ class _LineChartDemoState extends State<LineChartDemo> {
 
   @override
   Widget build(BuildContext context) {
+    // Generate chart data based on hard-coded values
     List<FlSpot> chartData = _generateChartData();
 
     final xLabels = _getXAxisLabels();
@@ -284,9 +310,18 @@ class _LineChartDemoState extends State<LineChartDemo> {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.orange.withAlpha(2),
+        color: Colors.white.withAlpha(70),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(width: 0.5, color: Colors.black26),
+        // border: Border.all(width: 0.5, color: Colors.black26),
+        // boxShadow: [
+        //   BoxShadow(
+        //     color: Color.fromARGB(255, 133, 0, 0)
+        //         .withOpacity(0.8), // Grey shadow color
+        //     offset: Offset(3, 3), // Position the shadow
+        //     blurRadius: 8, // Blur effect
+        //     spreadRadius: 3, // Spread the shadow
+        //   ),
+        // ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -297,7 +332,7 @@ class _LineChartDemoState extends State<LineChartDemo> {
               const Text(
                 'Total Leads',
                 style: TextStyle(
-                  color: Color(0xFF7C9070),
+                  color: Color(0xFF042630),
                   fontFamily: 'Manrope',
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -305,10 +340,6 @@ class _LineChartDemoState extends State<LineChartDemo> {
               ),
               DropdownButton<String>(
                 value: _selectedFilter,
-                style: const TextStyle(
-                  color: Colors.orange,
-                  fontSize: 16,
-                ),
                 items: <String>['Weekly', 'Monthly', 'Yearly']
                     .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
@@ -370,12 +401,12 @@ class _LineChartDemoState extends State<LineChartDemo> {
                     minX: 0,
                     maxX: xMax.toDouble(),
                     minY: 0,
-                    maxY: 100,
+                    maxY: 100, // Adjust this value based on your y-values
                     lineBarsData: [
                       LineChartBarData(
                         spots: chartData,
                         isCurved: true,
-                        color: Color.fromARGB(199, 248, 85, 4),
+                        color: Constant.bgColor,
                         barWidth: 3,
                         isStrokeCapRound: true,
                         dotData: const FlDotData(show: true),
@@ -483,15 +514,17 @@ class PieChartDemo extends StatefulWidget {
 class _PieChartDemoState extends State<PieChartDemo> {
   @override
   Widget build(BuildContext context) {
+    // Dummy data for the lead counts
     final leadCounts = {
       'Approved': 50,
       'In Progress': 30,
       'Rejected': 20,
     };
 
+    // Prepare the chart data with dummy values
     final chartData = [
       PieChartSectionData(
-        color: Color(0xFF62760C),
+        color: Colors.green, // Approved color
         value: leadCounts['Approved']!.toDouble(),
         title: '${leadCounts['Approved']}',
         radius: 60,
@@ -502,7 +535,7 @@ class _PieChartDemoState extends State<PieChartDemo> {
         ),
       ),
       PieChartSectionData(
-        color: Color(0xFFFB6D48),
+        color: Colors.orange, // In Progress color
         value: leadCounts['In Progress']!.toDouble(),
         title: '${leadCounts['In Progress']}',
         radius: 60,
@@ -513,7 +546,7 @@ class _PieChartDemoState extends State<PieChartDemo> {
         ),
       ),
       PieChartSectionData(
-        color: Color(0xFFD24545),
+        color: Colors.red, // Rejected color
         value: leadCounts['Rejected']!.toDouble(),
         title: '${leadCounts['Rejected']}',
         radius: 60,
@@ -528,9 +561,16 @@ class _PieChartDemoState extends State<PieChartDemo> {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.orange.withAlpha(2),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(width: 0.5, color: Colors.black26),
+        color: Colors.white.withOpacity(0.3), // Semi-transparent container
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.white.withOpacity(0.2),
+            offset: const Offset(0, 5),
+            blurRadius: 10,
+            spreadRadius: 1,
+          ),
+        ],
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -542,7 +582,7 @@ class _PieChartDemoState extends State<PieChartDemo> {
               Text(
                 'Tagging Status',
                 style: TextStyle(
-                  color: Color(0xFF7C9070),
+                  color: Color(0xFF042630),
                   fontFamily: 'Manrope',
                   fontSize: 18,
                   fontWeight: FontWeight.w500,
@@ -555,13 +595,13 @@ class _PieChartDemoState extends State<PieChartDemo> {
             alignment: Alignment.center,
             children: [
               SizedBox(
-                height: 200,
+                height: 150,
                 child: PieChart(
                   PieChartData(
                     sections: chartData,
-                    startDegreeOffset: 10,
-                    centerSpaceRadius: 45,
-                    sectionsSpace: 2,
+                    startDegreeOffset: 20,
+                    centerSpaceRadius: 40,
+                    sectionsSpace: 0,
                   ),
                 ),
               ),
@@ -572,15 +612,15 @@ class _PieChartDemoState extends State<PieChartDemo> {
                     'Total Leads',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Color(0xFF173B45),
+                      color: Color(0xFF042630),
                     ),
                   ),
                   Text(
                     '${leadCounts['Approved']! + leadCounts['In Progress']! + leadCounts['Rejected']!}', // Total leads count (dummy data)
                     style: const TextStyle(
-                      fontSize: 24,
+                      fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Color(0xFF042630),
                     ),
                   ),
                 ],
@@ -591,9 +631,9 @@ class _PieChartDemoState extends State<PieChartDemo> {
           const Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              LegendItem(color: Color(0xFF62760C), text: 'Approved'),
-              LegendItem(color: Color(0xFFFB6D48), text: 'In Progress'),
-              LegendItem(color: Color(0xFFD24545), text: 'Rejected'),
+              LegendItem(color: Colors.green, text: 'Approved'),
+              LegendItem(color: Colors.orange, text: 'In Progress'),
+              LegendItem(color: Colors.red, text: 'Rejected'),
             ],
           ),
         ],
@@ -623,7 +663,7 @@ class LegendItem extends StatelessWidget {
         const SizedBox(width: 4),
         Text(
           text,
-          style: const TextStyle(fontSize: 14, color: Colors.black87),
+          style: const TextStyle(fontSize: 14, color: Color(0xFF042630)),
         ),
       ],
     );
@@ -655,6 +695,7 @@ class _FunnelChartDemoState extends State<FunnelChartDemo> {
   @override
   void initState() {
     super.initState();
+
     _funnelData = _generateFunnelData();
   }
 
@@ -710,9 +751,16 @@ class _FunnelChartDemoState extends State<FunnelChartDemo> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.orange.withAlpha(2),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(width: 0.5, color: Colors.black26),
+            color: Colors.white.withOpacity(0.3), // Semi-transparent container
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.white.withOpacity(0.2),
+                offset: const Offset(0, 5),
+                blurRadius: 10,
+                spreadRadius: 1,
+              ),
+            ],
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -723,7 +771,7 @@ class _FunnelChartDemoState extends State<FunnelChartDemo> {
                   const Text(
                     'Leads Statistics',
                     style: TextStyle(
-                      color: Color(0xFF7C9070),
+                      color: Color(0xFF042630),
                       fontFamily: 'Manrope',
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
@@ -731,10 +779,6 @@ class _FunnelChartDemoState extends State<FunnelChartDemo> {
                   ),
                   DropdownButton<String>(
                     value: _selectedFilter,
-                    style: const TextStyle(
-                      color: Colors.orange,
-                      fontSize: 16,
-                    ),
                     icon: const Icon(Icons.arrow_drop_down),
                     items: _funnelData.keys
                         .map<DropdownMenuItem<String>>((String value) {
@@ -748,6 +792,7 @@ class _FunnelChartDemoState extends State<FunnelChartDemo> {
                 ],
               ),
               const SizedBox(height: 5),
+              // Wrap the Row in a SingleChildScrollView for horizontal scrolling
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
@@ -797,7 +842,7 @@ class FunnelStage extends StatelessWidget {
             style: const TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w500,
-              color: Colors.black87,
+              color: Color(0xFF042630),
             ),
           ),
           const SizedBox(height: 8),
@@ -809,7 +854,7 @@ class FunnelStage extends StatelessWidget {
               label,
               style: const TextStyle(
                 fontSize: 10,
-                color: Color.fromARGB(221, 0, 0, 0),
+                color: Color(0xFF042630),
               ),
             ),
           ),
@@ -820,36 +865,34 @@ class FunnelStage extends StatelessWidget {
 }
 
 class FunnelSegment extends StatelessWidget {
-  final double value;
+  final double value; // Changed from percentage to value
 
   const FunnelSegment({super.key, required this.value});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 8.0),
+      padding: const EdgeInsets.only(left: 8.0), // Add left padding here
       child: Container(
-        width: 60,
-        height: value,
-        margin: const EdgeInsets.only(top: 4.0),
+        width: 60, // Fixed width for all segments
+        height: value, // Adjust height based on value
+        margin: const EdgeInsets.only(top: 4.0), // Optional: margin on top
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Color(0xFF453F78),
-              Color(0xFF795458),
-              Color(0xFFC08B5C),
-              Color(0xFFFFC94A),
+              Color(0xFF005254),
+              Color(0xFF042630),
             ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
           borderRadius: BorderRadius.vertical(
-            top: Radius.circular(15.0),
+            top: Radius.circular(15.0), // Set top radius here
           ),
         ),
         alignment: Alignment.center,
         child: Text(
-          value.toString(),
+          value.toString(), // Display the value
           style: const TextStyle(
             fontSize: 12,
             color: Colors.white,

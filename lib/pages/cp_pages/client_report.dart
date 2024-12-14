@@ -54,7 +54,7 @@ class _ClientReportState extends State<ClientReport> {
     }).toList();
 
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 246, 238, 218),
+      backgroundColor: Color.fromARGB(255, 218, 240, 246),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(55),
         child: ClipRRect(
@@ -63,12 +63,13 @@ class _ClientReportState extends State<ClientReport> {
             bottomRight: Radius.circular(25),
           ),
           child: AppBar(
+            iconTheme: IconThemeData(color: Colors.white),
             automaticallyImplyLeading: true,
-            backgroundColor: Colors.orange,
+            backgroundColor: Color(0xFF042630),
             title: const Text(
               'Client Report',
               style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
               ),
             ),
           ),
@@ -83,8 +84,10 @@ class _ClientReportState extends State<ClientReport> {
               children: [
                 DropdownButton<String>(
                   value: selectedFilter,
-                  icon: const Icon(Icons.filter_list,
-                      color: Colors.orange), // Filter icon
+                  icon: const Icon(
+                    Icons.filter_list,
+                    color: Color(0xFF042630),
+                  ), // Filter icon
                   underline: const SizedBox.shrink(),
                   onChanged: (String? newValue) {
                     setState(() {
@@ -145,7 +148,7 @@ class _ClientReportState extends State<ClientReport> {
                                   padding: const EdgeInsets.symmetric(
                                       vertical: 8, horizontal: 16),
                                   decoration: BoxDecoration(
-                                    color: Color(0xFF9CA777),
+                                    color: Color(0xFF005254),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(

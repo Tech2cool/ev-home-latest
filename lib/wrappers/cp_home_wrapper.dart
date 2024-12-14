@@ -36,14 +36,14 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
   void initState() {
     super.initState();
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 2000), // Slower duration
       vsync: this,
     );
 
     _animation = CurvedAnimation(
       parent: _animationController,
-      curve: Curves.easeInOut,
-      reverseCurve: Curves.easeInOut, // Ensure the reverse curve matches
+      curve: Curves.easeOutQuad, // Smooth for opening
+      reverseCurve: Curves.easeInQuad, // Smooth for closing
     );
 
     _videoPlayerController =
@@ -66,9 +66,11 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
     setState(() {
       _isMenuVisible = !_isMenuVisible;
       if (_isMenuVisible) {
-        _animationController.forward(); // Open the sheet slowly
+        _sheetHeight = 0.6;
+        _animationController.forward();
       } else {
-        _animationController.reverse(); // Close the sheet slowly
+        _sheetHeight = 0.0;
+        _animationController.reverse();
       }
     });
   }
@@ -155,8 +157,8 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
           Icon(
             icon,
             color: _currentIndex == index
-                ? const Color.fromARGB(255, 133, 0, 0)
-                : Colors.grey[600],
+                ? Color(0xFF042630)
+                : Color.fromARGB(146, 134, 185, 176),
             size: 24,
           ),
           Text(
@@ -192,25 +194,26 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [
-                      Color.fromARGB(255, 133, 0, 0),
-                      Colors.white,
+                      Color.fromARGB(255, 92, 168, 209),
+                      Color.fromARGB(255, 172, 206, 225),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(25),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Color.fromARGB(255, 133, 0, 0).withOpacity(0.8),
-                  //     blurRadius: 2,
-                  //     spreadRadius: 2,
-                  //   ),
-                  // ],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(176, 4, 38, 48),
+                      blurRadius: 2,
+                      spreadRadius: 1,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: const Center(
                   child: Icon(
                     Icons.add,
-                    color: Color.fromARGB(255, 133, 0, 0),
+                    color: Color(0xFF042630),
                     size: 30,
                   ),
                 ),
@@ -226,12 +229,10 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
     return AnimatedBuilder(
       animation: _animationController,
       builder: (context, child) {
-        _sheetHeight = _animationController.value *
-            0.5; // Adjust the max height during the animation
         return DraggableScrollableSheet(
           controller: contr,
-          initialChildSize: _sheetHeight,
-          minChildSize: 0,
+          initialChildSize: _sheetHeight, // Use dynamic height
+          minChildSize: 0, // Set the minimum size
           maxChildSize: 0.6, // Adjust maximum size
           builder: (BuildContext context, ScrollController scrollController) {
             return NotificationListener<DraggableScrollableNotification>(
@@ -354,11 +355,10 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 133, 0, 0).withOpacity(0.1),
+                color: Color.fromARGB(117, 119, 245, 247),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(icon,
-                  color: const Color.fromARGB(255, 133, 0, 0), size: 24),
+              child: Icon(icon, color: Color(0xFF042630), size: 24),
             ),
             const SizedBox(height: 12),
             Text(
@@ -366,7 +366,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 133, 0, 0),
+                color: Color(0xFF042630),
               ),
             ),
             const SizedBox(height: 4),

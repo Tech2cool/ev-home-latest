@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/pages/customer_pages/featured_project_screen.dart';
 import 'package:flutter/material.dart';
@@ -103,7 +105,6 @@ class _PropertyCardVerticalState extends State<PropertyCardVertical>
           ),
         );
       },
-
       child: MouseRegion(
         onEnter: (_) => _controller.forward(),
         onExit: (_) => _controller.reverse(),
@@ -112,26 +113,37 @@ class _PropertyCardVerticalState extends State<PropertyCardVertical>
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            boxShadow: [
-              BoxShadow(
-                color: const Color.fromARGB(255, 133, 0, 0).withOpacity(0.6),
-                offset: const Offset(3, 3),
-                blurRadius: 8,
-                spreadRadius: 3,
-              ),
-            ],
           ),
           height: 120,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
             child: Stack(
               children: [
-                const Positioned.fill(
-                  child: AnimatedGradientBg(),
+                Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color(0xFF005254),
+                        Color(0xFF042630), // Start color
+                        // Color.fromARGB(199, 248, 85, 4),
+                      ],
+                    ),
+                  ),
                 ),
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(15),
+                    // boxShadow: [
+                    //   BoxShadow(
+                    //     color: const Color.fromARGB(255, 26, 25, 25)
+                    //         .withOpacity(0.4),
+                    //     offset: Offset(0, 6),
+                    //     blurRadius: 2,
+                    //     spreadRadius: 1,
+                    //   )
+                    // ],
                   ),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -145,22 +157,23 @@ class _PropertyCardVerticalState extends State<PropertyCardVertical>
                               scale: _animation.value,
                               child: Container(
                                 decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
+                                  borderRadius: BorderRadius.circular(25), //
                                   boxShadow: [
                                     BoxShadow(
                                       color:
                                           const Color.fromARGB(255, 26, 25, 25)
                                               .withOpacity(0.6),
                                       offset: const Offset(0, 6),
-                                      blurRadius: 7,
+                                      blurRadius: 3,
                                       spreadRadius: 1,
                                     ),
                                   ],
                                 ),
-                                child: ClipOval(
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(25),
                                   child: Image.network(
                                     widget.property['image']!,
-                                    height: 200,
+                                    height: 100,
                                     width: 100,
                                     fit: BoxFit.cover,
                                   ),
@@ -180,7 +193,7 @@ class _PropertyCardVerticalState extends State<PropertyCardVertical>
                               Text(
                                 widget.property['title']!,
                                 style: const TextStyle(
-                                  color: Colors.black,
+                                  color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16,
                                 ),
@@ -190,14 +203,14 @@ class _PropertyCardVerticalState extends State<PropertyCardVertical>
                                 children: [
                                   const Icon(
                                     Icons.location_on,
-                                    color: Color.fromARGB(255, 133, 0, 0),
+                                    color: Colors.white,
                                     size: 18,
                                   ),
                                   const SizedBox(width: 5),
                                   Text(
                                     widget.property['location']!,
                                     style: const TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       fontSize: 14,
                                     ),
                                   ),

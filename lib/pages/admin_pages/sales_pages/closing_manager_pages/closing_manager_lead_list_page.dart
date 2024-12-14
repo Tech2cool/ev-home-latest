@@ -15,7 +15,7 @@ class ClosingManagerLeadListPage extends StatefulWidget {
   final String status;
   final String? id;
   const ClosingManagerLeadListPage({
-    super.key,
+    super.key, 
     required this.status,
     this.id,
   });

@@ -5,7 +5,6 @@ import 'package:ev_homes/pages/cp_pages/cp_account_profile_page.dart';
 import 'package:ev_homes/pages/cp_pages/cp_reset_password_page.dart';
 import 'package:ev_homes/wrappers/auth_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -17,17 +16,6 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  // Future<void> fetchChannelPartner() async {
-  //   final settingProvider =
-  //       Provider.of<SettingProvider>(context, listen: false);
-
-  //   try {
-  //     await settingProvider.loginChannelPartner(
-  //       context,
-  //     ); // Await the data
-  //   } catch (e) {
-  //   }
-  // }
 
   @override
   void initState() {
@@ -42,212 +30,184 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: Colors.grey[200], // similar to secondaryBackground
-      appBar: _buildAppBar(
-          '${loggedChannelPartner?.firstName ?? " Unknown"}${loggedChannelPartner?.lastName ?? "User"} ',
-          loggedChannelPartner?.profilePic ?? ""),
+      backgroundColor: Color.fromARGB(255, 218, 240, 246),
       body: SafeArea(
         top: true,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildUserInfo(loggedChannelPartner?.email ?? ""),
-            _buildInfoTile(
-              title: 'My Account Information',
-              onTap: () => Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) {
-                    const begin = Offset(1.0, 0.0); // Slide from right
-                    const end = Offset.zero;
-                    const curve = Curves.easeInOut;
-
-                    var tween = Tween(begin: begin, end: end)
-                        .chain(CurveTween(curve: curve));
-                    var offsetAnimation = animation.drive(tween);
-
-                    return SlideTransition(
-                        position: offsetAnimation,
-                        child: const AccountProfilePage());
-                  },
-                  transitionDuration: const Duration(milliseconds: 600),
+            // Header Section with Gradient
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF042630),
+                    const Color.fromARGB(255, 178, 192, 255)
+                  ],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
                 ),
+                borderRadius:
+                    BorderRadius.vertical(bottom: Radius.circular(30)),
               ),
-            ),
-            _buildInfoTile(
-              title: 'Change Password',
-              onTap: () => Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (context, animation, secondaryAnimation) {
-                    const begin = Offset(1.0, 0.0); // Slide from right
-                    const end = Offset.zero;
-                    const curve = Curves.easeInOut;
-
-                    var tween = Tween(begin: begin, end: end)
-                        .chain(CurveTween(curve: curve));
-                    var offsetAnimation = animation.drive(tween);
-
-                    return SlideTransition(
-                        position: offsetAnimation,
-                        child: const ResetPasswordScreen());
-                  },
-                  transitionDuration: const Duration(milliseconds: 600),
-                ),
-              ),
-            ),
-            _buildLogoutButton(() async {
-              await SharedPrefService.deleteUser();
-              if (context.mounted) {
-                // GoRouter.of(context).pushReplacement("/auth-wrapper");
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => AuthWrapper(),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 30, horizontal: 130),
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    radius: 50,
+                    backgroundImage:
+                        (loggedChannelPartner?.profilePic ?? "").isNotEmpty
+                            ? CachedNetworkImageProvider(
+                                loggedChannelPartner!.profilePic!)
+                            : null,
+                    backgroundColor: Colors.blue.shade100,
+                    child: (loggedChannelPartner?.profilePic ?? "").isNotEmpty
+                        ? null
+                        : const Icon(
+                            Icons.person,
+                            size: 80.0,
+                            color: Color(0xFF005254),
+                          ),
                   ),
-                );
-              }
+                  const SizedBox(height: 10),
+                  Text(
+                    '${loggedChannelPartner?.firstName ?? "Unknown"} ${loggedChannelPartner?.lastName ?? "User"}',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF042630),
+                    ),
+                  ),
+                ],
+              ),
+            ),
 
-              // Handle logout functionality here
-            }),
+            // Profile Options
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.all(20),
+                children: [
+                  _buildInfoTile(
+                    icon: Icons.person,
+                    title: 'My Account Information',
+                    onTap: () => Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          const begin = Offset(1.0, 0.0);
+                          const end = Offset.zero;
+                          const curve = Curves.easeInOut;
+
+                          var tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
+                          var offsetAnimation = animation.drive(tween);
+
+                          return SlideTransition(
+                              position: offsetAnimation,
+                              child: const AccountProfilePage());
+                        },
+                        transitionDuration: const Duration(milliseconds: 600),
+                      ),
+                    ),
+                  ),
+                  _buildInfoTile(
+                    icon: Icons.lock,
+                    title: 'Change Password',
+                    onTap: () => Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (context, animation, secondaryAnimation) {
+                          const begin = Offset(1.0, 0.0);
+                          const end = Offset.zero;
+                          const curve = Curves.easeInOut;
+
+                          var tween = Tween(begin: begin, end: end)
+                              .chain(CurveTween(curve: curve));
+                          var offsetAnimation = animation.drive(tween);
+
+                          return SlideTransition(
+                              position: offsetAnimation,
+                              child: const ResetPasswordScreen());
+                        },
+                        transitionDuration: const Duration(milliseconds: 600),
+                      ),
+                    ),
+                  ),
+                  _buildLogoutTile(
+                    icon: Icons.logout,
+                    title: 'Log Out',
+                    onTap: () async {
+                      await SharedPrefService.deleteUser();
+                      if (context.mounted) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => AuthWrapper(),
+                          ),
+                        );
+                      }
+                    },
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  AppBar _buildAppBar(String userName, String profilePic) {
-    return AppBar(
-      backgroundColor: Colors.orange, // Set a background color for the AppBar
-      title: Text(
-        userName,
-        style: const TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: Colors.black,
-        ),
-      ),
-      actions: [
-        Padding(
-          padding:
-              const EdgeInsets.only(right: 16.0), // Add spacing on the right
-          child: CircleAvatar(
-            radius: 50,
-            backgroundColor: Color(0xFF4B5945), // Border color
-            child: CircleAvatar(
-              radius: 45, // Inner radius for the image
-              backgroundColor: Colors.grey[300],
-              child: profilePic.isNotEmpty
-                  ? ClipOval(
-                      child: CachedNetworkImage(
-                        imageUrl: profilePic,
-                        fit: BoxFit.cover,
-                        width: 80, // Ensure image fits properly
-                        height: 80,
-                        errorWidget: (context, url, error) => const Icon(
-                          Icons.person,
-                          size: 40.0,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    )
-                  : const Icon(
-                      Icons.person,
-                      size: 40.0,
-                      color: Colors.grey,
-                    ), // Display an icon when no profile picture is provided
-            ),
-          ),
-        ),
-      ],
-      centerTitle: false,
-      elevation: 0.0,
-    );
-  }
-
-  Widget _buildUserInfo(String userEmail) {
+  Widget _buildInfoTile(
+      {required IconData icon,
+      required String title,
+      required VoidCallback onTap}) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 16.0, 12.0),
-      child: Text(
-        userEmail,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          color: Color.fromARGB(
-              255, 133, 0, 0), // substitute for the constant bgColor
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: Color(0xFF042630),
         ),
-      ),
-    );
-  }
-
-  Widget _buildInfoTile({required String title, required VoidCallback onTap}) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 1.0),
-      child: GestureDetector(
+        title: Text(
+          title,
+          style: const TextStyle(fontSize: 16),
+        ),
+        trailing: const Icon(
+          Icons.arrow_forward_ios,
+          size: 16,
+          color: Color(0xFF042630),
+        ),
         onTap: onTap,
-        child: Container(
-          width: double.infinity,
-          height: 70.0,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                blurRadius: 0.0,
-                color: Colors.grey.withOpacity(0.3),
-                offset: const Offset(0.0, 1.0),
-              )
-            ],
-            shape: BoxShape.rectangle,
-          ),
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                  ),
-                ),
-                const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.grey,
-                  size: 20.0,
-                ),
-              ],
-            ),
-          ),
+        tileColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );
   }
 
-  Widget _buildLogoutButton(Function() onLogout) {
+  Widget _buildLogoutTile(
+      {required IconData icon,
+      required String title,
+      required VoidCallback onTap}) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0.0, 36.0, 0.0, 0.0),
-      child: Center(
-        child: ElevatedButton(
-          onPressed: onLogout,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white, // background color
-            side: const BorderSide(
-              color: Color.fromARGB(255, 133, 0, 0),
-              width: 2.0,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
-            ),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: Color(0xFF042630),
+        ),
+        title: Text(
+          title,
+          style: const TextStyle(
+            fontSize: 16,
+            color: Color(0xFF042630),
           ),
-          child: const Text(
-            'Log Out',
-            style: TextStyle(
-              fontSize: 16,
-              color: Colors.black,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
+        ),
+        onTap: onTap,
+        tileColor: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
       ),
     );

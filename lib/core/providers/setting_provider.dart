@@ -297,6 +297,13 @@ class SettingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> updateSiteVisit(String id, Map<String, dynamic> data) async {
+    final resp = await _apiService.updateSiteVisit(id, data);
+    if (resp == null) return;
+    await searchSiteVisits();
+    notifyListeners();
+  }
+
   Future<void> getDivision() async {
     final divs = await _apiService.getDivision();
     if (divs.isNotEmpty) {

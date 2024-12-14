@@ -46,8 +46,8 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
           'Profile',
           style: TextStyle(color: Colors.white),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.deepPurple,
+        // centerTitle: true,
+        backgroundColor: const Color.fromARGB(199, 248, 85, 4),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -61,14 +61,24 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
             ),
             const SizedBox(height: 20.0),
             // Non-editable fields
-            _buildTextField('Name',
-                '${loggedCustomer?.firstName ?? ""} ${loggedCustomer?.lastName ?? ""}'),
+            _buildTextField(
+              'Name',
+              '${loggedCustomer?.firstName ?? ""} ${loggedCustomer?.lastName ?? ""}',
+              const Color.fromARGB(199, 248, 85, 4),
+            ),
 
             const SizedBox(height: 10.0),
-            _buildTextField('Email', loggedCustomer?.email ?? ""),
+            _buildTextField(
+              'Email',
+              loggedCustomer?.email ?? "",
+              const Color.fromARGB(199, 248, 85, 4),
+            ),
             const SizedBox(height: 10.0),
             _buildTextField(
-                'Phone', loggedCustomer?.phoneNumber?.toString() ?? ""),
+              'Phone',
+              loggedCustomer?.phoneNumber?.toString() ?? "",
+              const Color.fromARGB(199, 248, 85, 4),
+            ),
             const SizedBox(height: 10.0),
 
             // _buildTextField('Address', loggedCustomer?.firmAddress ?? ""),
@@ -82,13 +92,14 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
   }
 
   // Function to build non-editable text field
-  Widget _buildTextField(String label, String value) {
+  Widget _buildTextField(String label, String value, Color labelColor) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: labelColor),
         ),
         const SizedBox(height: 5),
         TextField(

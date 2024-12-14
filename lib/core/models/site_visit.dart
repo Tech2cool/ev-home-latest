@@ -14,6 +14,7 @@ class SiteVisit {
   final String? residence;
   final String? visitType;
   final List<OurProject> projects;
+  final OurProject? location;
   final List<String> choiceApt;
   final Employee? closingManager;
   List<Employee> closingTeam;
@@ -45,11 +46,12 @@ class SiteVisit {
     this.gender,
     this.feedback,
     this.source,
+    this.location,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'date': date.toString(),
+      'date': date?.toIso8601String(),
       'firstName': firstName,
       'lastName': lastName,
       'phoneNumber': phoneNumber,
@@ -59,15 +61,16 @@ class SiteVisit {
       'residence': residence,
       'projects': projects.map((ele) => ele.id).toList(),
       'visitType': visitType,
+      'location': location?.id,
       'choiceApt': choiceApt,
       'gender': gender,
       'namePrefix': namePrefix,
       'source': source,
       'verified': verified,
-      'closingManager': closingManager?.toMap(),
+      'closingManager': closingManager?.id,
       'closingTeam': closingTeam.map((e) => e.id).toList(),
-      'attendedBy': attendedBy?.toMap(),
-      'dataEntryBy': dataEntryBy?.toMap(),
+      'attendedBy': attendedBy?.id,
+      'dataEntryBy': dataEntryBy?.id,
     };
   }
 
@@ -90,7 +93,10 @@ class SiteVisit {
       visitType: map['visitType'],
       projects: map['projects'] != null
           ? List<OurProject>.from(
-              (map['projects'] as List).map((e) => OurProject.fromJson(e)))
+              (map['projects'] as List).map(
+                (e) => OurProject.fromJson(e),
+              ),
+            )
           : [],
       choiceApt: List<String>.from((map['choiceApt'] ?? [])),
       closingManager: map['closingManager'] != null
@@ -106,6 +112,8 @@ class SiteVisit {
       dataEntryBy: map['dataEntryBy'] != null
           ? Employee.fromMap(map['dataEntryBy'])
           : null,
+      location:
+          map['location'] != null ? OurProject.fromJson(map['location']) : null,
     );
   }
 

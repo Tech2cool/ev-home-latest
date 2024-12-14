@@ -36,43 +36,44 @@ class MeetingSummaryPage extends StatelessWidget {
                 Text(
                   title,
                   style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white, // Ensure visibility over gradient
-                  ),
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black
+                      // Ensure visibility over gradient
+                      ),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   description,
                   style: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.white70, // Ensure visibility over gradient
-                  ),
+                      fontSize: 16,
+                      color: Colors.black // Ensure visibility over gradient
+                      ),
                 ),
                 const SizedBox(height: 16),
                 Text(
                   'Completed on: $date',
                   style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.white54, // Ensure visibility over gradient
-                  ),
+                      fontSize: 14,
+                      color: Colors.black // Ensure visibility over gradient
+                      ),
                 ),
                 const SizedBox(height: 16),
-                const Text(
-                  'Cost: 1.1CR',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white54,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Unit No: 707',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.white54,
-                  ),
-                ),
+                // const Text(
+                //   'Cost: 1.1CR',
+                //   style: TextStyle(
+                //     fontSize: 14,
+                //     color:  Colors.black
+                //   ),
+                // ),
+                // const SizedBox(height: 16),
+                // const Text(
+                //   'Unit No: 707',
+                //   style: TextStyle(
+                //     fontSize: 14,
+                //     color:  Colors.black
+                //   ),
+                // ),
                 const SizedBox(height: 20),
                 Center(
                   // Center the button

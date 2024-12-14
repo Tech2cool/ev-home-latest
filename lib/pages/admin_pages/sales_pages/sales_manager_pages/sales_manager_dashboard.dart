@@ -169,13 +169,13 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/sales-manager-lead-list/revisit/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                              "/sales-manager-lead-list/visit2/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                             );
                           },
                           child: MyCard(
                             textColor: Colors.red,
                             label: "Visit 2",
-                            value: teamLeaderLeads.revisitCount,
+                            value: teamLeaderLeads.visit2Count,
                           ),
                         ),
                       ),

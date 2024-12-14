@@ -25,25 +25,31 @@ class _MyMeetingsState extends State<MyMeetings> {
       context,
       listen: false,
     );
-    print("pass 1");
+    // print("pass 1");
     try {
       setState(() {
         isLoading = true;
       });
-      print("pass 2");
+      // print("pass 2");
       // Execute all three futures concurrently
       await Future.wait([
-        settingProvider.getMeeetingSummary(),
+        settingProvider
+            .getClientMeetingById(settingProvider.loggedCustomer?.id ?? ""),
         // settingProvider.getPayment(),
       ]);
-      print("pass 3");
+      // print("pass 3");
     } catch (e) {
     } finally {
       setState(() {
         isLoading = false;
       });
-      print("pass 4");
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _onRefresh();
   }
 
   @override
@@ -179,7 +185,8 @@ class _MyMeetingsState extends State<MyMeetings> {
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      meeting.date.toString(),
+                      DateFormat('dd-MM-yyyy')
+                          .format(DateTime.parse(meeting.date.toString())),
                       style: TextStyle(
                         fontFamily: 'Roboto',
                         color: Colors.grey[800],

@@ -10,7 +10,7 @@ class InventoryPage1 extends StatefulWidget {
 
   const InventoryPage1({super.key, required this.onButtonPressed});
   @override
-  _InventoryPage1State createState() => _InventoryPage1State();
+  State<InventoryPage1> createState() => _InventoryPage1State();
 }
 
 class _InventoryPage1State extends State<InventoryPage1> {
@@ -21,7 +21,7 @@ class _InventoryPage1State extends State<InventoryPage1> {
   void onTower(OurProject? selectedValue) {
     setState(() {
       selectedTower = selectedValue;
-    });
+    });  
   }
 
   Future<void> _onRefresh() async {
@@ -105,7 +105,7 @@ class _InventoryPage1State extends State<InventoryPage1> {
                 Text(selectedTower?.name ?? ""),
                 Text(
                   selectedTower?.locationName ?? "",
-                  style: TextStyle(fontSize: 12, color: Colors.black),
+                  style: const TextStyle(fontSize: 12, color: Colors.black),
                 ),
               ],
             ),
@@ -135,35 +135,16 @@ class _InventoryPage1State extends State<InventoryPage1> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildLegend(
-                        const Color.fromARGB(255, 253, 127, 127), 'Sold'),
-                    _buildLegend(const Color(0xff03cf9e), 'Available'),
+                      const Color.fromARGB(255, 253, 127, 127),
+                      'Sold',
+                    ),
+                    _buildLegend(
+                      const Color(0xff03cf9e),
+                      'Available',
+                    ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //   children: [
-                //     ElevatedButton.icon(
-                //       onPressed: () {},
-                //       icon: Icon(Icons.phone_in_talk, color: Colors.redAccent),
-                //       label: const Text('Contact Us',
-                //           style: TextStyle(color: Colors.black)),
-                //       style: ElevatedButton.styleFrom(
-                //         foregroundColor: Colors.black,
-                //         backgroundColor: Colors.white,
-                //         side: BorderSide(color: Colors.redAccent, width: 1),
-                //       ),
-                //     ),
-                //     ElevatedButton(
-                //       onPressed: () {},
-                //       style: ElevatedButton.styleFrom(
-                //         backgroundColor: Colors.redAccent,
-                //       ),
-                //       child: const Text('Book Site Visit',
-                //           style: TextStyle(color: Colors.white)),
-                //     ),
-                //   ],
-                // ),
               ],
             ),
           ),
@@ -200,9 +181,9 @@ Widget _buildLegend(Color color, String text) {
 class DropdownSection extends StatelessWidget {
   final Function(OurProject?) onTower;
   const DropdownSection({
-    Key? key,
+    super.key,
     required this.onTower,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -217,18 +198,12 @@ class DropdownSection extends StatelessWidget {
           labelText: 'Select Project',
         ),
         items: [
-          ...settingProvider.ourProject.map((ele) => DropdownMenuItem(
-                value: ele,
-                child: Text(ele?.name ?? ""),
-              ))
-          // DropdownMenuItem(
-          //   value: 'EV 10 Marina Bay',
-          //   child: Text('EV 10 Marina Bay'),
-          // // ),
-          // DropdownMenuItem(
-          //   value: 'EV 9 Square',
-          //   child: Text('EV 9 Square'),
-          // ),``
+          ...settingProvider.ourProject.map(
+            (ele) => DropdownMenuItem(
+              value: ele,
+              child: Text(ele.name ?? ""),
+            ),
+          )
         ],
         onChanged: onTower,
       ),
@@ -239,7 +214,7 @@ class DropdownSection extends StatelessWidget {
 class ButtonSection extends StatelessWidget {
   final Function(String) onButtonPressed;
 
-  const ButtonSection({required this.onButtonPressed});
+  const ButtonSection({super.key, required this.onButtonPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -270,12 +245,21 @@ class FloorContent extends StatelessWidget {
   final String selectedView;
   final OurProject? selectedProject;
 
-  const FloorContent(
-      {super.key, required this.selectedView, this.selectedProject});
+  const FloorContent({
+    super.key,
+    required this.selectedView,
+    this.selectedProject,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final floors = selectedProject?.flatList
+    final settingProvider = Provider.of<SettingProvider>(context);
+    final whichProj = selectedProject == null
+        ? null
+        : settingProvider.ourProject.singleWhere(
+            (pro) => pro == selectedProject,
+          );
+    final floors = whichProj?.flatList
             .map((flat) => flat.floor) // Get all floors
             .whereType<int>() // Ensure non-null and int type
             .toSet() // Remove duplicates
@@ -301,9 +285,9 @@ class FloorContent extends StatelessWidget {
                     height: 40,
                     alignment: Alignment.center,
                     child: Container(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         color: Colors.white,
-                        borderRadius: const BorderRadius.only(
+                        borderRadius: BorderRadius.only(
                           topRight: Radius.circular(18),
                           bottomRight: Radius.circular(18),
                         ),
@@ -346,17 +330,11 @@ class FloorContent extends StatelessWidget {
                           String content = _generateContent(flat, itemIndex);
                           return GestureDetector(
                             onTap: () {
-                              Navigator.push(
-                                context,
+                              Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => FlatDetailPage(
-                                    flatNumber:
-                                        '${flat.floor}0${itemIndex + 1}', // Example flat number
-                                    bhk: itemIndex % 2 == 0
-                                        ? '2BHK'
-                                        : '3BHK', // Example BHK
-                                    area:
-                                        '${flat.carpetArea} Sqft', // Example area
+                                    project: selectedProject!,
+                                    flatNo: flat.flatNo!,
                                   ),
                                 ),
                               );
@@ -399,7 +377,7 @@ class FloorContent extends StatelessWidget {
       case 'Flat No':
         return '${flat.floor}0${itemIndex + 1}';
       case 'BHK':
-        return itemIndex % 2 == 0 ? '2BHK' : '3BHK';
+        return flat.configuration ?? "";
       case 'Area':
         return '${flat.carpetArea} Sqft';
       default:

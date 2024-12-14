@@ -147,7 +147,7 @@ class Flat {
       'configuration': configuration,
       'msp1': msp1,
       'msp2': msp2,
-      'msp3': msp1,
+      'msp3': msp3,
     };
   }
 
@@ -163,8 +163,8 @@ class Flat {
           ? double.parse(map['allInclusiveValue'].toString())
           : map['allInclusiveValue'],
       occupied: map['occupied'],
-      occupiedBy: map['occupiedBy'],
       configuration: map['configuration'],
+      occupiedBy: map['occupiedBy'],
       msp1: map['msp1'] != null
           ? double.parse(map['msp1'].toString())
           : map['msp1'],

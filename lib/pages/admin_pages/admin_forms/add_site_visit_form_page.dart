@@ -47,6 +47,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
   TextEditingController teamLeaderNameController = TextEditingController();
   TextEditingController teamLeaderEmailController = TextEditingController();
   TextEditingController teamLeaderPhoneController = TextEditingController();
+  TextEditingController feedbackController = TextEditingController();
   TextEditingController otpController = TextEditingController();
   MultiSelectController<OurProject> multiselectController =
       MultiSelectController<OurProject>();
@@ -189,10 +190,12 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
         phoneController.text.isEmpty ||
         addressController.text.isEmpty ||
         _selectedDataEntryUser == null ||
+        _selectedSource == null ||
         selectedPrefix == null) {
       Helper.showCustomSnackBar("All Fields Required");
       return;
     }
+    // await onVerfiredOrSkipOtp();
     await generateOtp();
   }
 
@@ -217,7 +220,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
         "firstName": firstNameController.text,
         "lastName": lastNameController.text,
         "phoneNumber": phoneController.text,
-        "email": emailController.text.isEmpty ? null :emailController.text ,
+        "email": emailController.text.isEmpty ? null : emailController.text,
         "closingManager": _selectedSeniorClosingManager!.id,
       });
       if (recievedOtp != null) {
@@ -304,33 +307,6 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                   keyboardType: TextInputType.number,
                   enableActiveFill: true,
                 ),
-
-                // TextFormField(
-                //   keyboardType: TextInputType.number,
-                //   controller: otpController,
-                //   maxLength: 6,
-                //   decoration: InputDecoration(
-                //     hintText: "6 Digit OTP",
-                //     enabledBorder: OutlineInputBorder(
-                //       borderSide: BorderSide(
-                //         color: Colors.black.withOpacity(0.2),
-                //       ),
-                //       borderRadius: BorderRadius.circular(5),
-                //     ),
-                //     border: OutlineInputBorder(
-                //       borderSide: BorderSide(
-                //         color: Colors.black.withOpacity(0.2),
-                //       ),
-                //       borderRadius: BorderRadius.circular(5),
-                //     ),
-                //     errorBorder: OutlineInputBorder(
-                //       borderSide: BorderSide(
-                //         color: Colors.red.withOpacity(0.4),
-                //       ),
-                //       borderRadius: BorderRadius.circular(5),
-                //     ),
-                //   ),
-                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -456,34 +432,36 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
         closingManager: _selectedSeniorClosingManager,
         closingTeam: _selectedSalesManagers1,
         date: _selectedDate,
-        phoneNumber: int.parse(phoneController.text),
+        phoneNumber: int.tryParse(phoneController.text),
         email: emailController.text.trim(),
         residence: addressController.text,
         dataEntryBy: _selectedDataEntryUser,
         namePrefix: selectedPrefix,
         countryCode: "+91",
         verified: verified,
+        source: _selectedSource,
+        feedback: feedbackController.text,
         gender: selectedPrefix?.toLowerCase() == 'mr' ? 'male' : 'female',
       );
 
       Map<String, dynamic> visitMap = newVisit.toMap();
-      if (newVisit.closingManager != null) {
-        visitMap['closingManager'] = newVisit.closingManager!.id!;
-      }
+      // if (newVisit.closingManager != null) {
+      //   visitMap['closingManager'] = newVisit.closingManager!.id!;
+      // }
 
-      if (newVisit.attendedBy != null) {
-        visitMap['attendedBy'] = newVisit.attendedBy!.id!;
-      }
+      // if (newVisit.attendedBy != null) {
+      //   visitMap['attendedBy'] = newVisit.attendedBy!.id!;
+      // }
 
-      if (newVisit.dataEntryBy != null) {
-        visitMap['dataEntryBy'] = newVisit.dataEntryBy!.id!;
-      }
+      // if (newVisit.dataEntryBy != null) {
+      //   visitMap['dataEntryBy'] = newVisit.dataEntryBy!.id!;
+      // }
       if (widget.lead != null) {
         visitMap['lead'] = widget.lead!.id;
       }
-      if (selectedProj != null) {
-        visitMap['location'] = selectedProj!.id!;
-      }
+      // if (selectedProj != null) {
+      //   visitMap['location'] = selectedProj!.id!;
+      // }
 
       try {
         if (selectedProof != null) {
@@ -732,11 +710,30 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                           child: DropdownButtonFormField<String>(
                             value: selectedVisit,
                             decoration: InputDecoration(
-                              labelText: 'Select Visit Type',
-                              border: OutlineInputBorder(
+                              // labelText: 'Select Visit Type',
+                              label: RichText(
+                                text: TextSpan(
+                                  text: 'Select Visit Type',
+                                  style: TextStyle(
+                                    color: Colors.grey[700],
+                                    fontSize: 16,
+                                  ),
+                                  children: const [
+                                    TextSpan(
+                                      text: '*',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
-                                borderSide:
-                                    const BorderSide(color: Colors.grey),
+                                borderSide: BorderSide(
+                                  color: Colors.grey.withOpacity(0.3),
+                                ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
@@ -1233,7 +1230,24 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                 size: 20,
                               ),
                               title: selectedItem.isEmpty
-                                  ? const Text("Select Projects")
+                                  ? RichText(
+                                      text: TextSpan(
+                                        text: 'Select Project',
+                                        style: TextStyle(
+                                          color: Colors.grey[700],
+                                          fontSize: 16,
+                                        ),
+                                        children: const [
+                                          TextSpan(
+                                            text: '*',
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   : Text(
                                       selectedItem
                                           .map((item) => item.name ?? "")
@@ -1247,6 +1261,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                             decoration: InputDecoration(
                               contentPadding: const EdgeInsets.all(0),
                               // hintText: "Select Projects",
+
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Colors.grey.withOpacity(0.3),
@@ -1306,7 +1321,24 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                 size: 20,
                               ),
                               title: selectedItem.isEmpty
-                                  ? const Text("Choice of Apartment")
+                                  ? RichText(
+                                      text: TextSpan(
+                                        text: 'Choice of Apartment',
+                                        style: TextStyle(
+                                          color: Colors.grey[700],
+                                          fontSize: 16,
+                                        ),
+                                        children: const [
+                                          TextSpan(
+                                            text: '*',
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   : Text(
                                       selectedItem
                                           .map((item) => item)
@@ -1336,9 +1368,35 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                               child: DropdownButtonFormField<String>(
                                 value: _selectedSource,
                                 decoration: InputDecoration(
-                                  labelText: 'Source',
-                                  border: OutlineInputBorder(
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Source',
+                                      style: TextStyle(
+                                        color: Colors.grey[700],
+                                        fontSize: 16,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: '*',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
+                                      color: Colors.grey.withOpacity(0.3),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
+                                      color: Colors.grey.withOpacity(0.5),
+                                    ),
                                   ),
                                 ),
                                 items: listofSource.map((source) {
@@ -1381,9 +1439,35 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                               child: DropdownButtonFormField<Employee>(
                                 value: _selectedSeniorClosingManager,
                                 decoration: InputDecoration(
-                                  labelText: 'Closing Manager',
-                                  border: OutlineInputBorder(
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Closing Manager',
+                                      style: TextStyle(
+                                        color: Colors.grey[700],
+                                        fontSize: 16,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: '*',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
+                                      color: Colors.grey.withOpacity(0.3),
+                                    ),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                    borderSide: BorderSide(
+                                      color: Colors.grey.withOpacity(0.5),
+                                    ),
                                   ),
                                 ),
                                 items: closingMangers.map((teamleader) {
@@ -1474,11 +1558,28 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                                 horizontal: 8,
                               ),
                               leading: const Icon(
-                                CupertinoIcons.building_2_fill,
+                                CupertinoIcons.person_3_fill,
                                 size: 20,
                               ),
                               title: selectedItem.isEmpty
-                                  ? const Text("Sales Managers")
+                                  ? RichText(
+                                      text: TextSpan(
+                                        text: 'Sales Manager',
+                                        style: TextStyle(
+                                          color: Colors.grey[700],
+                                          fontSize: 16,
+                                        ),
+                                        children: const [
+                                          TextSpan(
+                                            text: '*',
+                                            style: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   : Text(
                                       selectedItem
                                           .map((item) =>
@@ -1502,6 +1603,38 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 16),
+
+                        // feedback Field
+                        TextFormField(
+                          controller: feedbackController,
+                          maxLines: 3,
+                          decoration: InputDecoration(
+                            label: RichText(
+                              text: TextSpan(
+                                text: 'Feedback',
+                                style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            prefixIcon: const Icon(Icons.email),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Colors.grey.withOpacity(0.7),
+                              ),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: Colors.grey.withOpacity(0.4),
+                              ),
+                            ),
+                          ),
+                        ),
+
                         const SizedBox(height: 26),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,

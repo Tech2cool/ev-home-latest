@@ -282,6 +282,14 @@ class SettingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getClientMeetingById(String id) async {
+    final emps = await _apiService.getClientMeetingById(id);
+    if (emps.isNotEmpty) {
+      _meeting = emps;
+      notifyListeners();
+    }
+  }
+
   Future<void> addSiteVisit(Map<String, dynamic> data) async {
     final resp = await _apiService.addSiteVisit(data);
     if (resp == null) return;
@@ -485,13 +493,11 @@ class SettingProvider extends ChangeNotifier {
     return leads;
   }
 
-  Future<PaginationModel<SiteVisit>> getClosingManagerSiteVisitById(
-    String id, [
-    String query = '',
-    int page = 1,
-    int limit = 10,
-    String status="all"
-  ]) async {
+  Future<PaginationModel<SiteVisit>> getClosingManagerSiteVisitById(String id,
+      [String query = '',
+      int page = 1,
+      int limit = 10,
+      String status = "all"]) async {
     final leads = await _apiService.getClosingManagerSiteVisitById(
       id,
       query,

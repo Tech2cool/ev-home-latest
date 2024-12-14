@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:ev_homes/components/date_filter_screen_leads.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/lead.dart';
+import 'package:ev_homes/core/models/site_visit.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:ev_homes/pages/admin_pages/site_visit_info_page.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -11,27 +13,27 @@ import 'package:csv/csv.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 
-class ClosingManagerLeadListPage extends StatefulWidget {
+class ClosingManagerVisit2ListPage extends StatefulWidget {
   final String status;
   final String? id;
-  const ClosingManagerLeadListPage({
+  const ClosingManagerVisit2ListPage({
     super.key,
     required this.status,
     this.id,
   });
 
   @override
-  State<ClosingManagerLeadListPage> createState() =>
-      _ClosingManagerLeadListPageState();
+  State<ClosingManagerVisit2ListPage> createState() =>
+      _ClosingManagerVisit2ListPageState();
 }
 
-class _ClosingManagerLeadListPageState
-    extends State<ClosingManagerLeadListPage> {
+class _ClosingManagerVisit2ListPageState
+    extends State<ClosingManagerVisit2ListPage> {
   bool isLoading = false;
   bool isFetchingMore = false;
   bool showExport = false;
   String searchQuery = '';
-  List<Lead> leads = [];
+  List<SiteVisit> leads = [];
   int currentPage = 1;
   int totalPages = 1;
   Timer? _debounce;
@@ -114,16 +116,12 @@ class _ClosingManagerLeadListPageState
       });
     }
 
-    final visitsResp = await settingProvider.getTeamLeaderLeads(
+    final visitsResp = await settingProvider.getClosingManagerSiteVisitById(
       widget.id ?? settingProvider.loggedAdmin!.id!,
       searchQuery,
       currentPage,
       10,
-      widget.status == "visit2"
-          ? (_selectedStatus != null
-              ? "visit2-$_selectedStatus"
-              : widget.status.toString())
-          : _selectedStatus ?? widget.status.toString(),
+      widget.status,
     );
 
     if (mounted) {
@@ -151,17 +149,17 @@ class _ClosingManagerLeadListPageState
     return lead.status;
   }
 
-  String getStatus1(Lead lead) {
-    if (lead.stage == "visit") {
-      return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
-    } else if (lead.stage == "revisit") {
-      return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.revisitStatus ?? '')}";
-    } else if (lead.stage == "booking") {
-      return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.bookingStatus ?? '')}";
-    }
+  // String getStatus1(SiteVisit lead) {
+  //   if (lead.stage == "visit") {
+  //     return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
+  //   } else if (lead.stage == "revisit") {
+  //     return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.revisitStatus ?? '')}";
+  //   } else if (lead.stage == "booking") {
+  //     return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.bookingStatus ?? '')}";
+  //   }
 
-    return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
-  }
+  //   return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
+  // }
 
   void onTapFilter(String status) {
     setState(() {
@@ -273,76 +271,10 @@ class _ClosingManagerLeadListPageState
                             ),
                           ),
                         );
-                        // setState(() {
-                        //   showExport = !showExport;
-                        // });
                       },
                     ),
                 ],
               ),
-
-              /*
-              
-              IconButton(
-                padding: const EdgeInsets.all(15),
-                onPressed: () {
-                  showMenu(
-                    context: context,
-                    position: RelativeRect.fromLTRB(
-                      MediaQuery.of(context).size.width - 50,
-                      kToolbarHeight + 12,
-                      12,
-                      0,
-                    ),
-                    items: [
-                      PopupMenuItem(
-                        value: 'total',
-                        child: const Text('All'),
-                        onTap: () => onTapFilter("total"),
-                      ),
-                      PopupMenuItem(
-                        value: 'visit-done',
-                        child: const Text('Visit Done'),
-                        onTap: () => onTapFilter("visit-done"),
-                      ),
-                      PopupMenuItem(
-                        value: 'revisit-done',
-                        child: const Text('Revisit Done'),
-                        onTap: () => onTapFilter("revisit-done"),
-                      ),
-                      PopupMenuItem(
-                        value: 'booking-done',
-                        child: const Text('Booking Done'),
-                        onTap: () => onTapFilter("booking-done"),
-                      ),
-                      PopupMenuItem(
-                        value: 'visit-pending',
-                        child: const Text('Visit Pending'),
-                        onTap: () => onTapFilter("visit-pending"),
-                      ),
-                      PopupMenuItem(
-                        value: 'revisit-pending',
-                        child: const Text('Revisit Pending'),
-                        onTap: () => onTapFilter("revisit-pending"),
-                      ),
-                      PopupMenuItem(
-                        value: 'pending',
-                        child: const Text('Both Pending'),
-                        onTap: () => onTapFilter("pending"),
-                      ),
-                      PopupMenuItem(
-                        value: 'tagging-over',
-                        child: const Text('Tagging Over'),
-                        onTap: () => onTapFilter("tagging-over"),
-                      ),
-                    ],
-                  );
-                },
-                icon: const Icon(Icons.filter_list),
-              )
-
-
-               */
             ],
           ),
           body: Column(
@@ -406,24 +338,27 @@ class _ClosingManagerLeadListPageState
                         return const Center(child: CircularProgressIndicator());
                       }
 
-                      final lead = filteredLeads[i];
+                      // final lead = filteredLeads[i];
+                      final visit = filteredLeads[i];
 
                       return GestureDetector(
                         onTap: () {
-                          // TODO: details page Lead DTA
-                          GoRouter.of(context).push(
-                            '/closing-manager-lead-details',
-                            extra: lead,
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => SiteVisitInfoPage(
+                                visit: visit,
+                              ),
+                            ),
                           );
                         },
                         child: Container(
                           padding: const EdgeInsets.all(10),
                           margin: const EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 15,
+                            vertical: 10,
+                            horizontal: 10,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white.withAlpha(240),
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(10),
                             boxShadow: [
                               BoxShadow(
@@ -434,6 +369,7 @@ class _ClosingManagerLeadListPageState
                             ],
                           ),
                           child: Column(
+                            mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
@@ -441,91 +377,122 @@ class _ClosingManagerLeadListPageState
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        Helper.capitalize(
-                                          getStatus1(lead),
-                                        ),
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: _getStatusColor(
-                                            getStatus1(lead),
-                                          ),
+                                      NamedCard(
+                                        heading: "Date",
+                                        value: Helper.formatDate(
+                                          visit.date.toString(),
                                         ),
                                       ),
+                                      const SizedBox(height: 5),
+                                      NamedCard(
+                                        heading: "Client Name",
+                                        value:
+                                            "${visit.firstName ?? ''} ${visit.lastName ?? ''}",
+                                      ),
+                                      const SizedBox(height: 5),
+                                      NamedCard(
+                                        heading: "Client Phone",
+                                        value:
+                                            "${visit.countryCode} ${visit.phoneNumber}",
+                                      ),
                                     ],
+                                  ),
+                                  const Spacer(),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        visit.verified
+                                            ? "Verfied"
+                                            : "Not verified",
+                                        style: TextStyle(
+                                          color: visit.verified
+                                              ? Colors.green
+                                              : Colors.red,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+
+                                      NamedCard(
+                                        heading: "Closing manager",
+                                        value: visit.closingManager != null
+                                            ? "${visit.closingManager?.firstName ?? ''} ${visit.closingManager?.lastName}"
+                                            : "NA",
+                                      ),
+                                      const SizedBox(height: 5),
+                                      NamedCard(
+                                        heading: "AttendedBy",
+                                        value: visit.closingTeam
+                                            .map((ele) =>
+                                                "${ele.firstName} ${ele.lastName}\n")
+                                            .join(),
+                                        // ignoreLength: true,
+                                      ),
+                                      // ...visit.closingTeam.map(
+                                      //   (ele) => NamedCard(
+                                      //     heading: "AttendedBy",
+                                      //     value:
+                                      //         "${ele?.firstName ?? ''} ${ele?.lastName ?? ''}",
+                                      //   ),
+                                      // )
+                                      // NamedCard(
+                                      //   heading: "AttendedBy",
+                                      //   value: visit.attendedBy != null
+                                      //       ? "${visit.attendedBy?.firstName ?? ''} ${visit.attendedBy?.lastName ?? ''}"
+                                      //       : "NA",
+                                      // ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 5),
+                              Row(
+                                children: [
+                                  Text(
+                                    "Projects: ",
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: Text(
+                                      visit.projects.isNotEmpty
+                                          ? visit.projects
+                                              .map((proj) => proj.name)
+                                              .join(", ")
+                                          : "NA",
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 11,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
                               const SizedBox(height: 5),
                               Row(
                                 children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        NamedCard(
-                                          heading: "Client Name",
-                                          value:
-                                              "${lead.firstName} ${lead.lastName}",
-                                        ),
-                                        const SizedBox(height: 5),
-                                        NamedCard(
-                                          heading: "Client Phone",
-                                          value:
-                                              "${lead.countryCode} ${lead.phoneNumber}",
-                                        ),
-                                        const SizedBox(height: 5),
-                                        NamedCard(
-                                          heading: "Assign Date",
-                                          value: Helper.formatDate(
-                                            lead.cycle?.startDate?.toString() ??
-                                                "NA",
-                                          ),
-                                        ),
-                                        const SizedBox(width: 5),
-                                        NamedCard(
-                                          heading: lead.cycle != null
-                                              ? "${Helper.capitalize(lead.cycle?.stage ?? "")} Deadline: "
-                                              : "Visit Deadline: ",
-                                          value: Helper.formatDateOnly(
-                                            lead.cycle?.validTill.toString() ??
-                                                '',
-                                          ),
-                                          // valueColor: Colors.red,
-                                          // headingColor: Colors.white,
-                                        ),
-                                        const SizedBox(width: 5),
-                                      ],
+                                  Text(
+                                    "Requirements: ",
+                                    style: TextStyle(
+                                      color: Colors.grey.shade600,
+                                      fontSize: 11,
                                     ),
                                   ),
-                                  const Spacer(),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        NamedCard(
-                                          heading: "CP Firm Name",
-                                          value:
-                                              lead.channelPartner?.firmName ??
-                                                  "NA",
-                                        ),
-                                        const SizedBox(height: 5),
-                                        NamedCard(
-                                          heading: "Data Analyser",
-                                          value: lead.dataAnalyzer != null
-                                              ? "${lead.dataAnalyzer?.firstName} ${lead.dataAnalyzer?.lastName}"
-                                              : "NA",
-                                        ),
-                                        NamedCard(
-                                          heading: "Team Leader",
-                                          value: lead.teamLeader != null
-                                              ? '${lead.teamLeader?.firstName} ${lead.teamLeader?.lastName}'
-                                              : "NA",
-                                        ),
-                                      ],
+                                  Flexible(
+                                    child: Text(
+                                      visit.choiceApt.isNotEmpty
+                                          ? visit.choiceApt.join(", ")
+                                          : "NA",
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 11,
+                                      ),
                                     ),
                                   ),
                                 ],

@@ -273,76 +273,10 @@ class _ClosingManagerLeadListPageState
                             ),
                           ),
                         );
-                        // setState(() {
-                        //   showExport = !showExport;
-                        // });
                       },
                     ),
                 ],
               ),
-
-              /*
-              
-              IconButton(
-                padding: const EdgeInsets.all(15),
-                onPressed: () {
-                  showMenu(
-                    context: context,
-                    position: RelativeRect.fromLTRB(
-                      MediaQuery.of(context).size.width - 50,
-                      kToolbarHeight + 12,
-                      12,
-                      0,
-                    ),
-                    items: [
-                      PopupMenuItem(
-                        value: 'total',
-                        child: const Text('All'),
-                        onTap: () => onTapFilter("total"),
-                      ),
-                      PopupMenuItem(
-                        value: 'visit-done',
-                        child: const Text('Visit Done'),
-                        onTap: () => onTapFilter("visit-done"),
-                      ),
-                      PopupMenuItem(
-                        value: 'revisit-done',
-                        child: const Text('Revisit Done'),
-                        onTap: () => onTapFilter("revisit-done"),
-                      ),
-                      PopupMenuItem(
-                        value: 'booking-done',
-                        child: const Text('Booking Done'),
-                        onTap: () => onTapFilter("booking-done"),
-                      ),
-                      PopupMenuItem(
-                        value: 'visit-pending',
-                        child: const Text('Visit Pending'),
-                        onTap: () => onTapFilter("visit-pending"),
-                      ),
-                      PopupMenuItem(
-                        value: 'revisit-pending',
-                        child: const Text('Revisit Pending'),
-                        onTap: () => onTapFilter("revisit-pending"),
-                      ),
-                      PopupMenuItem(
-                        value: 'pending',
-                        child: const Text('Both Pending'),
-                        onTap: () => onTapFilter("pending"),
-                      ),
-                      PopupMenuItem(
-                        value: 'tagging-over',
-                        child: const Text('Tagging Over'),
-                        onTap: () => onTapFilter("tagging-over"),
-                      ),
-                    ],
-                  );
-                },
-                icon: const Icon(Icons.filter_list),
-              )
-
-
-               */
             ],
           ),
           body: Column(
@@ -371,11 +305,6 @@ class _ClosingManagerLeadListPageState
                   ),
                 ),
               ),
-              // ElevatedButton(
-              //     onPressed: () => saveCSVToDownloads(
-              //           filteredLeads.map((ele) => ele.toExportJson()).toList(),
-              //         ),
-              //     child: Text("export csv")),
               if (!isLoading && filteredLeads.isEmpty)
                 const Padding(
                   padding: EdgeInsets.all(15),
@@ -541,11 +470,6 @@ class _ClosingManagerLeadListPageState
             ],
           ),
         ),
-        // if (showExport)
-        //   DateFilterScreenLeads(
-        //     onSelect: (start, end) {},
-        //     onSubmit: () {},
-        //   ),
         if (isLoading)
           Container(
             color: Colors.black.withOpacity(0.2),

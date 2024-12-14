@@ -103,16 +103,16 @@ class _CostGeneratorState extends State<CostGenerators> {
   Map<String, Map<String, String>> getAccountDetails(String projectName) {
     return {
       'booking': {
-        'accountNo': '923020034471092',
-        'ifscCode': 'UTIB0000072',
-        'micrCode': '',
-        'bankName': 'Axis Bank',
+        'accountNo': '015105022390',
+        'ifscCode': 'ICIC0000151',
+        'micrCode': '400229015022390',
+        'bankName': 'ICIC Bank',
       },
       'tax': {
-        'accountNo': '0123102000043254',
-        'ifscCode': 'IBKL0000123',
-        'micrCode': '',
-        'bankName': 'IDBI Bank',
+        'accountNo': '01510522186',
+        'ifscCode': 'ICIC0000151',
+        'micrCode': '400229015',
+        'bankName': 'ICIC Bank',
       },
     };
   }

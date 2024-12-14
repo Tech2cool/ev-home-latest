@@ -150,7 +150,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _buildUserInfo(String userEmail) {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(16.0, 4.0, 16.0, 12.0),
-      
       child: Text(
         userEmail,
         style: const TextStyle(
@@ -217,7 +216,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white, // background color
             side: const BorderSide(
-              color: Colors.blue, // substitute for Constant.bgColor
+              color: const Color.fromARGB(
+                  199, 248, 85, 4), // substitute for Constant.bgColor
               width: 2.0,
             ),
             shape: RoundedRectangleBorder(

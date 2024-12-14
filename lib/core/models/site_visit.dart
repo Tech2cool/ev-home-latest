@@ -5,6 +5,7 @@ import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 
 class SiteVisit {
+  final String? id;
   final DateTime? date;
   final String? firstName;
   final String? lastName;
@@ -27,6 +28,7 @@ class SiteVisit {
   final bool verified;
 
   SiteVisit({
+    this.id,
     this.visitType,
     this.date,
     this.firstName,
@@ -52,6 +54,7 @@ class SiteVisit {
   Map<String, dynamic> toMap() {
     return {
       'date': date?.toIso8601String(),
+      'id': id,
       'firstName': firstName,
       'lastName': lastName,
       'phoneNumber': phoneNumber,
@@ -79,6 +82,7 @@ class SiteVisit {
       date: map['date'] != null
           ? DateTime.parse(map['date'])
           : DateTime.parse(map['createdAt']),
+      id: map['_id'],
       firstName: map['firstName'],
       lastName: map['lastName'],
       phoneNumber: map['phoneNumber'],

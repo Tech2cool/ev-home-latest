@@ -1,5 +1,6 @@
 import 'package:ev_homes/components/loading/loading_generate_pdf.dart';
 import 'package:ev_homes/core/models/site_visit.dart';
+import 'package:ev_homes/pages/admin_pages/admin_forms/edit_site_visit_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:pdf/pdf.dart';
@@ -33,11 +34,22 @@ class _SiteVisitInfoPageState extends State<SiteVisitInfoPage> {
                   if (value == 'generatePdf') {
                     _generatePdf(context);
                   }
+                  if (value == 'edit') {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                EditSiteVisitPage(visit: widget.visit)));
+                  }
                 },
                 itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                   const PopupMenuItem<String>(
                     value: 'generatePdf',
                     child: Text('Generate PDF'),
+                  ),
+                  const PopupMenuItem<String>(
+                    value: 'edit',
+                    child: Text('Edit'),
                   ),
                 ],
               ),

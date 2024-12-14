@@ -1,7 +1,14 @@
 import 'package:ev_homes/core/models/our_project.dart';
+import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_marina_bay.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_nine_square.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_letter.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_letter_9_square.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule%20_nine_square.dart';
+import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule_marina_bay.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Import the intl package
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart'; // Import the intl package
 
 class FlatDetailPage extends StatefulWidget {
   final OurProject project;
@@ -25,6 +32,7 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
   final double registration = 30000;
   double stampDutyPercentage = 6.0;
   double gstPercentage = 5.0;
+  String? selectedGenerate;
 
   void showPriceDialog() {
     _priceController.text = allInclusive.toStringAsFixed(2);
@@ -88,6 +96,261 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
     return format.format(amount);
   }
 
+  Future<void> _showProjectDialogForCostSheet() async {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    OurProject? selectedProject;
+    // print(settingProvider.ourProject);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Project'),
+          content: DropdownButtonFormField<OurProject>(
+            value: projects.contains(selectedProject) ? selectedProject : null,
+            decoration: InputDecoration(
+              labelText: 'Select Project',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            items: projects.map((project) {
+              return DropdownMenuItem<OurProject>(
+                value: project,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.name ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedProject = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a Project';
+              }
+              return null;
+            },
+            isExpanded: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (selectedProject!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CostGenerators(),
+                    ),
+                  );
+                }
+                if (selectedProject!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CostGenerator(),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Proceed'),
+            ),
+          ],
+        );
+      },
+    );
+    // print(selectedProject);
+  }
+
+  Future<void> _showProjectDialogForPaymentSchedule() async {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    OurProject? selectedProject;
+    // print(settingProvider.ourProject);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Project'),
+          content: DropdownButtonFormField<OurProject>(
+            value: projects.contains(selectedProject) ? selectedProject : null,
+            decoration: InputDecoration(
+              labelText: 'Select Project',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            items: projects.map((project) {
+              return DropdownMenuItem<OurProject>(
+                value: project,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.name ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedProject = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a Project';
+              }
+              return null;
+            },
+            isExpanded: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (selectedProject!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PaymentScheduleGenerators(),
+                    ),
+                  );
+                }
+                if (selectedProject!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PaymentScheduleGenerator(),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Proceed'),
+            ),
+          ],
+        );
+      },
+    );
+    // print(selectedProject);
+  }
+
+  Future<void> _showProjectDialogForDemand() async {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    OurProject? selectedProject;
+    // print(settingProvider.ourProject);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Project'),
+          content: DropdownButtonFormField<OurProject>(
+            value: projects.contains(selectedProject) ? selectedProject : null,
+            decoration: InputDecoration(
+              labelText: 'Select Project',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            items: projects.map((project) {
+              return DropdownMenuItem<OurProject>(
+                value: project,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.name ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedProject = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a Project';
+              }
+              return null;
+            },
+            isExpanded: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (selectedProject!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DemandLetter(),
+                    ),
+                  );
+                }
+                if (selectedProject!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DemandLetter10(),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Proceed'),
+            ),
+          ],
+        );
+      },
+    );
+    // print(selectedProject);
+  }
+
   @override
   Widget build(BuildContext context) {
     final flat = widget.project.flatList.singleWhere(
@@ -101,27 +364,47 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Details for Flat ${widget.flatNo}'),
+        centerTitle: false,
+        title: Text(
+          'Details for Flat ${widget.flatNo}',
+          style: TextStyle(fontSize: 20),
+        ),
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
         actions: [
           PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'Cost Sheet Generator') {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CostGenerator(),
-                  ),
-                );
+            icon: const Icon(
+              Icons.more_vert,
+              color: Color.fromARGB(255, 7, 7, 7),
+            ),
+            onSelected: (value) async {
+              if (value == "Cost Sheet Generator") {
+                _showProjectDialogForCostSheet();
+              } else if (value == "Payment Schedule") {
+                _showProjectDialogForPaymentSchedule();
+              } else if (value == "Demand Letter") {
+                _showProjectDialogForDemand();
               }
+
+              setState(() {
+                selectedGenerate = value;
+              });
             },
-            itemBuilder: (BuildContext context) {
-              return [
-                const PopupMenuItem<String>(
-                  value: 'NextPage',
-                  child: Text('Go to Next Page'),
-                ),
-              ];
-            },
+            itemBuilder: (context) => <PopupMenuEntry<String>>[
+              const PopupMenuItem<String>(
+                value: 'Cost Sheet Generator',
+                child: Text('Cost Sheet Generator'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Payment Schedule',
+                child: Text('Payment Schedule'),
+              ),
+              const PopupMenuItem<String>(
+                value: 'Demand Letter',
+                child: Text('Demand Letter'),
+              ),
+            ],
           ),
         ],
       ),

@@ -466,54 +466,126 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
             ),
             const SizedBox(height: 20),
             if (customValue != null) ...[
-              Text(
-                'Agreement Value: ${formatCurrency(customRound(formattedValue))}',
-                style: const TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              const SizedBox(height: 20),
-              DropdownButtonFormField<double>(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Stamp Duty',
-                ),
-                items: const [
-                  DropdownMenuItem(
-                    value: 5,
-                    child: Text("5%"),
+              Table(
+                columnWidths: {
+                  0: FlexColumnWidth(3), // Adjusts column widths
+                  1: FlexColumnWidth(3),
+                },
+                children: [
+                  TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Agreement Value:',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          formatCurrency(customRound(formattedValue)),
+                          style: const TextStyle(fontSize: 16),
+                          textAlign:
+                              TextAlign.left, // Aligns the values to the right
+                        ),
+                      ),
+                    ],
                   ),
-                  DropdownMenuItem(
-                    value: 6,
-                    child: Text("6%"),
+                  TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Stamp Duty:',
+                          style: const TextStyle(fontSize: 16),
+                          textAlign: TextAlign.start,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          formatCurrency(customRound(formattedValue * 0.06)),
+                          style: const TextStyle(fontSize: 16),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'GST 5%:',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          formatCurrency(customRound(formattedValue * 0.05)),
+                          style: const TextStyle(fontSize: 16),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Registration:',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          formatCurrency(customRound(registration)),
+                          style: const TextStyle(fontSize: 16),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Total (All Inclusive):',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          formatCurrency(customRound(allInclusive)),
+                          style: const TextStyle(fontSize: 16),
+                          textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
-                value: stampDutyPercentage,
-                onChanged: (value) {
-                  setState(() {
-                    stampDutyPercentage = value ?? 6;
-                  });
-                },
-              ),
-              const SizedBox(height: 20),
-              const SizedBox(height: 10),
-              Text(
-                'Stamp Duty: ${formatCurrency(customRound(formattedValue * 0.06))}',
-                style: const TextStyle(
-                  fontSize: 16,
-                ),
               ),
               Text(
-                'GST 5%: ${formatCurrency(customRound(formattedValue * 0.05))}',
+                "Note",
                 style: const TextStyle(
                   fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
+                textAlign: TextAlign.left,
               ),
               Text(
-                'Registration: ${formatCurrency(customRound(registration))}',
+                "All inclusive price does not including, 1 lakh rupess of maintainance deposit and 30000 rupeess of legal charges.",
                 style: const TextStyle(
                   fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
+                textAlign: TextAlign.left,
               ),
             ],
             const Spacer(),

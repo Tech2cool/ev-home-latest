@@ -40,9 +40,6 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
         widget.id ?? settingProvider.loggedAdmin!.id!,
       );
 
-      await settingProvider.getMyTarget(
-        widget.id ?? settingProvider.loggedAdmin!.id!,
-      );
       await settingProvider.getClosingManagerGraph(
         widget.id ?? settingProvider.loggedAdmin!.id!,
       );

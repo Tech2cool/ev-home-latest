@@ -12,7 +12,6 @@ import 'package:ev_homes/pages/admin_pages/post_sale_pages/demand_letter_9_squar
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule%20_nine_square.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule_marina_bay.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
-import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/closing_manager_visit2_list_page.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/task_list_page.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';

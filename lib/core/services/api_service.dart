@@ -125,15 +125,19 @@ class ApiService {
     int page = 1,
     int limit = 20,
     String? approvalStatus,
-    String? status,
+    String? stage,
+    String? channelPartner,
   ]) async {
     try {
       var url = '/search-lead?query=$query&page=$page&limit=$limit';
       if (approvalStatus != null) {
         url += '&approvalStatus=$approvalStatus';
       }
-      if (status != null) {
-        url += '&status=$status';
+      if (stage != null) {
+        url += '&stage=$stage';
+      }
+      if (channelPartner != null) {
+        url += '&channelPartner=$channelPartner';
       }
 
       final Response response = await _dio.get(url);
@@ -1163,7 +1167,7 @@ class ApiService {
       if (items.isNotEmpty) {
         chItems = items.map((emp) => ChannelPartner.fromMap(emp)).toList();
       }
-      Helper.showCustomSnackBar(response.data['message'], Colors.green);
+      // Helper.showCustomSnackBar(response.data['message'], Colors.green);
 
       return chItems;
     } on DioException catch (e) {
@@ -3730,6 +3734,7 @@ class _AuthInterceptor extends Interceptor {
       }
     } catch (e) {
       await storage.deleteAll();
+      await SharedPrefService.deleteUser();
     }
     handler.next(options);
   }

@@ -759,7 +759,7 @@ class _ClosingManagerLeadDetailsPageState
                               isExpanded:
                                   true, // Ensure it uses the available space
                               onChanged: (value) async {
-                                if (value == "visited") {
+                                if (value?.toLowerCase() == "visited") {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) =>
@@ -769,7 +769,8 @@ class _ClosingManagerLeadDetailsPageState
                                       ),
                                     ),
                                   );
-                                } else if (value == "revisited") {
+                                } else if (value?.toLowerCase() ==
+                                    "revisited") {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) =>
@@ -779,7 +780,8 @@ class _ClosingManagerLeadDetailsPageState
                                       ),
                                     ),
                                   );
-                                } else if (value == "virtual-meeting") {
+                                } else if (value?.toLowerCase() ==
+                                    "virtual-meeting") {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
                                       builder: (context) =>
@@ -793,7 +795,7 @@ class _ClosingManagerLeadDetailsPageState
 
                                 setState(() {
                                   selectedStatus = value;
-                                  if (value == 'Booked') {
+                                  if (value?.toLowerCase() == 'booked') {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
                                         builder: (context) => AddPostsaleLead(

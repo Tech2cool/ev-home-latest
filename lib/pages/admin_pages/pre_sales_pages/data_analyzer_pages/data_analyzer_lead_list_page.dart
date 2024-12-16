@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'package:ev_homes/components/date_filter_screen_leads.dart';
+import 'package:ev_homes/components/searchable_dropdown.dart';
 import 'package:ev_homes/core/helper/helper.dart';
+import 'package:ev_homes/core/models/channel_partner.dart';
 import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +26,8 @@ class _DataAnalyzerLeadListPageState extends State<DataAnalyzerLeadListPage> {
   int currentPage = 1;
   int totalPages = 1;
   Timer? _debounce;
-
+  ChannelPartner? selectedChannelPartner;
+  String? stage;
   List<Lead> _getFilteredLeads() {
     if (widget.status == "approved") {
       return leads.where((lead) => lead.approvalStatus == "approved").toList();
@@ -39,6 +43,33 @@ class _DataAnalyzerLeadListPageState extends State<DataAnalyzerLeadListPage> {
           .toList();
     }
     return leads;
+  }
+
+  Future<void> onRefresh() async {
+    try {
+      final settingProvider = Provider.of<SettingProvider>(
+        context,
+        listen: false,
+      );
+
+      setState(() {
+        isLoading = true;
+      });
+      await settingProvider.getChannelPartners();
+    } catch (e) {
+      //
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  void onTapFilter(String? status) {
+    setState(() {
+      stage = status;
+    });
+    getLeads(resetPage: true);
   }
 
   // Fetch initial leads or leads based on a new search
@@ -67,6 +98,8 @@ class _DataAnalyzerLeadListPageState extends State<DataAnalyzerLeadListPage> {
       widget.status.toLowerCase() == "total"
           ? null
           : widget.status.toLowerCase(),
+      stage,
+      selectedChannelPartner?.id,
     );
 
     if (mounted) {
@@ -92,6 +125,8 @@ class _DataAnalyzerLeadListPageState extends State<DataAnalyzerLeadListPage> {
       return lead.revisitStatus;
     } else if (lead.stage == "booking") {
       return lead.bookingStatus;
+    } else if (lead.stage == "tagging-over") {
+      return lead.stage;
     }
     return lead.approvalStatus;
   }
@@ -100,17 +135,187 @@ class _DataAnalyzerLeadListPageState extends State<DataAnalyzerLeadListPage> {
   void initState() {
     super.initState();
     getLeads(resetPage: true); // Fetch initial leads
+    onRefresh();
   }
 
   @override
   Widget build(BuildContext context) {
     final filteredLeads = leads;
+    final settingProvider = Provider.of<SettingProvider>(context);
+    final loggedDesg = settingProvider.loggedAdmin?.designation;
+    final channelPartners = settingProvider.channelPartners;
 
     return Stack(
       children: [
         Scaffold(
           appBar: AppBar(
             title: Text("Tagging Report - ${widget.status}"),
+            actions: [
+              PopupMenuButton<String>(
+                onSelected: (value) {
+                  if (value == 'generatePdf') {
+                    // _generatePdf(context);
+                  }
+                },
+                itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                  PopupMenuItem<String>(
+                    value: 'filter',
+                    child: const Text('Filter'),
+                    onTap: () {
+                      showMenu(
+                        context: context,
+                        position: RelativeRect.fromLTRB(
+                          MediaQuery.of(context).size.width - 50,
+                          kToolbarHeight + 12,
+                          12,
+                          0,
+                        ),
+                        items: [
+                          PopupMenuItem(
+                            value: 'total',
+                            child: const Text('All'),
+                            onTap: () => onTapFilter(null),
+                          ),
+                          PopupMenuItem(
+                            value: 'visit-done',
+                            child: const Text('Visit Done'),
+                            onTap: () => onTapFilter("visit-done"),
+                          ),
+                          PopupMenuItem(
+                            value: 'revisit-done',
+                            child: const Text('Revisit Done'),
+                            onTap: () => onTapFilter("revisit-done"),
+                          ),
+                          PopupMenuItem(
+                            value: 'booking-done',
+                            child: const Text('Booking Done'),
+                            onTap: () => onTapFilter("booking-done"),
+                          ),
+                          PopupMenuItem(
+                            value: 'visit-pending',
+                            child: const Text('Visit Pending'),
+                            onTap: () => onTapFilter("visit-pending"),
+                          ),
+                          PopupMenuItem(
+                            value: 'revisit-pending',
+                            child: const Text('Revisit Pending'),
+                            onTap: () => onTapFilter("revisit-pending"),
+                          ),
+                          PopupMenuItem(
+                            value: 'pending',
+                            child: const Text('Both Pending'),
+                            onTap: () => onTapFilter("pending"),
+                          ),
+                          PopupMenuItem(
+                            value: 'tagging-over',
+                            child: const Text('Tagging Over'),
+                            onTap: () => onTapFilter("tagging-over"),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                  PopupMenuItem<String>(
+                    value: 'channel-partner',
+                    child: const Text('Channel Partner'),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                            content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SearchableDropdown<ChannelPartner>(
+                              initialSelection: selectedChannelPartner,
+                              items: channelPartners,
+                              labelBuilder: (ChannelPartner? emp) {
+                                if (emp == null) {
+                                  return "";
+                                }
+                                final name =
+                                    "${emp.firstName} ${emp.lastName} (${emp.firmName ?? ''})";
+                                return name;
+                              },
+                              label: "Channel Partner",
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedChannelPartner = value!;
+                                });
+                              },
+                            ),
+                            SizedBox(height: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red[300],
+                                    ),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text(
+                                      "Cancel",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 30),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.green[300],
+                                    ),
+                                    onPressed: () {
+                                      getLeads(resetPage: true);
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text(
+                                      "Submit",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        )),
+                      );
+                      // Navigator.of(context).push(
+                      //   MaterialPageRoute(
+                      //     builder: (context) => DateFilterScreenLeads(
+                      //       onSelect: (start, end) {},
+                      //       onSubmit: () {},
+                      //     ),
+                      //   ),
+                      // );
+                    },
+                  ),
+                  if (loggedDesg!.id == "desg-post-sales-head" ||
+                      loggedDesg!.id == "desg-app-developer" ||
+                      loggedDesg!.id == "desg-site-head")
+                    PopupMenuItem<String>(
+                      value: 'export',
+                      child: const Text('Export'),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => DateFilterScreenLeads(
+                              onSelect: (start, end) {},
+                              onSubmit: () {},
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                ],
+              ),
+            ],
           ),
           body: Column(
             children: [

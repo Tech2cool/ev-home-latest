@@ -195,11 +195,11 @@ class Lead {
       'revisitStatus': revisitStatus,
       'bookingStatus': bookingStatus,
       'interestedStatus': interestedStatus,
-      'callHistory': callHistory.map((item) => item.toJson()).toList(),
-      'followupHistory': followupHistory.map((item) => item.toJson()).toList(),
-      'approvalHistory': approvalHistory.map((item) => item.toJson()).toList(),
-      'updateHistory': updateHistory.map((item) => item.toJson()).toList(),
-      'cycleHistory': cycleHistory.map((item) => item.toMap()).toList(),
+      // 'callHistory': callHistory.map((item) => item.toJson()).toList(),
+      // 'followupHistory': followupHistory.map((item) => item.toJson()).toList(),
+      // 'approvalHistory': approvalHistory.map((item) => item.toJson()).toList(),
+      // 'updateHistory': updateHistory.map((item) => item.toJson()).toList(),
+      // 'cycleHistory': cycleHistory.map((item) => item.toMap()).toList(),
     };
   }
 
@@ -285,8 +285,8 @@ class CallHistory {
 
   Map<String, dynamic> toJson() {
     return {
-      'caller': caller?.toMap(),
-      'callDate': callDate,
+      'caller': caller?.id,
+      'callDate': callDate?.toIso8601String(),
       'remark': remark,
       'feedback': feedback,
       'document': document,
@@ -362,8 +362,8 @@ class ApprovalHistory {
 
   Map<String, dynamic> toJson() {
     return {
-      'employee': employee?.toMap(),
-      'approvedAt': approvedAt,
+      'employee': employee?.id,
+      'approvedAt': approvedAt?.toIso8601String(),
       'remark': remark,
     };
   }
@@ -400,8 +400,8 @@ class UpdateHistory {
 
   Map<String, dynamic> toJson() {
     return {
-      'employee': employee?.toMap(),
-      'updatedAt': updatedAt,
+      'employee': employee?.id,
+      'updatedAt': updatedAt?.toIso8601String(),
       'changes': changes,
     };
   }
@@ -429,7 +429,7 @@ class ApprovalStage {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'status': status,
-      'date': date,
+      'date': date?.toIso8601String(),
       'remark': remark,
     };
   }
@@ -522,7 +522,7 @@ class VisitStage {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'status': status,
-      'date': date,
+      'date': date?.toIso8601String(),
       'remark': remark,
       "attendedBy": attendedBy?.toMap(),
     };
@@ -562,7 +562,7 @@ class RevisitStage {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'status': status,
-      'date': date,
+      'date': date?.toIso8601String(),
       'remark': remark,
       "attendedBy": attendedBy?.toMap(),
     };
@@ -600,7 +600,7 @@ class TaggingOverStage {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'status': status,
-      'date': date,
+      'date': date?.toIso8601String(),
       'remark': remark,
     };
   }

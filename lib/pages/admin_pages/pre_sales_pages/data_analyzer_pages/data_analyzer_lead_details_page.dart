@@ -1,6 +1,7 @@
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/services/api_service.dart';
+import 'package:ev_homes/pages/admin_pages/admin_forms/edit_client_tagging_form.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -56,22 +57,20 @@ class _DataAnalyzerLeadDetailsPageState
         title: const Text('Tagging Details'),
         actions: [
           PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'Edit') {
-                // Navigator.push(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => EditTaggingPage(
-                //       lead: widget.lead,
-                //     ),
-                //   ),
-                // );
-              }
-            },
             itemBuilder: (BuildContext context) => [
-              const PopupMenuItem<String>(
+              PopupMenuItem<String>(
                 value: 'Edit',
                 child: Text('Edit'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditClientTaggingForm(
+                        lead: widget.lead,
+                      ),
+                    ),
+                  );
+                },
               ),
             ],
           ),

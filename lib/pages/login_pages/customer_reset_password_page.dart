@@ -18,7 +18,7 @@ class _ResetPasswordScreenCustomerState extends State<ResetPasswordCustomer> {
   final _oldPasswordController = TextEditingController();
   final _newPasswordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  // final AuthService _authService = AuthService();
+
   Future<void> resetPassword() async {
     setState(() {
       _isLoading = true;
@@ -41,7 +41,6 @@ class _ResetPasswordScreenCustomerState extends State<ResetPasswordCustomer> {
       return;
     }
 
-    // Call changePasswordChannelPartner
     try {
       await settingProvider.changePasswordClient(
         loggedCustomer?.id ?? "",
@@ -49,7 +48,7 @@ class _ResetPasswordScreenCustomerState extends State<ResetPasswordCustomer> {
         _newPasswordController.text,
       );
     } catch (e) {
-      //13
+      // Handle error
     }
     setState(() {
       _isLoading = false;
@@ -79,97 +78,61 @@ class _ResetPasswordScreenCustomerState extends State<ResetPasswordCustomer> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ElevatedButton(onPressed: fetchOldPassword, child: Text("fetch")),
                   const Text(
                     "Set a new password",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Colors.indigo,
+                      color: Color.fromARGB(199, 248, 85, 4),
                     ),
                   ),
                   const SizedBox(height: 8),
                   const Text(
                     "Create a new password. Ensure it differs from previous ones for security",
-                    style: TextStyle(fontSize: 14, color: Colors.grey),
+                    style: TextStyle(fontSize: 16, color: Colors.grey),
                   ),
                   const SizedBox(height: 30),
 
-                  // Password Field
-                  TextField(
+                  // Old Password Field
+                  _buildPasswordField(
+                    label: "Old Password",
+                    hintText: "Enter your old password",
                     controller: _oldPasswordController,
                     obscureText: _isObscuredPassword,
-                    decoration: InputDecoration(
-                      labelText: "Old Password",
-                      hintText: "Enter your new password",
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isObscuredPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isObscuredPassword = !_isObscuredPassword;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                    toggleVisibility: () {
+                      setState(() {
+                        _isObscuredPassword = !_isObscuredPassword;
+                      });
+                    },
                   ),
                   const SizedBox(height: 20),
-                  // Password Field
-                  TextField(
+
+                  // New Password Field
+                  _buildPasswordField(
+                    label: "New Password",
+                    hintText: "Enter your new password",
                     controller: _newPasswordController,
                     obscureText: _isObscuredPassword,
-                    decoration: InputDecoration(
-                      labelText: "New Password",
-                      hintText: "Enter your new password",
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isObscuredPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isObscuredPassword = !_isObscuredPassword;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                    toggleVisibility: () {
+                      setState(() {
+                        _isObscuredPassword = !_isObscuredPassword;
+                      });
+                    },
                   ),
                   const SizedBox(height: 20),
 
                   // Confirm Password Field
-                  TextField(
+                  _buildPasswordField(
+                    label: "Confirm Password",
+                    hintText: "Re-enter password",
                     controller: _confirmPasswordController,
                     obscureText: _isObscuredConfirmPassword,
-                    decoration: InputDecoration(
-                      labelText: "Confirm Password",
-                      hintText: "Re-enter password",
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          _isObscuredConfirmPassword
-                              ? Icons.visibility_off
-                              : Icons.visibility,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            _isObscuredConfirmPassword =
-                                !_isObscuredConfirmPassword;
-                          });
-                        },
-                      ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
+                    toggleVisibility: () {
+                      setState(() {
+                        _isObscuredConfirmPassword =
+                            !_isObscuredConfirmPassword;
+                      });
+                    },
                   ),
                   const SizedBox(height: 30),
 
@@ -177,13 +140,10 @@ class _ResetPasswordScreenCustomerState extends State<ResetPasswordCustomer> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Handle password update action here
-                        resetPassword();
-                      },
+                      onPressed: resetPassword,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Colors.blueAccent,
+                        backgroundColor: const Color.fromARGB(199, 248, 85, 4),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -212,6 +172,54 @@ class _ResetPasswordScreenCustomerState extends State<ResetPasswordCustomer> {
           ),
         ]
       ],
+    );
+  }
+
+  Widget _buildPasswordField({
+    required String label,
+    required String hintText,
+    required TextEditingController controller,
+    required bool obscureText,
+    required VoidCallback toggleVisibility,
+  }) {
+    const fieldColor = Color.fromARGB(199, 248, 85, 4);
+
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      style: const TextStyle(color: fieldColor), // Text color
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: fieldColor), // Label color
+        hintText: hintText,
+        hintStyle: const TextStyle(color: fieldColor), // Hint text color
+        suffixIcon: IconButton(
+          icon: Icon(
+            obscureText ? Icons.visibility_off : Icons.visibility,
+            color: fieldColor, // Icon color
+          ),
+          onPressed: toggleVisibility,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: fieldColor,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: fieldColor,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: const BorderSide(
+            color: fieldColor,
+            width: 2.0,
+          ),
+        ),
+      ),
     );
   }
 }

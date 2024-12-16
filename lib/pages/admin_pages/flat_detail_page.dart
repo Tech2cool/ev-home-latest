@@ -361,6 +361,12 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
         (((gstPercentage + stampDutyPercentage) / 100) + 1);
 
     final double formattedValue = agValue;
+    double customRound(double value) {
+      // Round to the nearest whole number based on the decimal part
+      return (value - value.truncate() >= 0.5)
+          ? value.ceilToDouble()
+          : value.floorToDouble();
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -461,7 +467,7 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
             const SizedBox(height: 20),
             if (customValue != null) ...[
               Text(
-                'Agreement Value: ${formatCurrency(formattedValue)}',
+                'Agreement Value: ${formatCurrency(customRound(formattedValue))}',
                 style: const TextStyle(
                   fontSize: 16,
                 ),
@@ -492,19 +498,19 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
               const SizedBox(height: 20),
               const SizedBox(height: 10),
               Text(
-                'Stamp Duty: ${formatCurrency(formattedValue * 0.06)}',
+                'Stamp Duty: ${formatCurrency(customRound(formattedValue * 0.06))}',
                 style: const TextStyle(
                   fontSize: 16,
                 ),
               ),
               Text(
-                'GST 5%: ${formatCurrency(formattedValue * 0.05)}',
+                'GST 5%: ${formatCurrency(customRound(formattedValue * 0.05))}',
                 style: const TextStyle(
                   fontSize: 16,
                 ),
               ),
               Text(
-                'Registration: ${formatCurrency(registration)}',
+                'Registration: ${formatCurrency(customRound(registration))}',
                 style: const TextStyle(
                   fontSize: 16,
                 ),

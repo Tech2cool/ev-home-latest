@@ -429,8 +429,8 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
       [
         '48',
         'On Completion of electrical fittings',
-        '2 %',
-        formatter.format(totalValue * 0.02)
+        '1 %',
+        formatter.format(totalValue * 0.01)
       ],
       [
         '49',

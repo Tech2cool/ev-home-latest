@@ -1,3 +1,4 @@
+import 'package:ev_homes/components/cp_videoplayer.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/cp_pages/cp_profile_page.dart';
@@ -7,8 +8,8 @@ import 'package:ev_homes/pages/our_project_details.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:video_player/video_player.dart';
 
-import '../../components/animated_gradient_bg.dart';
 import '../customer_pages/carousel_page.dart';
 
 class CpHomeScreen extends StatefulWidget {
@@ -33,7 +34,13 @@ class _HomeScreenState extends State<CpHomeScreen> {
   @override
   void initState() {
     super.initState();
+
     fetchProjects();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -42,11 +49,27 @@ class _HomeScreenState extends State<CpHomeScreen> {
     final loggedChannelPartner = settingProvider.loggedChannelPartner;
     return Stack(
       children: [
-        // AnimatedGradient(),
+        CpVideoplayer(),
 
+        // Gradient overlay to enhance text visibility
+        // Positioned.fill(
+        //   child: Container(
+        //     decoration: const BoxDecoration(
+        //       gradient: LinearGradient(
+        //         colors: [
+        //           Colors.black54,
+        //           Colors.black38,
+        //           Colors.transparent,
+        //         ],
+        //         begin: Alignment.topCenter,
+        //         end: Alignment.bottomCenter,
+        //       ),
+        //     ),
+        //   ),
+        // ),
         Scaffold(
           // backgroundColor: Constant.bgColor,
-          backgroundColor: Color.fromARGB(255, 255, 251, 240),
+          backgroundColor: Colors.transparent,
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(60),
             child: AppBar(
@@ -62,7 +85,7 @@ class _HomeScreenState extends State<CpHomeScreen> {
                       const Text(
                         "Welcome!",
                         style:
-                            TextStyle(color: Color(0xFF4B5945), fontSize: 18),
+                            TextStyle(color: Color(0xFF042630), fontSize: 18),
                       ),
                       const SizedBox(
                         height: 4,
@@ -70,7 +93,7 @@ class _HomeScreenState extends State<CpHomeScreen> {
                       Text(
                         loggedChannelPartner?.firstName ?? "",
                         style: const TextStyle(
-                            color: Color(0xFF4B5945),
+                            color: Color(0xFF042630),
                             fontWeight: FontWeight.bold,
                             fontSize: 20),
                       ),
@@ -94,15 +117,12 @@ class _HomeScreenState extends State<CpHomeScreen> {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 2,
+                  height: 10,
                 ),
                 Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Row(
                     children: [
-                      SizedBox(
-                        width: 10,
-                      ),
                       Expanded(
                         child: SizedBox(
                           height: 40,
@@ -110,30 +130,32 @@ class _HomeScreenState extends State<CpHomeScreen> {
                             decoration: InputDecoration(
                               hintText: "Search...",
                               hintStyle: const TextStyle(
-                                color: Color(0xFF4B5945),
+                                color: Color(0xFF042630),
                               ),
                               prefixIcon: const Icon(
                                 Icons.search,
-                                color: Color(0xFF4B5945),
+                                color: Color(0xFF042630),
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: const BorderSide(
-                                  color: Colors.orange,
-                                  width: 2.0,
+                                  color: Color(0xFF042630),
+                                  width: 2.0, // Set the border width
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: const BorderSide(
-                                  color: Colors.orange,
+                                  color: Color(
+                                      0xFF042630), // Set the color when not focused
                                   width: 2.0,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: const BorderSide(
-                                  color: Colors.orange,
+                                  color: Color(
+                                      0xFF042630), // Color when the field is focused
                                   width: 2.0,
                                 ),
                               ),
@@ -168,7 +190,7 @@ class _HomeScreenState extends State<CpHomeScreen> {
                           child: Text(
                             "Our Projects",
                             style: TextStyle(
-                                color: Color(0xFF4B5945),
+                                color: Color(0xFF042630),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
@@ -190,7 +212,7 @@ class _HomeScreenState extends State<CpHomeScreen> {
                           child: Text(
                             "Upcoming Projects",
                             style: TextStyle(
-                                color: Color(0xFF4B5945),
+                                color: Color(0xFF042630),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
@@ -201,7 +223,7 @@ class _HomeScreenState extends State<CpHomeScreen> {
                     UpcomingProjectsList(),
                   ],
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 10),
                 const Column(
                   children: [
                     Row(
@@ -212,7 +234,7 @@ class _HomeScreenState extends State<CpHomeScreen> {
                           child: Text(
                             "What's New",
                             style: TextStyle(
-                                color: Color(0xFF4B5945),
+                                color: Color(0xFF042630),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
@@ -225,7 +247,7 @@ class _HomeScreenState extends State<CpHomeScreen> {
                 ),
                 const SizedBox(
                   height: 120,
-                ),
+                )
               ],
             ),
           ),

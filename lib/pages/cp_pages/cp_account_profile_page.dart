@@ -50,24 +50,49 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
     // final loggedUser = Provider.of<SettingProvider>(context).loggedUser;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Profile',
-          style: TextStyle(color: Colors.white),
+      backgroundColor: Color.fromARGB(255, 218, 240, 246),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(50),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(25),
+            bottomRight: Radius.circular(25),
+          ),
+          child: AppBar(
+            iconTheme: IconThemeData(color: Colors.white),
+            automaticallyImplyLeading: true,
+            backgroundColor: Color(0xFF042630),
+            title: const Text(
+              'Profile',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
         ),
-        centerTitle: true,
-        backgroundColor: Colors.deepPurple,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Profile picture
-            CircleAvatar(
-              radius: 60.0,
-              backgroundImage: const NetworkImage('https://picsum.photos/200'),
-              backgroundColor: Colors.grey[300],
+            Container(
+              width: 120.0,
+              height: 120.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Color(0xFF042630),
+                  width: 4.0,
+                ),
+              ),
+              child: CircleAvatar(
+                radius: 56.0,
+                backgroundImage:
+                    const NetworkImage('https://picsum.photos/200'),
+                backgroundColor: Colors.grey[300],
+              ),
             ),
+
             const SizedBox(height: 20.0),
 
             // Username
@@ -114,8 +139,8 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
         TextField(
           enabled: false, // Non-editable
           decoration: InputDecoration(
-            border: const OutlineInputBorder(),
-            hintText: value, // Display the value as the text in the field
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+            hintText: value,
           ),
         ),
       ],

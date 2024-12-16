@@ -26,8 +26,8 @@ class _LottiepageState extends State<Lottiepage> {
         ),
         child: Center(
           child: Image.network(
-            'https://cdn.evhomes.tech/44552d81-3c4e-4ec8-8935-ece01307d09a-NINE%20SQUARE%20new%20logo%20final%20%C3%A0%C2%A5%C2%A7.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6IjQ0NTUyZDgxLTNjNGUtNGVjOC04OTM1LWVjZTAxMzA3ZDA5YS1OSU5FIFNRVUFSRSBuZXcgbG9nbyBmaW5hbCDDoMKlwqcucG5nIiwiaWF0IjoxNzMzODM5Mjc4fQ.smkSbBADThX6PSljaD46catKx-dWbvNqKNBgpn0s2ek',
-            width: 200,
+            'https://cdn.evhomes.tech/50c20134-af99-476c-8316-2638a39410f3-EV%20HOME%20LOGO%20GOLDEN%20HD.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6IjUwYzIwMTM0LWFmOTktNDc2Yy04MzE2LTI2MzhhMzk0MTBmMy1FViBIT01FIExPR08gR09MREVOIEhELnBuZyIsImlhdCI6MTczNDA5NTk5MH0.yPKVawX2e0QNn7X8vbZ1uNxjY3Jg-LTGzlU9SFe3Pck',
+            width: 300,
             height: 300,
           ),
         ),

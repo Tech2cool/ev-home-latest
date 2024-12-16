@@ -125,12 +125,12 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
   @override
   void initState() {
     super.initState();
-    clientNameController.text ='${widget.lead?.firstName ?? ""} ${widget.lead?.lastName??""}';
+    clientNameController.text =
+        '${widget.lead?.firstName ?? ""} ${widget.lead?.lastName ?? ""}';
     phoneController.text = widget.lead?.phoneNumber?.toString() ?? '0';
     addressLine1Controller.text = widget.lead?.address ?? "";
     netAmountController.addListener(_updateTotalAmount);
     cgstSgstController.addListener(_updateTotalAmount);
-
   }
 
   @override
@@ -826,8 +826,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
   pw.Widget _buildPdfTable() {
     double totalDue = totalUpToSelectedSlab;
     double receivedAmount =
-        double.parse(totalAmountController.text.replaceAll(',', '')) +
-            double.parse(tdsController.text.replaceAll(',', ''));
+        double.parse(totalAmountController.text.replaceAll(',', ''));
     int reminderDays = int.parse(selectedReminder!);
 
     double baseAmount = (totalDue / 1.05);

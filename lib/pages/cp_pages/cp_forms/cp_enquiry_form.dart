@@ -143,8 +143,7 @@ class EnquiryFormScreenState extends State<CpEnquiryFormScreen> {
                 },
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor:
-                      const Color.fromARGB(255, 133, 0, 0), // Text color
+                  backgroundColor: Color(0xFF042630), // Text color
                   padding: const EdgeInsets.all(0.0), // Padding equivalent
                   elevation: 3.0,
                   shape: RoundedRectangleBorder(

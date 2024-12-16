@@ -550,7 +550,7 @@ class _DemandLetterState extends State<DemandLetter> {
             Text(
                 'Net Amount: ${currencyFormat.format(calculatedValues!['baseAmount'])}'),
             Text(
-                'TDS +GST/SGST ${currencyFormat.format(calculatedValues!['gstAmount']!)}'),
+                'GST/SGST ${currencyFormat.format(calculatedValues!['gstAmount']!)}'),
             Text(
                 'Total Due: ${currencyFormat.format(calculatedValues!['totalDue'])}'),
           ],
@@ -959,7 +959,7 @@ class _DemandLetterState extends State<DemandLetter> {
                   style: pw.TextStyle(
                       fontSize: 14, fontWeight: pw.FontWeight.bold)),
               _buildPdfBankDetails(
-                'ICIC Bank Limited (for ${bankTableOption == 'bookingAmount' ? 'Booking amount' : 'GST'} payment ${currencyFormat.format(bankTableOption == 'bookingAmount' ? remainingBase.ceil() : (remainingGst + remainingTds).ceil())}',
+                'ICIC Bank Limited (for ${bankTableOption == 'bookingAmount' ? 'Booking amount' : 'GST'} payment ${currencyFormat.format(bankTableOption == 'bookingAmount' ? remainingBase.ceil() : (remainingGst).ceil())}',
                 'Account Name:- E V Homes Construction Pvt.Ltd',
                 '015105022186',
                 'ICIC0000151',
@@ -967,7 +967,7 @@ class _DemandLetterState extends State<DemandLetter> {
                 'Vashi, Navi Mumbai',
               ),
               _buildPdfBankDetails(
-                'ICIC Bank (for ${bankTableOption == 'bookingAmount' ? 'GST' : 'Booking amount'} payment ${currencyFormat.format(bankTableOption == 'bookingAmount' ? remainingGst.ceil() : (remainingGst + remainingTds).ceil())}',
+                'ICIC Bank (for ${bankTableOption == 'bookingAmount' ? 'GST' : 'Booking amount'} payment ${currencyFormat.format(bankTableOption == 'bookingAmount' ? remainingGst.ceil() : (remainingGst).ceil())}',
                 'Account Name:- E V Homes Construction Pvt.Ltd',
                 '015105022390',
                 'ICIC0000151',
@@ -1009,8 +1009,7 @@ class _DemandLetterState extends State<DemandLetter> {
   pw.Widget _buildPdfTable() {
     double totalDue = totalUpToSelectedSlab;
     double receivedAmount =
-        double.parse(totalAmountController.text.replaceAll(',', '')) +
-            double.parse(tdsController.text.replaceAll(',', ''));
+        double.parse(totalAmountController.text.replaceAll(',', ''));
     int reminderDays = int.parse(selectedReminder!);
 
     double baseAmount = (totalDue / 1.05);

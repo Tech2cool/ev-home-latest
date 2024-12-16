@@ -3090,6 +3090,36 @@ class ApiService {
     }
   }
 
+  Future<SiteVisit?> updateSiteVisit(
+      String id, Map<String, dynamic> data) async {
+    try {
+      final Response response2 = await _dio.post(
+        '/siteVisit-update/$id',
+        data: data,
+      );
+      if (response2.data['code'] != 200) {
+        Helper.showCustomSnackBar(response2.data['message']);
+        return null;
+      }
+      Helper.showCustomSnackBar(response2.data['message'], Colors.green);
+
+      return SiteVisit.fromMap(response2.data['code']);
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
+      return null;
+    }
+  }
+
   //
   // division
   Future<void> saveOneSignalId(

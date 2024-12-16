@@ -153,7 +153,9 @@ class _AnlyticEmployeePageState extends State<AnlyticEmployeePage> {
                             } else if (widget.designation.id ==
                                     "desg-sales-manager" ||
                                 widget.designation.id ==
-                                    "desg-sales-executive") {
+                                    "desg-sales-executive" ||
+                                widget.designation.id ==
+                                    "desg-senior-sales-manager") {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => SalesManagerDashboard(

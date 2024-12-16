@@ -53,7 +53,7 @@ class SiteVisit {
 
   Map<String, dynamic> toMap() {
     return {
-      'date': date?.toIso8601String(),
+      'date': date?.toString(),
       'id': id,
       'firstName': firstName,
       'lastName': lastName,

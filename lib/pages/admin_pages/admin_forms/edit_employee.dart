@@ -89,6 +89,29 @@ class _EditEmployeeState extends State<EditEmployee> {
     }
   }
 
+  Future<void> _onRefresh() async {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      await Future.wait([
+        settingProvider.getDesignation(),
+        settingProvider.getDepartment(),
+        settingProvider.getDivision(),
+      ]);
+    } catch (e) {
+//
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   Future<void> onPressSubmit() async {
     final newEmp = Employee(
       id: widget.emp.id,
@@ -133,7 +156,7 @@ class _EditEmployeeState extends State<EditEmployee> {
   @override
   void initState() {
     super.initState();
-
+    _onRefresh();
     firstNameController.text = widget.emp.firstName ?? "";
     lastNameController.text = widget.emp.lastName ?? "";
     emailController.text = widget.emp.email ?? "";

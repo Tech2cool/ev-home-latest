@@ -218,15 +218,15 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             children: [
               if (!isSentByUser)
                 const CircleAvatar(
-                  backgroundColor: Colors.blue,
-                  child: Icon(Icons.house, color: Colors.white),
+                  backgroundColor: Colors.white70,
+                  child: Icon(Icons.house, color: Colors.orange),
                 ),
               const SizedBox(width: 8),
               Flexible(
                 child: Container(
                   decoration: BoxDecoration(
                     color: isSentByUser
-                        ? Colors.blue.withAlpha(200)
+                        ? Colors.white.withAlpha(200)
                         : Colors.white.withAlpha(200),
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -239,7 +239,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                         message["text"],
                         style: TextStyle(
                             color:
-                                isSentByUser ? Colors.white : Colors.black87),
+                                isSentByUser ? Colors.black87 : Colors.black87),
                       ),
                       if (!isSentByUser && message["showOptions"] == true)
                         Column(
@@ -257,7 +257,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                           style: ElevatedButton.styleFrom(
                                             foregroundColor: Colors.white,
                                             backgroundColor:
-                                                Colors.blue.withAlpha(100),
+                                                Colors.white.withAlpha(190),
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(20),
@@ -265,7 +265,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                           ),
                                           child: Text(option,
                                               style: const TextStyle(
-                                                  color: Colors.white)),
+                                                  color: Colors.orange)),
                                         ),
                                       ),
                                     ))
@@ -279,8 +279,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               const SizedBox(width: 8),
               if (isSentByUser)
                 const CircleAvatar(
-                  backgroundColor: Colors.green,
-                  child: Icon(Icons.person, color: Colors.white),
+                  backgroundColor: Colors.white70,
+                  child: Icon(Icons.person, color: Colors.orange),
                 ),
             ],
           ),
@@ -322,10 +322,10 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                 _handleSubmitted(_controller.text.trim());
               }
             },
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.white70,
             child: const Icon(
               Icons.send,
-              color: Colors.white,
+              color: Colors.orange,
             ),
           ),
         ],

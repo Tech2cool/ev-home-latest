@@ -26,7 +26,7 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
   int currentPage = 1;
   Timer? _debounce; // Declare a Timer
   String? selectedSiteVisit;
-  String? selectedClosing;
+  Employee? selectedClosing;
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -40,16 +40,6 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
         fetchMoreVisits();
       }
     });
-  }
-
-  Future<void> onRefresh() async {
-    try {
-      final settingProvider = Provider.of<SettingProvider>(
-        context,
-        listen: false,
-      );
-      await settingProvider.getClosingManagers();
-    } catch (e) {}
   }
 
   @override
@@ -68,11 +58,8 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
       isLoading = true;
     });
     final visitsResp = await settingProvider.searchSiteVisits(
-      searchQuery,
-      page,
-      10,
-      selectedSiteVisit ?? "all",
-    );
+        searchQuery, page, 10, selectedSiteVisit ?? "all", selectedClosing?.id);
+
     final tes2 = visitsResp.data;
     setState(() {
       visits = tes2;
@@ -101,6 +88,16 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
         isFetchingMore = false;
       });
     }
+  }
+
+  Future<void> onRefresh() async {
+    try {
+      final settingProvider = Provider.of<SettingProvider>(
+        context,
+        listen: false,
+      );
+      await settingProvider.getClosingManagers();
+    } catch (e) {}
   }
 
   @override
@@ -210,16 +207,27 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
                               0,
                             ),
                             items: [
+                              PopupMenuItem<Employee>(
+                                value: null,
+                                child: Text('All'),
+                                onTap: () {
+                                  setState(() {
+                                    selectedClosing = null;
+                                  });
+                                  getVisits(1);
+                                },
+                              ),
                               ...closingManagers
-                                  .map<PopupMenuEntry<String>>((ele) {
-                                return PopupMenuItem<String>(
-                                  value: ele.firstName,
+                                  .map<PopupMenuEntry<Employee>>((ele) {
+                                return PopupMenuItem<Employee>(
+                                  value: ele,
                                   child: Text(
                                       "${ele?.firstName ?? ""} ${ele?.lastName ?? ""}"),
                                   onTap: () {
                                     setState(() {
-                                      selectedClosing = ele.firstName;
+                                      selectedClosing = ele;
                                     });
+                                    getVisits(1);
                                   },
                                 );
                               }).toList(),

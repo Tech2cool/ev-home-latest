@@ -540,9 +540,17 @@ class SettingProvider extends ChangeNotifier {
     int page = 1,
     int limit = 10,
     String status = 'all',
+    String? closingManagerId,
   ]) async {
+    if (closingManagerId != null) {
+      final visitclosing = await _apiService.getClosingManagerSiteVisitById(
+          closingManagerId, query, page, limit, status);
+      _searchSiteVisit = visitclosing;
+      return visitclosing;
+    }
     final visits =
         await _apiService.searchSiteVisits(query, page, limit, status);
+
     // if (visits) {
     _searchSiteVisit = visits;
     notifyListeners();

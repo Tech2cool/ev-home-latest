@@ -1,6 +1,7 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/helper/helper.dart';
+import 'package:ev_homes/core/models/employee.dart';
 import 'package:ev_homes/core/models/site_visit.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/admin_pages/site_visit_info_page.dart';
@@ -25,13 +26,14 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
   int currentPage = 1;
   Timer? _debounce; // Declare a Timer
   String? selectedSiteVisit;
+  Employee? selectedClosing;
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     getVisits(currentPage);
-
+    onRefresh();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent - 200) {
@@ -56,11 +58,8 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
       isLoading = true;
     });
     final visitsResp = await settingProvider.searchSiteVisits(
-      searchQuery,
-      page,
-      10,
-      selectedSiteVisit ?? "all",
-    );
+        searchQuery, page, 10, selectedSiteVisit ?? "all", selectedClosing?.id);
+
     final tes2 = visitsResp.data;
     setState(() {
       visits = tes2;
@@ -91,12 +90,24 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
     }
   }
 
+  Future<void> onRefresh() async {
+    try {
+      final settingProvider = Provider.of<SettingProvider>(
+        context,
+        listen: false,
+      );
+      await settingProvider.getClosingManagers();
+    } catch (e) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(context);
     // final visits = settingProvider.searchSiteVisit.data;
     final filteredLocalSiteVisits = visits;
-    String visitType = 'All';
+    final closingManagers = settingProvider.closingManagers;
+
+    bool isLoading = false;
 
     // final filteredLocalSiteVisits = visits.where((visit) {
     //   final nameLower = visit.firstName?.toLowerCase() ?? '';
@@ -115,39 +126,117 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
             actions: [
               PopupMenuButton<String>(
                 onSelected: (value) {
-                  setState(() {
-                    selectedSiteVisit = value;
-                  });
-                  getVisits(1);
+                  // Handle the selection if needed
                 },
                 itemBuilder: (BuildContext context) {
                   return [
                     PopupMenuItem<String>(
-                      value: 'Visit',
-                      child: const Text('Visit'),
-                      // onTap: () {
-                      //   setState(() {
-                      //     selectedSiteVisit = visitType;
-                      //   });
+                      value: 'filter',
+                      child: const Text('Filter'),
+                      onTap: () {
+                        showMenu(
+                          context: context,
+                          position: RelativeRect.fromLTRB(
+                            MediaQuery.of(context).size.width - 50,
+                            kToolbarHeight + 12,
+                            12,
+                            0,
+                          ),
+                          items: [
+                            PopupMenuItem<String>(
+                              value: 'Visit',
+                              child: const Text('Visit'),
+                              onTap: () {
+                                setState(() {
+                                  selectedSiteVisit = 'Visit';
+                                });
+                                getVisits(1);
+                              },
+                            ),
+                            PopupMenuItem<String>(
+                              value: 'Revisit',
+                              child: Text('Revisit'),
+                              onTap: () {
+                                setState(() {
+                                  selectedSiteVisit = 'revisit';
+                                });
+                                getVisits(1);
+                              },
+                            ),
+                            PopupMenuItem<String>(
+                              value: 'virtual-meeting',
+                              child: Text('Virtual Meeting'),
+                              onTap: () {
+                                setState(() {
+                                  selectedSiteVisit = 'virtual-meeting';
+                                });
+                                getVisits(1);
+                              },
+                            ),
+                            PopupMenuItem<String>(
+                              value: 'All Visits',
+                              child: Text('All Visits'),
+                              onTap: () {
+                                setState(() {
+                                  selectedSiteVisit = 'All ';
+                                });
+                                getVisits(1);
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                    PopupMenuItem<String>(
+                      value: 'closing-manager',
+                      child: const Text('Closing Manager'),
+                      onTap: () {
+                        setState(() {
+                          isLoading = true;
+                        });
 
-                      //   // fetchMoreVisits();
-                      // }
-                    ),
-                    const PopupMenuItem<String>(
-                      value: 'Revisit',
-                      child: Text('Revisit'),
-                    ),
-                    const PopupMenuItem<String>(
-                      value: 'virtual-meeting',
-                      child: Text('Virtual Meeting'),
-                    ),
-                    const PopupMenuItem<String>(
-                      value: 'All',
-                      child: Text('All Visits'),
+                        setState(() {
+                          isLoading = false;
+                        });
+                        showMenu(
+                            context: context,
+                            position: RelativeRect.fromLTRB(
+                              MediaQuery.of(context).size.width - 50,
+                              kToolbarHeight + 12,
+                              12,
+                              0,
+                            ),
+                            items: [
+                              PopupMenuItem<Employee>(
+                                value: null,
+                                child: Text('All'),
+                                onTap: () {
+                                  setState(() {
+                                    selectedClosing = null;
+                                  });
+                                  getVisits(1);
+                                },
+                              ),
+                              ...closingManagers
+                                  .map<PopupMenuEntry<Employee>>((ele) {
+                                return PopupMenuItem<Employee>(
+                                  value: ele,
+                                  child: Text(
+                                      "${ele?.firstName ?? ""} ${ele?.lastName ?? ""}"),
+                                  onTap: () {
+                                    setState(() {
+                                      selectedClosing = ele;
+                                    });
+                                    getVisits(1);
+                                  },
+                                );
+                              }).toList(),
+                            ]);
+                      },
                     ),
                   ];
                 },
-                icon: const Icon(Icons.filter_list), // Filter icon
+                icon: const Icon(Icons.filter_list),
               ),
             ],
           ),
@@ -413,7 +502,6 @@ class NamedCard extends StatelessWidget {
   }
 }
 
-
 // import 'package:ev_home_beta/components/animated_gradient_screen.dart';
 // import 'package:ev_home_beta/core/helper/helper.dart';
 // import 'package:ev_home_beta/core/models/site_visit.dart';
@@ -458,7 +546,6 @@ class NamedCard extends StatelessWidget {
 //     //   visits = serv;
 //     // });
 //   }
-
 
 //   @override
 //   Widget build(BuildContext context) {

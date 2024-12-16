@@ -1,10 +1,10 @@
-import 'package:ev_homes/pages/cp_pages/cp_tagging_details.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ClientReport extends StatefulWidget {
   final String selectedFilter;
 
-  const ClientReport({super.key, required this.selectedFilter});
+  const ClientReport({Key? key, required this.selectedFilter}) : super(key: key);
 
   @override
   State<ClientReport> createState() => _ClientReportState();
@@ -12,6 +12,10 @@ class ClientReport extends StatefulWidget {
 
 class _ClientReportState extends State<ClientReport> {
   late String selectedFilter;
+  String searchQuery = '';
+  String? selectedDateFilter = 'All';
+  DateTime? customStartDate;
+  DateTime? customEndDate;
 
   // Dummy data
   final List<Map<String, String>> dummyClients = [
@@ -47,10 +51,11 @@ class _ClientReportState extends State<ClientReport> {
   @override
   Widget build(BuildContext context) {
     List<Map<String, String>> filteredClients = dummyClients.where((client) {
-      if (selectedFilter == 'All') {
-        return true;
-      }
-      return client['taggingStatus'] == selectedFilter;
+      bool passesStatusFilter = selectedFilter == 'All' || client['taggingStatus'] == selectedFilter;
+      bool passesSearchFilter = client['clientName']!.toLowerCase().contains(searchQuery.toLowerCase()) ||
+          client['clientPhoneNumber']!.contains(searchQuery);
+      bool passesDateFilter = _passesDateFilter(client['startDate']!);
+      return passesStatusFilter && passesSearchFilter && passesDateFilter;
     }).toList();
 
     return Scaffold(
@@ -78,16 +83,49 @@ class _ClientReportState extends State<ClientReport> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value;
+                });
+              },
+              decoration: InputDecoration(
+                hintText: 'Search clients...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                DropdownButton<String>(
+                  value: selectedDateFilter,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      selectedDateFilter = newValue;
+                      _showDateRangePicker();
+                    });
+                  },
+                  items: <String>['All', 'Day', 'Week', 'Month', 'Custom']
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                ),
                 DropdownButton<String>(
                   value: selectedFilter,
                   icon: const Icon(
                     Icons.filter_list,
                     color: Color(0xFF042630),
-                  ), // Filter icon
+                  ),
                   underline: const SizedBox.shrink(),
                   onChanged: (String? newValue) {
                     setState(() {
@@ -105,8 +143,6 @@ class _ClientReportState extends State<ClientReport> {
               ],
             ),
           ),
-
-          // List of filtered clients
           Expanded(
             child: ListView.builder(
               itemCount: filteredClients.length,
@@ -114,16 +150,10 @@ class _ClientReportState extends State<ClientReport> {
                 final client = filteredClients[index];
                 return GestureDetector(
                   onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CpTaggingDeatils(client: client),
-                      ),
-                    );
+                    // Navigate to CpTaggingDetails
                   },
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     child: Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
@@ -145,8 +175,7 @@ class _ClientReportState extends State<ClientReport> {
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                                   decoration: BoxDecoration(
                                     color: Color(0xFF005254),
                                     borderRadius: BorderRadius.circular(12),
@@ -184,11 +213,10 @@ class _ClientReportState extends State<ClientReport> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Status: ${client['taggingStatus'] == "In Progress" ? "In Progress" : client['taggingStatus']}',
+                              'Status: ${client['taggingStatus']}',
                               style: TextStyle(
                                 fontSize: 14,
-                                color:
-                                    _getStatusColor(client['taggingStatus']!),
+                                color: _getStatusColor(client['taggingStatus']!),
                               ),
                             ),
                           ],
@@ -217,4 +245,100 @@ class _ClientReportState extends State<ClientReport> {
         return Colors.grey;
     }
   }
+
+  bool _passesDateFilter(String dateString) {
+    if (selectedDateFilter == 'All') return true;
+    
+    DateTime date = DateTime.parse(dateString);
+    DateTime now = DateTime.now();
+    
+    switch (selectedDateFilter) {
+      case 'Day':
+        return date.year == customStartDate!.year && 
+               date.month == customStartDate!.month && 
+               date.day == customStartDate!.day;
+      case 'Week':
+        return date.isAfter(customStartDate!.subtract(Duration(days: 1))) && 
+               date.isBefore(customEndDate!.add(Duration(days: 1)));
+      case 'Month':
+        return date.year == customStartDate!.year && 
+               date.month == customStartDate!.month;
+      case 'Custom':
+        return date.isAfter(customStartDate!.subtract(Duration(days: 1))) &&
+               date.isBefore(customEndDate!.add(Duration(days: 1)));
+      default:
+        return true;
+    }
+  }
+
+  void _showDateRangePicker() async {
+    if (selectedDateFilter == 'All') {
+      setState(() {
+        customStartDate = null;
+        customEndDate = null;
+      });
+      return;
+    }
+
+    DateTime now = DateTime.now();
+
+    switch (selectedDateFilter) {
+      case 'Day':
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: now,
+          firstDate: DateTime(2020),
+          lastDate: DateTime(2025),
+        );
+        if (picked != null) {
+          setState(() {
+            customStartDate = picked;
+            customEndDate = picked;
+          });
+        }
+        break;
+      case 'Week':
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: now,
+          firstDate: DateTime(2020),
+          lastDate: DateTime(2025),
+        );
+        if (picked != null) {
+          setState(() {
+            customStartDate = picked.subtract(Duration(days: picked.weekday - 1));
+            customEndDate = customStartDate!.add(Duration(days: 6));
+          });
+        }
+        break;
+      case 'Month':
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialDate: now,
+          firstDate: DateTime(2020),
+          lastDate: DateTime(2025),
+        );
+        if (picked != null) {
+          setState(() {
+            customStartDate = DateTime(picked.year, picked.month, 1);
+            customEndDate = DateTime(picked.year, picked.month + 1, 0);
+          });
+        }
+        break;
+      case 'Custom':
+        DateTimeRange? picked = await showDateRangePicker(
+          context: context,
+          firstDate: DateTime(2020),
+          lastDate: DateTime(2025),
+        );
+        if (picked != null) {
+          setState(() {
+            customStartDate = picked.start;
+            customEndDate = picked.end;
+          });
+        }
+        break;
+    }
+  }
 }
+

@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'package:ev_homes/components/animated_gradient_bg.dart';
-import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:ev_homes/components/animated_gradient_bg.dart';
 
 class ChatScreen extends StatefulWidget {
   final Function() goBack;
@@ -116,25 +115,39 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 218, 240, 246),
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Color(0xFF042630),
-        title: const Text(
-          'EV Homes Chat',
-          style: TextStyle(
-            color: Colors.white,
+    return Stack(
+      children: [
+        const AnimatedGradientBg(),
+        //   decoration: const BoxDecoration(
+        //     gradient: LinearGradient(
+        //       begin: Alignment.topCenter,
+        //       end: Alignment.bottomCenter,
+        //       colors: [
+        //         Color(0xFF005254),
+        //         Color(0xFF042630),
+        //       ],
+        //     ),
+        //   ),
+        
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            title: const Text(
+              'EV Homes Chat',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              onPressed: widget.goBack,
+            ),
           ),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: widget.goBack,
-        ),
-      ),
-      body: Stack(
-        children: [
-          SafeArea(
+          body: SafeArea(
             child: Column(
               children: <Widget>[
                 Expanded(
@@ -154,8 +167,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -166,7 +179,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         padding: const EdgeInsets.all(8.0),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.black.withAlpha(120),
+            color: Colors.white.withOpacity(0.8),
             borderRadius: BorderRadius.circular(20),
           ),
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -221,16 +234,24 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             children: [
               if (!isSentByUser)
                 const CircleAvatar(
-                  backgroundColor: Color(0xFF042630),
-                  child: Icon(Icons.house, color: Colors.white),
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.house, color: Color(0xFF005254)),
                 ),
               const SizedBox(width: 8),
               Flexible(
                 child: Container(
                   decoration: BoxDecoration(
-                    color: isSentByUser
-                        ? Color(0xFF042630)
-                        : Color(0xFF4B5945).withAlpha(200),
+                    gradient: isSentByUser
+                        ? null
+                        : const LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Color(0xFF005254),
+                              Color(0xFF042630),
+                            ],
+                          ),
+                    color: isSentByUser ? Colors.white.withOpacity(0.8) : null,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   padding:
@@ -241,7 +262,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                       Text(
                         message["text"],
                         style: TextStyle(
-                            color: isSentByUser ? Colors.white : Colors.white),
+                            color: isSentByUser ? Colors.black87 : Colors.white),
                       ),
                       if (!isSentByUser && message["showOptions"] == true)
                         Column(
@@ -257,8 +278,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                           onPressed: () =>
                                               _handleSubmitted(option),
                                           style: ElevatedButton.styleFrom(
-                                            foregroundColor: Colors.white,
-                                            backgroundColor: Color(0xFF042630),
+                                            foregroundColor: const Color(0xFF005254),
+                                            backgroundColor: Colors.white,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(20),
@@ -266,7 +287,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                           ),
                                           child: Text(option,
                                               style: const TextStyle(
-                                                  color: Colors.white)),
+                                                  color: Color(0xFF005254))),
                                         ),
                                       ),
                                     ))
@@ -280,8 +301,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               const SizedBox(width: 8),
               if (isSentByUser)
                 const CircleAvatar(
-                  backgroundColor: Colors.green,
-                  child: Icon(Icons.person, color: Colors.white),
+                  backgroundColor: Colors.white,
+                  child: Icon(Icons.person, color: Color(0xFF005254)),
                 ),
             ],
           ),
@@ -294,7 +315,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     return Container(
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: Colors.black.withAlpha(50),
+        color: Colors.white.withOpacity(0.8),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Row(
@@ -304,29 +325,43 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               controller: _controller,
               decoration: InputDecoration(
                 hintText: "Type your message...",
-                hintStyle: const TextStyle(color: Colors.black),
+                hintStyle: const TextStyle(color: Colors.black54),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(20),
                   borderSide: BorderSide.none,
                 ),
                 filled: true,
-                fillColor: Colors.black.withAlpha(50),
+                fillColor: Colors.white,
               ),
-              style: const TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black87),
               onSubmitted: _handleSubmitted,
             ),
           ),
           const SizedBox(width: 8),
-          FloatingActionButton(
-            onPressed: () {
-              if (_controller.text.trim().isNotEmpty) {
-                _handleSubmitted(_controller.text.trim());
-              }
-            },
-            backgroundColor: Color(0xFF042630),
-            child: const Icon(
-              Icons.send,
-              color: Colors.white,
+          Container(
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF005254),
+                  Color(0xFF042630),
+                ],
+              ),
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: FloatingActionButton(
+              onPressed: () {
+                if (_controller.text.trim().isNotEmpty) {
+                  _handleSubmitted(_controller.text.trim());
+                }
+              },
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              child: const Icon(
+                Icons.send,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
@@ -334,3 +369,4 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     );
   }
 }
+

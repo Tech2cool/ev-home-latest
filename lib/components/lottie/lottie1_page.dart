@@ -59,7 +59,7 @@ class _Lottie1PageState extends State<Lottie1Page>
             },
             child: Center(
               child: AspectRatio(
-                aspectRatio: 3 / 4, // Maintain the aspect ratio of 300:400
+                aspectRatio: 5 / 4, // Maintain the aspect ratio of 300:400
                 child: Image.network(
                   'https://cdn.evhomes.tech/50c20134-af99-476c-8316-2638a39410f3-EV HOME LOGO GOLDEN HD.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaWxlbmFtZSI6IjUwYzIwMTM0LWFmOTktNDc2Yy04MzE2LTI2MzhhMzk0MTBmMy1FViBIT01FIExPR08gR09MREVOIEhELnBuZyIsImlhdCI6MTczNDA5NTk5MH0.yPKVawX2e0QNn7X8vbZ1uNxjY3Jg-LTGzlU9SFe3Pck',
                   fit: BoxFit.contain,

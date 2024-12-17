@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/channel_partner.dart';
 import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:ev_homes/pages/cp_pages/cp_tagging_details.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +13,10 @@ import 'package:provider/provider.dart';
 class ClientReport extends StatefulWidget {
   final String selectedFilter;
   final String? id;
+  final Lead? lead;
 
-  const ClientReport({Key? key, required this.selectedFilter, this.id})
+  const ClientReport(
+      {Key? key, required this.selectedFilter, this.id, this.lead})
       : super(key: key);
 
   @override
@@ -82,7 +86,7 @@ class _ClientReportState extends State<ClientReport> {
       searchQuery,
       currentPage,
       10,
-      widget.selectedFilter.toLowerCase() == "Leads"
+      widget.selectedFilter.toLowerCase() == "all"
           ? null
           : widget.selectedFilter.toLowerCase(),
       stage,
@@ -153,185 +157,211 @@ class _ClientReportState extends State<ClientReport> {
     // getLeads();
     // print(filteredClients.length);
 
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 218, 240, 246),
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(55),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(25),
-            bottomRight: Radius.circular(25),
-          ),
-          child: AppBar(
-            iconTheme: IconThemeData(color: Colors.white),
-            automaticallyImplyLeading: true,
-            backgroundColor: Color(0xFF042630),
-            title: const Text(
-              'Client Report',
-              style: TextStyle(
-                color: Colors.white,
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Color.fromARGB(255, 218, 240, 246),
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(55),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(25),
+                bottomRight: Radius.circular(25),
               ),
-            ),
-          ),
-        ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value;
-                });
-              },
-              decoration: InputDecoration(
-                hintText: 'Search clients...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DropdownButton<String>(
-                  value: selectedDateFilter,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedDateFilter = newValue;
-                      _showDateRangePicker();
-                    });
-                  },
-                  items: <String>['All', 'Day', 'Week', 'Month', 'Custom']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                DropdownButton<String>(
-                  value: selectedFilter,
-                  icon: const Icon(
-                    Icons.filter_list,
-                    color: Color(0xFF042630),
+              child: AppBar(
+                iconTheme: IconThemeData(color: Colors.white),
+                automaticallyImplyLeading: true,
+                backgroundColor: Color(0xFF042630),
+                title: const Text(
+                  'Client Report',
+                  style: TextStyle(
+                    color: Colors.white,
                   ),
-                  underline: const SizedBox.shrink(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedFilter = newValue!;
-                    });
-                  },
-                  items: <String>['All', 'Approved', 'Rejected', 'In Progress']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
                 ),
-              ],
+              ),
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredClients.length,
-              itemBuilder: (context, index) {
-                final client = filteredClients[index];
-                print(filteredClients.length);
-                getLeads();
-
-                return GestureDetector(
-                  onTap: () {
-                    // Navigate to CpTaggingDetails
+          body: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      searchQuery = value;
+                    });
                   },
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      elevation: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '${client.firstName ?? ""} ${client.lastName ?? ""}',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 16),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF005254),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    (client.phoneNumber?.toString()) ?? "0",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  client.startDate?.toIso8601String() ?? "",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[700],
-                                  ),
-                                ),
-                                Text(
-                                  client.validTill?.toIso8601String() ?? "",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[700],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            // Text(
-                            //   Helper.capitalize(
-                            //     getStatus1(lead),
-                            //   ),
-                            //   style: TextStyle(
-                            //     fontSize: 14,
-                            //     color: _getStatusColor(getStatus1(lead)),
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                      ),
+                  decoration: InputDecoration(
+                    hintText: 'Search clients...',
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DropdownButton<String>(
+                      value: selectedDateFilter,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedDateFilter = newValue;
+                          _showDateRangePicker();
+                        });
+                      },
+                      items: <String>['All', 'Day', 'Week', 'Month', 'Custom']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                    DropdownButton<String>(
+                      value: selectedFilter,
+                      icon: const Icon(
+                        Icons.filter_list,
+                        color: Color(0xFF042630),
+                      ),
+                      underline: const SizedBox.shrink(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedFilter = newValue!;
+                        });
+                      },
+                      items: <String>[
+                        'All',
+                        'Approved',
+                        'Rejected',
+                        'Pending'
+                      ].map<DropdownMenuItem
+                      <String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: filteredClients.length,
+                  itemBuilder: (context, index) {
+                    final client = filteredClients[index];
+                    // print(filteredClients.length);
+                    // getLeads();
+
+                    return GestureDetector(
+                      onTap: () {
+                        // Navigate to CpTaggingDetails
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CpTaggingDeatils(
+                              lead: client,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          elevation: 4,
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${client.firstName ?? ""} ${client.lastName ?? ""}',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 16),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF005254),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        (client.phoneNumber?.toString()) ?? "0",
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      client.startDate != null
+                                          ? DateFormat('dd-MM-yyyy')
+                                              .format(client.startDate!)
+                                          : "",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    Text(
+                                      client.validTill != null
+                                          ? DateFormat('dd-MM-yyyy')
+                                              .format(client.validTill!)
+                                          : "",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                // Text(
+                                //   Helper.capitalize(
+                                //     getStatus1(lead),
+                                //   ),
+                                //   style: TextStyle(
+                                //     fontSize: 14,
+                                //     color: _getStatusColor(getStatus1(lead)),
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        if (isLoading) LoadingSquare()
+      ],
     );
   }
 
@@ -341,7 +371,7 @@ class _ClientReportState extends State<ClientReport> {
         return Colors.green;
       case 'Rejected':
         return Colors.red;
-      case 'In Progress':
+      case 'Pending':
         return Colors.orange;
       default:
         return Colors.grey;
@@ -356,7 +386,6 @@ class _ClientReportState extends State<ClientReport> {
     } else if (lead.stage == "booking") {
       return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.bookingStatus ?? '')}";
     }
-
     return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
   }
 

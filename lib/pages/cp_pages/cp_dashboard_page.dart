@@ -146,14 +146,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const ClientReport(
-                                    selectedFilter: 'In Progress'),
+                                    selectedFilter: 'Pending'),
                               ),
                             );
                           },
                           child: FittedBox(
                             child: _buildLabelBox(
                                 cpLeads.pendingCount.toString(),
-                                'In Progress'), // Dummy data for "In Progress"
+                                'In progress'), // Dummy data for "In Progress"
                           ),
                         ),
                       ),

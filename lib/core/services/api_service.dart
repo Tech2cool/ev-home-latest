@@ -217,11 +217,9 @@ class ApiService {
       if (stage != null) {
         url += '&stage=$stage';
       }
-
+      print(url);
       print("pass2");
       final Response response = await _dio.get(url);
-
-      final Map<String, dynamic> data = response.data;
 
       print(response.data);
       if (response.data["code"] != 200) {
@@ -239,8 +237,8 @@ class ApiService {
 
         return emptyPagination;
       }
-      final items = data['data'] as List<dynamic>? ?? [];
-
+      print(response.data['data']);
+      final items = response.data['data'] as List<dynamic>;
       print("pass4");
       List<Lead> leads = [];
       if (items.isNotEmpty) {
@@ -249,12 +247,12 @@ class ApiService {
         print("whj");
       }
       final newPagination = PaginationModel<Lead>(
-        code: data['code'],
-        message: data['message'],
-        page: data['page'],
-        limit: data['limit'],
-        totalPages: data['totalPages'],
-        totalItems: data['totalItems'],
+        code: response.data['code'],
+        message: response.data['message'],
+        page: response.data['page'],
+        limit: response.data['limit'],
+        totalPages: response.data['totalPages'],
+        totalItems: response.data['totalItems'],
         pendingCount: response.data["pendingCount"],
         approvedCount: response.data["approvedCount"],
         rejectedCount: response.data["rejectedCount"],

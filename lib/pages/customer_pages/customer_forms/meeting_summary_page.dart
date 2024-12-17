@@ -282,7 +282,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet>
             children: [
               if (!isSentByUser)
                 const CircleAvatar(
-                  backgroundColor: Colors.blue,
+                  backgroundColor: Colors.orange,
                   child: Icon(Icons.house, color: Colors.white),
                 ),
               const SizedBox(width: 8),
@@ -290,7 +290,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet>
                 child: Container(
                   decoration: BoxDecoration(
                     color: isSentByUser
-                        ? Colors.blue
+                        ? Colors.orange
                         : Colors.white.withAlpha(200),
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -320,7 +320,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet>
                                               _handleSubmitted(option),
                                           style: ElevatedButton.styleFrom(
                                             foregroundColor: Colors.white,
-                                            backgroundColor: Colors.blue,
+                                            backgroundColor: Colors.orange,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(20),
@@ -342,8 +342,8 @@ class _ChatBottomSheetState extends State<ChatBottomSheet>
               const SizedBox(width: 8),
               if (isSentByUser)
                 const CircleAvatar(
-                  backgroundColor: Colors.green,
-                  child: Icon(Icons.person, color: Colors.white),
+                  backgroundColor: Colors.white70,
+                  child: Icon(Icons.person, color: Colors.orange),
                 ),
             ],
           ),
@@ -449,7 +449,7 @@ class _ChatBottomSheetState extends State<ChatBottomSheet>
                 _handleSubmitted(_controller.text.trim());
               }
             },
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.orange,
             child: const Icon(
               Icons.send,
               color: Colors.white,

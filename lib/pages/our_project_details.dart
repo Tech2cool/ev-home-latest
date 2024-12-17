@@ -27,7 +27,7 @@ class OurProjectList extends StatelessWidget {
         itemCount: projects.length,
         itemWidth: 270.0,
         layout: SwiperLayout.STACK,
-        loop: false, // Set to false to prevent looping
+        loop: true, // Set to false to prevent looping
         autoplay: false,
         pagination: const SwiperPagination(),
         control: const SwiperControl(),

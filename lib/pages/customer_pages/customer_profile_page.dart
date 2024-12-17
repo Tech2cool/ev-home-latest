@@ -216,8 +216,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white, // background color
             side: const BorderSide(
-              color: const Color.fromARGB(
-                  199, 248, 85, 4), // substitute for Constant.bgColor
+              color: Color(0xFF042630),
               width: 2.0,
             ),
             shape: RoundedRectangleBorder(

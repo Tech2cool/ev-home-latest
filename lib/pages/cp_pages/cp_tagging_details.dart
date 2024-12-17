@@ -1,9 +1,13 @@
+import 'package:ev_homes/core/helper/helper.dart';
+import 'package:ev_homes/core/models/lead.dart';
 import 'package:flutter/material.dart';
 
 class CpTaggingDeatils extends StatefulWidget {
-  final Map<String, String> client;
-
-  const CpTaggingDeatils({super.key, required this.client});
+  final Lead lead;
+  const CpTaggingDeatils({
+    required this.lead,
+    super.key,
+  });
 
   @override
   State<CpTaggingDeatils> createState() => _CpTaggingDeatilsState();
@@ -12,8 +16,6 @@ class CpTaggingDeatils extends StatefulWidget {
 class _CpTaggingDeatilsState extends State<CpTaggingDeatils> {
   @override
   Widget build(BuildContext context) {
-    final client = widget.client;
-
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 218, 240, 246),
       appBar: PreferredSize(
@@ -66,24 +68,19 @@ class _CpTaggingDeatilsState extends State<CpTaggingDeatils> {
                         NamedCard(
                             icon: Icons.person,
                             heading: "Client Name",
-                            value: "John Deo"),
+                            value:
+                                '${widget.lead.firstName ?? ""} ${widget.lead.lastName ?? ""}'),
                         const SizedBox(height: 5),
                         NamedCard(
                           icon: Icons.phone,
                           heading: "Client Phone",
-                          value: "9100668899",
-                        ),
-                        const SizedBox(height: 8),
-                        NamedCard(
-                          icon: Icons.phone_android,
-                          heading: "Alternate Number",
-                          value: "0987654321",
+                          value: widget.lead.phoneNumber.toString(),
                         ),
                         const SizedBox(height: 8),
                         NamedCard(
                             icon: Icons.email,
                             heading: "Client Email",
-                            value: "example@gmail.com"),
+                            value: widget.lead.email ?? ""),
                         const SizedBox(height: 8),
                       ],
                     ),
@@ -117,25 +114,25 @@ class _CpTaggingDeatilsState extends State<CpTaggingDeatils> {
                         NamedCard(
                           icon: Icons.home_work,
                           heading: "Requirements",
-                          value: "2BHK",
+                          value: widget.lead.requirement.toString() ?? "",
                         ),
                         const SizedBox(height: 5),
                         NamedCard(
                           icon: Icons.calendar_today,
                           heading: "Start Date",
-                          value: "11/12/2024",
+                          value: widget.lead.startDate.toString(),
                         ),
                         const SizedBox(height: 8),
                         NamedCard(
                           icon: Icons.calendar_month,
                           heading: "Valid Till Date",
-                          value: "11/5/2025",
+                          value: widget.lead.validTill.toString(),
                         ),
                         const SizedBox(height: 8),
                         NamedCard(
                           icon: Icons.verified,
                           heading: "Remark",
-                          value: "Progress",
+                          value: getStatus1(widget.lead),
                         ),
                       ],
                     ),
@@ -148,6 +145,19 @@ class _CpTaggingDeatilsState extends State<CpTaggingDeatils> {
       ),
     );
   }
+}
+
+String getStatus1(Lead lead) {
+  if (lead.stage == "visit") {
+    return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
+  } else if (lead.stage == "revisit") {
+    return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.revisitStatus ?? '')}";
+  } else if (lead.stage == "approval") {
+    return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.approvalStatus ?? '')}";
+  } else if (lead.stage == "booking") {
+    return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.bookingStatus ?? '')}";
+  }
+  return "${Helper.capitalize(lead.stage ?? "")} ${Helper.capitalize(lead.visitStatus ?? '')}";
 }
 
 class NamedCard extends StatelessWidget {

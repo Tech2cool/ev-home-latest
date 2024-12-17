@@ -1,10 +1,12 @@
+import 'package:ev_homes/pages/cp_pages/cp_tagging_details.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ClientReport extends StatefulWidget {
   final String selectedFilter;
 
-  const ClientReport({Key? key, required this.selectedFilter}) : super(key: key);
+  const ClientReport({Key? key, required this.selectedFilter})
+      : super(key: key);
 
   @override
   State<ClientReport> createState() => _ClientReportState();
@@ -51,8 +53,11 @@ class _ClientReportState extends State<ClientReport> {
   @override
   Widget build(BuildContext context) {
     List<Map<String, String>> filteredClients = dummyClients.where((client) {
-      bool passesStatusFilter = selectedFilter == 'All' || client['taggingStatus'] == selectedFilter;
-      bool passesSearchFilter = client['clientName']!.toLowerCase().contains(searchQuery.toLowerCase()) ||
+      bool passesStatusFilter =
+          selectedFilter == 'All' || client['taggingStatus'] == selectedFilter;
+      bool passesSearchFilter = client['clientName']!
+              .toLowerCase()
+              .contains(searchQuery.toLowerCase()) ||
           client['clientPhoneNumber']!.contains(searchQuery);
       bool passesDateFilter = _passesDateFilter(client['startDate']!);
       return passesStatusFilter && passesSearchFilter && passesDateFilter;
@@ -150,10 +155,16 @@ class _ClientReportState extends State<ClientReport> {
                 final client = filteredClients[index];
                 return GestureDetector(
                   onTap: () {
-                    // Navigate to CpTaggingDetails
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CpTaggingDeatils(client: client),
+                      ),
+                    );
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     child: Card(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
@@ -175,7 +186,8 @@ class _ClientReportState extends State<ClientReport> {
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 16),
                                   decoration: BoxDecoration(
                                     color: Color(0xFF005254),
                                     borderRadius: BorderRadius.circular(12),
@@ -216,7 +228,8 @@ class _ClientReportState extends State<ClientReport> {
                               'Status: ${client['taggingStatus']}',
                               style: TextStyle(
                                 fontSize: 14,
-                                color: _getStatusColor(client['taggingStatus']!),
+                                color:
+                                    _getStatusColor(client['taggingStatus']!),
                               ),
                             ),
                           ],
@@ -248,24 +261,24 @@ class _ClientReportState extends State<ClientReport> {
 
   bool _passesDateFilter(String dateString) {
     if (selectedDateFilter == 'All') return true;
-    
+
     DateTime date = DateTime.parse(dateString);
     DateTime now = DateTime.now();
-    
+
     switch (selectedDateFilter) {
       case 'Day':
-        return date.year == customStartDate!.year && 
-               date.month == customStartDate!.month && 
-               date.day == customStartDate!.day;
+        return date.year == customStartDate!.year &&
+            date.month == customStartDate!.month &&
+            date.day == customStartDate!.day;
       case 'Week':
-        return date.isAfter(customStartDate!.subtract(Duration(days: 1))) && 
-               date.isBefore(customEndDate!.add(Duration(days: 1)));
+        return date.isAfter(customStartDate!.subtract(Duration(days: 1))) &&
+            date.isBefore(customEndDate!.add(Duration(days: 1)));
       case 'Month':
-        return date.year == customStartDate!.year && 
-               date.month == customStartDate!.month;
+        return date.year == customStartDate!.year &&
+            date.month == customStartDate!.month;
       case 'Custom':
         return date.isAfter(customStartDate!.subtract(Duration(days: 1))) &&
-               date.isBefore(customEndDate!.add(Duration(days: 1)));
+            date.isBefore(customEndDate!.add(Duration(days: 1)));
       default:
         return true;
     }
@@ -306,7 +319,8 @@ class _ClientReportState extends State<ClientReport> {
         );
         if (picked != null) {
           setState(() {
-            customStartDate = picked.subtract(Duration(days: picked.weekday - 1));
+            customStartDate =
+                picked.subtract(Duration(days: picked.weekday - 1));
             customEndDate = customStartDate!.add(Duration(days: 6));
           });
         }
@@ -341,4 +355,3 @@ class _ClientReportState extends State<ClientReport> {
     }
   }
 }
-

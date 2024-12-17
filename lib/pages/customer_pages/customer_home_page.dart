@@ -1,5 +1,6 @@
 // import 'package:ev_homes/Customer%20section/property_card.dart';
 import 'package:ev_homes/components/animated_gradient_bg.dart';
+import 'package:ev_homes/components/cp_videoplayer.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/customer_pages/carousel_page.dart';
@@ -43,7 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
     final loggedCustomer = settingProvider.loggedCustomer;
     return Stack(
       children: [
-        const AnimatedGradientBg(),
+        CpVideoplayer(),
+        // const AnimatedGradientBg(),
         // AnimatedShapesPage(),
         Scaffold(
           // backgroundColor: Constant.bgColor,

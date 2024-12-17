@@ -22,15 +22,15 @@ class MyTimelineTile extends StatelessWidget {
       isFirst: isFirst,
       isLast: isLast,
       beforeLineStyle: LineStyle(
-          color: isPast ? const Color(0xFFFFB22C) : const Color(0xFFFFB22C)),
+          color: isPast
+              ? Color.fromARGB(146, 134, 185, 176)
+              : Color.fromARGB(146, 134, 185, 176)),
       indicatorStyle: IndicatorStyle(
         width: 30,
-        color: isPast
-            ? const Color.fromARGB(255, 133, 0, 0)
-            : const Color(0xFFFFB22C),
+        color: isPast ? Color(0xFF042630) : Color.fromARGB(146, 134, 185, 176),
         iconStyle: IconStyle(
           iconData: Icons.done,
-          color: isPast ? Colors.white : const Color(0xFFFFB22C),
+          color: isPast ? Colors.white : Color.fromARGB(146, 134, 185, 176),
         ),
       ),
       endChild: EventCard(

@@ -116,7 +116,7 @@ class _PropertyCardVerticalState extends State<PropertyCardVertical>
           ),
           height: 120,
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(25),
             child: Stack(
               children: [
                 Container(

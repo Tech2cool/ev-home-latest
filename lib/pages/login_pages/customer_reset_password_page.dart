@@ -83,7 +83,7 @@ class _ResetPasswordScreenCustomerState extends State<ResetPasswordCustomer> {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Color.fromARGB(199, 248, 85, 4),
+                      color: Color(0xFF042630),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -143,7 +143,7 @@ class _ResetPasswordScreenCustomerState extends State<ResetPasswordCustomer> {
                       onPressed: resetPassword,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: const Color.fromARGB(199, 248, 85, 4),
+                        backgroundColor: Color(0xFF042630),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -182,7 +182,7 @@ class _ResetPasswordScreenCustomerState extends State<ResetPasswordCustomer> {
     required bool obscureText,
     required VoidCallback toggleVisibility,
   }) {
-    const fieldColor = Color.fromARGB(199, 248, 85, 4);
+    const fieldColor = Color(0xFF042630);
 
     return TextField(
       controller: controller,

@@ -1,4 +1,5 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
+import 'package:ev_homes/components/cp_videoplayer.dart';
 import 'package:ev_homes/pages/customer_pages/customer_details/offer_description_page.dart';
 import 'package:ev_homes/pages/customer_pages/customer_offers/navratri_offer_page.dart';
 import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
@@ -58,14 +59,14 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
     super.initState();
 
     // Trigger the CelebratePopup when this page is loaded
-    if (widget.showDiolog) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) => const NavratriOfferPopup(),
-        );
-      });
-    }
+    // if (widget.showDiolog) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     showDialog(
+    //       context: context,
+    //       builder: (BuildContext context) => const NavratriOfferPopup(),
+    //     );
+    //   });
+    // }
   }
 
   Future<bool> _onWillPop() async {
@@ -83,13 +84,13 @@ class _OfferDetailPageState extends State<OfferDetailPage> {
       onWillPop: _onWillPop, // Handle back button press
       child: Stack(
         children: [
-          const AnimatedGradientBg(),
+          const CpVideoplayer(),
           Scaffold(
             backgroundColor: Colors.transparent,
             appBar: AppBar(
               title: const Text("Ongoing Offers"),
               backgroundColor: Colors.transparent,
-              foregroundColor: Colors.white,
+              foregroundColor: Color(0xFF042630),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back), // Back button icon
                 onPressed: () {

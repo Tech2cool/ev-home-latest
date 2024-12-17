@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:ev_homes/components/cp_videoplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:ev_homes/components/animated_gradient_bg.dart';
 
@@ -117,7 +118,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        const AnimatedGradientBg(),
+        CpVideoplayer(),
         //   decoration: const BoxDecoration(
         //     gradient: LinearGradient(
         //       begin: Alignment.topCenter,
@@ -128,7 +129,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         //       ],
         //     ),
         //   ),
-        
+
         Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
@@ -138,12 +139,12 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             title: const Text(
               'EV Homes Chat',
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
+              icon: const Icon(Icons.arrow_back, color: Colors.black),
               onPressed: widget.goBack,
             ),
           ),
@@ -262,7 +263,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                       Text(
                         message["text"],
                         style: TextStyle(
-                            color: isSentByUser ? Colors.black87 : Colors.white),
+                            color:
+                                isSentByUser ? Colors.black87 : Colors.white),
                       ),
                       if (!isSentByUser && message["showOptions"] == true)
                         Column(
@@ -278,7 +280,8 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                           onPressed: () =>
                                               _handleSubmitted(option),
                                           style: ElevatedButton.styleFrom(
-                                            foregroundColor: const Color(0xFF005254),
+                                            foregroundColor:
+                                                const Color(0xFF005254),
                                             backgroundColor: Colors.white,
                                             shape: RoundedRectangleBorder(
                                               borderRadius:
@@ -369,4 +372,3 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     );
   }
 }
-

@@ -1,4 +1,5 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
+import 'package:ev_homes/components/blue_animated_gradient.dart';
 import 'package:ev_homes/pages/customer_pages/customer_details/customer_offer_details_page.dart';
 import 'package:flutter/material.dart';
 
@@ -40,7 +41,7 @@ class _OfferPageState extends State<OfferPage> {
       body: Stack(
         children: [
           // Add the animated gradient as the full-page background
-          const AnimatedGradientBg(), // This will cover the entire background
+          const blueanimatesgradint(), // This will cover the entire background
           CustomScrollView(
             controller: _scrollController,
             slivers: [
@@ -109,13 +110,12 @@ class _OfferPageState extends State<OfferPage> {
                   icon: const Icon(Icons.arrow_back, color: Colors.white),
                   onPressed: () {
                     // Navigate to HomeWrapper page using pushReplacement
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const OfferDetailPage(
-                                showDiolog: true,
-                              )),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) =>
+                    //           OfferDetailPage(showDiolog: true)),
+                    // );
                   },
                 ),
                 actions: const [],

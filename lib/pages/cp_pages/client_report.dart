@@ -1,3 +1,4 @@
+
 import 'dart:async';
 
 import 'package:ev_homes/components/loading/loading_square.dart';
@@ -5,6 +6,7 @@ import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/channel_partner.dart';
 import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+
 import 'package:ev_homes/pages/cp_pages/cp_tagging_details.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,8 +17,11 @@ class ClientReport extends StatefulWidget {
   final String? id;
   final Lead? lead;
 
+
   const ClientReport(
       {Key? key, required this.selectedFilter, this.id, this.lead})
+ const ClientReport({Key? key, required this.selectedFilter})
+
       : super(key: key);
 
   @override
@@ -151,6 +156,7 @@ class _ClientReportState extends State<ClientReport> {
 
   @override
   Widget build(BuildContext context) {
+
     final filteredClients = leads;
     final settingProvider = Provider.of<SettingProvider>(context);
     // final loggedChannel = settingProvider.loggedChannelPartner?.id;
@@ -199,6 +205,7 @@ class _ClientReportState extends State<ClientReport> {
                     ),
                   ),
                 ),
+
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -226,6 +233,31 @@ class _ClientReportState extends State<ClientReport> {
                       icon: const Icon(
                         Icons.filter_list,
                         color: Color(0xFF042630),
+
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: filteredClients.length,
+              itemBuilder: (context, index) {
+                final client = filteredClients[index];
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CpTaggingDeatils(client: client),
+                      ),
+                    );
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    child: Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+
                       ),
                       underline: const SizedBox.shrink(),
                       onChanged: (String? newValue) {
@@ -282,6 +314,7 @@ class _ClientReportState extends State<ClientReport> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -292,6 +325,28 @@ class _ClientReportState extends State<ClientReport> {
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                       ),
+
+                                Text(
+                                  client['clientName']!,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 16),
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFF005254),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    client['clientPhoneNumber']!,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+
                                     ),
                                     Container(
                                       padding: const EdgeInsets.symmetric(
@@ -350,7 +405,20 @@ class _ClientReportState extends State<ClientReport> {
                                 // ),
                               ],
                             ),
+
                           ),
+
+                            const SizedBox(height: 8),
+                            Text(
+                              'Status: ${client['taggingStatus']}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color:
+                                    _getStatusColor(client['taggingStatus']!),
+                              ),
+                            ),
+                          ],
+
                         ),
                       ),
                     );

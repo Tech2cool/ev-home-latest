@@ -80,14 +80,27 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
       ChatScreen(
         gBack: gback,
       ),
-      const OfferDetailPage(showDiolog: true),
+      const OfferDetailPage(showDiolog: false),
     ];
 
     return Scaffold(
       body: Stack(
         children: [
-          pages[_currentIndex],
-          if (_isMenuVisible) _buildBottomSheet(controller),
+          IndexedStack(
+            index: _currentIndex,
+            children: [
+              ...pages,
+            ],
+          ),
+          if (_isMenuVisible) ...[
+            GestureDetector(
+              onTap: _toggleMenu,
+              child: Container(
+                color: Colors.transparent,
+              ),
+            ),
+            _buildBottomSheet(controller),
+          ],
           if (_currentIndex != 2) ...[
             _buildBottomNavBar(),
             _buildFloatingActionButton(),
@@ -142,14 +155,18 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
         children: [
           Icon(
             icon,
-            color: _currentIndex == index ? Colors.orange : Colors.grey,
+            color: _currentIndex == index
+                ? Color(0xFF042630)
+                : Color.fromARGB(146, 134, 185, 176),
           ),
           Text(
             label,
             style: TextStyle(
               fontFamily: 'Manrope',
               fontWeight: FontWeight.normal,
-              color: _currentIndex == index ? Colors.black : Colors.grey,
+              color: _currentIndex == index
+                  ? const Color(0xFF2e2252)
+                  : const Color.fromARGB(255, 0, 0, 0),
               fontSize: 12,
             ),
           ),
@@ -175,25 +192,26 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
                     colors: [
-                      Colors.orange,
-                      Colors.orange,
+                      Color.fromARGB(255, 92, 168, 209),
+                      Color.fromARGB(255, 172, 206, 225),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(25),
-                  // boxShadow: [
-                  //   BoxShadow(
-                  //     color: Color.fromARGB(255, 133, 0, 0).withOpacity(0.8),
-                  //     blurRadius: 2,
-                  //     spreadRadius: 2,
-                  //   ),
-                  // ],
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(176, 4, 38, 48),
+                      blurRadius: 2,
+                      spreadRadius: 1,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
                 ),
                 child: const Center(
                   child: Icon(
                     Icons.add,
-                    color: Colors.white,
+                    color: Color(0xFF042630),
                     size: 30,
                   ),
                 ),
@@ -238,26 +256,24 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
                   child: Stack(
                     children: [
                       // Video background
-                      SizedBox.expand(
-                        child: _videoPlayerController.value.isInitialized
-                            ? FittedBox(
-                                fit: BoxFit.cover,
-                                child: SizedBox(
-                                  width:
-                                      _videoPlayerController.value.size.width ??
-                                          0,
-                                  height: _videoPlayerController
-                                          .value.size.height ??
-                                      0,
-                                  child: VideoPlayer(_videoPlayerController),
-                                ),
-                              )
-                            : const Center(child: CircularProgressIndicator()),
-                      ),
+                      // SizedBox.expand(
+                      //   child: _videoPlayerController.value.isInitialized
+                      //       ? FittedBox(
+                      //           fit: BoxFit.cover,
+                      //           child: SizedBox(
+                      //             width:
+                      //                 _videoPlayerController.value.size.width ??
+                      //                     0,
+                      //             height: _videoPlayerController
+                      //                     .value.size.height ??
+                      //                 0,
+                      //             child: VideoPlayer(_videoPlayerController),
+                      //           ),
+                      //         )
+                      //       : const Center(child: CircularProgressIndicator()),
+                      // ),
                       // Semi-transparent overlay
-                      Container(
-                        color: Colors.black.withOpacity(0.5),
-                      ),
+                      Container(color: Color(0xFF042630)),
                       // Content
                       SingleChildScrollView(
                         controller: scrollController,
@@ -346,11 +362,11 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
             width: 40,
             height: 50,
             decoration: BoxDecoration(
-              color: Colors.orange,
+              color: Color.fromARGB(146, 134, 185, 176),
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.orange.withOpacity(0.3),
+                  color: Color.fromARGB(146, 134, 185, 176),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -369,7 +385,7 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
             style: TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
-              color: Colors.orange,
+              color: Color.fromARGB(146, 134, 185, 176),
             ),
           ),
         ],

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 
-class AnimatedGradientBg extends StatefulWidget {
-  const AnimatedGradientBg({super.key});
+class blueanimatesgradint extends StatefulWidget {
+  const blueanimatesgradint({super.key});
 
   @override
-  State<AnimatedGradientBg> createState() => _AnimatedGradientBgState();
+  State<blueanimatesgradint> createState() => _blueanimatesgradintState();
 }
 
-class _AnimatedGradientBgState extends State<AnimatedGradientBg> {
+class _blueanimatesgradintState extends State<blueanimatesgradint> {
   List<Color> gradientColors = [
-    const Color(0xFFFFDE4D),
-    const Color(0xFFFFB22C),
-    const Color.fromARGB(199, 248, 85, 4),
-    // const Color.fromARGB(199, 248, 85, 4),
+    const Color(0xFFFF3373b0),
+    const Color(0xFFFFbed4e9),
+    const Color(0xFFFFbcd5eb)
   ];
 
   bool _isAnimating = true;

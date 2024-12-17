@@ -558,7 +558,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
     _selectedDate = today;
 
     _dateController.text = DateFormat("dd MMM yy hh:mm a").format(
-      DateTime.now(),
+      today,
     );
     _onRefresh();
     selectedVisit = widget.status;
@@ -951,6 +951,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                     ),
                     const SizedBox(height: 16),
                     // Name Field with Prefix Dropdown
+                    Text(_selectedDate?.toIso8601String() ?? ""),
                     // if (width > 500)
                     Column(
                       children: [

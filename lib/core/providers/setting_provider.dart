@@ -136,6 +136,16 @@ class SettingProvider extends ChangeNotifier {
     data: [],
   );
 
+  PaginationModel<Lead> _searchLeadsChannelPartner = PaginationModel<Lead>(
+    code: 404,
+    message: '',
+    page: 1,
+    limit: 10,
+    totalPages: 1,
+    totalItems: 0,
+    data: [],
+  );
+
   Employee? loggedAdmin;
   Customer? loggedCustomer;
   Customer? loggedPhone;
@@ -182,6 +192,8 @@ class SettingProvider extends ChangeNotifier {
   List<ChannelPartner> get channelPartner => _channelPartner;
   PaginationModel<SiteVisit> get searchSiteVisit => _searchSiteVisit;
   PaginationModel<Lead> get searchLeads => _searchLeads;
+  PaginationModel<Lead> get searchLeadsChannelPartner =>
+      _searchLeadsChannelPartner;
   List<String> get requirements => _requirements;
   List<Employee> get teamLeaders => _teamLeaders;
 
@@ -589,6 +601,31 @@ class SettingProvider extends ChangeNotifier {
     // }
   }
 
+  Future<PaginationModel<Lead>> searchLeadChannelPartner(
+    String id, [
+    String query = '',
+    int page = 1,
+    int limit = 20,
+    String? approvalStatus,
+    String? stage,
+    String? channelPartner,
+  ]) async {
+    final leads = await _apiService.searchLeadsChannelPartner(
+      id,
+      query,
+      page,
+      limit,
+      approvalStatus,
+      stage,
+    );
+    // if (leads) {
+    _searchLeadsChannelPartner = leads;
+    notifyListeners();
+
+    return leads;
+    // }
+  }
+
   Future<List<ChartModel>> leadForGraph([
     String interval = 'monthly',
     int? year,
@@ -926,11 +963,11 @@ class SettingProvider extends ChangeNotifier {
     if (resp == null) return;
 
     loggedCustomer = resp;
-
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const CustomerHomeWrapper()),
-    );
+    GoRouter.of(context).go("/customer-home-wrapper");
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const CustomerHomeWrapper()),
+    // );
     notifyListeners();
   }
 
@@ -960,10 +997,7 @@ class SettingProvider extends ChangeNotifier {
     );
     if (resp == null) return;
     loggedChannelPartner = resp;
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const CpHomeWrapper()),
-    );
+    GoRouter.of(context).go("/cp-home-wrapper");
     notifyListeners();
   }
 

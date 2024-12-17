@@ -21,6 +21,7 @@ class _CpVideoplayerState extends State<CpVideoplayer> {
         setState(() {});
         _videoController.setLooping(true);
         _videoController.play();
+        _videoController.setVolume(0.0);
       });
   }
 

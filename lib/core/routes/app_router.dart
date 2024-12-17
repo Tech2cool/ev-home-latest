@@ -40,6 +40,8 @@ import 'package:ev_homes/pages/starter_page.dart';
 import 'package:ev_homes/sections/login_sections/admin_login_section.dart';
 import 'package:ev_homes/wrappers/admin_home_wrapper.dart';
 import 'package:ev_homes/wrappers/auth_wrapper.dart';
+import 'package:ev_homes/wrappers/cp_home_wrapper.dart';
+import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../pages/admin_pages/admin_forms/edit_channel_partner.dart';
@@ -84,6 +86,19 @@ class AppRoutes {
           return const AdminHomeWrapper();
         },
       ),
+      GoRoute(
+        path: '/cp-home-wrapper',
+        builder: (context, state) {
+          return const CpHomeWrapper();
+        },
+      ),
+      GoRoute(
+        path: '/customer-home-wrapper',
+        builder: (context, state) {
+          return const CustomerHomeWrapper();
+        },
+      ),
+
       //pages
       GoRoute(
         path: '/add-client-tagging-lead',
@@ -227,7 +242,7 @@ class AppRoutes {
         },
       ),
 
-        GoRoute(
+      GoRoute(
         path: '/my-site-visit',
         builder: (context, state) {
           return const MySiteVisitPage();

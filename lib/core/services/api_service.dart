@@ -33,8 +33,8 @@ const storage = FlutterSecureStorage();
 
 // final dio = Dio();
 
-// const baseUrl = "http://192.168.1.180:8082";
-const baseUrl = "https://api.evhomes.tech";
+const baseUrl = "http://192.168.1.180:8082";
+// const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -138,6 +138,83 @@ class ApiService {
       }
       if (channelPartner != null) {
         url += '&channelPartner=$channelPartner';
+      }
+
+      final Response response = await _dio.get(url);
+      final Map<String, dynamic> data = response.data;
+      if (response.data["code"] != 200) {
+        final emptyPagination = PaginationModel<Lead>(
+          code: 404,
+          message: '',
+          page: page,
+          limit: limit,
+          totalPages: 1,
+          totalItems: 0,
+          data: [],
+        );
+
+        return emptyPagination;
+      }
+      final items = data['data'] as List<dynamic>? ?? [];
+
+      List<Lead> leads = [];
+      if (items.isNotEmpty) {
+        leads = items.map((emp) => Lead.fromJson(emp)).toList();
+      }
+      final newPagination = PaginationModel<Lead>(
+        code: data['code'],
+        message: data['message'],
+        page: data['page'],
+        limit: data['limit'],
+        totalPages: data['totalPages'],
+        totalItems: data['totalItems'],
+        pendingCount: response.data["pendingCount"],
+        approvedCount: response.data["approvedCount"],
+        rejectedCount: response.data["rejectedCount"],
+        // assignedCount: response.data["assignedCount"],
+        data: leads,
+      );
+
+      return newPagination;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
+      final emptyPagination = PaginationModel<Lead>(
+        code: 404,
+        message: '',
+        page: page,
+        limit: limit,
+        totalPages: 1,
+        totalItems: 0,
+        data: [],
+      );
+      return emptyPagination;
+    }
+  }
+
+  Future<PaginationModel<Lead>> searchLeadsChannelPartner(
+    String id, [
+    String query = '',
+    int page = 1,
+    int limit = 20,
+    String? approvalStatus,
+    String? stage,
+  ]) async {
+    try {
+      var url =
+          '/search-lead-channel-partner/$id?query=$query&page=$page&limit=$limit';
+      if (approvalStatus != null) {
+        url += '&approvalStatus=$approvalStatus';
+      }
+      if (stage != null) {
+        url += '&stage=$stage';
       }
 
       final Response response = await _dio.get(url);

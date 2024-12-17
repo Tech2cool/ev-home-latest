@@ -1,9 +1,11 @@
 import 'package:ev_homes/components/cp_videoplayer.dart';
 import 'package:ev_homes/core/constant/constant.dart';
 import 'package:ev_homes/core/models/tagging_form_model.dart';
+import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/cp_pages/client_report.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -14,14 +16,43 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  bool isLoading = false;
+
+  Future<void> _onRefresh() async {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      // await settingProvider.searchLead();
+      await settingProvider.searchLeadChannelPartner(
+        settingProvider.loggedChannelPartner!.id!,
+      );
+
+      // await settingProvider.getOurProject();
+    } catch (e) {
+      // Helper
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _onRefresh();
   }
 
   @override
   Widget build(BuildContext context) {
+    final settingProvider = Provider.of<SettingProvider>(context);
+    final cpLeads = settingProvider.searchLeadsChannelPartner;
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -69,7 +100,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             );
                           },
                           child: _buildLabelBox(
-                              '100', 'Leads'), // Dummy data for "Leads"
+                              cpLeads.totalItems.toString(), 'Leads'),
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -84,8 +115,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             );
                           },
-                          child: _buildLabelBox(
-                              '50', 'Approved'), // Dummy data for "Approved"
+                          child: _buildLabelBox(cpLeads.totalItems.toString(),
+                              'Approved'), // Dummy data for "Approved"
                         ),
                       ),
                       const SizedBox(width: 10),

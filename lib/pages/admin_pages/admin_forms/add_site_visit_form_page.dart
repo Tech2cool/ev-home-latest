@@ -195,8 +195,12 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
       Helper.showCustomSnackBar("All Fields Required");
       return;
     }
-    // await onVerfiredOrSkipOtp();
-    await generateOtp();
+    if (selectedVisit == "virtual-meeting") {
+      await onVerfiredOrSkipOtp(true);
+    } else {
+      // await onVerfiredOrSkipOtp(false);
+      await generateOtp();
+    }
   }
 
   void updatMessageOtp(String? message) {
@@ -442,6 +446,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
         source: _selectedSource,
         feedback: feedbackController.text,
         gender: selectedPrefix?.toLowerCase() == 'mr' ? 'male' : 'female',
+        location: selectedProj,
       );
 
       Map<String, dynamic> visitMap = newVisit.toMap();
@@ -553,7 +558,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
     _selectedDate = today;
 
     _dateController.text = DateFormat("dd MMM yy hh:mm a").format(
-      DateTime.now(),
+      today,
     );
     _onRefresh();
     selectedVisit = widget.status;
@@ -946,6 +951,7 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                     ),
                     const SizedBox(height: 16),
                     // Name Field with Prefix Dropdown
+                    Text(_selectedDate?.toIso8601String() ?? ""),
                     // if (width > 500)
                     Column(
                       children: [

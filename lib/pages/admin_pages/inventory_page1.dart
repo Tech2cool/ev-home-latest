@@ -334,7 +334,7 @@ class FloorContent extends StatelessWidget {
                                 MaterialPageRoute(
                                   builder: (context) => FlatDetailPage(
                                     project: selectedProject!,
-                                    flatNo: flat.flatNo!,
+                                    flat: flat,
                                   ),
                                 ),
                               );

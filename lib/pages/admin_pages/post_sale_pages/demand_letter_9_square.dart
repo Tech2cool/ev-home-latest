@@ -1,4 +1,5 @@
 import 'package:ev_homes/core/models/lead.dart';
+import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/models/post_sale_lead.dart';
 import 'package:flutter/material.dart';
 import 'package:ev_homes/core/models/customer_payment.dart';
@@ -13,9 +14,12 @@ import 'package:permission_handler/permission_handler.dart';
 
 class DemandLetter extends StatefulWidget {
   final Lead? lead;
+  final Flat? flat;
+
   const DemandLetter({
     Key? key,
-    this.lead, // Initialize the lead parameter here
+    this.lead,
+    this.flat, // Initialize the lead parameter here
   }) : super(key: key);
 
   @override

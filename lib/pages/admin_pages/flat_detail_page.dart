@@ -1,3 +1,4 @@
+import 'package:ev_homes/core/models/lead.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/costsheet_generator_marina_bay.dart';
@@ -11,13 +12,15 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart'; // Import the intl package
 
 class FlatDetailPage extends StatefulWidget {
+  final Lead? lead;
+  final Flat? flat;
   final OurProject project;
-  final String flatNo;
 
   const FlatDetailPage({
     super.key,
     required this.project,
-    required this.flatNo,
+    this.flat,
+    this.lead,
   });
 
   @override
@@ -84,7 +87,7 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
   void initState() {
     super.initState();
     final flat = widget.project.flatList.singleWhere(
-      (fl) => fl.flatNo == widget.flatNo,
+      (fl) => fl.flatNo == widget.flat?.flatNo,
     );
     status = flat.occupied!;
     allInclusive = flat.allInclusiveValue ?? 0;
@@ -101,83 +104,84 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
         Provider.of<SettingProvider>(context, listen: false);
     final projects = settingProvider.ourProject;
     OurProject? selectedProject;
+
     // print(settingProvider.ourProject);
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Select Project'),
-          content: DropdownButtonFormField<OurProject>(
-            value: projects.contains(selectedProject) ? selectedProject : null,
-            decoration: InputDecoration(
-              labelText: 'Select Project',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-            ),
-            items: projects.map((project) {
-              return DropdownMenuItem<OurProject>(
-                value: project,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        project.name ?? "",
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                  ],
-                ),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                selectedProject = newValue;
-              });
-            },
-            validator: (value) {
-              if (value == null) {
-                return 'Please select a Project';
-              }
-              return null;
-            },
-            isExpanded: true,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-              },
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (selectedProject!.name!.toLowerCase().contains("square")) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CostGenerators(),
-                    ),
-                  );
-                }
-                if (selectedProject!.name!.toLowerCase().contains("marina")) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const CostGenerator(),
-                    ),
-                  );
-                }
-              },
-              child: const Text('Proceed'),
-            ),
-          ],
-        );
-      },
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       title: const Text('Select Project'),
+    //       content: DropdownButtonFormField<OurProject>(
+    //         value: projects.contains(selectedProject) ? selectedProject : null,
+    //         decoration: InputDecoration(
+    //           labelText: 'Select Project',
+    //           border: OutlineInputBorder(
+    //             borderRadius: BorderRadius.circular(5),
+    //           ),
+    //         ),
+    //         items: projects.map((project) {
+    //           return DropdownMenuItem<OurProject>(
+    //             value: project,
+    //             child: Row(
+    //               children: [
+    //                 Expanded(
+    //                   child: Text(
+    //                     project.name ?? "",
+    //                     overflow: TextOverflow.ellipsis,
+    //                     maxLines: 1,
+    //                   ),
+    //                 ),
+    //                 const SizedBox(width: 4),
+    //               ],
+    //             ),
+    //           );
+    //         }).toList(),
+    //         onChanged: (newValue) {
+    //           setState(() {
+    //             selectedProject = newValue;
+    //           });
+    //         },
+    //         validator: (value) {
+    //           if (value == null) {
+    //             return 'Please select a Project';
+    //           }
+    //           return null;
+    //         },
+    //         isExpanded: true,
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           onPressed: () {
+    //             Navigator.pop(context); // Close the dialog
+    //           },
+    //           child: const Text('Cancel'),
+    //         ),
+    //         ElevatedButton(
+    //           onPressed: () {
+    //             if (selectedProject!.name!.toLowerCase().contains("square")) {
+    //               Navigator.push(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                   builder: (context) => const CostGenerators(),
+    //                 ),
+    //               );
+    //             }
+    //             if (selectedProject!.name!.toLowerCase().contains("marina")) {
+    //               Navigator.push(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                   builder: (context) => const CostGenerator(),
+    //                 ),
+    //               );
+    //             }
+    //           },
+    //           child: const Text('Proceed'),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
     // print(selectedProject);
   }
 
@@ -188,81 +192,81 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
     OurProject? selectedProject;
     // print(settingProvider.ourProject);
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Select Project'),
-          content: DropdownButtonFormField<OurProject>(
-            value: projects.contains(selectedProject) ? selectedProject : null,
-            decoration: InputDecoration(
-              labelText: 'Select Project',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-            ),
-            items: projects.map((project) {
-              return DropdownMenuItem<OurProject>(
-                value: project,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        project.name ?? "",
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                  ],
-                ),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                selectedProject = newValue;
-              });
-            },
-            validator: (value) {
-              if (value == null) {
-                return 'Please select a Project';
-              }
-              return null;
-            },
-            isExpanded: true,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-              },
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (selectedProject!.name!.toLowerCase().contains("square")) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PaymentScheduleGenerators(),
-                    ),
-                  );
-                }
-                if (selectedProject!.name!.toLowerCase().contains("marina")) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const PaymentScheduleGenerator(),
-                    ),
-                  );
-                }
-              },
-              child: const Text('Proceed'),
-            ),
-          ],
-        );
-      },
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       title: const Text('Select Project'),
+    //       content: DropdownButtonFormField<OurProject>(
+    //         value: projects.contains(selectedProject) ? selectedProject : null,
+    //         decoration: InputDecoration(
+    //           labelText: 'Select Project',
+    //           border: OutlineInputBorder(
+    //             borderRadius: BorderRadius.circular(5),
+    //           ),
+    //         ),
+    //         items: projects.map((project) {
+    //           return DropdownMenuItem<OurProject>(
+    //             value: project,
+    //             child: Row(
+    //               children: [
+    //                 Expanded(
+    //                   child: Text(
+    //                     project.name ?? "",
+    //                     overflow: TextOverflow.ellipsis,
+    //                     maxLines: 1,
+    //                   ),
+    //                 ),
+    //                 const SizedBox(width: 4),
+    //               ],
+    //             ),
+    //           );
+    //         }).toList(),
+    //         onChanged: (newValue) {
+    //           setState(() {
+    //             selectedProject = newValue;
+    //           });
+    //         },
+    //         validator: (value) {
+    //           if (value == null) {
+    //             return 'Please select a Project';
+    //           }
+    //           return null;
+    //         },
+    //         isExpanded: true,
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           onPressed: () {
+    //             Navigator.pop(context); // Close the dialog
+    //           },
+    //           child: const Text('Cancel'),
+    //         ),
+    //         ElevatedButton(
+    //           onPressed: () {
+    //             if (selectedProject!.name!.toLowerCase().contains("square")) {
+    //               Navigator.push(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                   builder: (context) => const PaymentScheduleGenerators(),
+    //                 ),
+    //               );
+    //             }
+    //             if (selectedProject!.name!.toLowerCase().contains("marina")) {
+    //               Navigator.push(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                   builder: (context) => const PaymentScheduleGenerator(),
+    //                 ),
+    //               );
+    //             }
+    //           },
+    //           child: const Text('Proceed'),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
     // print(selectedProject);
   }
 
@@ -273,88 +277,88 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
     OurProject? selectedProject;
     // print(settingProvider.ourProject);
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Select Project'),
-          content: DropdownButtonFormField<OurProject>(
-            value: projects.contains(selectedProject) ? selectedProject : null,
-            decoration: InputDecoration(
-              labelText: 'Select Project',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-            ),
-            items: projects.map((project) {
-              return DropdownMenuItem<OurProject>(
-                value: project,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        project.name ?? "",
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                  ],
-                ),
-              );
-            }).toList(),
-            onChanged: (newValue) {
-              setState(() {
-                selectedProject = newValue;
-              });
-            },
-            validator: (value) {
-              if (value == null) {
-                return 'Please select a Project';
-              }
-              return null;
-            },
-            isExpanded: true,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context); // Close the dialog
-              },
-              child: const Text('Cancel'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if (selectedProject!.name!.toLowerCase().contains("square")) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DemandLetter(),
-                    ),
-                  );
-                }
-                if (selectedProject!.name!.toLowerCase().contains("marina")) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const DemandLetter10(),
-                    ),
-                  );
-                }
-              },
-              child: const Text('Proceed'),
-            ),
-          ],
-        );
-      },
-    );
+    // showDialog(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       title: const Text('Select Project'),
+    //       content: DropdownButtonFormField<OurProject>(
+    //         value: projects.contains(selectedProject) ? selectedProject : null,
+    //         decoration: InputDecoration(
+    //           labelText: 'Select Project',
+    //           border: OutlineInputBorder(
+    //             borderRadius: BorderRadius.circular(5),
+    //           ),
+    //         ),
+    //         items: projects.map((project) {
+    //           return DropdownMenuItem<OurProject>(
+    //             value: project,
+    //             child: Row(
+    //               children: [
+    //                 Expanded(
+    //                   child: Text(
+    //                     project.name ?? "",
+    //                     overflow: TextOverflow.ellipsis,
+    //                     maxLines: 1,
+    //                   ),
+    //                 ),
+    //                 const SizedBox(width: 4),
+    //               ],
+    //             ),
+    //           );
+    //         }).toList(),
+    //         onChanged: (newValue) {
+    //           setState(() {
+    //             selectedProject = newValue;
+    //           });
+    //         },
+    //         validator: (value) {
+    //           if (value == null) {
+    //             return 'Please select a Project';
+    //           }
+    //           return null;
+    //         },
+    //         isExpanded: true,
+    //       ),
+    //       actions: [
+    //         TextButton(
+    //           onPressed: () {
+    //             Navigator.pop(context); // Close the dialog
+    //           },
+    //           child: const Text('Cancel'),
+    //         ),
+    //         ElevatedButton(
+    //           onPressed: () {
+    //             if (selectedProject!.name!.toLowerCase().contains("square")) {
+    //               Navigator.push(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                   builder: (context) => const DemandLetter(),
+    //                 ),
+    //               );
+    //             }
+    //             if (selectedProject!.name!.toLowerCase().contains("marina")) {
+    //               Navigator.push(
+    //                 context,
+    //                 MaterialPageRoute(
+    //                   builder: (context) => const DemandLetter10(),
+    //                 ),
+    //               );
+    //             }
+    //           },
+    //           child: const Text('Proceed'),
+    //         ),
+    //       ],
+    //     );
+    //   },
+    // );
     // print(selectedProject);
   }
 
   @override
   Widget build(BuildContext context) {
     final flat = widget.project.flatList.singleWhere(
-      (fl) => fl.flatNo == widget.flatNo,
+      (fl) => fl.flatNo == widget.flat?.flatNo,
     );
 
     final double agValue = (allInclusive - registration) /
@@ -372,7 +376,7 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
       appBar: AppBar(
         centerTitle: false,
         title: Text(
-          'Details for Flat ${widget.flatNo}',
+          'Details for Flat ${widget.flat?.flatNo ?? ""}',
           style: TextStyle(fontSize: 20),
         ),
         iconTheme: const IconThemeData(
@@ -386,11 +390,77 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
             ),
             onSelected: (value) async {
               if (value == "Cost Sheet Generator") {
-                _showProjectDialogForCostSheet();
+                if (widget.project!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CostGenerators(
+                        lead: widget.lead,
+                        flat: widget.flat,
+                      ),
+                    ),
+                  );
+                }
+                if (widget.project!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CostGenerator(
+                        lead: widget.lead,
+                        flat: widget.flat,
+                      ),
+                    ),
+                  );
+                }
+                // _showProjectDialogForCostSheet();
               } else if (value == "Payment Schedule") {
-                _showProjectDialogForPaymentSchedule();
+                if (widget.project!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PaymentScheduleGenerators(
+                        lead: widget.lead,
+                        flat: widget.flat,
+                      ),
+                    ),
+                  );
+                }
+                if (widget.project!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PaymentScheduleGenerator(
+                        lead: widget.lead,
+                        flat: widget.flat,
+                      ),
+                    ),
+                  );
+                }
+                // _showProjectDialogForPaymentSchedule();
               } else if (value == "Demand Letter") {
-                _showProjectDialogForDemand();
+                if (widget.project!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DemandLetter(
+                        lead: widget.lead,
+                        flat: widget.flat,
+                      ),
+                    ),
+                  );
+                }
+                if (widget.project!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DemandLetter10(
+                        lead: widget.lead,
+                        flat: widget.flat,
+                      ),
+                    ),
+                  );
+                }
+                // _showProjectDialogForDemand();
               }
 
               setState(() {
@@ -424,7 +494,7 @@ class _FlatDetailPageState extends State<FlatDetailPage> {
               style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             Text('Floor: ${flat.floor}'),
-            Text('Flat: ${widget.flatNo}'),
+            Text('Flat: ${widget.flat?.flatNo ?? ""}'),
             Text('Type: ${flat.configuration} (${flat.type})'),
             Text('Usable Carpet Area: ${flat.carpetArea} sqft'),
             Text('Sellable Carpet Area: ${flat.sellableCarpetArea} sqft'),

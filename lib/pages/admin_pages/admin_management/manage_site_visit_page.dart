@@ -1,4 +1,5 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
+import 'package:ev_homes/components/date_filter_screen_leads.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/employee.dart';
@@ -106,6 +107,7 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
     // final visits = settingProvider.searchSiteVisit.data;
     final filteredLocalSiteVisits = visits;
     final closingManagers = settingProvider.closingManagers;
+    final loggedDesg = settingProvider.loggedAdmin?.designation;
 
     bool isLoading = false;
 
@@ -234,6 +236,26 @@ class _ManageSiteVisitPageState extends State<ManageSiteVisitPage> {
                             ]);
                       },
                     ),
+                    if (loggedDesg!.id == "desg-post-sales-head" ||
+                        loggedDesg!.id == "desg-app-developer" ||
+                        loggedDesg!.id == "desg-site-head")
+                      PopupMenuItem<String>(
+                        value: 'export',
+                        child: const Text('Export'),
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => DateFilterScreenLeads(
+                                onSelect: (start, end) {},
+                                onSubmit: () {},
+                              ),
+                            ),
+                          );
+                          // setState(() {
+                          //   showExport = !showExport;
+                          // });
+                        },
+                      ),
                   ];
                 },
                 icon: const Icon(Icons.filter_list),

@@ -257,8 +257,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                   ),
                                   decoration: BoxDecoration(
                                     color: isSelected
-                                        ? const Color.fromARGB(199, 248, 85, 4)
-                                        : Colors.orangeAccent,
+                                        ? Color(0xFF042630)
+                                        : Color.fromARGB(146, 134, 185, 176),
                                     borderRadius: BorderRadius.circular(15),
                                     boxShadow: [
                                       BoxShadow(
@@ -274,7 +274,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                         FluentIcons
                                             .subtract_circle_arrow_back_16_filled,
                                         color: isSelected
-                                            ? Colors.black
+                                            ? Colors.white
                                             : Colors.black, // Icon color
                                         size: 16.0,
                                       ),
@@ -283,7 +283,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                                         uniqueConfig,
                                         style: TextStyle(
                                           color: isSelected
-                                              ? Colors.black
+                                              ? Colors.white
                                               : Colors.black, // Text color
                                         ),
                                       ),
@@ -315,7 +315,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                             height: 80,
                             margin: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
-                              color: Colors.orangeAccent,
+                              color: Color.fromARGB(146, 134, 185, 176),
                               borderRadius: BorderRadius.circular(15),
                               boxShadow: [
                                 BoxShadow(
@@ -420,7 +420,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              color: Colors.orangeAccent,
+              color: Color.fromARGB(146, 134, 185, 176),
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
@@ -477,7 +477,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                               Icon(
                                 FluentIcons.arrow_download_24_regular,
                                 size: 18,
-                                color: Colors.orangeAccent,
+                                color: Color(0xFF042630),
                               ),
                               SizedBox(width: 5), // Space between icon and text
                               Text(
@@ -520,11 +520,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           child: const Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
-                                FluentIcons.call_24_regular,
-                                size: 18,
-                                color: Colors.orangeAccent,
-                              ),
+                              Icon(FluentIcons.call_24_regular,
+                                  size: 18, color: Color(0xFF042630)),
                               SizedBox(width: 5), // Space between icon and text
                               Text(
                                 'Contact Us',
@@ -549,7 +546,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
             right: 10,
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.orangeAccent,
+                  color: Color.fromARGB(146, 134, 185, 176),
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
@@ -578,7 +575,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
             right: 10,
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.orangeAccent,
+                  color: Color.fromARGB(146, 134, 185, 176),
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(
@@ -856,8 +853,8 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                         const EdgeInsetsDirectional.fromSTEB(15, 10, 15, 10),
                     decoration: BoxDecoration(
                       color: widget.selectedAmenity == "All"
-                          ? const Color.fromARGB(199, 248, 85, 4)
-                          : Colors.orangeAccent,
+                          ? Color(0xFF042630)
+                          : Color.fromARGB(146, 134, 185, 176),
                       borderRadius: BorderRadius.circular(15),
                       boxShadow: [
                         BoxShadow(
@@ -872,7 +869,7 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                         Icon(
                           FluentIcons.people_24_regular,
                           color: widget.selectedAmenity == "All"
-                              ? Colors.black
+                              ? Colors.white
                               : Colors.black,
                           size: 16.0,
                         ),
@@ -881,7 +878,7 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                           "All",
                           style: TextStyle(
                             color: widget.selectedAmenity == "All"
-                                ? Colors.black
+                                ? Colors.white
                                 : Colors.black,
                           ),
                         ),
@@ -904,8 +901,8 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                           const EdgeInsetsDirectional.fromSTEB(15, 10, 15, 10),
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? const Color.fromARGB(199, 248, 85, 4)
-                            : Colors.orangeAccent,
+                            ? Color(0xFF042630)
+                            : Color.fromARGB(146, 134, 185, 176),
                         borderRadius: BorderRadius.circular(15),
                         boxShadow: [
                           BoxShadow(
@@ -919,14 +916,14 @@ class _AmenitiesSectionState extends State<AmenitiesSection> {
                         children: [
                           Icon(
                             getIconData(amenity.name),
-                            color: isSelected ? Colors.black : Colors.black,
+                            color: isSelected ? Colors.white : Colors.black,
                             size: 16.0,
                           ),
                           const SizedBox(width: 4.0),
                           Text(
                             amenity.name,
                             style: TextStyle(
-                              color: isSelected ? Colors.black : Colors.black,
+                              color: isSelected ? Colors.white : Colors.black,
                             ),
                           ),
                         ],

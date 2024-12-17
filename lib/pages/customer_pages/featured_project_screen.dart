@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ev_homes/components/animated_gradient_bg.dart';
 
+import '../../components/cp_videoplayer.dart';
+
 class FeaturedProjectScreen extends StatefulWidget {
   final String logoImagePath;
   final String title;
@@ -57,7 +59,7 @@ class _FeaturedProjectScreenState extends State<FeaturedProjectScreen>
     return Stack(
       children: [
         const Positioned.fill(
-          child: AnimatedGradientBg(),
+          child: CpVideoplayer(),
         ),
         Scaffold(
           backgroundColor: Colors.transparent,

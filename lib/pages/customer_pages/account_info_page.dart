@@ -44,10 +44,10 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
       appBar: AppBar(
         title: const Text(
           'Profile',
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.black),
         ),
         // centerTitle: true,
-        backgroundColor: const Color.fromARGB(199, 248, 85, 4),
+        backgroundColor: Color.fromARGB(146, 134, 185, 176),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -64,20 +64,20 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
             _buildTextField(
               'Name',
               '${loggedCustomer?.firstName ?? ""} ${loggedCustomer?.lastName ?? ""}',
-              const Color.fromARGB(199, 248, 85, 4),
+              Color(0xFF042630),
             ),
 
             const SizedBox(height: 10.0),
             _buildTextField(
               'Email',
               loggedCustomer?.email ?? "",
-              const Color.fromARGB(199, 248, 85, 4),
+              Color(0xFF042630),
             ),
             const SizedBox(height: 10.0),
             _buildTextField(
               'Phone',
               loggedCustomer?.phoneNumber?.toString() ?? "",
-              const Color.fromARGB(199, 248, 85, 4),
+              Color(0xFF042630),
             ),
             const SizedBox(height: 10.0),
 

@@ -1,4 +1,5 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
+import 'package:ev_homes/components/cp_videoplayer.dart';
 import 'package:ev_homes/core/models/meetingSummary.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/customer_pages/customer_forms/meeting_summary_page.dart';
@@ -60,7 +61,7 @@ class _MyMeetingsState extends State<MyMeetings> {
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF042630)),
           onPressed: () {
             Navigator.pushReplacement(
               context,
@@ -74,7 +75,7 @@ class _MyMeetingsState extends State<MyMeetings> {
           style: TextStyle(
             fontFamily: 'Poppins',
             fontSize: 24,
-            color: Colors.white,
+            color: Color(0xFF042630),
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -86,7 +87,7 @@ class _MyMeetingsState extends State<MyMeetings> {
         child: Stack(
           children: [
             const Positioned.fill(
-              child: AnimatedGradientBg(),
+              child: CpVideoplayer(),
             ),
             SafeArea(
               child: Column(

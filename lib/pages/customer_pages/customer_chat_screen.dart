@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:ev_homes/components/animated_gradient_bg.dart';
+import 'package:ev_homes/components/cp_videoplayer.dart';
 import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
 import 'package:flutter/material.dart';
 
@@ -130,7 +131,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       ),
       body: Stack(
         children: [
-          const AnimatedGradientBg(),
+          const CpVideoplayer(),
           SafeArea(
             child: Column(
               children: <Widget>[
@@ -219,7 +220,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               if (!isSentByUser)
                 const CircleAvatar(
                   backgroundColor: Colors.white70,
-                  child: Icon(Icons.house, color: Colors.orange),
+                  child: Icon(Icons.house, color: Color(0xFF042630)),
                 ),
               const SizedBox(width: 8),
               Flexible(
@@ -265,7 +266,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                                           ),
                                           child: Text(option,
                                               style: const TextStyle(
-                                                  color: Colors.orange)),
+                                                  color: Color(0xFF042630))),
                                         ),
                                       ),
                                     ))
@@ -280,7 +281,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
               if (isSentByUser)
                 const CircleAvatar(
                   backgroundColor: Colors.white70,
-                  child: Icon(Icons.person, color: Colors.orange),
+                  child: Icon(Icons.person, color: Color(0xFF042630)),
                 ),
             ],
           ),
@@ -325,7 +326,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
             backgroundColor: Colors.white70,
             child: const Icon(
               Icons.send,
-              color: Colors.orange,
+              color: Color(0xFF042630),
             ),
           ),
         ],

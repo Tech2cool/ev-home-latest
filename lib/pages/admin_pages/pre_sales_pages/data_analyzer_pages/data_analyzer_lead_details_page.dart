@@ -612,9 +612,11 @@ class MyTextCard extends StatelessWidget {
             color: headingColor,
           ),
         ),
-        Text(
-          value,
-          style: TextStyle(fontSize: 15, color: valueColor),
+        Flexible(
+          child: Text(
+            value,
+            style: TextStyle(fontSize: 15, color: valueColor),
+          ),
         ),
       ],
     );

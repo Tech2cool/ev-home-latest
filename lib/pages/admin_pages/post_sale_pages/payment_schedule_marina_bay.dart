@@ -12,8 +12,10 @@ import 'package:permission_handler/permission_handler.dart';
 class PaymentScheduleGenerator extends StatefulWidget {
   final Lead? lead;
   final Flat? flat;
+  final double? allInclusive;
 
-  const PaymentScheduleGenerator({super.key, this.lead, this.flat});
+  const PaymentScheduleGenerator(
+      {super.key, this.lead, this.flat, this.allInclusive});
 
   @override
   _PaymentScheduleGeneratorState createState() =>
@@ -337,9 +339,10 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerator> {
       flatNoController.text = widget.flat?.flatNo ?? "";
 
       carpetAreaController.text = widget.flat?.carpetArea.toString() ?? "";
-      allInclusiveController.text =
-          widget.flat?.allInclusiveValue.toString() ?? "";
+      // allInclusiveController.text =
+      //     widget.flat?.allInclusiveValue.toString() ?? "";
     }
+    allInclusiveController.text = widget.allInclusive?.toString() ?? "";
   }
 
   @override

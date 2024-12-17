@@ -13,7 +13,8 @@ import 'dart:io';
 class CostGenerators extends StatefulWidget {
   final Lead? lead;
   final Flat? flat;
-  const CostGenerators({super.key, this.lead, this.flat});
+  final double? allInclusive;
+  const CostGenerators({super.key, this.lead, this.flat, this.allInclusive});
 
   @override
   State<CostGenerators> createState() => _CostGeneratorState();
@@ -431,9 +432,10 @@ class _CostGeneratorState extends State<CostGenerators> {
       floorController.text = widget.flat?.floor?.toString() ?? "";
       unitNoController.text = widget.flat?.flatNo ?? "";
       carpetAreaController.text = widget.flat?.carpetArea.toString() ?? "";
-      allInclusiveAmountController.text =
-          widget.flat?.allInclusiveValue.toString() ?? "";
+      // allInclusiveAmountController.text =
+      //     widget.flat?.allInclusiveValue.toString() ?? "";
     }
+    allInclusiveAmountController.text = widget.allInclusive?.toString() ?? "";
   }
 
   @override

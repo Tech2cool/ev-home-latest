@@ -11,6 +11,7 @@ import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/core/services/api_service.dart';
 import 'package:ev_homes/pages/admin_pages/admin_forms/add_postsale_lead.dart';
+import 'package:ev_homes/pages/admin_pages/admin_forms/add_site_visit_form_page.dart';
 import 'package:ev_homes/pages/admin_pages/followup_page.dart';
 import 'package:ev_homes/pages/admin_pages/pre_sales_pages/data_analyzer_pages/data_analyzer_lead_details_page.dart';
 import 'package:flutter/material.dart';
@@ -619,52 +620,73 @@ class _SalesManagerLeadDetailsPageState
                             ),
                           ),
                           const SizedBox(width: 10),
-                          DropdownButton<String>(
-                            value: selectedStatus,
-                            underline: SizedBox.shrink(),
-                            onChanged: (value) async {
-                              if (value == "Visited") {
-                                await ApiService()
-                                    .updateLeadStatus(widget.lead.id, {
-                                  "status": "visited",
-                                });
-                                Navigator.of(context).pop();
-                              } else if (value == "Revisited") {
-                                await ApiService()
-                                    .updateLeadStatus(widget.lead.id, {
-                                  "status": "revisited",
-                                });
-                                Navigator.of(context).pop();
-                              }
-
-                              setState(() {
-                                selectedStatus = value;
-                                if (value == 'Booked') {
+                          Expanded(
+                            child: DropdownButton<String>(
+                              value: selectedStatus,
+                              underline: const SizedBox.shrink(),
+                              isExpanded:
+                                  true, // Ensure it uses the available space
+                              onChanged: (value) async {
+                                if (value?.toLowerCase() == "visited") {
                                   Navigator.of(context).push(
                                     MaterialPageRoute(
-                                      builder: (context) => AddPostsaleLead(
+                                      builder: (context) =>
+                                          AddSiteVisitFormPage(
                                         lead: widget.lead,
+                                        status: "visit",
                                       ),
                                     ),
                                   );
-                                  // GoRouter.of(context).push(
-                                  //   "/post-sales-lead-details",
-                                  //   // extra: lead,
-                                  // );
+                                } else if (value?.toLowerCase() ==
+                                    "revisited") {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AddSiteVisitFormPage(
+                                        lead: widget.lead,
+                                        status: "revisit",
+                                      ),
+                                    ),
+                                  );
+                                } else if (value?.toLowerCase() ==
+                                    "virtual-meeting") {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          AddSiteVisitFormPage(
+                                        lead: widget.lead,
+                                        status: "virtual-meeting",
+                                      ),
+                                    ),
+                                  );
                                 }
-                              });
-                            },
-                            items: <String>[
-                              'Called',
-                              'Visited',
-                              'Revisited',
-                              'Booked'
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
+
+                                setState(() {
+                                  selectedStatus = value;
+                                  if (value?.toLowerCase() == 'booked') {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => AddPostsaleLead(
+                                          lead: widget.lead,
+                                        ),
+                                      ),
+                                    );
+                                  }
+                                });
+                              },
+                              items: <String>[
+                                'called',
+                                'visited',
+                                'revisited',
+                                'virtual-meeting',
+                                'booked'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            ),
                           ),
                         ],
                       ),
@@ -676,8 +698,9 @@ class _SalesManagerLeadDetailsPageState
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                FollowupPage(lead: widget.lead),
+                            builder: (context) => FollowupPage(
+                              lead: widget.lead,
+                            ),
                           ),
                         );
                       },
@@ -741,8 +764,7 @@ class _SalesManagerLeadDetailsPageState
                                 ),
                               ),
                               SizedBox(
-                                width:
-                                    140, // Half the width for two cards in a row
+                                width: 140,
                                 child: Card(
                                   elevation: 1,
                                   shape: RoundedRectangleBorder(
@@ -776,49 +798,6 @@ class _SalesManagerLeadDetailsPageState
                                   ),
                                 ),
                               ),
-                              // SizedBox(
-                              //   width: double
-                              //       .infinity, // Full width for the rectangle card
-                              //   child: Card(
-                              //     elevation: 1,
-                              //     shape: RoundedRectangleBorder(
-                              //       borderRadius: BorderRadius.circular(10),
-                              //     ),
-                              //     color: Colors.white,
-                              //     child: InkWell(
-                              //       onTap: () => _showAssignTaskDialog(context),
-                              //       child: const Column(
-                              //         mainAxisAlignment:
-                              //             MainAxisAlignment.center,
-                              //         children: [
-                              //           Icon(
-                              //             Icons.task,
-                              //             size: 40,
-                              //             color: Colors.orangeAccent,
-                              //           ),
-                              //           SizedBox(height: 10),
-                              //           Text(
-                              //             "Assign",
-                              //             textAlign: TextAlign.center,
-                              //             style: TextStyle(
-                              //               fontSize: 18,
-                              //               color: Colors.black,
-                              //             ),
-                              //           ),
-                              //           SizedBox(height: 4),
-                              //           Text(
-                              //             "Task",
-                              //             textAlign: TextAlign.center,
-                              //             style: TextStyle(
-                              //               fontSize: 18,
-                              //               color: Colors.black,
-                              //             ),
-                              //           ),
-                              //         ],
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
                             ],
                           ),
                         ),

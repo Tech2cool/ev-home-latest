@@ -1,6 +1,7 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/components/animated_pie_chart.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
+import 'package:ev_homes/components/my_transculent_box.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
@@ -628,268 +629,109 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                           ],
                         ),
                       ),
-                      const SizedBox(height: 10),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 1.0,
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  GoRouter.of(context).push(
-                                    "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      const Color.fromARGB(255, 241, 118, 11),
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                ),
-                                child: const Text(
-                                  'Follow Up Status',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
+                      Divider(
+                        color: Colors.grey.withOpacity(0.2),
+                      ),
+                      const SizedBox(height: 16),
+                      Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        runAlignment: WrapAlignment.center,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          Stack(
+                            children: [
+                              MyTransculentBox(
+                                icon: FluentIcons.tasks_app_20_regular,
+                                iconColor: Colors.pink,
+                                text: "My Task",
+                                textColor: Colors.white,
+                                onTap: () => _showTaskDialog(context),
+                              ),
+                              Positioned(
+                                right: 30,
+                                top: 10,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    // Bubble for pending count
+                                    Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          tasks
+                                              .where((ele) =>
+                                                  ele.completed == false)
+                                              .length
+                                              .toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0,
-                              vertical: 1.0,
-                            ),
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      //TODO: closing manager client List
-                                      _showTaskDialog(context);
-                                      // GoRouter.of(context).push(
-                                      //   "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
-                                      // );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.blue,
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10.0),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(12.0),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      'My Task',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            ],
                           ),
-                          Positioned(
-                            right: 28,
-                            top: 10,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                // Bubble for pending count
-                                Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                    color: Colors.red,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      tasks
-                                          .where(
-                                              (ele) => ele.completed == false)
-                                          .length
-                                          .toString(),
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
-                                      ),
-                                    ),
+                          MyTransculentBox(
+                            icon: FluentIcons.task_list_square_ltr_24_regular,
+                            iconColor: Colors.pink,
+                            text: "Follow Up Status",
+                            textColor: Colors.white,
+                            onTap: () {
+                              GoRouter.of(context).push(
+                                "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                              );
+                            },
+                          ),
+                          MyTransculentBox(
+                            icon: FluentIcons.box_24_regular,
+                            iconColor: Colors.pink,
+                            text: "Inventory",
+                            textColor: Colors.white,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => InventoryPage1(
+                                    onButtonPressed: (view) {},
                                   ),
                                 ),
-                              ],
-                            ),
+                              );
+                            },
+                          ),
+                          MyTransculentBox(
+                            icon: FluentIcons.receipt_16_regular,
+                            iconColor: Colors.pink,
+                            text: "Cost Sheet",
+                            textColor: Colors.white,
+                            onTap: () => _showProjectDialogForCostSheet(),
+                          ),
+                          MyTransculentBox(
+                            icon: FluentIcons.calendar_clock_16_regular,
+                            iconColor: Colors.pink,
+                            text: "Payment Schedule",
+                            textColor: Colors.white,
+                            onTap: () => _showProjectDialogForPaymentSchedule(),
+                          ),
+                          MyTransculentBox(
+                            icon: FluentIcons.document_text_16_regular,
+                            iconColor: Colors.pink,
+                            text: "Demand Letter",
+                            textColor: Colors.white,
+                            onTap: () => _showProjectDialogForDemand(),
                           ),
                         ],
                       ),
-                      // const SizedBox(
-                      //   height: 5,
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 1.0,
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => InventoryPage1(
-                                              onButtonPressed: (view) {})));
-                                },
-                                icon: const Icon(
-                                  FluentIcons.box_24_regular,
-                                  color: Colors.white,
-                                ),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                ),
-                                label: const Text(
-                                  'Inventory',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      // const SizedBox(
-                      //   height: 5,
-                      // ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 1.0,
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  _showProjectDialogForCostSheet();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                ),
-                                label: const Text(
-                                  'Cost Sheet Generator',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 1.0,
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  _showProjectDialogForPaymentSchedule();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                ),
-                                label: const Text(
-                                  'Payment Schedule',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16.0,
-                          vertical: 1.0,
-                        ),
-                        child: Row(
-                          children: [
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: ElevatedButton.icon(
-                                onPressed: () {
-                                  _showProjectDialogForDemand();
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blue,
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.0),
-                                  ),
-                                ),
-                                label: const Text(
-                                  'Demand Letter',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                      const SizedBox(height: 5),
                     ],
                   ),
                 ),
@@ -899,17 +741,18 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                 Card(
                   elevation: 4,
                   shadowColor: Colors.transparent,
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   color: Colors.white.withOpacity(0.3),
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           "Lead to Visit 1",
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         AnimatedPieChart(
                           visited: graphInfo.visitCount.toInt(),
                           notVisited: graphInfo.leadCount.toInt(),
@@ -929,18 +772,19 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                   elevation: 4,
                   shadowColor: Colors.transparent,
 
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   color: Colors.white
                       .withOpacity(0.3), // Semi-transparent white background
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           "Visit 1 to Booking",
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         AnimatedPieChart(
                           visited: graphInfo.bookingCount.toInt(),
                           notVisited: graphInfo.visitCount.toInt(),
@@ -961,17 +805,18 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                 Card(
                   elevation: 4,
                   shadowColor: Colors.transparent,
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   color: Colors.white.withOpacity(0.3),
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           "Visit 2 to Booking",
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         AnimatedPieChart(
                           visited: graphInfo.bookingCount.toInt(),
                           notVisited: graphInfo.visit2Count.toInt(),
@@ -991,17 +836,18 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                 Card(
                   elevation: 4,
                   shadowColor: Colors.transparent,
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   color: Colors.white.withOpacity(0.3),
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           "Lead to Booking",
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         AnimatedPieChart(
                           visited: graphInfo.bookingCount.toInt(),
                           notVisited: graphInfo.leadCount.toInt(),
@@ -1084,7 +930,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                             ele.completed == false)
                                         .length
                                         .toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
@@ -1128,7 +974,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                             ele.completed == false)
                                         .length
                                         .toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,
@@ -1172,7 +1018,7 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                                             ele.completed == false)
                                         .length
                                         .toString(),
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold,

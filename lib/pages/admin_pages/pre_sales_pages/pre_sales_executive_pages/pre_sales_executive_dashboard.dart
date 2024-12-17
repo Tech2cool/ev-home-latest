@@ -1,9 +1,12 @@
 import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/components/animated_pie_chart.dart';
 import 'package:ev_homes/components/loading/loading_square.dart';
+import 'package:ev_homes/components/my_transculent_box.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
+import 'package:ev_homes/pages/admin_pages/inventory_page1.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/admin_carry_forward_page.dart';
 import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/task_list_page.dart';
+import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -77,6 +80,7 @@ class _PreSalesExecutiveDashboardState
     final teamLeaderLeads = settingProvider.leadsTeamLeaderReportingTo;
     final target = settingProvider.myTarget;
     final graphInfo = settingProvider.closingManagerGraph;
+    final tasks = settingProvider.tasks;
 
     return Stack(
       children: [
@@ -168,13 +172,13 @@ class _PreSalesExecutiveDashboardState
                         child: GestureDetector(
                           onTap: () {
                             GoRouter.of(context).push(
-                              "/pre-sales-executive-lead-list/revisit/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                              "/pre-sales-executive-lead-list/visit2/${widget.id ?? settingProvider.loggedAdmin!.id!}",
                             );
                           },
                           child: MyCard(
                             textColor: Colors.red,
                             label: "Visit 2",
-                            value: teamLeaderLeads.revisitCount,
+                            value: teamLeaderLeads.visit2Count,
                           ),
                         ),
                       ),
@@ -419,6 +423,88 @@ class _PreSalesExecutiveDashboardState
                           ],
                         ),
                       ),
+                      Divider(
+                        color: Colors.grey.withOpacity(0.2),
+                      ),
+                      const SizedBox(height: 16),
+                      Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        runAlignment: WrapAlignment.center,
+                        alignment: WrapAlignment.center,
+                        children: [
+                          Stack(
+                            children: [
+                              MyTransculentBox(
+                                icon: FluentIcons.tasks_app_20_regular,
+                                iconColor: Colors.pink,
+                                text: "My Task",
+                                textColor: Colors.white,
+                                onTap: () => _showTaskDialog(context),
+                              ),
+                              Positioned(
+                                right: 30,
+                                top: 10,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    // Bubble for pending count
+                                    Container(
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          tasks
+                                              .where((ele) =>
+                                                  ele.completed == false)
+                                              .length
+                                              .toString(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          MyTransculentBox(
+                            icon: FluentIcons.task_list_square_ltr_24_regular,
+                            iconColor: Colors.pink,
+                            text: "Follow Up Status",
+                            textColor: Colors.white,
+                            onTap: () {
+                              GoRouter.of(context).push(
+                                "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                              );
+                            },
+                          ),
+                          MyTransculentBox(
+                            icon: FluentIcons.box_24_regular,
+                            iconColor: Colors.pink,
+                            text: "Inventory",
+                            textColor: Colors.white,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => InventoryPage1(
+                                    onButtonPressed: (view) {},
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 5),
                     ],
                   ),
                 ),

@@ -111,7 +111,7 @@ class _DateFilterScreenLeadsState extends State<DateFilterScreenLeads> {
         });
       } catch (e) {
         //
-      } finally {
+      } finally { 
         setState(() {
           isGenerating = false;
         });

@@ -375,7 +375,7 @@ class FloorContent extends StatelessWidget {
   String _generateContent(Flat flat, int itemIndex) {
     switch (selectedView) {
       case 'Flat No':
-        return '${flat.floor}0${itemIndex + 1}';
+        return '${flat.flatNo}';
       case 'BHK':
         return flat.configuration ?? "";
       case 'Area':

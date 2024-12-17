@@ -193,6 +193,15 @@ class AppRoutes {
           return const AddChannerPartnerPage();
         },
       ),
+      
+   GoRoute(
+        path: '/channel-partner-lead-list/:selectedFilter',
+        builder: (context, state) {
+          final selectedFilter = state.pathParameters['selectedFilter'] ?? '';
+          return DataAnalyzerLeadListPage(status: selectedFilter);
+        },
+      ),
+
 
       // project routes
       GoRoute(

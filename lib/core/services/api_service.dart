@@ -33,7 +33,7 @@ const storage = FlutterSecureStorage();
 
 // final dio = Dio();
 
-const baseUrl = "http://192.168.1.180:8082";
+const baseUrl = "http://192.168.1.168:8082";
 // const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
@@ -213,12 +213,15 @@ class ApiService {
       if (approvalStatus != null) {
         url += '&approvalStatus=$approvalStatus';
       }
+      print("pass1");
       if (stage != null) {
         url += '&stage=$stage';
       }
-
+      print(url);
+      print("pass2");
       final Response response = await _dio.get(url);
-      final Map<String, dynamic> data = response.data;
+
+      print(response.data);
       if (response.data["code"] != 200) {
         final emptyPagination = PaginationModel<Lead>(
           code: 404,
@@ -230,21 +233,26 @@ class ApiService {
           data: [],
         );
 
+        print("pass3");
+
         return emptyPagination;
       }
-      final items = data['data'] as List<dynamic>? ?? [];
-
+      print(response.data['data']);
+      final items = response.data['data'] as List<dynamic>;
+      print("pass4");
       List<Lead> leads = [];
       if (items.isNotEmpty) {
+        print("yes");
         leads = items.map((emp) => Lead.fromJson(emp)).toList();
+        print("whj");
       }
       final newPagination = PaginationModel<Lead>(
-        code: data['code'],
-        message: data['message'],
-        page: data['page'],
-        limit: data['limit'],
-        totalPages: data['totalPages'],
-        totalItems: data['totalItems'],
+        code: response.data['code'],
+        message: response.data['message'],
+        page: response.data['page'],
+        limit: response.data['limit'],
+        totalPages: response.data['totalPages'],
+        totalItems: response.data['totalItems'],
         pendingCount: response.data["pendingCount"],
         approvedCount: response.data["approvedCount"],
         rejectedCount: response.data["rejectedCount"],
@@ -252,6 +260,7 @@ class ApiService {
         data: leads,
       );
 
+      print("pass5");
       return newPagination;
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
@@ -262,6 +271,7 @@ class ApiService {
         errorMessage = e.message.toString();
       }
 
+      print("pass6");
       Helper.showCustomSnackBar(errorMessage);
       final emptyPagination = PaginationModel<Lead>(
         code: 404,

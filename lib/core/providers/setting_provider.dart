@@ -608,7 +608,7 @@ class SettingProvider extends ChangeNotifier {
     int limit = 20,
     String? approvalStatus,
     String? stage,
-    String? channelPartner,
+ 
   ]) async {
     final leads = await _apiService.searchLeadsChannelPartner(
       id,

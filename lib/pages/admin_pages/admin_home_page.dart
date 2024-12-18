@@ -155,20 +155,6 @@ class _AdminHomePage2State extends State<AdminHomePage>
             color: Colors.white,
           ),
         ),
-        // actions: const [
-        //   FaIcon(
-        //     FontAwesomeIcons.whatsapp,
-        //     size: 26,
-        //     color: Colors.white,
-        //   ),
-        //   SizedBox(width: 10),
-        //   Icon(
-        //     Icons.notifications_none_outlined,
-        //     color: Colors.white,
-        //     size: 26,
-        //   ),
-        //   SizedBox(width: 10),
-        // ],
       ),
       // Drawer
       drawer: Drawer(
@@ -244,37 +230,11 @@ class _AdminHomePage2State extends State<AdminHomePage>
                       GoRouter.of(context).push("/admin-profile");
                     },
                   ),
-                  // ListTile(
-                  //   leading: const Icon(Icons.info),
-                  //   title: const Text("About"),
-                  //   onTap: () {
-                  //     Navigator.of(context).pop(); // Close the drawer
-                  //   },
-                  // ),
-                  // ListTile(
-                  //   leading: const Icon(Icons.settings),
-                  //   title: const Text("Settings"),
-                  //   onTap: () {
-                  //     Navigator.of(context).pop(); // Close the drawer
-                  //   },
-                  // ),
                   ListTile(
                     leading: const Icon(Icons.logout),
                     title: const Text("Log out"),
                     onTap: () async {
                       settingProvider.logoutUser(context);
-                      //     child: const Text(
-                      //       "Logout",
-                      //       style: TextStyle(
-                      //         color: Colors.white,
-                      //         fontSize: 12,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // await SharedPrefService.deleteUser();
-                      // if (context.mounted) {
-                      //   GoRouter.of(context).pushReplacement("/auth-wrapper");
-                      // }
                     },
                   ),
                 ],
@@ -289,102 +249,11 @@ class _AdminHomePage2State extends State<AdminHomePage>
         child: ListView(
           children: [
             TopcardWithAvatar(
-              takePhoto: () {
-                // Add photo-taking functionality here
-              },
+              takePhoto: () {},
             ),
-            // const SizedBox(height: 10),
-            // Mycustomcard(
-            //   childrens: [
-            //     UserWishCard(
-            //       name: "Mahek",
-            //       gender: "female",
-            //       onPress: () => onPressWish(context),
-            //     ),
-            //     UserWishCard(
-            //       name: "Mayur",
-            //       gender: "male",
-            //       onPress: () => onPressWish(context),
-            //     ),
-            //     UserWishCard(
-            //       name: "Aktar",
-            //       gender: "male",
-            //       onPress: () => onPressWish(context),
-            //     ),
-            //   ],
-            // ),
-            // Mycustomcard(
-            //   heading: "Announcement",
-            //   iconPath: Constant.megaphoneIcon,
-            //   circleBackground: const Color.fromARGB(255, 248, 85, 4),
-            //   childrens: [
-            //     AnnoucementCard(
-            //       name: "Welcome to ev Home People",
-            //       subtitle: "Today 11:08 AM",
-            //       gender: "female",
-            //       onPress: () => onPressWish(context),
-            //     ),
-            //     AnnoucementCard(
-            //       name: "Grand Opening Event",
-            //       subtitle: "Today at 8:00 PM",
-            //       gender: "male",
-            //       onPress: () => onPressWish(context),
-            //     ),
-            //   ],
-            // ),
           ],
         ),
       ),
     );
   }
 }
-
-// // import 'package:ev_developer/pages/tagging_list_page.dart';
-// // import 'package:ev_developer/pages/tagging_task_details_page.dart';
-// // import 'package:ev_developer/pages/task_details_page.dart';
-// import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
-// import 'package:intl/intl.dart';
-// import 'package:lottie/lottie.dart';
-// import 'package:percent_indicator/circular_percent_indicator.dart';
-
-// class HomePage extends StatelessWidget {
-//   const HomePage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         backgroundColor: Colors.yellowAccent,
-//         title: GestureDetector(
-//           onTap: () {
-//             GoRouter.of(context).push("/profile");
-//           },
-//           child: Container(
-//             child: Row(
-//               children: [
-//                 Icon(Icons.person), // User icon
-//                 SizedBox(width: 10), // Space between icon and text
-//                 Column(
-//                   crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: const [
-//                     Text("Welcome"), // Main title
-//                     Text("User", style: TextStyle(fontSize: 14)), // Subheading
-//                   ],
-//                 ),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//       body: Center(
-//         child: Lottie.asset(
-//           'assets/animations/business_animation.json', // Lottie animation path
-//           width: 300, // Adjust width as needed
-//           height: 300, // Adjust height as needed
-//           fit: BoxFit.cover, // Fit option for the animation
-//         ),
-//       ),
-//     );
-//   }
-// }

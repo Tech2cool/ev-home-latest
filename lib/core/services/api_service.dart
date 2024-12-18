@@ -33,8 +33,8 @@ const storage = FlutterSecureStorage();
 
 // final dio = Dio();
 
-// const baseUrl = "http://192.168.1.180:8082";
-const baseUrl = "https://api.evhomes.tech";
+const baseUrl = "http://192.168.1.180:8082";
+// const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -3774,6 +3774,38 @@ class ApiService {
 
       Helper.showCustomSnackBar(errorMessage);
       return null;
+    }
+  }
+
+  Future<List<Attendance>> getAllAttendanceById(String id) async {
+    try {
+      final Response response = await _dio.get('/attendance/$id');
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return [];
+      }
+      print("pass 200");
+
+      List<Attendance> att = [];
+      final data = response.data['data'] as List<dynamic>;
+      if (data.isNotEmpty) {
+        att = data.map((el) => Attendance.fromJson(el)).toList();
+      }
+      print(att.length);
+      return att;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+
+      Helper.showCustomSnackBar(errorMessage);
+      return [];
     }
   }
 

@@ -8,6 +8,7 @@ import 'dart:convert'; // For JSON encoding/decoding
 class AttendanceProvider with ChangeNotifier {
   final ApiService _apiService = ApiService();
   Attendance? _attendance;
+  List<Attendance> _attendanceList = [];
   int activeSeconds = 0;
   int breakSeconds = 0;
   int meetingSeconds = 0;
@@ -16,6 +17,7 @@ class AttendanceProvider with ChangeNotifier {
 
   List<AttendanceTimeline> timeline = [];
   Attendance? get attendance => _attendance;
+  List<Attendance> get attendanceList => _attendanceList;
 
   Duration get currentTimerDuration {
     if (status == 'present') {
@@ -152,6 +154,12 @@ class AttendanceProvider with ChangeNotifier {
       );
     }
     // print('pass timer');
+    notifyListeners();
+  }
+
+  Future<void> getAttendanceAll(String id) async {
+    final resp = await _apiService.getAllAttendanceById(id);
+    _attendanceList = resp;
     notifyListeners();
   }
 

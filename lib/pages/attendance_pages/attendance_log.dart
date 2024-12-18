@@ -1,21 +1,54 @@
+import 'package:ev_homes/core/helper/helper.dart';
+import 'package:ev_homes/core/models/attendance.dart';
+import 'package:ev_homes/core/providers/attendance_provider.dart';
+import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class Attendance extends StatefulWidget {
-  const Attendance({super.key});
+class AttendanceLog extends StatefulWidget {
+  const AttendanceLog({super.key});
 
   @override
-  _AttendanceState createState() => _AttendanceState();
+  _AttendanceLogState createState() => _AttendanceLogState();
 }
 
-class _AttendanceState extends State<Attendance>
+class _AttendanceLogState extends State<AttendanceLog>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   DateTime selectedDate = DateTime.now();
+  bool isLoading = false;
+
+  Future<void> onRefresh() async {
+    final attProvider = Provider.of<AttendanceProvider>(
+      context,
+      listen: false,
+    );
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      await Future.wait([
+        attProvider.getAttendanceAll(settingProvider.loggedAdmin!.id!),
+      ]);
+    } catch (e) {
+      //
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    onRefresh();
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -34,6 +67,8 @@ class _AttendanceState extends State<Attendance>
 
   @override
   Widget build(BuildContext context) {
+    final attProvider = Provider.of<AttendanceProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.orange.shade600,
@@ -50,20 +85,8 @@ class _AttendanceState extends State<Attendance>
       body: TabBarView(
         controller: _tabController,
         children: [
-          const Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Self Attendance Log",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              Expanded(child: AttendanceList(isSelf: true)),
-            ],
+          AttendanceList(
+            list: attProvider.attendanceList,
           ),
           Column(
             children: [
@@ -118,7 +141,10 @@ class _AttendanceState extends State<Attendance>
               SizedBox(
                 height: 10,
               ),
-              const Expanded(child: AttendanceList(isSelf: false)),
+              Expanded(
+                  child: AttendanceList(
+                list: [],
+              )),
             ],
           ),
         ],
@@ -128,86 +154,26 @@ class _AttendanceState extends State<Attendance>
 }
 
 class AttendanceList extends StatelessWidget {
-  final bool isSelf;
+  final List<Attendance> list;
 
-  const AttendanceList({super.key, required this.isSelf});
+  const AttendanceList({super.key, required this.list});
 
   @override
   Widget build(BuildContext context) {
-    final List<AttendanceRecord> attendanceRecords = isSelf
-        ? [
-            AttendanceRecord(
-                name: "Mahek",
-                date: "2024-11-01",
-                timeIn: "09:00",
-                timeOut: "17:00",
-                location: "Your Location",
-                status: "Present"),
-            AttendanceRecord(
-                name: "Mahek",
-                date: "2024-11-02",
-                timeIn: "09:15",
-                timeOut: "17:10",
-                location: "Your Location",
-                status: "Present"),
-            AttendanceRecord(
-                name: "Mahek",
-                date: "2024-11-03",
-                timeIn: "09:05",
-                timeOut: "17:05",
-                location: "Your Location",
-                status: "Present"),
-            AttendanceRecord(
-                name: "Mahek",
-                date: "2024-11-04",
-                timeIn: "09:10",
-                timeOut: "17:00",
-                location: "Your Location",
-                status: "Present"),
-          ]
-        : [
-            AttendanceRecord(
-                name: "Mahek",
-                date: "2024-11-01",
-                timeIn: "12:12",
-                timeOut: "-",
-                location: "JN2-57/A Vashi, Navi Mumbai",
-                status: "Present"),
-            AttendanceRecord(
-                name: "sheya",
-                date: "2024-11-02",
-                timeIn: "12:11",
-                timeOut: "-",
-                location: "6, Karegaonkar Marg, Vashi, Navi Mumbai",
-                status: "Present"),
-            AttendanceRecord(
-                name: "Mayur",
-                date: "2024-11-03",
-                timeIn: "11:25",
-                timeOut: "-",
-                location: "JN2-55/B, Vashi, Navi Mumbai",
-                status: "Present"),
-            AttendanceRecord(
-                name: "aktar",
-                date: "2024-11-04",
-                timeIn: "11:29",
-                timeOut: "-",
-                location: "JN2/36/A, Vashi, Navi Mumbai",
-                status: "Present"),
-          ];
-
     return ListView.builder(
-      itemCount: attendanceRecords.length,
+      itemCount: list.length,
       itemBuilder: (context, index) {
-        final record = attendanceRecords[index];
+        final record = list[index];
         return AttendanceTile(
-          name: record.name,
-          date: record.date,
-          timeIn: record.timeIn,
-          timeOut: record.timeOut,
-          location: record.location,
+          name: record.userId,
+          date: "${record.day}-${record.month}-${record.year}",
+          timeIn:
+              Helper.formatDate(record.checkInTime?.toIso8601String() ?? ""),
+          timeOut:
+              Helper.formatDate(record.checkOutTime?.toIso8601String() ?? ""),
+          location: "${record.checkInLatitude}, ${record.checkInLongitude}",
           status: record.status,
-          imageUrl: "https://via.placeholder.com/50",
+          imageUrl: record.checkInPhoto ?? "",
         );
       },
     );

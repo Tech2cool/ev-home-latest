@@ -1037,8 +1037,8 @@ class _DemandLetterState extends State<DemandLetter> {
     double latetdspayment = 0.0;
     double totalLatePayment = latePaymentCharge + latePaymentGST;
 
-    double finalBase = remainingBase;
-    double finalGst = remainingGst;
+    double finalBase = remainingBase + latePaymentCharge;
+    double finalGst = remainingGst + latePaymentGST;
     double finaltds = remainingTds;
     double finalTotal = finalBase + finalGst;
 

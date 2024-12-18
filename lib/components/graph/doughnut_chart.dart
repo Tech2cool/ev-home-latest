@@ -8,6 +8,7 @@ class DoughnutChart extends StatefulWidget {
   final String? centerHeading;
   final String? centerValue;
   final List<ChartModel> chartData;
+  final List<Color>? pallets;
   final Function(String filter) onPressFilter;
 
   const DoughnutChart({
@@ -17,6 +18,7 @@ class DoughnutChart extends StatefulWidget {
     this.centerValue,
     required this.chartData,
     required this.onPressFilter,
+    this.pallets,
   });
 
   @override
@@ -46,6 +48,7 @@ class _DoughnutChartState extends State<DoughnutChart> {
             child: Stack(
               children: [
                 SfCircularChart(
+                  palette: widget.pallets,
                   backgroundColor: Colors.transparent,
                   title: ChartTitle(text: widget.title),
                   legend: const Legend(

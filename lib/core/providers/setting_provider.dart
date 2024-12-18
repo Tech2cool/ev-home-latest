@@ -736,6 +736,35 @@ class SettingProvider extends ChangeNotifier {
     // }
   }
 
+
+  Future<List<ChartModel>> getleadsChannelPartnerGraphById(
+    String id, [
+    String interval = 'monthly',
+    int? year,
+    String? startDate,
+    String? endDate,
+    int? month,
+  ]) async {
+    final leads = await _apiService.getleadsChannelPartnerGraphById(
+      id,
+      interval,
+      year,
+      startDate,
+      endDate,
+      month,
+    );
+    // if (leads) {
+    leadsChannelPartnerGraph = leads;
+    notifyListeners();
+
+    return leads;
+    // }
+  }
+
+
+
+
+
   Future<List<ChartModel>> getLeadsPostSaleGraph(
     String id, [
     String interval = 'monthly',

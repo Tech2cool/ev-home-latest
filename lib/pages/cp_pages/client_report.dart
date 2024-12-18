@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:ev_homes/components/loading/loading_square.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/models/channel_partner.dart';
 import 'package:ev_homes/core/models/lead.dart';
@@ -83,9 +84,11 @@ class _ClientReportState extends State<ClientReport> {
       searchQuery,
       currentPage,
       10,
-      widget.selectedFilter.toLowerCase() == "all"
-          ? null
-          : widget.selectedFilter.toLowerCase(),
+      selectedFilter != null
+          ? selectedFilter?.toLowerCase()
+          : (widget.selectedFilter.toLowerCase() == "all"
+              ? null
+              : widget.selectedFilter.toLowerCase()),
       stage,
     );
 
@@ -111,7 +114,7 @@ class _ClientReportState extends State<ClientReport> {
       setState(() {
         isLoading = true;
       });
-      await settingProvider.getChannelPartners();
+      // await settingProvider.getChannelPartners();
     } catch (e) {
       //
     } finally {
@@ -131,208 +134,213 @@ class _ClientReportState extends State<ClientReport> {
 
   @override
   Widget build(BuildContext context) {
-    final settingProvider = Provider.of<SettingProvider>(context);
-    final filteredClients = leads.where((lead) {
-      if (selectedFilter == 'All') return true;
-      return lead.status?.toLowerCase() == selectedFilter.toLowerCase();
-    }).toList();
-    // final loggedChannel = settingProvider.loggedChannelPartner?.id;
-    // getLeads();
-    // print(filteredClients.length);
+    final filteredClients = leads;
+    // final filteredClients = leads.where((lead) {
+    //   if (selectedFilter == 'All') return true;
+    //   return lead.approvalStatus?.toLowerCase() == selectedFilter.toLowerCase();
+    // }).toList();
 
-    return Scaffold(
-      backgroundColor: Color.fromARGB(255, 218, 240, 246),
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(55),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(25),
-            bottomRight: Radius.circular(25),
-          ),
-          child: AppBar(
-            iconTheme: IconThemeData(color: Colors.white),
-            automaticallyImplyLeading: true,
-            backgroundColor: Color(0xFF042630),
-            title: const Text(
-              'Client Report',
-              style: TextStyle(
-                color: Colors.white,
+    return Stack(
+      children: [
+        Scaffold(
+          backgroundColor: Color.fromARGB(255, 218, 240, 246),
+          appBar: PreferredSize(
+            preferredSize: const Size.fromHeight(55),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(25),
+                bottomRight: Radius.circular(25),
               ),
-            ),
-          ),
-        ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              onChanged: (value) {
-                setState(() {
-                  searchQuery = value;
-                });
-              },
-              decoration: InputDecoration(
-                hintText: 'Search clients...',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(25),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DropdownButton<String>(
-                  value: selectedDateFilter,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedDateFilter = newValue;
-                      _showDateRangePicker();
-                    });
-                  },
-                  items: <String>['All', 'Day', 'Week', 'Month', 'Custom']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
-                ),
-                DropdownButton<String>(
-                  value: selectedFilter,
-                  icon: const Icon(
-                    Icons.filter_list,
-                    color: Color(0xFF042630),
+              child: AppBar(
+                iconTheme: IconThemeData(color: Colors.white),
+                automaticallyImplyLeading: true,
+                backgroundColor: Color(0xFF042630),
+                title: const Text(
+                  'Client Report',
+                  style: TextStyle(
+                    color: Colors.white,
                   ),
-                  underline: const SizedBox.shrink(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedFilter = newValue!;
-                    });
-                  },
-                  items: <String>['All', 'Approved', 'Rejected', 'Pending']
-                      .map<DropdownMenuItem<String>>((String value) {
-                    return DropdownMenuItem<String>(
-                      value: value,
-                      child: Text(value),
-                    );
-                  }).toList(),
                 ),
-              ],
+              ),
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: filteredClients.length,
-              itemBuilder: (context, index) {
-                final client = filteredClients[index];
-                print(filteredClients.length);
-                getLeads();
-
-                return GestureDetector(
-                  onTap: () {
-                    // Navigate to CpTaggingDetails
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => CpTaggingDeatils(
-                          lead: client,
-                        ),
-                      ),
-                    );
+          body: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      searchQuery = value;
+                    });
                   },
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    child: Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(25),
-                      ),
-                      elevation: 4,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  '${client.firstName ?? ""} ${client.lastName ?? ""}',
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 16),
-                                  decoration: BoxDecoration(
-                                    color: Color(0xFF005254),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    (client.phoneNumber?.toString()) ?? "0",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  client.startDate != null
-                                      ? DateFormat('dd-MM-yyyy')
-                                          .format(client.startDate!)
-                                      : "",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[700],
-                                  ),
-                                ),
-                                Text(
-                                  client.validTill != null
-                                      ? DateFormat('dd-MM-yyyy')
-                                          .format(client.validTill!)
-                                      : "",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey[700],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            // Text(
-                            //   Helper.capitalize(
-                            //     getStatus1(lead),
-                            //   ),
-                            //   style: TextStyle(
-                            //     fontSize: 14,
-                            //     color: _getStatusColor(getStatus1(lead)),
-                            //   ),
-                            // ),
-                          ],
-                        ),
-                      ),
+                  decoration: InputDecoration(
+                    hintText: 'Search clients...',
+                    prefixIcon: Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DropdownButton<String>(
+                      value: selectedDateFilter,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedDateFilter = newValue;
+                          _showDateRangePicker();
+                        });
+                      },
+                      items: <String>['All', 'Day', 'Week', 'Month', 'Custom']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                    DropdownButton<String>(
+                      value: selectedFilter,
+                      icon: const Icon(
+                        Icons.filter_list,
+                        color: Color(0xFF042630),
+                      ),
+                      underline: const SizedBox.shrink(),
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedFilter = newValue!;
+                        });
+                        getLeads(resetPage: true);
+                      },
+                      items: <String>['All', 'Approved', 'Rejected', 'Pending']
+                          .map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ListView.builder(
+                  itemCount: filteredClients.length,
+                  itemBuilder: (context, index) {
+                    final client = filteredClients[index];
+                    // print(filteredClients.length);
+                    getLeads();
+
+                    return GestureDetector(
+                      onTap: () {
+                        // Navigate to CpTaggingDetails
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CpTaggingDeatils(
+                              lead: client,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(25),
+                          ),
+                          elevation: 4,
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      '${client.firstName ?? ""} ${client.lastName ?? ""}',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 16),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xFF005254),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Text(
+                                        (client.phoneNumber?.toString()) ?? "0",
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      client.startDate != null
+                                          ? DateFormat('dd-MM-yyyy')
+                                              .format(client.startDate!)
+                                          : "",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    Text(
+                                      client.validTill != null
+                                          ? DateFormat('dd-MM-yyyy')
+                                              .format(client.validTill!)
+                                          : "",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                // Text(
+                                //   Helper.capitalize(
+                                //     getStatus1(lead),
+                                //   ),
+                                //   style: TextStyle(
+                                //     fontSize: 14,
+                                //     color: _getStatusColor(getStatus1(lead)),
+                                //   ),
+                                // ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        if (isLoading) LoadingSquare()
+      ],
     );
   }
 

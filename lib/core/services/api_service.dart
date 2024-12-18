@@ -213,12 +213,12 @@ class ApiService {
       if (approvalStatus != null) {
         url += '&approvalStatus=$approvalStatus';
       }
-      print("pass1");
+      // print("pass1");
       if (stage != null) {
         url += '&stage=$stage';
       }
-      print(url);
-      print("pass2");
+      // print(url);
+      // print("pass2");
       final Response response = await _dio.get(url);
 
       print(response.data);
@@ -237,14 +237,14 @@ class ApiService {
 
         return emptyPagination;
       }
-      print(response.data['data']);
+      // print(response.data['data']);
       final items = response.data['data'] as List<dynamic>;
-      print("pass4");
+      // print("pass4");
       List<Lead> leads = [];
       if (items.isNotEmpty) {
-        print("yes");
+        // print("yes");
         leads = items.map((emp) => Lead.fromJson(emp)).toList();
-        print("whj");
+        // print("whj");
       }
       final newPagination = PaginationModel<Lead>(
         code: response.data['code'],
@@ -260,7 +260,7 @@ class ApiService {
         data: leads,
       );
 
-      print("pass5");
+      // print("pass5");
       return newPagination;
     } on DioException catch (e) {
       String errorMessage = 'Something went wrong';
@@ -271,7 +271,7 @@ class ApiService {
         errorMessage = e.message.toString();
       }
 
-      print("pass6");
+      // print("pass6");
       Helper.showCustomSnackBar(errorMessage);
       final emptyPagination = PaginationModel<Lead>(
         code: 404,
@@ -586,6 +586,67 @@ class ApiService {
         // Other types of errors (network, etc.)
         errorMessage = e.message.toString();
       }
+      Helper.showCustomSnackBar(errorMessage);
+
+      return [];
+    }
+  }
+
+  Future<List<ChartModel>> getleadsChannelPartnerGraphById(
+    String id, [
+    String interval = 'monthly',
+    int? year,
+    String? startDate,
+    String? endDate,
+    int? month,
+  ]) async {
+    print("yes");
+    try {
+      var url = '/lead-count-channel-partners-id/$id?interval=$interval';
+      if (year != null) {
+        url += '&year=$year';
+      }
+      if (month != null) {
+        url += '&month=$month';
+      }
+
+      if (startDate != null) {
+        url += '&startDate=$startDate';
+      }
+
+      if (endDate != null) {
+        url += '&endDate=$endDate';
+      }
+      print("pass1");
+      final Response response = await _dio.get(url);
+
+      print(response.data);
+      if (response.data['code'] != 200) {
+        Helper.showCustomSnackBar(response.data['message']);
+        return [];
+      }
+      final List<dynamic> dataList = response.data['data'];
+      final List<ChartModel> datas = dataList.map((data) {
+        return ChartModel(
+          category: data['month'],
+          value: double.parse(data['count'].toString()),
+        );
+      }).toList();
+      
+      print("pass2");
+      return datas;
+    } on DioException catch (e) {
+      String errorMessage = 'Something went wrong';
+
+      if (e.response != null) {
+        // Backend response error message
+        errorMessage = e.response?.data['message'] ?? errorMessage;
+      } else {
+        // Other types of errors (network, etc.)
+        errorMessage = e.message.toString();
+      }
+
+      print("pass3");
       Helper.showCustomSnackBar(errorMessage);
 
       return [];

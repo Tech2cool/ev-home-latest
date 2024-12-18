@@ -24,7 +24,7 @@ class ClientReport extends StatefulWidget {
 class _ClientReportState extends State<ClientReport> {
   String? selectedFilter;
   String searchQuery = '';
-  String selectedDateFilter = 'All';
+  String? selectedDateFilter = 'All';
   DateTime? customStartDate;
   DateTime? customEndDate;
   bool isLoading = false;
@@ -177,9 +177,7 @@ class _ClientReportState extends State<ClientReport> {
                 child: TextField(
                   onChanged: (value) {
                     setState(() {
-
                       searchQuery = value;
-
                     });
                   },
                   decoration: InputDecoration(
@@ -190,7 +188,6 @@ class _ClientReportState extends State<ClientReport> {
                     ),
                   ),
                 ),
-
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -218,8 +215,6 @@ class _ClientReportState extends State<ClientReport> {
                       icon: const Icon(
                         Icons.filter_list,
                         color: Color(0xFF042630),
-
-
                       ),
                       underline: const SizedBox.shrink(),
                       onChanged: (String? newValue) {
@@ -383,15 +378,26 @@ class _ClientReportState extends State<ClientReport> {
   bool _passesDateFilter(String dateString) {
     if (selectedDateFilter == 'All') return true;
 
-    if (customStartDate == null || customEndDate == null) return true;
-
     DateTime date = DateTime.parse(dateString);
+    DateTime now = DateTime.now();
 
-    return date.isAfter(customStartDate!.subtract(Duration(days: 1))) &&
-           date.isBefore(customEndDate!.add(Duration(days: 1)));
-
-
-
+    switch (selectedDateFilter) {
+      case 'Day':
+        return date.year == customStartDate!.year &&
+            date.month == customStartDate!.month &&
+            date.day == customStartDate!.day;
+      case 'Week':
+        return date.isAfter(customStartDate!.subtract(Duration(days: 1))) &&
+            date.isBefore(customEndDate!.add(Duration(days: 1)));
+      case 'Month':
+        return date.year == customStartDate!.year &&
+            date.month == customStartDate!.month;
+      case 'Custom':
+        return date.isAfter(customStartDate!.subtract(Duration(days: 1))) &&
+            date.isBefore(customEndDate!.add(Duration(days: 1)));
+      default:
+        return true;
+    }
   }
 
   void _showDateRangePicker() async {
@@ -416,11 +422,8 @@ class _ClientReportState extends State<ClientReport> {
         if (picked != null) {
           setState(() {
             customStartDate = DateTime(picked.year, picked.month, picked.day);
-
             customEndDate =
                 DateTime(picked.year, picked.month, picked.day, 23, 59, 59);
-
-
           });
         }
         break;
@@ -436,11 +439,8 @@ class _ClientReportState extends State<ClientReport> {
         );
         if (picked != null) {
           setState(() {
-
             customStartDate = picked.start;
             customEndDate = picked.end;
-
-
           });
         }
         break;
@@ -454,10 +454,8 @@ class _ClientReportState extends State<ClientReport> {
         if (picked != null) {
           setState(() {
             customStartDate = DateTime(picked.year, picked.month, 1);
-
             customEndDate =
                 DateTime(picked.year, picked.month + 1, 0, 23, 59, 59);
-
           });
         }
         break;

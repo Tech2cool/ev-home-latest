@@ -5,7 +5,7 @@ import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/providers/attendance_provider.dart';
 import 'package:ev_homes/core/providers/geolocation_provider.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
-import 'package:ev_homes/pages/admin_pages/attendance.dart';
+import 'package:ev_homes/pages/attendance_pages/attendance_log.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +14,7 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../pages/admin_pages/employees_list.dart';
 import '../pages/admin_pages/leave_employee.dart';
-import '../pages/admin_pages/today_attendance.dart';
+import '../pages/attendance_pages/today_attendance.dart';
 
 class TopcardWithAvatar extends StatefulWidget {
   final Function() takePhoto;
@@ -51,6 +51,39 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
     DateTime.utc(2024, 8, 15), // Independence Day
     DateTime.utc(2024, 10, 2), // Gandhi Jayanti
   ];
+  bool isLoading = false;
+
+  Future<void> onRefresh() async {
+    final attProvider = Provider.of<AttendanceProvider>(
+      context,
+      listen: false,
+    );
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+
+    try {
+      setState(() {
+        isLoading = true;
+      });
+      await Future.wait([
+        attProvider.getAttendanceAll(settingProvider.loggedAdmin!.id!),
+      ]);
+    } catch (e) {
+      //
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    onRefresh();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +95,11 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
     final loggedAdmin = settingProvider.loggedAdmin;
     final bool isInRadius = geolocationProvider.isWithinRadius;
     bool isCheckedIn = attendanceProvider.status == "present";
+    Map<DateTime, dynamic> attendanceMap = {
+      for (var a in attendanceProvider.attendanceList)
+        DateTime(a.year, a.month, a.day): a.status,
+    };
+    print(attendanceMap);
 
     String formatTime(int seconds) {
       final hours = seconds ~/ 3600;
@@ -363,7 +401,8 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const Attendance()),
+                              builder: (context) => const AttendanceLog(),
+                            ),
                           );
                         },
                         child: const ActionTile(
@@ -526,11 +565,10 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                                     Colors.blue, // Weekly Off
                                     Colors.orange, // Leave
                                     Colors.purple // Other
-                                  ][i], // Different color for each circle
+                                  ][i],
                                 ),
                               ),
-                              const SizedBox(
-                                  width: 8), // Space between circle and text
+                              const SizedBox(width: 8),
                               Text(
                                 [
                                   "Present",
@@ -564,52 +602,31 @@ class _TopcardWithAvatarState extends State<TopcardWithAvatar> {
                       this.focusedDay = focusedDay;
                     });
                   },
+                  onPageChanged: (focusedDay) {
+                    setState(() {
+                      this.focusedDay = focusedDay;
+                    });
+                  },
                   daysOfWeekVisible: true,
+                  pageJumpingEnabled: false,
                   daysOfWeekStyle: const DaysOfWeekStyle(
-                    weekdayStyle:
-                        TextStyle(color: Colors.black), // Weekdays color
-                    weekendStyle:
-                        TextStyle(color: Colors.blue), // Sundays color
+                    weekdayStyle: TextStyle(color: Colors.black),
+                    weekendStyle: TextStyle(color: Colors.blue),
                   ),
                   calendarBuilders: CalendarBuilders(
                     defaultBuilder: (context, day, focusedDay) {
-                      // Apply blue to all Sundays
-                      if (day.weekday == DateTime.sunday) {
-                        return _buildDayContainer(day, Colors.blue);
-                      }
-                      // Apply purple for government holidays after today
-                      else if (governmentHolidays.contains(day)) {
-                        return _buildDayContainer(day, Colors.purple);
-                      }
-                      // Apply green to all dates up to today (excluding Sundays)
-                      else if (day.isBefore(DateTime.now()) ||
-                          day.isAtSameMomentAs(DateTime.now())) {
-                        return _buildDayContainer(day, Colors.green);
-                      }
-
-                      return _buildDayContainer(
-                          day, Colors.grey); // Default color for future days
-                    },
-                    todayBuilder: (context, day, focusedDay) {
-                      return _buildDayContainer(
-                          day, Colors.green); // Today in green
-                    },
-                    markerBuilder: (context, day, events) {
-                      // Special colors for specific dates in October only
-                      if (day.month == 10) {
-                        if (day.day == 8 || day.day == 9) {
+                      if (attendanceMap.containsKey(day)) {
+                        final status = attendanceMap[day];
+                        if (status == 'present' || status == 'completed') {
+                          return _buildDayContainer(day, Colors.green);
+                        } else if (status == 'absent') {
                           return _buildDayContainer(day, Colors.red); // Absent
-                        } else if (day.day == 15) {
-                          return _buildDayContainer(
-                              day, Colors.yellow); // Leave
                         }
                       }
-                      return null;
+                      return null; // Default styling for other days
                     },
                   ),
                 ),
-
-// Helper method to create day container with specific color
               ],
             ),
           ),

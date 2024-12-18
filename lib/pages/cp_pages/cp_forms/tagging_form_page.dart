@@ -18,8 +18,7 @@ class ClientTaggingForm extends StatefulWidget {
 
 class _ClientTaggingFormState extends State<ClientTaggingForm> {
   final TextEditingController _startDateController = TextEditingController();
-  final TextEditingController _validTillDateController =
-      TextEditingController();
+  final TextEditingController _validTillDateController = TextEditingController();
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
@@ -79,7 +78,6 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
       });
     }
   }
-
   Future<void> _selectDate(BuildContext context) async {
     final DateTime today = DateTime.now();
     final DateTime initialDate = _selectedDate ?? today;
@@ -160,7 +158,6 @@ class _ClientTaggingFormState extends State<ClientTaggingForm> {
       context,
       listen: false,
     );
-
     Lead newLead = Lead(
       id: "",
       email: _emailController.text.trim(),

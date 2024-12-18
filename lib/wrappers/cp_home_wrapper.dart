@@ -3,6 +3,7 @@ import 'package:ev_homes/pages/cp_pages/cp_dashboard_page.dart';
 import 'package:ev_homes/pages/cp_pages/cp_forms/cp_enquiry_form.dart';
 import 'package:ev_homes/pages/cp_pages/cp_forms/tagging_form_page.dart';
 import 'package:ev_homes/pages/cp_pages/cp_performance_page.dart';
+import 'package:ev_homes/pages/cp_pages/cp_profile_page.dart';
 import 'package:ev_homes/pages/cp_pages/home_page.dart';
 import 'package:ev_homes/pages/customer_pages/emi_calculator.dart';
 import 'package:flutter/material.dart';
@@ -313,7 +314,7 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
                               Icons.settings,
                               'Adjust app settings',
                               () {
-                                // Navigate to Settings screen
+                                const ProfileScreen();
                               },
                             ),
                           ),
@@ -330,7 +331,6 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
       },
     );
   }
-
   Widget _buildActionCard(
       String title, IconData icon, String description, VoidCallback onTap) {
     return GestureDetector(

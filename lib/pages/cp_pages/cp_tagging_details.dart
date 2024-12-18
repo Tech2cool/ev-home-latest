@@ -80,7 +80,7 @@ class _CpTaggingDeatilsState extends State<CpTaggingDeatils> {
                         NamedCard(
                             icon: Icons.email,
                             heading: "Client Email",
-                            value: widget.lead.email ?? ""),
+                            value: widget.lead.email ?? "NA"),
                         const SizedBox(height: 8),
                       ],
                     ),
@@ -114,7 +114,7 @@ class _CpTaggingDeatilsState extends State<CpTaggingDeatils> {
                         NamedCard(
                           icon: Icons.home_work,
                           heading: "Requirements",
-                          value: widget.lead.requirement.toString() ?? "",
+                          value: widget.lead.requirement.join(", ") ?? "",
                         ),
                         const SizedBox(height: 5),
                         NamedCard(

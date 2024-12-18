@@ -87,22 +87,7 @@ class _ClientReportState extends State<ClientReport> {
           ? null
           : widget.selectedFilter.toLowerCase(),
       stage,
-      // selectedChannelPartner?.id,
     );
-    print("Request Parameters:");
-    print("widget.id: ${widget.id}");
-    print(
-        "loggedChannelPartner?.id: ${settingProvider.loggedChannelPartner?.id}");
-    print("searchQuery: $searchQuery");
-    print("currentPage: $currentPage");
-    print("stage: $stage");
-    print("selectedFilter: ${widget.selectedFilter.toLowerCase()}");
-    // print("selectedChannelPartner?.id: ${selectedChannelPartner?.id}");
-
-    print("API Response:");
-// If visitsResp has a `toJson` method
-
-    // print(visitsResp);
 
     setState(() {
       if (resetPage) {
@@ -114,8 +99,6 @@ class _ClientReportState extends State<ClientReport> {
       isLoading = false; // Hide loading
       isFetchingMore = false; // Hide loading more
     });
-
-    print("Total leads: $leads");
   }
 
   Future<void> onRefresh() async {
@@ -148,8 +131,11 @@ class _ClientReportState extends State<ClientReport> {
 
   @override
   Widget build(BuildContext context) {
-    final filteredClients = leads;
     final settingProvider = Provider.of<SettingProvider>(context);
+    final filteredClients = leads.where((lead) {
+      if (selectedFilter == 'All') return true;
+      return lead.status?.toLowerCase() == selectedFilter.toLowerCase();
+    }).toList();
     // final loggedChannel = settingProvider.loggedChannelPartner?.id;
     // getLeads();
     // print(filteredClients.length);
@@ -421,23 +407,26 @@ class _ClientReportState extends State<ClientReport> {
         );
         if (picked != null) {
           setState(() {
-            customStartDate = picked;
-            customEndDate = picked;
+            customStartDate = DateTime(picked.year, picked.month, picked.day);
+            customEndDate =
+                DateTime(picked.year, picked.month, picked.day, 23, 59, 59);
           });
         }
         break;
       case 'Week':
-        final DateTime? picked = await showDatePicker(
+        final DateTimeRange? picked = await showDateRangePicker(
           context: context,
-          initialDate: now,
           firstDate: DateTime(2020),
           lastDate: DateTime(2025),
+          initialDateRange: DateTimeRange(
+            start: now.subtract(Duration(days: now.weekday - 1)),
+            end: now.add(Duration(days: 7 - now.weekday)),
+          ),
         );
         if (picked != null) {
           setState(() {
-            customStartDate =
-                picked.subtract(Duration(days: picked.weekday - 1));
-            customEndDate = customStartDate!.add(Duration(days: 6));
+            customStartDate = picked.start;
+            customEndDate = picked.end;
           });
         }
         break;
@@ -451,7 +440,8 @@ class _ClientReportState extends State<ClientReport> {
         if (picked != null) {
           setState(() {
             customStartDate = DateTime(picked.year, picked.month, 1);
-            customEndDate = DateTime(picked.year, picked.month + 1, 0);
+            customEndDate =
+                DateTime(picked.year, picked.month + 1, 0, 23, 59, 59);
           });
         }
         break;

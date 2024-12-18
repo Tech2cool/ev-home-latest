@@ -58,7 +58,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
+        backgroundColor: const Color.fromARGB(255, 157, 211, 221),
         title: const Text(
           'Dashboard',
           style: TextStyle(
@@ -66,111 +66,115 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          CpVideoplayer(),
-          // Container(
-          //   decoration: const BoxDecoration(
-          //     gradient: LinearGradient(
-          //       begin: Alignment.topCenter,
-          //       end: Alignment.bottomCenter,
-          //       colors: [
-          //         Color.fromARGB(44, 134, 185, 176), // Start color
-          //         Color.fromARGB(44, 76, 114, 115),
-          //         // Color.fromARGB(199, 248, 85, 4),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const ClientReport(selectedFilter: 'All'),
-                              ),
-                            );
-                          },
-                          child: _buildLabelBox(
-                              cpLeads.totalItems.toString(), 'Leads'),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ClientReport(
-                                    selectedFilter: 'Approved'),
-                              ),
-                            );
-                          },
-                          child: _buildLabelBox(
-                              cpLeads.approvedCount.toString(),
-                              'Approved'), // Dummy data for "Approved"
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ClientReport(
-                                    selectedFilter: 'Rejected'),
-                              ),
-                            );
-                          },
-                          child: _buildLabelBox(
-                              cpLeads.rejectedCount.toString(),
-                              'Rejected'), // Dummy data for "Rejected"
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ClientReport(
-                                    selectedFilter: 'Pending'),
-                              ),
-                            );
-                          },
-                          child: FittedBox(
+      body: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: Stack(
+          children: [
+            CpVideoplayer(),
+            // Container(
+            //   decoration: const BoxDecoration(
+            //     gradient: LinearGradient(
+            //       begin: Alignment.topCenter,
+            //       end: Alignment.bottomCenter,
+            //       colors: [
+            //         Color.fromARGB(44, 134, 185, 176), // Start color
+            //         Color.fromARGB(44, 76, 114, 115),
+            //         // Color.fromARGB(199, 248, 85, 4),
+            //       ],
+            //     ),
+            //   ),
+            // ),
+            Padding(
+              padding: const EdgeInsets.all(15),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ClientReport(selectedFilter: 'All'),
+                                ),
+                              );
+                            },
                             child: _buildLabelBox(
-                                cpLeads.pendingCount.toString(),
-                                'In progress'), // Dummy data for "In Progress"
+                                cpLeads.totalItems.toString(), 'Leads'),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  const LineChartDemo(list: []), // Dummy data for charts
-                  const SizedBox(height: 20),
-                  const PieChartDemo(leads: []), // Dummy data for charts
-                  const SizedBox(height: 20),
-                  const FunnelChartDemo(leads: []), // Dummy data for charts
-                  const SizedBox(height: 180),
-                ],
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ClientReport(
+                                      selectedFilter: 'Approved'),
+                                ),
+                              );
+                            },
+                            child: _buildLabelBox(
+                                cpLeads.approvedCount.toString(),
+                                'Approved'), // Dummy data for "Approved"
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ClientReport(
+                                      selectedFilter: 'Rejected'),
+                                ),
+                              );
+                            },
+                            child: _buildLabelBox(
+                                cpLeads.rejectedCount.toString(),
+                                'Rejected'), // Dummy data for "Rejected"
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ClientReport(
+                                    selectedFilter: 'Pending',
+                                  ),
+                                ),
+                              );
+                            },
+                            child: FittedBox(
+                              child: _buildLabelBox(
+                                  cpLeads.pendingCount.toString(),
+                                  'In progress'), // Dummy data for "In Progress"
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    const LineChartDemo(list: []), // Dummy data for charts
+                    const SizedBox(height: 20),
+                    const PieChartDemo(leads: []), // Dummy data for charts
+                    const SizedBox(height: 20),
+                    const FunnelChartDemo(leads: []), // Dummy data for charts
+                    const SizedBox(height: 180),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

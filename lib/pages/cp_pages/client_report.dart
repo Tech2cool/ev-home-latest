@@ -22,7 +22,7 @@ class ClientReport extends StatefulWidget {
 }
 
 class _ClientReportState extends State<ClientReport> {
-  late String selectedFilter;
+  String? selectedFilter;
   String searchQuery = '';
   String? selectedDateFilter = 'All';
   DateTime? customStartDate;
@@ -78,30 +78,36 @@ class _ClientReportState extends State<ClientReport> {
         isFetchingMore = true; // Show loading more indicator
       });
     }
+    try {
+      final visitsResp = await settingProvider.searchLeadChannelPartner(
+        widget.id ?? settingProvider.loggedChannelPartner!.id!,
+        searchQuery,
+        currentPage,
+        10,
+        selectedFilter != null
+            ? selectedFilter?.toLowerCase()
+            : (widget.selectedFilter?.toLowerCase() == "all"
+                ? null
+                : widget.selectedFilter.toLowerCase()),
+        stage,
+      );
 
-    final visitsResp = await settingProvider.searchLeadChannelPartner(
-      widget.id ?? settingProvider.loggedChannelPartner?.id ?? "",
-      searchQuery,
-      currentPage,
-      10,
-      selectedFilter != null
-          ? selectedFilter?.toLowerCase()
-          : (widget.selectedFilter.toLowerCase() == "all"
-              ? null
-              : widget.selectedFilter.toLowerCase()),
-      stage,
-    );
-
-    setState(() {
-      if (resetPage) {
-        leads = visitsResp.data; // Set new leads
-      } else {
-        leads.addAll(visitsResp.data); // Append more leads
-      }
-      totalPages = visitsResp.totalPages; // Update total pages
-      isLoading = false; // Hide loading
-      isFetchingMore = false; // Hide loading more
-    });
+      setState(() {
+        if (resetPage) {
+          leads = visitsResp.data; // Set new leads
+        } else {
+          leads.addAll(visitsResp.data); // Append more leads
+        }
+        totalPages = visitsResp.totalPages; // Update total pages
+        isLoading = false; // Hide loading
+        isFetchingMore = false; // Hide loading more
+      });
+    } catch (e) {
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> onRefresh() async {

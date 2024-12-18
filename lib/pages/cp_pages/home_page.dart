@@ -2,13 +2,11 @@ import 'package:ev_homes/components/cp_videoplayer.dart';
 import 'package:ev_homes/core/helper/helper.dart';
 import 'package:ev_homes/core/providers/setting_provider.dart';
 import 'package:ev_homes/pages/cp_pages/cp_profile_page.dart';
-import 'package:ev_homes/pages/cp_pages/resale_property_page.dart';
 import 'package:ev_homes/pages/upcoming_project_details.dart';
 import 'package:ev_homes/pages/our_project_details.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:video_player/video_player.dart';
 
 import '../customer_pages/carousel_page.dart';
 
@@ -50,25 +48,7 @@ class _HomeScreenState extends State<CpHomeScreen> {
     return Stack(
       children: [
         CpVideoplayer(),
-
-        // Gradient overlay to enhance text visibility
-        // Positioned.fill(
-        //   child: Container(
-        //     decoration: const BoxDecoration(
-        //       gradient: LinearGradient(
-        //         colors: [
-        //           Colors.black54,
-        //           Colors.black38,
-        //           Colors.transparent,
-        //         ],
-        //         begin: Alignment.topCenter,
-        //         end: Alignment.bottomCenter,
-        //       ),
-        //     ),
-        //   ),
-        // ),
         Scaffold(
-          // backgroundColor: Constant.bgColor,
           backgroundColor: Colors.transparent,
           appBar: PreferredSize(
             preferredSize: const Size.fromHeight(60),

@@ -198,8 +198,8 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
     if (selectedVisit == "virtual-meeting") {
       await onVerfiredOrSkipOtp(true);
     } else {
-      // await onVerfiredOrSkipOtp(false);
-      await generateOtp();
+      await onVerfiredOrSkipOtp();
+      // await generateOtp();
     }
   }
 
@@ -951,7 +951,6 @@ class _AddSiteVisitFormPageState extends State<AddSiteVisitFormPage> {
                     ),
                     const SizedBox(height: 16),
                     // Name Field with Prefix Dropdown
-                    Text(_selectedDate?.toIso8601String() ?? ""),
                     // if (width > 500)
                     Column(
                       children: [

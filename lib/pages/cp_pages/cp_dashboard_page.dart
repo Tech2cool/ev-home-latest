@@ -53,6 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     final settingProvider = Provider.of<SettingProvider>(context);
     final cpLeads = settingProvider.searchLeadsChannelPartner;
+    print(cpLeads);
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -115,7 +116,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               ),
                             );
                           },
-                          child: _buildLabelBox(cpLeads.totalItems.toString(),
+                          child: _buildLabelBox(
+                              cpLeads.approvedCount.toString(),
                               'Approved'), // Dummy data for "Approved"
                         ),
                       ),
@@ -132,7 +134,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             );
                           },
                           child: _buildLabelBox(
-                              '20', 'Rejected'), // Dummy data for "Rejected"
+                              cpLeads.rejectedCount.toString(),
+                              'Rejected'), // Dummy data for "Rejected"
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -143,13 +146,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => const ClientReport(
-                                    selectedFilter: 'In Progress'),
+                                    selectedFilter: 'Pending'),
                               ),
                             );
                           },
                           child: FittedBox(
-                            child: _buildLabelBox('30',
-                                'In Progress'), // Dummy data for "In Progress"
+                            child: _buildLabelBox(
+                                cpLeads.pendingCount.toString(),
+                                'In progress'), // Dummy data for "In Progress"
                           ),
                         ),
                       ),
@@ -713,6 +717,7 @@ class FunnelChartDemo extends StatefulWidget {
 class _FunnelChartDemoState extends State<FunnelChartDemo> {
   final String _selectedFilter = "Last Week";
   late Map<String, List<Map<String, String>>> _funnelData;
+  bool isLoading = false;
 
   // final Map<String, Color> _stageColors = {
   //   "Total": Colors.blue,
@@ -722,6 +727,29 @@ class _FunnelChartDemoState extends State<FunnelChartDemo> {
   //   "Site visited": Colors.green,
   //   "Booked": Colors.teal,
   // };
+
+  // Future<void> _onRefresh() async {
+  //   final settingProvider = Provider.of<SettingProvider>(
+  //     context,
+  //     listen: false,
+  //   );
+  //   try {
+  //     setState(() {
+  //       isLoading = true;
+  //     });
+  //     await settingProvider.getPostSaleLead();
+  //     await settingProvider.getOurProject();
+  //     await settingProvider.getDesignation();
+  //     await settingProvider.getDivision();
+  //     await settingProvider.getDepartment();
+  //   } catch (e) {
+  //     //
+  //   } finally {
+  //     setState(() {
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
   @override
   void initState() {

@@ -1,4 +1,5 @@
 import 'package:ev_homes/core/models/lead.dart';
+import 'package:ev_homes/core/models/our_project.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -11,7 +12,9 @@ import 'dart:io';
 
 class CostGenerator extends StatefulWidget {
   final Lead? lead;
-  const CostGenerator({super.key, this.lead});
+  final Flat? flat;
+  final double? allInclusive;
+  const CostGenerator({super.key, this.lead, this.flat, this.allInclusive});
 
   @override
   State<CostGenerator> createState() => _CostGeneratorState();
@@ -420,9 +423,19 @@ class _CostGeneratorState extends State<CostGenerator> {
   @override
   void initState() {
     super.initState();
-    clientNameController.text =
-        '${widget.lead?.firstName ?? ""} ${widget.lead?.lastName ?? ""}';
-    additionalNameController.text = widget.lead?.address ?? "";
+    if (widget.lead != null) {
+      clientNameController.text =
+          '${widget.lead?.firstName ?? ""} ${widget.lead?.lastName ?? ""}';
+      additionalNameController.text = widget.lead?.address ?? "";
+    }
+    if (widget.flat != null) {
+      floorController.text = widget.flat?.floor?.toString() ?? "";
+      unitNoController.text = widget.flat?.flatNo ?? "";
+      carpetAreaController.text = widget.flat?.carpetArea.toString() ?? "";
+      // allInclusiveAmountController.text =
+      //     widget.flat?.allInclusiveValue.toString() ?? "";
+    }
+    allInclusiveAmountController.text = widget.allInclusive?.toString() ?? "";
   }
 
   @override

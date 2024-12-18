@@ -1,4 +1,5 @@
 import 'package:ev_homes/core/models/lead.dart';
+import 'package:ev_homes/core/models/our_project.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -10,7 +11,11 @@ import 'package:permission_handler/permission_handler.dart';
 
 class PaymentScheduleGenerators extends StatefulWidget {
   final Lead? lead;
-  const PaymentScheduleGenerators({super.key, this.lead});
+  final Flat? flat;
+  final double? allInclusive;
+
+  const PaymentScheduleGenerators(
+      {super.key, this.lead, this.flat, this.allInclusive});
 
   @override
   _PaymentScheduleGeneratorState createState() =>
@@ -508,9 +513,19 @@ class _PaymentScheduleGeneratorState extends State<PaymentScheduleGenerators> {
   @override
   void initState() {
     super.initState();
-    clientNameController.text =
-        '${widget.lead?.firstName ?? ""} ${widget.lead?.lastName ?? ""}';
-    phoneController.text = widget.lead?.phoneNumber?.toString() ?? '0';
+    if (widget.lead != null) {
+      clientNameController.text =
+          '${widget.lead?.firstName ?? ""} ${widget.lead?.lastName ?? ""}';
+      phoneController.text = widget.lead?.phoneNumber?.toString() ?? '0';
+    }
+    if (widget.flat != null) {
+      flatNoController.text = widget.flat?.flatNo ?? "";
+
+      carpetAreaController.text = widget.flat?.carpetArea.toString() ?? "";
+      // allInclusiveController.text =
+      //     widget.flat?.allInclusiveValue.toString() ?? "";
+    }
+    allInclusiveController.text = widget.allInclusive?.toString() ?? "";
   }
 
   @override

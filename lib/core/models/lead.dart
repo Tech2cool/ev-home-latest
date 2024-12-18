@@ -86,7 +86,7 @@ class Lead {
   });
 
   factory Lead.fromJson(Map<String, dynamic> json) {
-    print(json['cycleHistory']);
+    // print(json['cycleHistory']);
     return Lead(
       id: json['_id'],
       email: json['email'],

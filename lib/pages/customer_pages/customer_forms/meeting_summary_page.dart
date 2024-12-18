@@ -2,6 +2,8 @@
 // import 'package:ev_homes/Customer%20pages/AnimatedGradientScreen.dart';
 import 'dart:async';
 import 'package:ev_homes/components/animated_gradient_bg.dart';
+import 'package:ev_homes/components/blue_animated_gradient.dart';
+import 'package:ev_homes/components/cp_videoplayer.dart';
 import 'package:flutter/material.dart';
 
 class MeetingSummaryPage extends StatelessWidget {
@@ -26,7 +28,7 @@ class MeetingSummaryPage extends StatelessWidget {
       ),
       body: Stack(
         children: [
-          const AnimatedGradientBg(),
+          const blueanimatesgradint(),
           // Foreground content
           Padding(
             padding: const EdgeInsets.all(16.0),

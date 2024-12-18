@@ -15,7 +15,7 @@ class _CpVideoplayerState extends State<CpVideoplayer> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _videoController = VideoPlayerController.asset('assets/video/video_2.mp4')
+    _videoController = VideoPlayerController.asset('assets/video/home_bg.mp4')
       ..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized
         setState(() {});

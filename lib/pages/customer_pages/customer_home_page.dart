@@ -64,15 +64,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       const Text(
                         "Welcome!",
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style:
+                            TextStyle(color: Color(0xFF042630), fontSize: 18),
                       ),
                       const SizedBox(
                         height: 4,
                       ),
                       Text(
                         loggedCustomer?.firstName ?? "",
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 20),
+                        style: const TextStyle(
+                            color: Color(0xFF042630),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20),
                       ),
                     ],
                   ),
@@ -128,30 +131,32 @@ class _HomeScreenState extends State<HomeScreen> {
                             decoration: InputDecoration(
                               hintText: "Search...",
                               hintStyle: const TextStyle(
-                                color: Colors.black,
+                                color: Color(0xFF042630),
                               ),
                               prefixIcon: const Icon(
                                 Icons.search,
-                                color: Colors.black,
+                                color: Color(0xFF042630),
                               ),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: const BorderSide(
-                                  color: Color(0xFFFEEc92),
+                                  color: Color(0xFF042630),
                                   width: 2.0, // Set the border width
                                 ),
                               ),
                               enabledBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: const BorderSide(
-                                  color: Color(0xFFFEEc92),
+                                  color: Color(
+                                      0xFF042630), // Set the color when not focused
                                   width: 2.0,
                                 ),
                               ),
                               focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(20),
                                 borderSide: const BorderSide(
-                                  color: Color(0xFFFEEc92),
+                                  color: Color(
+                                      0xFF042630), // Color when the field is focused
                                   width: 2.0,
                                 ),
                               ),
@@ -186,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text(
                             "Our Projects",
                             style: TextStyle(
-                                color: Colors.white,
+                                color: Color(0xFF042630),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
@@ -207,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text(
                             "Upcoming Projects",
                             style: TextStyle(
-                                color: Colors.white,
+                                color: Color(0xFF042630),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),
@@ -228,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Text(
                             "What's New",
                             style: TextStyle(
-                                color: Colors.white,
+                                color: Color(0xFF042630),
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),
                           ),

@@ -1,3 +1,4 @@
+import 'package:ev_homes/components/blue_animated_gradient.dart';
 import 'package:flutter/material.dart';
 import 'package:ev_homes/components/animated_gradient_bg.dart';
 
@@ -59,7 +60,7 @@ class _FeaturedProjectScreenState extends State<FeaturedProjectScreen>
     return Stack(
       children: [
         const Positioned.fill(
-          child: CpVideoplayer(),
+          child: blueanimatesgradint(),
         ),
         Scaffold(
           backgroundColor: Colors.transparent,

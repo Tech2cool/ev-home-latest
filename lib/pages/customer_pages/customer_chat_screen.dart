@@ -4,15 +4,15 @@ import 'package:ev_homes/components/cp_videoplayer.dart';
 import 'package:ev_homes/wrappers/customer_home_wrapper.dart';
 import 'package:flutter/material.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatScreen1 extends StatefulWidget {
   final Function() gBack;
-  const ChatScreen({super.key, required this.gBack});
+  const ChatScreen1({super.key, required this.gBack});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<ChatScreen1> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
+class _ChatScreenState extends State<ChatScreen1> with TickerProviderStateMixin {
   List<Map<String, dynamic>> messages = [
     {"text": "Welcome to EV Homes!", "isBot": true},
     {"text": "How can I assist you today?", "isBot": true, "showOptions": true}

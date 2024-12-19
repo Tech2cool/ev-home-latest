@@ -1,4 +1,5 @@
-import 'package:ev_homes/pages/customer_pages/customer_chat_screen.dart';
+import 'package:ev_homes/pages/cp_pages/cp_chat_page.dart';
+// import 'package:ev_homes/pages/customer_pages/customer_chat_screen.dart';
 import 'package:ev_homes/pages/customer_pages/customer_forms/enquiry_form.dart';
 import 'package:ev_homes/pages/customer_pages/customer_forms/my_meeting_page.dart';
 import 'package:ev_homes/pages/customer_pages/customer_forms/schedule_meeting.dart';
@@ -26,8 +27,10 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
   late VideoPlayerController _videoPlayerController;
   DraggableScrollableController controller = DraggableScrollableController();
   double _sheetHeight = 0.0;
+  
 
-  void gback() {
+
+  void goback() {
     setState(() {
       _currentIndex = 0;
     });
@@ -77,9 +80,7 @@ class _CustomerHomeWrappertate extends State<CustomerHomeWrapper>
     final List<Widget> pages = [
       const HomeScreen(),
       MyMeetings(),
-      ChatScreen(
-        gBack: gback,
-      ),
+       ChatScreen(goBack: goback),
       const OfferDetailPage(showDiolog: false),
     ];
 

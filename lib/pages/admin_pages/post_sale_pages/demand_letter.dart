@@ -157,9 +157,18 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
     });
   }
 
-  double _getSlabPercentage(int slabIndex) {
-    if (slabIndex <= 4) return 40.0;
-    return 40.0 + (slabIndex - 4) * 2.0;
+ double _getSlabPercentage(int slabIndex) {
+    List<double> percentages = [
+      10.0, 20.0, 15.0, 3.0, // Slabs 1-4
+      3.0, 3.0, 3.0, 3.0, // Slabs 5-8
+      0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+      0.5, 0.5, 0.5, // Slabs 9-26
+      0.2, 0.2, 0.2, 0.2, 0.2, // Slabs 27-31
+      1.0, 1.0, 1.0, 1.0, 1.0, 1.25, 1.25, 1.25, 1.25, 1.0, 1.0, 1.0, 1.0, 1.0,
+      4.0, 1.0, 2.0, 1.0, 2.0, 1.0, 5.0 // Slabs 32-52
+    ];
+    double total = percentages.sublist(0, slabIndex).reduce((a, b) => a + b);
+    return total > 100 ? 100 : total;
   }
 
   @override
@@ -646,8 +655,8 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
         (((stampDutyPercentage + gstPercentage) / 100) + 1);
     double totalValue = agreementValue + (agreementValue * gstPercentage / 100);
 
-    int selectedSlabIndex = int.parse(selectedSlab);
-    double selectedSlabPercentage = _getSlabPercentage(selectedSlabIndex);
+    // Calculate the slab percentage first
+    double selectedSlabPercentage = _getSlabPercentage(int.parse(selectedSlab));
 
     setState(() {
       totalUpToSelectedSlab = totalValue * (selectedSlabPercentage / 100);
@@ -738,7 +747,7 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
                   style: pw.TextStyle(
                       fontSize: 12, fontWeight: pw.FontWeight.bold)),
               pw.Text(
-                'We are pleased to inform you that we have completed Construction Work ${slabs[int.parse(selectedSlab) - 1]['name']} of EV-10 Marina Bay. The statement of your account is listed below. Please arrange to make the payment on or before "${selectedDate != null ? DateFormat('dd.MM.yyyy').format(selectedDate!) : 'N/A'}" to avoid late payment charges applicable as mentioned below.',
+                'We are pleased to inform you that we have completed Construction Work ${slabs[int.parse(selectedSlab) - 1]['name']} (${_getSlabPercentage(int.parse(selectedSlab)).toStringAsFixed(2)}%), of EV-9 Square. The statement of your account is listed below. Please arrange to make the payment on or before "${selectedDate != null ? DateFormat('dd.MM.yyyy').format(selectedDate!) : 'N/A'}" to avoid late payment charges applicable as mentioned below.',
                 style: const pw.TextStyle(fontSize: 12),
               ),
               pw.SizedBox(height: 15),
@@ -853,8 +862,8 @@ class _PaymentScheduleAndDemandLetterState extends State<DemandLetter10> {
     double latetdspayment = 0.0;
     double totalLatePayment = latePaymentCharge + latePaymentGST;
 
-    double finalBase = remainingBase;
-    double finalGst = remainingGst;
+    double finalBase = remainingBase + latePaymentCharge;
+    double finalGst = remainingGst + latePaymentGST;
     double finaltds = remainingTds;
     double finalTotal = finalBase + finalGst;
 

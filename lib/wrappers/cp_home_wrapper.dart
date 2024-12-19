@@ -308,16 +308,16 @@ class _CpHomeWrapperState extends State<CpHomeWrapper>
                                           const EmiCalculator())),
                             ),
                           ),
-                          Expanded(
-                            child: _buildActionCard(
-                              'Settings',
-                              Icons.settings,
-                              'Adjust app settings',
-                              () {
-                                const ProfileScreen();
-                              },
-                            ),
-                          ),
+                          // Expanded(
+                          //   child: _buildActionCard(
+                          //     'Settings',
+                          //     Icons.settings,
+                          //     'Adjust app settings',
+                          //     () {
+                          //       const ProfileScreen();
+                          //     },
+                          //   ),
+                          // ),
                         ],
                       ),
                       const SizedBox(height: 100),

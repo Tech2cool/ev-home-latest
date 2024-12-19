@@ -402,7 +402,7 @@ class _EmiCalculatorState extends State<EmiCalculator>
           children: [
             _buildLegendItem('Principal', const Color(0xFFCEA9BC),
                 principalPercentage), // Coral color
-            _buildLegendItem('Interest', const Color(0xFF0A417A),
+            _buildLegendItem('Interest', const Color(0xFF042630),
                 interestPercentage), // Teal color
           ],
         ),
@@ -443,19 +443,27 @@ class _EmiCalculatorState extends State<EmiCalculator>
 
     double principal = _emi * _tenureYears * 12 - _totalInterest;
     return [
-      PieChartSectionData(
-        color: const Color(0xFFCEA9BC),
-        value: principal,
-        title: '',
-        radius: 80,
-      ),
-      PieChartSectionData(
-        color: const Color(0xFF0A417A),
-        value: _totalInterest,
-        title: '',
-        radius: 80,
-      ),
-    ];
+  PieChartSectionData(
+    color: const Color(0xFFCEA9BC),
+    value: principal,
+    title: '',
+    radius: 80,
+  ),
+  PieChartSectionData(
+    color: Colors.transparent, // Set transparent as base color
+    value: _totalInterest,
+    title: '',
+    radius: 80,
+    gradient: const LinearGradient(
+      colors: [
+        Color(0xFF005254),
+        Color(0xFF042630),
+      ],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+  ),
+];
   }
 
   Widget _buildYearlySummaryTable() {

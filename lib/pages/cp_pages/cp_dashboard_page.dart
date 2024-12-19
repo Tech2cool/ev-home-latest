@@ -27,12 +27,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       isLoading = true;
     });
     try {
-      // await settingProvider.searchLead();
       await settingProvider.searchLeadChannelPartner(
         settingProvider.loggedChannelPartner!.id!,
       );
-
-      // await settingProvider.getOurProject();
     } catch (e) {
       // Helper
     } finally {
@@ -44,7 +41,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _onRefresh();
   }
@@ -56,118 +52,115 @@ class _DashboardScreenState extends State<DashboardScreen> {
     print(cpLeads);
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        backgroundColor: Colors.transparent,
-        title: const Text(
-          'Dashboard',
-          style: TextStyle(
-            color: Color(0xFF042630),
-          ),
-        ),
-      ),
       body: Stack(
         children: [
           CpVideoplayer(),
-          // Container(
-          //   decoration: const BoxDecoration(
-          //     gradient: LinearGradient(
-          //       begin: Alignment.topCenter,
-          //       end: Alignment.bottomCenter,
-          //       colors: [
-          //         Color.fromARGB(44, 134, 185, 176), // Start color
-          //         Color.fromARGB(44, 76, 114, 115),
-          //         // Color.fromARGB(199, 248, 85, 4),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const ClientReport(selectedFilter: 'All'),
-                              ),
-                            );
-                          },
-                          child: _buildLabelBox(
-                              cpLeads.totalItems.toString(), 'Leads'),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ClientReport(
-                                    selectedFilter: 'Approved'),
-                              ),
-                            );
-                          },
-                          child: _buildLabelBox(
-                              cpLeads.approvedCount.toString(),
-                              'Approved'), // Dummy data for "Approved"
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ClientReport(
-                                    selectedFilter: 'Rejected'),
-                              ),
-                            );
-                          },
-                          child: _buildLabelBox(
-                              cpLeads.rejectedCount.toString(),
-                              'Rejected'), // Dummy data for "Rejected"
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ClientReport(
-                                    selectedFilter: 'Pending'),
-                              ),
-                            );
-                          },
-                          child: FittedBox(
-                            child: _buildLabelBox(
-                                cpLeads.pendingCount.toString(),
-                                'In progress'), // Dummy data for "In Progress"
-                          ),
-                        ),
-                      ),
-                    ],
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+                  child: Text(
+                    'Dashboard',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Color(0xFF042630),
+                    ),
                   ),
-                  const SizedBox(height: 20),
-                  const LineChartDemo(list: []), // Dummy data for charts
-                  const SizedBox(height: 20),
-                  const PieChartDemo(leads: []), // Dummy data for charts
-                  const SizedBox(height: 20),
-                  const FunnelChartDemo(leads: []), // Dummy data for charts
-                  const SizedBox(height: 180),
-                ],
-              ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ClientReport(selectedFilter: 'All'),
+                                      ),
+                                    );
+                                  },
+                                  child: _buildLabelBox(
+                                      cpLeads.totalItems.toString(), 'Leads'),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const ClientReport(
+                                            selectedFilter: 'Approved'),
+                                      ),
+                                    );
+                                  },
+                                  child: _buildLabelBox(
+                                      cpLeads.approvedCount.toString(),
+                                      'Approved'),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const ClientReport(
+                                            selectedFilter: 'Rejected'),
+                                      ),
+                                    );
+                                  },
+                                  child: _buildLabelBox(
+                                      cpLeads.rejectedCount.toString(),
+                                      'Rejected'),
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const ClientReport(
+                                            selectedFilter: 'Pending'),
+                                      ),
+                                    );
+                                  },
+                                  child: FittedBox(
+                                    child: _buildLabelBox(
+                                        cpLeads.pendingCount.toString(),
+                                        'In progress'),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          const LineChartDemo(list: []),
+                          const SizedBox(height: 20),
+                          const PieChartDemo(leads: []),
+                          const SizedBox(height: 20),
+                          const FunnelChartDemo(leads: []),
+                          const SizedBox(height: 180),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -213,6 +206,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
+
 
 class LabelsDemo extends StatelessWidget {
   const LabelsDemo({super.key});

@@ -168,16 +168,6 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
       ),
       child: Scaffold(
         backgroundColor: Colors.transparent,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          backgroundColor: Colors.transparent,
-          title: const Text(
-            'Performance',
-            style: TextStyle(
-              color: Color(0xFF042630),
-            ),
-          ),
-        ),
         body: Stack(
           children: [
             CpVideoplayer(),
@@ -199,6 +189,17 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0, left: 16.0),
+                      child: Text(
+                        'Performance',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF042630),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     // Padding(
                     //   padding: const EdgeInsets.only(left: 15),
@@ -864,3 +865,4 @@ class DetailCard extends StatelessWidget {
     );
   }
 }
+

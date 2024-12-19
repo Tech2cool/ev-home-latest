@@ -243,10 +243,13 @@ class _CostGeneratorState extends State<CostGenerator> {
               'Total', double.parse(allInclusiveAmountController.text),
               isBold: true),
           _buildTableRow(
-              'Adjusted for Stampduty', calculatedValues['stampDutyAmount']!,
-              rounded: calculatedValues['stampDutyRounded']! -
-                  calculatedValues['stampDutyAmount']!,
-              isBold: true),
+            'Adjusted for Stampduty',
+            calculatedValues['stampDutyAmount']!,
+            rounded: calculatedValues['stampDutyRounded']! -
+                calculatedValues['stampDutyAmount']!,
+            isBold: true,
+            showDash: true,
+          ),
         ],
       ),
     );
@@ -266,7 +269,7 @@ class _CostGeneratorState extends State<CostGenerator> {
   }
 
   pw.TableRow _buildTableRow(String particular, double amount,
-      {double? rounded, bool isBold = false}) {
+      {double? rounded, bool isBold = false, bool showDash = false}) {
     final textStyle = pw.TextStyle(
         fontWeight: isBold ? pw.FontWeight.bold : pw.FontWeight.normal,
         fontSize: 9);
@@ -279,7 +282,8 @@ class _CostGeneratorState extends State<CostGenerator> {
           padding: const pw.EdgeInsets.all(2),
           child: pw.Align(
               alignment: pw.Alignment.center,
-              child: pw.Text(formatCurrency(amount), style: textStyle)),
+              child: pw.Text(showDash ? "-" : formatCurrency(amount),
+                  style: textStyle)),
         ),
         rounded != null
             ? pw.Padding(

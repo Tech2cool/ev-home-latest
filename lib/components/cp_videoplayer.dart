@@ -15,13 +15,14 @@ class _CpVideoplayerState extends State<CpVideoplayer> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _videoController = VideoPlayerController.asset('assets/video/home_bg.mp4')
+    _videoController = VideoPlayerController.asset('assets/video/home_bg.mp4',
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true))
+      ..setLooping(true)
       ..initialize().then((_) {
         // Ensure the first frame is shown after the video is initialized
         setState(() {});
-        _videoController.setLooping(true);
-        _videoController.play();
         _videoController.setVolume(0.0);
+        _videoController.play();
       });
   }
 

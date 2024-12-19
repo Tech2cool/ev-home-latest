@@ -18,11 +18,15 @@ class CpHomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<CpHomeScreen> {
+  bool isLoading = false;
   Future<void> fetchProjects() async {
     final settingProvider =
         Provider.of<SettingProvider>(context, listen: false);
 
     try {
+      setState(() {
+        isLoading = true;
+      });
       await settingProvider.getOurProject(); // Await the data
     } catch (e) {
       Helper.showCustomSnackBar('Error fetching projects: $e');

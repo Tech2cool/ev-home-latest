@@ -16,14 +16,21 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.asset(Constant.splashVideo)
+
+    // Initialize the video player with the splash video
+    _controller = VideoPlayerController.asset(Constant.splashVideo,
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true))
+      ..setLooping(false)
       ..initialize().then((_) {
         setState(() {});
+        _controller.setVolume(0.0); // Mute the video
         _controller.play();
       });
-    _controller.setLooping(false);
+
+    // Navigate when the video ends
     _controller.addListener(() {
-      if (_controller.value.position == _controller.value.duration) {
+      if (_controller.value.isInitialized &&
+          _controller.value.position >= _controller.value.duration) {
         GoRouter.of(context).pushReplacement("/auth-wrapper");
       }
     });

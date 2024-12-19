@@ -583,153 +583,160 @@ class _ClosingManagerDashboardState extends State<ClosingManagerDashboard> {
                         ],
                       ),
                       const SizedBox(height: 10),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            InkWell(
-                              onTap: () {},
-                              child: TargetCircle(
-                                number: target?.target.toString() ?? "0",
-                                label: "Target",
-                                backgroundColor: Colors.orange,
+                      Center(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              InkWell(
+                                onTap: () {},
+                                child: TargetCircle(
+                                  number: target?.target.toString() ?? "0",
+                                  label: "Target",
+                                  backgroundColor: Colors.orange,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            InkWell(
-                              onTap: () {},
-                              child: TargetCircle(
-                                number: target?.achieved.toString() ?? "0",
-                                label: "Achieved",
-                                backgroundColor: Colors.green,
+                              const SizedBox(width: 8),
+                              InkWell(
+                                onTap: () {},
+                                child: TargetCircle(
+                                  number: target?.achieved.toString() ?? "0",
+                                  label: "Achieved",
+                                  backgroundColor: Colors.green,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                            InkWell(
-                              onTap: () {
-                                showDialog<int>(
-                                  context: context,
-                                  builder: (context) => AdminCarryForwardDialog(
-                                    id: widget.id,
-                                  ),
-                                );
+                              const SizedBox(width: 8),
+                              InkWell(
+                                onTap: () {
+                                  showDialog<int>(
+                                    context: context,
+                                    builder: (context) =>
+                                        AdminCarryForwardDialog(
+                                      id: widget.id,
+                                    ),
+                                  );
 
-                                // if (selectedValue != null) {
-                                // print(
-                                //     "Selected Carry Forward Option: $selectedValue");
-                                // }
-                              },
-                              child: TargetCircle(
-                                number: target?.carryForward.toString() ?? "0",
-                                label: "Carry Forward",
-                                backgroundColor: Colors.blue,
+                                  // if (selectedValue != null) {
+                                  // print(
+                                  //     "Selected Carry Forward Option: $selectedValue");
+                                  // }
+                                },
+                                child: TargetCircle(
+                                  number:
+                                      target?.carryForward.toString() ?? "0",
+                                  label: "Carry Forward",
+                                  backgroundColor: Colors.blue,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: 8),
-                          ],
+                              const SizedBox(width: 8),
+                            ],
+                          ),
                         ),
                       ),
                       Divider(
                         color: Colors.grey.withOpacity(0.2),
                       ),
                       const SizedBox(height: 16),
-                      Wrap(
-                        spacing: 10,
-                        runSpacing: 10,
-                        runAlignment: WrapAlignment.center,
-                        alignment: WrapAlignment.center,
-                        children: [
-                          Stack(
-                            children: [
-                              MyTransculentBox(
-                                icon: FluentIcons.tasks_app_20_regular,
-                                iconColor: Colors.pink,
-                                text: "My Task",
-                                textColor: Colors.white,
-                                onTap: () => _showTaskDialog(context),
-                              ),
-                              Positioned(
-                                right: 30,
-                                top: 10,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    // Bubble for pending count
-                                    Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: const BoxDecoration(
-                                        color: Colors.red,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          tasks
-                                              .where((ele) =>
-                                                  ele.completed == false)
-                                              .length
-                                              .toString(),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12,
+                      Center(
+                        child: Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          runAlignment: WrapAlignment.center,
+                          alignment: WrapAlignment.center,
+                          children: [
+                            Stack(
+                              children: [
+                                MyTransculentBox(
+                                  icon: FluentIcons.tasks_app_20_regular,
+                                  iconColor: Colors.pink,
+                                  text: "My Task",
+                                  textColor: Colors.white,
+                                  onTap: () => _showTaskDialog(context),
+                                ),
+                                Positioned(
+                                  right: 30,
+                                  top: 10,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      // Bubble for pending count
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            tasks
+                                                .where((ele) =>
+                                                    ele.completed == false)
+                                                .length
+                                                .toString(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          MyTransculentBox(
-                            icon: FluentIcons.task_list_square_ltr_24_regular,
-                            iconColor: Colors.pink,
-                            text: "Follow Up Status",
-                            textColor: Colors.white,
-                            onTap: () {
-                              GoRouter.of(context).push(
-                                "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
-                              );
-                            },
-                          ),
-                          MyTransculentBox(
-                            icon: FluentIcons.box_24_regular,
-                            iconColor: Colors.pink,
-                            text: "Inventory",
-                            textColor: Colors.white,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => InventoryPage1(
-                                    onButtonPressed: (view) {},
+                                    ],
                                   ),
                                 ),
-                              );
-                            },
-                          ),
-                          MyTransculentBox(
-                            icon: FluentIcons.receipt_16_regular,
-                            iconColor: Colors.pink,
-                            text: "Cost Sheet",
-                            textColor: Colors.white,
-                            onTap: () => _showProjectDialogForCostSheet(),
-                          ),
-                          MyTransculentBox(
-                            icon: FluentIcons.calendar_clock_16_regular,
-                            iconColor: Colors.pink,
-                            text: "Payment Schedule",
-                            textColor: Colors.white,
-                            onTap: () => _showProjectDialogForPaymentSchedule(),
-                          ),
-                          MyTransculentBox(
-                            icon: FluentIcons.document_text_16_regular,
-                            iconColor: Colors.pink,
-                            text: "Demand Letter",
-                            textColor: Colors.white,
-                            onTap: () => _showProjectDialogForDemand(),
-                          ),
-                        ],
+                              ],
+                            ),
+                            MyTransculentBox(
+                              icon: FluentIcons.task_list_square_ltr_24_regular,
+                              iconColor: Colors.pink,
+                              text: "Follow Up Status",
+                              textColor: Colors.white,
+                              onTap: () {
+                                GoRouter.of(context).push(
+                                  "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                                );
+                              },
+                            ),
+                            MyTransculentBox(
+                              icon: FluentIcons.box_24_regular,
+                              iconColor: Colors.pink,
+                              text: "Inventory",
+                              textColor: Colors.white,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => InventoryPage1(
+                                      onButtonPressed: (view) {},
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            MyTransculentBox(
+                              icon: FluentIcons.receipt_16_regular,
+                              iconColor: Colors.pink,
+                              text: "Cost Sheet",
+                              textColor: Colors.white,
+                              onTap: () => _showProjectDialogForCostSheet(),
+                            ),
+                            MyTransculentBox(
+                              icon: FluentIcons.calendar_clock_16_regular,
+                              iconColor: Colors.pink,
+                              text: "Payment Schedule",
+                              textColor: Colors.white,
+                              onTap: () =>
+                                  _showProjectDialogForPaymentSchedule(),
+                            ),
+                            MyTransculentBox(
+                              icon: FluentIcons.document_text_16_regular,
+                              iconColor: Colors.pink,
+                              text: "Demand Letter",
+                              textColor: Colors.white,
+                              onTap: () => _showProjectDialogForDemand(),
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 5),
                     ],

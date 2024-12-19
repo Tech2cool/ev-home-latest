@@ -106,15 +106,15 @@ class _CostGeneratorState extends State<CostGenerators> {
   Map<String, Map<String, String>> getAccountDetails(String projectName) {
     return {
       'booking': {
-        'accountNo': '01510522186',
-        'ifscCode': 'ICIC0000151',
-        'micrCode': '400229015',
-        'bankName': 'ICIC Bank',
-      },
-      'tax': {
         'accountNo': '015105022390',
         'ifscCode': 'ICIC0000151',
         'micrCode': '400229015022390',
+        'bankName': 'ICIC Bank',
+      },
+      'tax': {
+        'accountNo': '01510522186',
+        'ifscCode': 'ICIC0000151',
+        'micrCode': '400229015',
         'bankName': 'ICIC Bank',
       },
     };
@@ -246,7 +246,8 @@ class _CostGeneratorState extends State<CostGenerators> {
               'Adjusted for Stampduty', calculatedValues['stampDutyAmount']!,
               rounded: calculatedValues['stampDutyRounded']! -
                   calculatedValues['stampDutyAmount']!,
-              isBold: true),
+              isBold: true,
+              showDash: true),
         ],
       ),
     );
@@ -266,7 +267,7 @@ class _CostGeneratorState extends State<CostGenerators> {
   }
 
   pw.TableRow _buildTableRow(String particular, double amount,
-      {double? rounded, bool isBold = false}) {
+      {double? rounded, bool isBold = false, bool showDash = false}) {
     final textStyle = pw.TextStyle(
         fontWeight: isBold ? pw.FontWeight.bold : pw.FontWeight.normal,
         fontSize: 9);
@@ -279,7 +280,8 @@ class _CostGeneratorState extends State<CostGenerators> {
           padding: const pw.EdgeInsets.all(2),
           child: pw.Align(
               alignment: pw.Alignment.center,
-              child: pw.Text(formatCurrency(amount), style: textStyle)),
+              child: pw.Text(showDash ? "-" : formatCurrency(amount),
+                  style: textStyle)),
         ),
         rounded != null
             ? pw.Padding(
@@ -289,10 +291,7 @@ class _CostGeneratorState extends State<CostGenerators> {
                     child: pw.Text(formatCurrency(rounded), style: textStyle)),
               )
             : pw.Padding(
-                padding: const pw.EdgeInsets.all(2),
-                child: pw.Align(
-                    alignment: pw.Alignment.center,
-                    child: pw.Text('-', style: textStyle))),
+                padding: const pw.EdgeInsets.all(2), child: pw.Text('')),
       ],
     );
   }

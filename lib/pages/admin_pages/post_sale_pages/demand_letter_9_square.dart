@@ -926,7 +926,7 @@ class _DemandLetterState extends State<DemandLetter> {
                   style: pw.TextStyle(
                       fontSize: 12, fontWeight: pw.FontWeight.bold)),
               pw.Text(
-                'We are pleased to inform you that we have completed Construction Work ${slabs[int.parse(selectedSlab) - 1]['name']} of EV-9 Square. The statement of your account is listed below. Please arrange to make the payment on or before "${selectedDate != null ? DateFormat('dd.MM.yyyy').format(selectedDate!) : 'N/A'}" to avoid late payment charges applicable as mentioned below.',
+                'We are pleased to inform you that we have completed Construction Work ${slabs[int.parse(selectedSlab) - 1]['name']} (${_getSlabPercentage(int.parse(selectedSlab)).toStringAsFixed(2)}%), of EV-9 Square. The statement of your account is listed below. Please arrange to make the payment on or before "${selectedDate != null ? DateFormat('dd.MM.yyyy').format(selectedDate!) : 'N/A'}" to avoid late payment charges applicable as mentioned below.',
                 style: const pw.TextStyle(fontSize: 12),
               ),
               pw.SizedBox(height: 15),
@@ -1160,6 +1160,7 @@ class _DemandLetterState extends State<DemandLetter> {
         String pdfName =
             'Demand_Letter_${flatNoController.text}_${DateFormat('yyyyMMdd').format(DateTime.now())}.pdf';
         final downloadPath = '${downloadDir.path}/$pdfName';
+
         await File(pdfFilePath!).copy(downloadPath);
 
         ScaffoldMessenger.of(context).showSnackBar(

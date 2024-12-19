@@ -172,9 +172,9 @@ class _DataAnalyzerLeadListPageState extends State<DataAnalyzerLeadListPage> {
                         ),
                         items: [
                           PopupMenuItem(
-                            value: 'total',
+                            value: 'all',
                             child: const Text('All'),
-                            onTap: () => onTapFilter(null),
+                            onTap: () => onTapFilter('all'),
                           ),
                           PopupMenuItem(
                             value: 'visit-done',

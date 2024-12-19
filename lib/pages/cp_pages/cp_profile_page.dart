@@ -7,6 +7,8 @@ import 'package:ev_homes/wrappers/auth_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../components/blue_animated_gradient.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -30,7 +32,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: Color.fromARGB(255, 218, 240, 246),
       body: SafeArea(
         top: true,
         child: Column(
@@ -40,8 +41,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   colors: [
-                    Color(0xFF042630),
-                    const Color.fromARGB(255, 178, 192, 255)
+                    const Color(0xFFFFbcd5eb),
+                    const Color(0xFFFFbed4e9),
+                    const Color(0xFFFF3373b0),
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -50,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     BorderRadius.vertical(bottom: Radius.circular(30)),
               ),
               padding:
-                  const EdgeInsets.symmetric(vertical: 30, horizontal: 130),
+                  const EdgeInsets.symmetric(vertical: 30, horizontal: 100),
               child: Column(
                 children: [
                   CircleAvatar(
@@ -60,13 +62,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ? CachedNetworkImageProvider(
                                 loggedChannelPartner!.profilePic!)
                             : null,
-                    backgroundColor: Colors.blue.shade100,
+                    backgroundColor: Colors.white,
                     child: (loggedChannelPartner?.profilePic ?? "").isNotEmpty
                         ? null
                         : const Icon(
                             Icons.person,
                             size: 80.0,
-                            color: Color(0xFF005254),
+                            color: Color(0xFFFF3373b0),
                           ),
                   ),
                   const SizedBox(height: 10),
@@ -75,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF042630),
+                      color: Colors.white,
                     ),
                   ),
                 ],

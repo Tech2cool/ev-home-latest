@@ -53,18 +53,22 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Profile picture
-            CircleAvatar(
-              radius: 60.0,
-              backgroundImage: const NetworkImage('https://picsum.photos/200'),
-              backgroundColor: Colors.grey[300],
-            ),
-            const SizedBox(height: 20.0),
-            // Non-editable fields
-            _buildTextField(
-              'Name',
-              '${loggedCustomer?.firstName ?? ""} ${loggedCustomer?.lastName ?? ""}',
-              Color(0xFF042630),
+            Container(
+              width: 120.0,
+              height: 120.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Color.fromARGB(146, 134, 185, 176),
+                  width: 4.0,
+                ),
+              ),
+              child: CircleAvatar(
+                radius: 56.0,
+                backgroundImage:
+                    const NetworkImage('https://picsum.photos/200'),
+                backgroundColor: Colors.grey[300],
+              ),
             ),
 
             const SizedBox(height: 10.0),
@@ -105,6 +109,7 @@ class _AccountProfilePageState extends State<AccountProfilePage> {
         TextField(
           enabled: false, // Non-editable
           decoration: InputDecoration(
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
             hintText: value, // Display the value as the text in the field
           ),
         ),

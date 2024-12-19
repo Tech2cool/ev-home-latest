@@ -427,82 +427,84 @@ class _PreSalesExecutiveDashboardState
                         color: Colors.grey.withOpacity(0.2),
                       ),
                       const SizedBox(height: 16),
-                      Wrap(
-                        spacing: 10,
-                        runSpacing: 10,
-                        runAlignment: WrapAlignment.center,
-                        alignment: WrapAlignment.center,
-                        children: [
-                          Stack(
-                            children: [
-                              MyTransculentBox(
-                                icon: FluentIcons.tasks_app_20_regular,
-                                iconColor: Colors.pink,
-                                text: "My Task",
-                                textColor: Colors.white,
-                                onTap: () => _showTaskDialog(context),
-                              ),
-                              Positioned(
-                                right: 30,
-                                top: 10,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    // Bubble for pending count
-                                    Container(
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: const BoxDecoration(
-                                        color: Colors.red,
-                                        shape: BoxShape.circle,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          tasks
-                                              .where((ele) =>
-                                                  ele.completed == false)
-                                              .length
-                                              .toString(),
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 12,
+                      Center(
+                        child: Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          runAlignment: WrapAlignment.center,
+                          alignment: WrapAlignment.center,
+                          children: [
+                            Stack(
+                              children: [
+                                MyTransculentBox(
+                                  icon: FluentIcons.tasks_app_20_regular,
+                                  iconColor: Colors.pink,
+                                  text: "My Task",
+                                  textColor: Colors.white,
+                                  onTap: () => _showTaskDialog(context),
+                                ),
+                                Positioned(
+                                  right: 30,
+                                  top: 10,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      // Bubble for pending count
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: const BoxDecoration(
+                                          color: Colors.red,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            tasks
+                                                .where((ele) =>
+                                                    ele.completed == false)
+                                                .length
+                                                .toString(),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 12,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                          MyTransculentBox(
-                            icon: FluentIcons.task_list_square_ltr_24_regular,
-                            iconColor: Colors.pink,
-                            text: "Follow Up Status",
-                            textColor: Colors.white,
-                            onTap: () {
-                              GoRouter.of(context).push(
-                                "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
-                              );
-                            },
-                          ),
-                          MyTransculentBox(
-                            icon: FluentIcons.box_24_regular,
-                            iconColor: Colors.pink,
-                            text: "Inventory",
-                            textColor: Colors.white,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => InventoryPage1(
-                                    onButtonPressed: (view) {},
+                                    ],
                                   ),
                                 ),
-                              );
-                            },
-                          ),
-                        ],
+                              ],
+                            ),
+                            MyTransculentBox(
+                              icon: FluentIcons.task_list_square_ltr_24_regular,
+                              iconColor: Colors.pink,
+                              text: "Follow Up Status",
+                              textColor: Colors.white,
+                              onTap: () {
+                                GoRouter.of(context).push(
+                                  "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                                );
+                              },
+                            ),
+                            MyTransculentBox(
+                              icon: FluentIcons.box_24_regular,
+                              iconColor: Colors.pink,
+                              text: "Inventory",
+                              textColor: Colors.white,
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => InventoryPage1(
+                                      onButtonPressed: (view) {},
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 5),
                     ],

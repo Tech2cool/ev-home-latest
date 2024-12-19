@@ -2,6 +2,7 @@ import 'package:ev_homes/components/animated_gradient_bg.dart';
 import 'package:ev_homes/components/graph/doughnut_chart.dart';
 import 'package:ev_homes/components/graph/funnel_chart.dart';
 import 'package:ev_homes/components/graph/line_chart.dart';
+import 'package:ev_homes/components/my_transculent_box.dart';
 import 'package:ev_homes/core/models/chart_model.dart';
 import 'package:ev_homes/core/models/our_project.dart';
 import 'package:ev_homes/pages/admin_pages/inventory_page1.dart';
@@ -13,6 +14,7 @@ import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule%20_n
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/payment_schedule_marina_bay.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/update_payment_schedule_9_squre.dart';
 import 'package:ev_homes/pages/admin_pages/post_sale_pages/update_status_10%20marina_bay.dart';
+import 'package:ev_homes/pages/admin_pages/sales_pages/closing_manager_pages/task_list_page.dart';
 import 'package:fluentui_system_icons/fluentui_system_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -86,6 +88,261 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
     ChartModel(category: 'EOI', value: 40),
   ];
 
+  Future<void> _showProjectDialogForCostSheet() async {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    OurProject? selectedProject;
+    // print(settingProvider.ourProject);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Project'),
+          content: DropdownButtonFormField<OurProject>(
+            value: projects.contains(selectedProject) ? selectedProject : null,
+            decoration: InputDecoration(
+              labelText: 'Select Project',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            items: projects.map((project) {
+              return DropdownMenuItem<OurProject>(
+                value: project,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.name ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedProject = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a Project';
+              }
+              return null;
+            },
+            isExpanded: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (selectedProject!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CostGenerators(),
+                    ),
+                  );
+                }
+                if (selectedProject!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const CostGenerator(),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Proceed'),
+            ),
+          ],
+        );
+      },
+    );
+    // print(selectedProject);
+  }
+
+  Future<void> _showProjectDialogForPaymentSchedule() async {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    OurProject? selectedProject;
+    // print(settingProvider.ourProject);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Project'),
+          content: DropdownButtonFormField<OurProject>(
+            value: projects.contains(selectedProject) ? selectedProject : null,
+            decoration: InputDecoration(
+              labelText: 'Select Project',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            items: projects.map((project) {
+              return DropdownMenuItem<OurProject>(
+                value: project,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.name ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedProject = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a Project';
+              }
+              return null;
+            },
+            isExpanded: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (selectedProject!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PaymentScheduleGenerators(),
+                    ),
+                  );
+                }
+                if (selectedProject!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PaymentScheduleGenerator(),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Proceed'),
+            ),
+          ],
+        );
+      },
+    );
+    // print(selectedProject);
+  }
+
+  Future<void> _showProjectDialogForDemand() async {
+    final settingProvider =
+        Provider.of<SettingProvider>(context, listen: false);
+    final projects = settingProvider.ourProject;
+    OurProject? selectedProject;
+    // print(settingProvider.ourProject);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Select Project'),
+          content: DropdownButtonFormField<OurProject>(
+            value: projects.contains(selectedProject) ? selectedProject : null,
+            decoration: InputDecoration(
+              labelText: 'Select Project',
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+            ),
+            items: projects.map((project) {
+              return DropdownMenuItem<OurProject>(
+                value: project,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        project.name ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                  ],
+                ),
+              );
+            }).toList(),
+            onChanged: (newValue) {
+              setState(() {
+                selectedProject = newValue;
+              });
+            },
+            validator: (value) {
+              if (value == null) {
+                return 'Please select a Project';
+              }
+              return null;
+            },
+            isExpanded: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                if (selectedProject!.name!.toLowerCase().contains("square")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DemandLetter(),
+                    ),
+                  );
+                }
+                if (selectedProject!.name!.toLowerCase().contains("marina")) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const DemandLetter10(),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Proceed'),
+            ),
+          ],
+        );
+      },
+    );
+    // print(selectedProject);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -102,6 +359,8 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
     final settingProvider = Provider.of<SettingProvider>(context);
     final leadsPostSale = settingProvider.leadsPostSale;
     final leads = leadsPostSale.data;
+
+    final tasks = settingProvider.tasks;
     return Stack(
       children: [
         const Positioned.fill(
@@ -299,47 +558,147 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                 const SizedBox(
                   height: 10,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 12.0,
-                  ),
-                  child: Row(
+                Center(
+                  child: Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    runAlignment: WrapAlignment.center,
+                    alignment: WrapAlignment.center,
                     children: [
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => InventoryPage1(
-                                        onButtonPressed: (view) {})));
-                          },
-                          icon: const Icon(
-                            FluentIcons.box_24_regular,
-                            color: Colors.white,
+                      Stack(
+                        children: [
+                          MyTransculentBox(
+                            icon: FluentIcons.tasks_app_20_regular,
+                            iconColor: Colors.pink,
+                            text: "My Task",
+                            textColor: Colors.white,
+                            onTap: () => _showTaskDialog(context),
                           ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue,
-                            padding: const EdgeInsets.symmetric(vertical: 10.0),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
+                          Positioned(
+                            right: 30,
+                            top: 10,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Bubble for pending count
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      tasks
+                                          .where(
+                                              (ele) => ele.completed == false)
+                                          .length
+                                          .toString(),
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          label: const Text(
-                            'Inventory',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                        ],
+                      ),
+                      MyTransculentBox(
+                        icon: FluentIcons.task_list_square_ltr_24_regular,
+                        iconColor: Colors.pink,
+                        text: "Follow Up Status",
+                        textColor: Colors.white,
+                        onTap: () {
+                          GoRouter.of(context).push(
+                            "/closing-manager-follow-up-list/followup/${widget.id ?? settingProvider.loggedAdmin!.id!}",
+                          );
+                        },
+                      ),
+                      MyTransculentBox(
+                        icon: FluentIcons.box_24_regular,
+                        iconColor: Colors.pink,
+                        text: "Inventory",
+                        textColor: Colors.white,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => InventoryPage1(
+                                onButtonPressed: (view) {},
+                              ),
                             ),
-                          ),
-                        ),
+                          );
+                        },
+                      ),
+                      MyTransculentBox(
+                        icon: FluentIcons.receipt_16_regular,
+                        iconColor: Colors.pink,
+                        text: "Cost Sheet",
+                        textColor: Colors.white,
+                        onTap: () => _showProjectDialogForCostSheet(),
+                      ),
+                      MyTransculentBox(
+                        icon: FluentIcons.calendar_clock_16_regular,
+                        iconColor: Colors.pink,
+                        text: "Payment Schedule",
+                        textColor: Colors.white,
+                        onTap: () => _showProjectDialogForPaymentSchedule(),
+                      ),
+                      MyTransculentBox(
+                        icon: FluentIcons.document_text_16_regular,
+                        iconColor: Colors.pink,
+                        text: "Demand Letter",
+                        textColor: Colors.white,
+                        onTap: () => _showProjectDialogForDemand(),
                       ),
                     ],
                   ),
                 ),
+                // Padding(
+                //   padding: const EdgeInsets.symmetric(
+                //     horizontal: 16.0,
+                //     vertical: 12.0,
+                //   ),
+                //   child: Row(
+                //     children: [
+                //       const SizedBox(width: 16),
+                //       Expanded(
+                //         child: ElevatedButton.icon(
+                //           onPressed: () {
+                //             Navigator.push(
+                //                 context,
+                //                 MaterialPageRoute(
+                //                     builder: (context) => InventoryPage1(
+                //                         onButtonPressed: (view) {})));
+                //           },
+                //           icon: const Icon(
+                //             FluentIcons.box_24_regular,
+                //             color: Colors.white,
+                //           ),
+                //           style: ElevatedButton.styleFrom(
+                //             backgroundColor: Colors.blue,
+                //             padding: const EdgeInsets.symmetric(vertical: 10.0),
+                //             shape: RoundedRectangleBorder(
+                //               borderRadius: BorderRadius.circular(12.0),
+                //             ),
+                //           ),
+                //           label: const Text(
+                //             'Inventory',
+                //             style: TextStyle(
+                //               color: Colors.white,
+                //               fontSize: 16,
+                //               fontWeight: FontWeight.bold,
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -363,149 +722,149 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
                   initialFunnelData: initialFunnelData,
                   onPressFilter: (val) {},
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (selectedProject == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content:
-                                          Text('Please select a project first'),
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  );
-                                } else if (selectedProject!.name!
-                                    .toLowerCase()
-                                    .contains("marina")) {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const CostGenerator(),
-                                  ));
-                                } else if (selectedProject!.name!
-                                    .toLowerCase()
-                                    .contains("square")) {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const CostGenerators(),
-                                  ));
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                              ),
-                              child: const Text(
-                                'Cost Sheet Generator',
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () {
-                                if (selectedProject == null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content:
-                                          Text('Please select a project first'),
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  );
-                                } else if (selectedProject!.name!
-                                    .toLowerCase()
-                                    .contains("marina")) {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        PaymentScheduleGenerator(),
-                                  ));
-                                } else if (selectedProject!.name!
-                                    .toLowerCase()
-                                    .contains("square")) {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) =>
-                                        const PaymentScheduleGenerators(),
-                                  ));
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.amberAccent,
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.0),
-                                ),
-                              ),
-                              child: const Text(
-                                'Payment Schedule',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (selectedProject == null) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Please select a project first'),
-                                backgroundColor: Colors.red,
-                              ),
-                            );
-                          } else if (selectedProject!.name!
-                              .toLowerCase()
-                              .contains("marina")) {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const DemandLetter10(),
-                            ));
-                          } else if (selectedProject!.name!
-                              .toLowerCase()
-                              .contains("square")) {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const DemandLetter(),
-                            ));
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.amberAccent,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 30.0, vertical: 10.0),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12.0),
-                          ),
-                        ),
-                        child: const Text(
-                          'Demand Letter',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(5),
+                //   child: Column(
+                //     children: [
+                //       Row(
+                //         children: [
+                //           Expanded(
+                //             child: ElevatedButton(
+                //               onPressed: () {
+                //                 if (selectedProject == null) {
+                //                   ScaffoldMessenger.of(context).showSnackBar(
+                //                     const SnackBar(
+                //                       content:
+                //                           Text('Please select a project first'),
+                //                       backgroundColor: Colors.red,
+                //                     ),
+                //                   );
+                //                 } else if (selectedProject!.name!
+                //                     .toLowerCase()
+                //                     .contains("marina")) {
+                //                   Navigator.of(context).push(MaterialPageRoute(
+                //                     builder: (context) => const CostGenerator(),
+                //                   ));
+                //                 } else if (selectedProject!.name!
+                //                     .toLowerCase()
+                //                     .contains("square")) {
+                //                   Navigator.of(context).push(MaterialPageRoute(
+                //                     builder: (context) =>
+                //                         const CostGenerators(),
+                //                   ));
+                //                 }
+                //               },
+                //               style: ElevatedButton.styleFrom(
+                //                 backgroundColor: Colors.white,
+                //                 padding:
+                //                     const EdgeInsets.symmetric(vertical: 10.0),
+                //                 shape: RoundedRectangleBorder(
+                //                   borderRadius: BorderRadius.circular(12.0),
+                //                 ),
+                //               ),
+                //               child: const Text(
+                //                 'Cost Sheet Generator',
+                //                 style: TextStyle(
+                //                   color: Colors.black,
+                //                   fontSize: 16,
+                //                   fontWeight: FontWeight.bold,
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //           const SizedBox(width: 16),
+                //           Expanded(
+                //             child: ElevatedButton(
+                //               onPressed: () {
+                //                 if (selectedProject == null) {
+                //                   ScaffoldMessenger.of(context).showSnackBar(
+                //                     const SnackBar(
+                //                       content:
+                //                           Text('Please select a project first'),
+                //                       backgroundColor: Colors.red,
+                //                     ),
+                //                   );
+                //                 } else if (selectedProject!.name!
+                //                     .toLowerCase()
+                //                     .contains("marina")) {
+                //                   Navigator.of(context).push(MaterialPageRoute(
+                //                     builder: (context) =>
+                //                         PaymentScheduleGenerator(),
+                //                   ));
+                //                 } else if (selectedProject!.name!
+                //                     .toLowerCase()
+                //                     .contains("square")) {
+                //                   Navigator.of(context).push(MaterialPageRoute(
+                //                     builder: (context) =>
+                //                         const PaymentScheduleGenerators(),
+                //                   ));
+                //                 }
+                //               },
+                //               style: ElevatedButton.styleFrom(
+                //                 backgroundColor: Colors.amberAccent,
+                //                 padding:
+                //                     const EdgeInsets.symmetric(vertical: 10.0),
+                //                 shape: RoundedRectangleBorder(
+                //                   borderRadius: BorderRadius.circular(12.0),
+                //                 ),
+                //               ),
+                //               child: const Text(
+                //                 'Payment Schedule',
+                //                 style: TextStyle(
+                //                   color: Colors.white,
+                //                   fontSize: 16,
+                //                   fontWeight: FontWeight.bold,
+                //                 ),
+                //               ),
+                //             ),
+                //           ),
+                //         ],
+                //       ),
+                //       const SizedBox(height: 16),
+                //       ElevatedButton(
+                //         onPressed: () {
+                //           if (selectedProject == null) {
+                //             ScaffoldMessenger.of(context).showSnackBar(
+                //               const SnackBar(
+                //                 content: Text('Please select a project first'),
+                //                 backgroundColor: Colors.red,
+                //               ),
+                //             );
+                //           } else if (selectedProject!.name!
+                //               .toLowerCase()
+                //               .contains("marina")) {
+                //             Navigator.of(context).push(MaterialPageRoute(
+                //               builder: (context) => const DemandLetter10(),
+                //             ));
+                //           } else if (selectedProject!.name!
+                //               .toLowerCase()
+                //               .contains("square")) {
+                //             Navigator.of(context).push(MaterialPageRoute(
+                //               builder: (context) => const DemandLetter(),
+                //             ));
+                //           }
+                //         },
+                //         style: ElevatedButton.styleFrom(
+                //           backgroundColor: Colors.amberAccent,
+                //           padding: const EdgeInsets.symmetric(
+                //               horizontal: 30.0, vertical: 10.0),
+                //           shape: RoundedRectangleBorder(
+                //             borderRadius: BorderRadius.circular(12.0),
+                //           ),
+                //         ),
+                //         child: const Text(
+                //           'Demand Letter',
+                //           style: TextStyle(
+                //             color: Colors.white,
+                //             fontSize: 16,
+                //             fontWeight: FontWeight.bold,
+                //           ),
+                //         ),
+                //       ),
+                //       const SizedBox(height: 16),
+                //     ],
+                //   ),
+                // ),
                 const SizedBox(width: 80),
               ],
             ),
@@ -513,6 +872,199 @@ class _PostSaleHeadDashboardState extends State<PostSaleHeadDashboard> {
         ),
         if (isLoading) const LoadingSquare()
       ],
+    );
+  }
+
+  void _showTaskDialog(
+    BuildContext context,
+  ) {
+    final settingProvider = Provider.of<SettingProvider>(
+      context,
+      listen: false,
+    );
+    final tasks = settingProvider.tasks;
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12.0),
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            height: 300, // Dialog height
+            width: 200, // Dialog width
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Tasks",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ListTile(
+                          leading: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              const Icon(Icons.check_circle,
+                                  color: Colors.green),
+                              Positioned(
+                                top: -4,
+                                right: -4,
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Text(
+                                    tasks
+                                        .where((ele) =>
+                                            ele.type == "first-call" &&
+                                            ele.completed == false)
+                                        .length
+                                        .toString(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          title: const Text("First Call"),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TaskListPage(
+                                  id: widget.id,
+                                  type: "first-call",
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              const Icon(Icons.task_alt, color: Colors.blue),
+                              Positioned(
+                                top: -4,
+                                right: -4,
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Text(
+                                    tasks
+                                        .where((ele) =>
+                                            ele.type == "follow-up" &&
+                                            ele.completed == false)
+                                        .length
+                                        .toString(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          title: const Text("Follow-Up Call"),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TaskListPage(
+                                  id: widget.id,
+                                  type: "follow-up",
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        ListTile(
+                          leading: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              const Icon(Icons.note, color: Colors.orange),
+                              Positioned(
+                                top: -4,
+                                right: -4,
+                                child: Container(
+                                  padding: const EdgeInsets.all(2),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Text(
+                                    tasks
+                                        .where((ele) =>
+                                            ele.type == "schedule-meeting" &&
+                                            ele.completed == false)
+                                        .length
+                                        .toString(),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          title: const Text("Schedule Meeting"),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TaskListPage(
+                                  id: widget.id,
+                                  type: "schedule-meeting",
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey,
+                    ),
+                    child: const Text("Close"),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

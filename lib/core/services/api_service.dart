@@ -256,6 +256,9 @@ class ApiService {
         pendingCount: response.data["pendingCount"],
         approvedCount: response.data["approvedCount"],
         rejectedCount: response.data["rejectedCount"],
+        visitCount: response.data['visitedCount'],
+        revisitCount:response.data['revisitedCount'] ,
+        bookingCount: response.data['bookedCount'],
         // assignedCount: response.data["assignedCount"],
         data: leads,
       );

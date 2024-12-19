@@ -33,8 +33,8 @@ const storage = FlutterSecureStorage();
 
 // final dio = Dio();
 
-const baseUrl = "http://192.168.1.180:8082";
-// const baseUrl = "https://api.evhomes.tech";
+// const baseUrl = "http://192.168.1.180:8082";
+const baseUrl = "https://api.evhomes.tech";
 
 class ApiService {
   static final ApiService _instance = ApiService._internal();
@@ -257,7 +257,7 @@ class ApiService {
         approvedCount: response.data["approvedCount"],
         rejectedCount: response.data["rejectedCount"],
         visitCount: response.data['visitedCount'],
-        revisitCount:response.data['revisitedCount'] ,
+        revisitCount: response.data['revisitedCount'],
         bookingCount: response.data['bookedCount'],
         // assignedCount: response.data["assignedCount"],
         data: leads,

@@ -3138,7 +3138,7 @@ class ApiService {
       });
 
       final Response response = await _dio.post(
-        '/upload',
+        '/upload?path=vasundhara',
         data: formData,
         onSendProgress: (sent, total) {
           // Optionally handle progress

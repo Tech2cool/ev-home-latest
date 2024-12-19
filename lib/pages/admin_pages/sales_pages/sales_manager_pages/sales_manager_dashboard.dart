@@ -42,10 +42,7 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
       );
 
       await settingProvider.getClosingManagerGraph(
-        widget.id ?? settingProvider.loggedAdmin!.id!,
-      );
-      await settingProvider.getCarryForwardOpt(
-        widget.id ?? settingProvider.loggedAdmin!.id!,
+        widget.id ?? settingProvider.loggedAdmin!.reportingTo?.id ?? "",
       );
     } catch (e) {
       // Helper
@@ -441,17 +438,18 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                 Card(
                   elevation: 4,
                   shadowColor: Colors.transparent,
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   color: Colors.white.withOpacity(0.3),
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           "Lead to Visit 1",
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         AnimatedPieChart(
                           visited: graphInfo.visitCount.toInt(),
                           notVisited: graphInfo.leadCount.toInt(),
@@ -471,18 +469,19 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                   elevation: 4,
                   shadowColor: Colors.transparent,
 
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   color: Colors.white
                       .withOpacity(0.3), // Semi-transparent white background
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           "Visit 1 to Booking",
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         AnimatedPieChart(
                           visited: graphInfo.bookingCount.toInt(),
                           notVisited: graphInfo.visitCount.toInt(),
@@ -503,17 +502,18 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                 Card(
                   elevation: 4,
                   shadowColor: Colors.transparent,
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   color: Colors.white.withOpacity(0.3),
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           "Visit 2 to Booking",
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         AnimatedPieChart(
                           visited: graphInfo.bookingCount.toInt(),
                           notVisited: graphInfo.visit2Count.toInt(),
@@ -533,17 +533,18 @@ class _SalesManagerDashboardState extends State<SalesManagerDashboard> {
                 Card(
                   elevation: 4,
                   shadowColor: Colors.transparent,
-                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   color: Colors.white.withOpacity(0.3),
                   child: Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(16),
                     child: Column(
                       children: [
-                        Text(
+                        const Text(
                           "Lead to Booking",
                           style: TextStyle(fontSize: 16),
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         AnimatedPieChart(
                           visited: graphInfo.bookingCount.toInt(),
                           notVisited: graphInfo.leadCount.toInt(),
